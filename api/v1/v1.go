@@ -4,6 +4,7 @@ import (
 	authenticate "netsepio-api/api/v1/authenticate"
 	flowid "netsepio-api/api/v1/flowid"
 	"netsepio-api/api/v1/profile"
+	roleid "netsepio-api/api/v1/roleId"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,5 +16,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		flowid.ApplyRoutes(v1)
 		authenticate.ApplyRoutes(v1)
 		profile.ApplyRoutes(v1)
+		roleid.ApplyRoutes(v1)
 	}
 }

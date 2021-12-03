@@ -10,6 +10,7 @@ import (
 	"netsepio-api/api/v1/authenticate"
 	"netsepio-api/api/v1/flowid"
 	"netsepio-api/app"
+	testingcommmon "netsepio-api/util/testing"
 	"os"
 	"testing"
 
@@ -27,7 +28,7 @@ func Test_PostAuthenticate(t *testing.T) {
 		testWalletPrivateKey = os.Getenv("TEST_WALLET_PRIVATE_KEY")
 	)
 	flowId := callFlowIdApi(walletAddress, t)
-	fmt.Println("flowid", flowId)
+	t.Cleanup(testingcommmon.ClearTables)
 
 	router := app.GinApp
 
@@ -73,11 +74,6 @@ func Test_PostAuthenticate(t *testing.T) {
 		router.ServeHTTP(rr, req)
 		assert.Equal(t, http.StatusForbidden, rr.Code, rr.Body.String())
 	})
-
-	// defer func() {
-	// 	//Delete whole table after running test
-	// 	db.Db.Delete(&models.User{})
-	// }()
 
 }
 

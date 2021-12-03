@@ -3,41 +3,22 @@ package profile
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"netsepio-api/api/v1/profile"
 	"netsepio-api/app"
-	"netsepio-api/db"
 	"netsepio-api/models"
-	"netsepio-api/models/claims"
-	"netsepio-api/util/pkg/auth"
-	"os"
+	testingcommmon "netsepio-api/util/testing"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
-func prepare(t *testing.T) string {
-	gin.SetMode(gin.TestMode)
-	app.Init()
-	testWalletAddress := os.Getenv("TEST_WALLET_ADDRESS")
-	t.Cleanup(createTestUser(t, testWalletAddress))
-
-	customClaims := claims.New(testWalletAddress)
-	jwtPrivateKey := os.Getenv("JWT_PRIVATE_KEY")
-	token, err := auth.GenerateToken(customClaims, jwtPrivateKey)
-	if err != nil {
-		t.Fatal(err)
-	}
-	header := fmt.Sprintf("Bearer %v", token)
-
-	return header
-}
 func Test_PatchProfile(t *testing.T) {
-	header := prepare(t)
+	header := testingcommmon.PrepareAndGetAuthHeader(t)
+	t.Cleanup(testingcommmon.ClearTables)
+
 	url := "/api/v1.0/profile"
 
 	// TODO: Write more tests
@@ -62,7 +43,8 @@ func Test_PatchProfile(t *testing.T) {
 }
 
 func Test_GetProfile(t *testing.T) {
-	header := prepare(t)
+	header := testingcommmon.PrepareAndGetAuthHeader(t)
+	t.Cleanup(testingcommmon.ClearTables)
 	url := "/api/v1.0/profile"
 	rr := httptest.NewRecorder()
 	req, err := http.NewRequest("GET", url, nil)
@@ -82,20 +64,4 @@ func Test_GetProfile(t *testing.T) {
 	assert.Equal(t, "https://revoticengineering.com/", user.ProfilePictureUrl)
 	assert.Equal(t, "India", user.Country)
 	logrus.Debug(user)
-}
-func createTestUser(t *testing.T, walletAddress string) func() {
-	user := models.User{
-		Name:              "Jack",
-		ProfilePictureUrl: "https://revoticengineering.com/",
-		WalletAddress:     walletAddress,
-		Country:           "India",
-	}
-	err := db.Db.Model(&models.User{}).Create(&user).Error
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	return func() {
-		db.Db.Delete(&user)
-	}
 }

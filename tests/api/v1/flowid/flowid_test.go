@@ -7,15 +7,18 @@ import (
 	"net/http/httptest"
 	"netsepio-api/api/v1/flowid"
 	"netsepio-api/app"
+	testingcommmon "netsepio-api/util/testing"
 	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
+//TODO add test for testing when wallet address exist
 func Test_GetFlowId(t *testing.T) {
-	app.Init()
+	t.Cleanup(testingcommmon.ClearTables)
 
+	app.Init()
 	var (
 		walletAddress = os.Getenv("TEST_WALLET_ADDRESS")
 	)

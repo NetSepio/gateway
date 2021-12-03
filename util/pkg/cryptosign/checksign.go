@@ -31,17 +31,19 @@ func CheckSign(signature string, flowId string, message string) (string, bool, e
 
 	//Get address from public key
 	walletAddress := crypto.PubkeyToAddress(*pubKey)
-	var user models.User
-	res := db.Db.Model(&models.User{}).Where("? = ANY (flow_id)", flowId).First(&user)
+	var flowIdData models.FlowId
+	res := db.Db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData)
+
 	if res.RecordNotFound() {
 		return "", false, ErrFlowIdNotFound
 	}
-	if err != nil {
+	if err := res.Error; err != nil {
 		return "", false, err
 	}
-
-	if user.WalletAddress == walletAddress.String() {
-		return user.WalletAddress, true, nil
+	fmt.Println("signature", signature)
+	fmt.Println(" l ", flowIdData.WalletAddress, " r ", walletAddress.String())
+	if flowIdData.WalletAddress == walletAddress.String() {
+		return flowIdData.WalletAddress, true, nil
 	} else {
 		return "", false, nil
 	}

@@ -1,7 +1,6 @@
 package jwt
 
 import (
-	"bytes"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -44,7 +43,7 @@ func callApi(t *testing.T, token string) int {
 	ginTestApp := gin.New()
 
 	header := fmt.Sprintf("Bearer %v", token)
-	rq, err := http.NewRequest("POST", "", bytes.NewBuffer([]byte("0")))
+	rq, err := http.NewRequest("POST", "", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
