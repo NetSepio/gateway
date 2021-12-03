@@ -1,17 +1,13 @@
 package authenticate
 
 import (
-	"fmt"
 	"net/http"
-	"netsepio-api/db"
-	"netsepio-api/models"
+	"netsepio-api/models/claims"
+	"netsepio-api/util/pkg/auth"
+	"netsepio-api/util/pkg/cryptosign"
 	"os"
-	"time"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/gin-gonic/gin"
-	jwt "github.com/golang-jwt/jwt/v4"
 )
 
 // ApplyRoutes applies router to gin Router
@@ -30,38 +26,21 @@ func authenticate(c *gin.Context) {
 
 	// Append userId to the message
 	message := req.FlowId + "m"
-	fmt.Println("flowid", req.FlowId)
-	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)
-	newMsgHash := crypto.Keccak256Hash([]byte(newMsg))
-	signatureInBytes, err := hexutil.Decode(req.Signature)
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		return
-	}
-	signatureInBytes[64] -= 27
-	pubKey, err := crypto.SigToPub(newMsgHash.Bytes(), signatureInBytes)
+	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	if err == cryptosign.ErrFlowIdNotFound {
+		c.String(http.StatusNotFound, err.Error())
 		return
 	}
 
-	//Get address from public key
-	walletAddress := crypto.PubkeyToAddress(*pubKey)
-	var user models.User
-	res := db.Db.Model(&models.User{}).Where("? = ANY (flow_id)", req.FlowId).First(&user)
-	if res.RecordNotFound() {
-		c.String(http.StatusNotFound, "FlowId not found")
-		return
-	}
 	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+		c.String(http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	fmt.Println(user.WalletAddress, "==", walletAddress.String())
-	if user.WalletAddress == walletAddress.String() {
-		jwtToken, err := generateToken(user.WalletAddress)
+	if isCorrect {
+		customClaims := claims.New(walletAddress)
+		jwtPrivateKey := os.Getenv("JWT_PRIVATE_KEY")
+		jwtToken, err := auth.GenerateToken(customClaims, jwtPrivateKey)
 		if err != nil {
 			c.String(http.StatusInternalServerError, "Internal Server Error Occured")
 		}
@@ -72,19 +51,4 @@ func authenticate(c *gin.Context) {
 		c.String(http.StatusForbidden, "Wallet Address is not correct")
 		return
 	}
-}
-
-func generateToken(walletAddress string) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS512, customClaims{
-		walletAddress,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
-		},
-	})
-	tokenString, err := token.SignedString([]byte(os.Getenv("PASETO_PRIVATE_KEY")))
-
-	if err != nil {
-		return "", err
-	}
-	return tokenString, nil
 }
