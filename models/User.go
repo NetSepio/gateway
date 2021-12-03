@@ -3,6 +3,9 @@ package models
 import "github.com/lib/pq"
 
 type User struct {
-	WalletAddress string
-	FlowId        pq.StringArray `gorm:"type:text[]"`
+	Name              string
+	WalletAddress     string         `gorm:"unique"`
+	FlowId            pq.StringArray `gorm:"type:text[]"`
+	ProfilePictureUrl string
+	Country           string
 }
