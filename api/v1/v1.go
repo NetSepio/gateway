@@ -2,6 +2,7 @@ package apiv1
 
 import (
 	authenticate "netsepio-api/api/v1/authenticate"
+	claimrole "netsepio-api/api/v1/claimRole"
 	flowid "netsepio-api/api/v1/flowid"
 	"netsepio-api/api/v1/profile"
 	roleid "netsepio-api/api/v1/roleId"
@@ -17,5 +18,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		authenticate.ApplyRoutes(v1)
 		profile.ApplyRoutes(v1)
 		roleid.ApplyRoutes(v1)
+		claimrole.ApplyRoutes(v1)
 	}
 }

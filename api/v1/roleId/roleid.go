@@ -1,8 +1,8 @@
 package roleid
 
 import (
-	"fmt"
 	"net/http"
+	"netsepio-api/db"
 	jwtMiddleWare "netsepio-api/middleware/auth/jwt"
 	"netsepio-api/models"
 	"netsepio-api/util/pkg/flowid"
@@ -21,15 +21,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	}
 }
 
-type Roles []Role
-type Role struct {
-	id   int
-	name string
-	eula string
-}
-
 func getRoleId(c *gin.Context) {
-	roles := Roles{{1, "Manager", "TODO managerEula"}}
 	walletAddress := c.GetString("walletAddress")
 
 	roleId, exist := c.Params.Get("roleId")
@@ -38,29 +30,27 @@ func getRoleId(c *gin.Context) {
 		return
 	}
 	roleIdInt, err := strconv.Atoi(roleId)
-
-	for _, v := range roles {
+	if err != nil {
+		logrus.Error(err)
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+	var role models.Role
+	err = db.Db.Model(&models.Role{}).Where("role_id = ?", roleIdInt).First(&role).Error
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+	} else {
+		flowId, err := flowid.GenerateFlowId(walletAddress, true, models.ROLE, roleIdInt)
 		if err != nil {
 			logrus.Error(err)
 			c.Status(http.StatusInternalServerError)
 			return
 		}
-		if v.id == roleIdInt {
-			fmt.Println(v)
-			flowId, err := flowid.GenerateFlowId(walletAddress, true, models.ROLE)
 
-			if err != nil {
-				logrus.Error(err)
-				c.Status(http.StatusInternalServerError)
-				return
-			}
-
-			response := GetRoleIdResponse{
-				v.eula, flowId,
-			}
-			c.JSON(200, response)
-			return
+		response := GetRoleIdResponse{
+			role.Eula, flowId,
 		}
+		c.JSON(200, response)
 	}
-	c.String(http.StatusNotFound, fmt.Sprintf("Role with id %v is not found", roleIdInt))
+
 }

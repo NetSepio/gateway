@@ -37,7 +37,6 @@ func Test_PostAuthenticate(t *testing.T) {
 	t.Run("Should return 200 with correct wallet address", func(t *testing.T) {
 		signature := getSignature(flowId, testWalletPrivateKey)
 		body := authenticate.AuthenticateRequest{Signature: signature, FlowId: flowId}
-		fmt.Println(body)
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
 			t.Fatal(err)

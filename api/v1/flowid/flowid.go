@@ -37,7 +37,7 @@ func getFlowId(c *gin.Context) {
 	}
 	// If wallet address exist
 	if dbRes.Error != gorm.ErrRecordNotFound {
-		flowId, err := flowid.GenerateFlowId(request.WalletAddress, true, models.AUTH)
+		flowId, err := flowid.GenerateFlowId(request.WalletAddress, true, models.AUTH, 0)
 		if err != nil {
 			log.Error(err)
 			c.Status(http.StatusInternalServerError)
@@ -49,7 +49,7 @@ func getFlowId(c *gin.Context) {
 		})
 	} else {
 		//If wallet address doesn't exist
-		flowId, err := flowid.GenerateFlowId(request.WalletAddress, false, models.AUTH)
+		flowId, err := flowid.GenerateFlowId(request.WalletAddress, false, models.AUTH, 0)
 		if err != nil {
 			log.Error(err)
 			c.Status(http.StatusInternalServerError)

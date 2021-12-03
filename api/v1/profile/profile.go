@@ -1,7 +1,6 @@
 package profile
 
 import (
-	"fmt"
 	"net/http"
 	"netsepio-api/db"
 	jwtMiddleWare "netsepio-api/middleware/auth/jwt"
@@ -50,7 +49,6 @@ func getProfile(c *gin.Context) {
 		c.Status(http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("user is", user)
 
 	c.JSON(http.StatusOK, user)
 }

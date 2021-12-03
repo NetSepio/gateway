@@ -37,7 +37,7 @@ func InitDB() {
 		log.Fatal("failed to ping database", err)
 	}
 
-	if err := Db.AutoMigrate(&models.FlowId{}, &models.User{}).Error; err != nil {
+	if err := Db.AutoMigrate(&models.FlowId{}, &models.User{}, &models.Role{}).Error; err != nil {
 		log.Fatal(err)
 	}
 
