@@ -4,11 +4,10 @@ import (
 	"net/http"
 	"netsepio-api/db"
 	"netsepio-api/models"
+	"netsepio-api/util/pkg/flowid"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
-	"github.com/lib/pq"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -39,7 +38,7 @@ func getFlowId(c *gin.Context) {
 
 	// If wallet address exist
 	if dbRes.Error != gorm.ErrRecordNotFound {
-		flowId, err := generateFlowId(request.WalletAddress, true)
+		flowId, err := flowid.GenerateFlowId(request.WalletAddress, true)
 		if err != nil {
 			log.Error(err)
 			c.Status(http.StatusInternalServerError)
@@ -51,41 +50,15 @@ func getFlowId(c *gin.Context) {
 		})
 	} else {
 		//If wallet address doesn't exist
-
-		flowId, err := generateFlowId(request.WalletAddress, false)
+		flowId, err := flowid.GenerateFlowId(request.WalletAddress, false)
 		if err != nil {
 			log.Error(err)
 			c.Status(http.StatusInternalServerError)
 			return
 		}
 		c.JSON(http.StatusOK, GetFlowIdResponse{
-			Message: "test eula",
+			Message: "TODO eula",
 			FlowId:  flowId,
 		})
 	}
-}
-
-func generateFlowId(walletAddress string, update bool) (string, error) {
-
-	flowId := uuid.NewString()
-	if update {
-		// User exist so update
-		err := db.Db.Model(&models.User{}).
-			Where("wallet_address = ?", walletAddress).
-			Update("flow_id", gorm.Expr("array_cat(flow_id,?)", pq.Array([]string{flowId}))).Error
-		if err != nil {
-			return "", err
-		}
-	} else {
-		// User doesn't exist so create
-		newUser := &models.User{
-			WalletAddress: walletAddress,
-			FlowId:        pq.StringArray([]string{flowId}),
-		}
-		if err := db.Db.Create(newUser).Error; err != nil {
-			return "", err
-		}
-	}
-
-	return flowId, nil
 }
