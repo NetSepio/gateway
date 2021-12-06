@@ -1,26 +1,28 @@
 package jwt
 
 import (
+	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v4"
-	"github.com/sirupsen/logrus"
+)
+
+var (
+	ErrAuthHeaderMissing = errors.New("Authorization header is required")
 )
 
 func JWT(c *gin.Context) {
 	var headers GenericAuthHeaders
 	err := c.BindHeader(&headers)
 	if err != nil {
-		log.Println(err)
-		c.Status(http.StatusInternalServerError)
+		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 	if headers.Authorization == "" {
-		c.String(http.StatusBadRequest, "Authorization header is required")
+		c.AbortWithError(http.StatusBadRequest, ErrAuthHeaderMissing)
 		return
 	}
 	jwtToken := headers.Authorization[7:]
@@ -37,7 +39,6 @@ func JWT(c *gin.Context) {
 		c.Set("walletAddress", claims["walletAddress"])
 		c.Next()
 	} else {
-		logrus.Error(err)
 		c.AbortWithStatus(http.StatusForbidden)
 	}
 }
