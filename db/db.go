@@ -41,4 +41,13 @@ func InitDB() {
 		log.Fatal(err)
 	}
 
+	rolesToBeAdded := []models.Role{
+		{Name: "Investor", RoleId: 1, Eula: "TODO Investor EULA"},
+		{Name: "Manager", RoleId: 2, Eula: "TODO Manager EULA"}}
+	for _, role := range rolesToBeAdded {
+		if err := Db.Model(&models.Role{}).FirstOrCreate(&role).Error; err != nil {
+			log.Fatal(err)
+		}
+	}
+
 }
