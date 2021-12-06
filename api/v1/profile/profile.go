@@ -43,7 +43,7 @@ func patchProfile(c *gin.Context) {
 func getProfile(c *gin.Context) {
 	walletAddress := c.GetString("walletAddress")
 	var user models.User
-	err := db.Db.Model(&models.User{}).Select("name, profile_picture_url,country").Where("wallet_address = ?", walletAddress).First(&user).Error
+	err := db.Db.Model(&models.User{}).Select("name, profile_picture_url,country,roles, wallet_address").Where("wallet_address = ?", walletAddress).First(&user).Error
 	if err != nil {
 		logrus.Error(err)
 		c.Status(http.StatusInternalServerError)
