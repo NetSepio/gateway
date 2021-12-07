@@ -4,10 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"netsepio-api/db"
+	"netsepio-api/models"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v4"
+	"github.com/jinzhu/gorm"
 )
 
 var (
@@ -36,8 +39,21 @@ func JWT(c *gin.Context) {
 	})
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		c.Set("walletAddress", claims["walletAddress"])
-		c.Next()
+		walletAddress := claims["walletAddress"]
+		where := models.User{
+			WalletAddress: walletAddress.(string),
+		}
+		err := db.Db.Model(&models.User{}).Find(&models.User{}, where).Error
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				c.AbortWithStatus(http.StatusForbidden)
+			} else {
+				c.AbortWithStatus(http.StatusInternalServerError)
+			}
+		} else {
+			c.Set("walletAddress", walletAddress)
+			c.Next()
+		}
 	} else {
 		c.AbortWithStatus(http.StatusForbidden)
 	}
