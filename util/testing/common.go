@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 func PrepareAndGetAuthHeader(t *testing.T) string {
@@ -35,6 +36,7 @@ func CreateTestUser(t *testing.T, walletAddress string) {
 		ProfilePictureUrl: "https://revoticengineering.com/",
 		WalletAddress:     walletAddress,
 		Country:           "India",
+		Roles:             pq.Int32Array([]int32{1}),
 	}
 	err := db.Db.Model(&models.User{}).Create(&user).Error
 	if err != nil {

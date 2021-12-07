@@ -8,5 +8,5 @@ type User struct {
 	FlowIds           []FlowId      `gorm:"foreignkey:WalletAddress" json:"-"`
 	ProfilePictureUrl string        `json:"profilePictureUrl,omitempty"`
 	Country           string        `json:"country,omitempty"`
-	Roles             pq.Int32Array `gorm:"type:int[]" json:"roles"`
+	Roles             pq.Int32Array `gorm:"type:int[];not null" json:"roles"`
 }

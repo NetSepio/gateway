@@ -5,6 +5,7 @@ import (
 	"netsepio-api/models"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 )
 
@@ -27,8 +28,8 @@ func GenerateFlowId(walletAddress string, update bool, flowIdType models.FlowIdT
 			WalletAddress: walletAddress,
 			FlowIds: []models.FlowId{{
 				FlowIdType: flowIdType, WalletAddress: walletAddress, FlowId: flowId, RelatedRoleId: relatedRoleId,
-			},
-			},
+			}},
+			Roles: pq.Int32Array([]int32{1}),
 		}
 		if err := db.Db.Create(newUser).Error; err != nil {
 			return "", err
