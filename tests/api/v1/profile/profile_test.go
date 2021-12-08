@@ -7,7 +7,6 @@ import (
 	"net/http/httptest"
 	"netsepio-api/api/v1/profile"
 	"netsepio-api/app"
-	"netsepio-api/models"
 	testingcommmon "netsepio-api/util/testing"
 	"testing"
 
@@ -53,7 +52,7 @@ func Test_GetProfile(t *testing.T) {
 		t.Fatal(err)
 	}
 	app.GinApp.ServeHTTP(rr, req)
-	var user models.User
+	var user profile.GetProfileResponse
 	body := rr.Body
 	json.NewDecoder(body).Decode(&user)
 	if err != nil {

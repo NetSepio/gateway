@@ -11,7 +11,6 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lib/pq"
 )
 
 func PrepareAndGetAuthHeader(t *testing.T) string {
@@ -36,7 +35,11 @@ func CreateTestUser(t *testing.T, walletAddress string) {
 		ProfilePictureUrl: "https://revoticengineering.com/",
 		WalletAddress:     walletAddress,
 		Country:           "India",
-		Roles:             pq.Int32Array([]int32{1}),
+		Roles: []models.UserRole{
+			{
+				WalletAddress: walletAddress, RoleId: 1,
+			},
+		},
 	}
 	err := db.Db.Model(&models.User{}).Create(&user).Error
 	if err != nil {
@@ -47,4 +50,5 @@ func CreateTestUser(t *testing.T, walletAddress string) {
 func ClearTables() {
 	db.Db.Delete(&models.User{})
 	db.Db.Delete(&models.FlowId{})
+	db.Db.Delete(&models.UserRole{})
 }

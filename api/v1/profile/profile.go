@@ -43,12 +43,25 @@ func patchProfile(c *gin.Context) {
 func getProfile(c *gin.Context) {
 	walletAddress := c.GetString("walletAddress")
 	var user models.User
-	err := db.Db.Model(&models.User{}).Select("name, profile_picture_url,country,roles, wallet_address").Where("wallet_address = ?", walletAddress).First(&user).Error
+	var userRoles []models.UserRole
+	err := db.Db.Model(&models.User{}).Select("name, profile_picture_url,country, wallet_address").Where("wallet_address = ?", walletAddress).First(&user).Error
 	if err != nil {
 		logrus.Error(err)
 		c.Status(http.StatusInternalServerError)
 		return
 	}
-
-	c.JSON(http.StatusOK, user)
+	err = db.Db.Model(&user).Association("Roles").Find(&userRoles).Error
+	userRolesIds := make([]int, 0, 1)
+	for _, userRole := range userRoles {
+		userRolesIds = append(userRolesIds, userRole.RoleId)
+	}
+	if err != nil {
+		logrus.Error(err)
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+	responseData := GetProfileResponse{
+		user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country, userRolesIds,
+	}
+	c.JSON(http.StatusOK, responseData)
 }

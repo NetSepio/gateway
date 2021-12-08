@@ -5,3 +5,11 @@ type PatchProfileRequest struct {
 	Country           string `json:"country,omitempty"`
 	ProfilePictureUrl string `json:"profilePictureUrl,omitempty"`
 }
+
+type GetProfileResponse struct {
+	Name              string `json:"name,omitempty"`
+	WalletAddress     string `json:"walletAddress"`
+	ProfilePictureUrl string `json:"profilePictureUrl,omitempty"`
+	Country           string `json:"country,omitempty"`
+	Roles             []int  `json:"roles"`
+}

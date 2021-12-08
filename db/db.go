@@ -36,10 +36,15 @@ func InitDB() {
 	if err = Db.DB().Ping(); err != nil {
 		log.Fatal("failed to ping database", err)
 	}
-
 	if err := Db.AutoMigrate(&models.FlowId{}, &models.User{}, &models.Role{}).Error; err != nil {
 		log.Fatal(err)
 	}
+	//Create user_roles table
+	Db.Exec(`create table if not exists user_roles (
+			wallet_address text,
+			role_id int,
+			unique (wallet_address,role_id)
+			)`)
 
 	rolesToBeAdded := []models.Role{
 		{Name: "Investor", RoleId: 1, Eula: "TODO Investor EULA"},

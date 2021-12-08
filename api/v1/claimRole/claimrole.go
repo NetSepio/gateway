@@ -10,7 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 )
 
 // ApplyRoutes applies router to gin Router
@@ -53,8 +53,18 @@ func postClaimRole(c *gin.Context) {
 	}
 
 	// Update user role
-	db.Db.Model(&models.User{}).Where("wallet_address = ?", walletAddress).
-		Update("roles", gorm.Expr("array_cat(roles,?)", pq.Array([]int{role.RoleId})))
+	logrus.Println("walletaddress", walletAddress, "roleId", role.RoleId)
+	err = db.Db.Model(&models.User{WalletAddress: walletAddress}).
+		Association("Roles").
+		Append(models.UserRole{WalletAddress: walletAddress, RoleId: role.RoleId}).
+		Error
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		logrus.Println(err)
+		return
+	} else {
+		c.Status(http.StatusOK)
+	}
 
 }
 
