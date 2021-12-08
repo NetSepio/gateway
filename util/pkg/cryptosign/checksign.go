@@ -22,7 +22,9 @@ func CheckSign(signature string, flowId string, message string) (string, bool, e
 	if err != nil {
 		return "", false, err
 	}
-	signatureInBytes[64] -= 27
+	if signatureInBytes[64] == 27 || signatureInBytes[64] == 28 {
+		signatureInBytes[64] -= 27
+	}
 	pubKey, err := crypto.SigToPub(newMsgHash.Bytes(), signatureInBytes)
 
 	if err != nil {
@@ -41,10 +43,10 @@ func CheckSign(signature string, flowId string, message string) (string, bool, e
 		return "", false, err
 	}
 	fmt.Println("signature", signature)
-	fmt.Println(" l ", flowIdData.WalletAddress, " r ", walletAddress.String())
 	if flowIdData.WalletAddress == walletAddress.String() {
 		return flowIdData.WalletAddress, true, nil
 	} else {
+		fmt.Println("Expected wallet address - ", flowIdData.WalletAddress, "Wallet address used to sign message", walletAddress.String())
 		return "", false, nil
 	}
 }

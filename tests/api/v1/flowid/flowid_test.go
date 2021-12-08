@@ -11,11 +11,13 @@ import (
 	"os"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
 //TODO add test for testing when wallet address exist
 func Test_GetFlowId(t *testing.T) {
+	gin.SetMode(gin.TestMode)
 	t.Cleanup(testingcommmon.ClearTables)
 
 	app.Init()

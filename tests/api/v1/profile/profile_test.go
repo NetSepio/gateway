@@ -10,6 +10,7 @@ import (
 	testingcommmon "netsepio-api/util/testing"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
@@ -42,6 +43,8 @@ func Test_PatchProfile(t *testing.T) {
 }
 
 func Test_GetProfile(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+
 	header := testingcommmon.PrepareAndGetAuthHeader(t)
 	t.Cleanup(testingcommmon.ClearTables)
 	url := "/api/v1.0/profile"

@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"netsepio-api/config"
+	"netsepio-api/db"
+	"netsepio-api/models"
 	"netsepio-api/models/claims"
 	"netsepio-api/util/pkg/auth"
 	"os"
@@ -14,9 +17,19 @@ import (
 )
 
 func Test_JWT(t *testing.T) {
+	config.Init()
+	db.InitDB()
+	testWalletAddress := os.Getenv("TEST_WALLET_ADDRESS")
+	newUser := models.User{
+		WalletAddress: testWalletAddress,
+	}
+	db.Db.Model(&models.User{}).Create(&newUser)
+	defer func() {
+		db.Db.Delete(&newUser)
+	}()
 	gin.SetMode(gin.TestMode)
 	t.Run("Should return 200 with correct JWT", func(t *testing.T) {
-		testWalletAddress := os.Getenv("TEST_WALLET_ADDRESS")
+
 		newClaims := claims.New(testWalletAddress)
 		token, err := auth.GenerateToken(newClaims, os.Getenv("JWT_PRIVATE_KEY"))
 		if err != nil {
@@ -27,7 +40,7 @@ func Test_JWT(t *testing.T) {
 	})
 
 	t.Run("Should return 403 with incorret JWT", func(t *testing.T) {
-		newClaims := claims.New(os.Getenv("TEST_WALLET_ADDRESS"))
+		newClaims := claims.New(testWalletAddress)
 		token, err := auth.GenerateToken(newClaims, "this private key is valid key")
 		if err != nil {
 			t.Fatal(err)

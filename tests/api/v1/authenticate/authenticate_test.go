@@ -16,11 +16,13 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
 // TODO: Write test to verify expiry
 func Test_PostAuthenticate(t *testing.T) {
+	gin.SetMode(gin.TestMode)
 	app.Init()
 
 	var (
@@ -123,10 +125,5 @@ func getSignature(flowId string, walletAddress string) string {
 
 	signature := hexutil.Encode(signatureBytes)
 
-	lenOfString := len(signature)
-	newLenOfString := lenOfString - 2
-	newSignature := signature[:newLenOfString]
-	// TODO: Fix end bytes
-	newSignature = newSignature + "1b"
-	return newSignature
+	return signature
 }

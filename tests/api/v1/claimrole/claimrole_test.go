@@ -16,10 +16,12 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_PostClaimRole(t *testing.T) {
+	gin.SetMode(gin.TestMode)
 	app.Init()
 	headers := testingcommmon.PrepareAndGetAuthHeader(t)
 	t.Cleanup(testingcommmon.ClearTables)
@@ -41,7 +43,7 @@ func Test_PostClaimRole(t *testing.T) {
 }
 
 func requestRole(t *testing.T, headers string) roleid.GetRoleIdResponse {
-	url := "/api/v1.0/roleId/1"
+	url := "/api/v1.0/roleId/2"
 	rr := httptest.NewRecorder()
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

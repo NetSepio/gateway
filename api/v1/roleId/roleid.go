@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 )
 
@@ -37,7 +38,9 @@ func getRoleId(c *gin.Context) {
 	}
 	var role models.Role
 	err = db.Db.Model(&models.Role{}).Where("role_id = ?", roleIdInt).First(&role).Error
-	if err != nil {
+	if err == gorm.ErrRecordNotFound {
+		c.String(http.StatusNotFound, err.Error())
+	} else if err != nil {
 		c.Status(http.StatusInternalServerError)
 	} else {
 		flowId, err := flowid.GenerateFlowId(walletAddress, true, models.ROLE, roleIdInt)

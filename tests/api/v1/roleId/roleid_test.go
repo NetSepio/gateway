@@ -8,17 +8,19 @@ import (
 	testingcommmon "netsepio-api/util/testing"
 	"testing"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_GetRoleId(t *testing.T) {
+	gin.SetMode(gin.TestMode)
 	app.Init()
 	headers := testingcommmon.PrepareAndGetAuthHeader(t)
 	t.Cleanup(testingcommmon.ClearTables)
 	url := "/api/v1.0/roleId/%v"
 	t.Run("Get role EULA with flowId when roleId exist", func(t *testing.T) {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequest("GET", fmt.Sprintf(url, 1), nil)
+		req, err := http.NewRequest("GET", fmt.Sprintf(url, 2), nil)
 		if err != nil {
 			t.Fatal(err)
 		}
