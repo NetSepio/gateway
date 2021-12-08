@@ -1,8 +1,7 @@
-package testingcommmon
+package testingcommon
 
 import (
 	"fmt"
-	"netsepio-api/app"
 	"netsepio-api/db"
 	"netsepio-api/models"
 	"netsepio-api/models/claims"
@@ -10,13 +9,18 @@ import (
 	"os"
 	"testing"
 
+	"crypto/ecdsa"
+	"log"
+
 	"github.com/gin-gonic/gin"
+
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
-func PrepareAndGetAuthHeader(t *testing.T) string {
+func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 	gin.SetMode(gin.TestMode)
-	app.Init()
-	testWalletAddress := os.Getenv("TEST_WALLET_ADDRESS")
+	db.InitDB()
 	CreateTestUser(t, testWalletAddress)
 	customClaims := claims.New(testWalletAddress)
 	jwtPrivateKey := os.Getenv("JWT_PRIVATE_KEY")
@@ -45,6 +49,30 @@ func CreateTestUser(t *testing.T, walletAddress string) {
 	if err != nil {
 		t.Fatal(err)
 	}
+}
+
+func GenerateWallet() *TestWallet {
+	privateKey, err := crypto.GenerateKey()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	privateKeyBytes := crypto.FromECDSA(privateKey)
+
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+	}
+
+	address := crypto.PubkeyToAddress(*publicKeyECDSA).Hex()
+	privateKeyHex := hexutil.Encode(privateKeyBytes)
+	testWallet := TestWallet{
+		PrivateKey:    privateKeyHex[2:],
+		WalletAddress: address,
+	}
+	fmt.Println("wallet address gen:", address)
+	return &testWallet
 }
 
 func ClearTables() {

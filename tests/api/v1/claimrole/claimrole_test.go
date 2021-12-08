@@ -10,8 +10,7 @@ import (
 	claimrole "netsepio-api/api/v1/claimRole"
 	roleid "netsepio-api/api/v1/roleId"
 	"netsepio-api/app"
-	testingcommmon "netsepio-api/util/testing"
-	"os"
+	"netsepio-api/util/testingcommon"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -23,12 +22,13 @@ import (
 func Test_PostClaimRole(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	app.Init()
-	headers := testingcommmon.PrepareAndGetAuthHeader(t)
-	t.Cleanup(testingcommmon.ClearTables)
+	testWallet := testingcommon.GenerateWallet()
+	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
+	t.Cleanup(testingcommon.ClearTables)
 	url := "/api/v1.0/claimrole"
 	rr := httptest.NewRecorder()
 	requestRoleRes := requestRole(t, headers)
-	signature := getSignature(requestRoleRes.Message, os.Getenv("TEST_WALLET_PRIVATE_KEY"))
+	signature := getSignature(requestRoleRes.Message, testWallet.PrivateKey)
 	reqBody := claimrole.ClaimRoleRequest{
 		Signature: signature, FlowId: requestRoleRes.FlowId,
 	}
@@ -77,10 +77,5 @@ func getSignature(eula string, hexPrivateKey string) string {
 
 	signature := hexutil.Encode(signatureBytes)
 
-	lenOfString := len(signature)
-	newLenOfString := lenOfString - 2
-	newSignature := signature[:newLenOfString]
-	// TODO: Fix end bytes
-	newSignature = newSignature + "1b"
-	return newSignature
+	return signature
 }

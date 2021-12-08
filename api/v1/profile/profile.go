@@ -23,7 +23,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 func patchProfile(c *gin.Context) {
 	var requestBody PatchProfileRequest
 	c.BindJSON(&requestBody)
-	c.Status(http.StatusNotImplemented)
 	walletAddress := c.GetString("walletAddress")
 	result := db.Db.Model(&models.User{}).
 		Where("wallet_address = ?", walletAddress).

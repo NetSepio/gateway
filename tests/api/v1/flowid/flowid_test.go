@@ -7,8 +7,7 @@ import (
 	"net/http/httptest"
 	"netsepio-api/api/v1/flowid"
 	"netsepio-api/app"
-	testingcommmon "netsepio-api/util/testing"
-	"os"
+	"netsepio-api/util/testingcommon"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -18,16 +17,15 @@ import (
 //TODO add test for testing when wallet address exist
 func Test_GetFlowId(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	t.Cleanup(testingcommmon.ClearTables)
+	t.Cleanup(testingcommon.ClearTables)
 
 	app.Init()
-	var (
-		walletAddress = os.Getenv("TEST_WALLET_ADDRESS")
-	)
+
+	testWalletAddress := testingcommon.GenerateWallet().WalletAddress
 	url := "/api/v1.0/flowid"
 	rr := httptest.NewRecorder()
 	body := flowid.GetFlowIdRequest{
-		WalletAddress: walletAddress,
+		WalletAddress: testWalletAddress,
 	}
 	jsonBody, err := json.Marshal(body)
 	if err != nil {

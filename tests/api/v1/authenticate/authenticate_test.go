@@ -10,8 +10,7 @@ import (
 	"netsepio-api/api/v1/authenticate"
 	"netsepio-api/api/v1/flowid"
 	"netsepio-api/app"
-	testingcommmon "netsepio-api/util/testing"
-	"os"
+	testingcommmon "netsepio-api/util/testingcommon"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -25,11 +24,8 @@ func Test_PostAuthenticate(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	app.Init()
 
-	var (
-		walletAddress        = os.Getenv("TEST_WALLET_ADDRESS")
-		testWalletPrivateKey = os.Getenv("TEST_WALLET_PRIVATE_KEY")
-	)
-	flowId := callFlowIdApi(walletAddress, t)
+	testWallet := testingcommmon.GenerateWallet()
+	flowId := callFlowIdApi(testWallet.WalletAddress, t)
 	t.Cleanup(testingcommmon.ClearTables)
 
 	router := app.GinApp
@@ -37,7 +33,7 @@ func Test_PostAuthenticate(t *testing.T) {
 	url := fmt.Sprintf("/api/v1.0/authenticate")
 
 	t.Run("Should return 200 with correct wallet address", func(t *testing.T) {
-		signature := getSignature(flowId, testWalletPrivateKey)
+		signature := getSignature(flowId, testWallet.PrivateKey)
 		body := authenticate.AuthenticateRequest{Signature: signature, FlowId: flowId}
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
@@ -62,8 +58,8 @@ func Test_PostAuthenticate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		walletAddress += "b"
-		callFlowIdApi(walletAddress, t)
+		newWalletAddress := testWallet.WalletAddress + "b"
+		callFlowIdApi(newWalletAddress, t)
 
 		rr := httptest.NewRecorder()
 

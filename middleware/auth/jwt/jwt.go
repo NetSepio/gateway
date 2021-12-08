@@ -40,10 +40,8 @@ func JWT(c *gin.Context) {
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		walletAddress := claims["walletAddress"]
-		where := models.User{
-			WalletAddress: walletAddress.(string),
-		}
-		err := db.Db.Model(&models.User{}).Find(&models.User{}, where).Error
+
+		err := db.Db.Model(&models.User{}).Where("wallet_address = ?", walletAddress.(string)).First(&models.User{}).Error
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				c.AbortWithStatus(http.StatusForbidden)

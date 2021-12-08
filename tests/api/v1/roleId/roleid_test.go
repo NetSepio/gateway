@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"netsepio-api/app"
-	testingcommmon "netsepio-api/util/testing"
+	"netsepio-api/util/testingcommon"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -15,8 +15,9 @@ import (
 func Test_GetRoleId(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	app.Init()
-	headers := testingcommmon.PrepareAndGetAuthHeader(t)
-	t.Cleanup(testingcommmon.ClearTables)
+	testWallet := testingcommon.GenerateWallet()
+	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
+	t.Cleanup(testingcommon.ClearTables)
 	url := "/api/v1.0/roleId/%v"
 	t.Run("Get role EULA with flowId when roleId exist", func(t *testing.T) {
 		rr := httptest.NewRecorder()

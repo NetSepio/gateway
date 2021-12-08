@@ -7,7 +7,9 @@ import (
 	"net/http/httptest"
 	"netsepio-api/api/v1/profile"
 	"netsepio-api/app"
-	testingcommmon "netsepio-api/util/testing"
+	"netsepio-api/config"
+	"netsepio-api/db"
+	"netsepio-api/util/testingcommon"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -16,8 +18,10 @@ import (
 )
 
 func Test_PatchProfile(t *testing.T) {
-	header := testingcommmon.PrepareAndGetAuthHeader(t)
-	t.Cleanup(testingcommmon.ClearTables)
+	app.Init()
+	testWallet := testingcommon.GenerateWallet()
+	header := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
+	t.Cleanup(testingcommon.ClearTables)
 
 	url := "/api/v1.0/profile"
 
@@ -37,16 +41,19 @@ func Test_PatchProfile(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		app.GinApp.ServeHTTP(rr, req)
 		assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 	})
 }
 
 func Test_GetProfile(t *testing.T) {
+	config.Init()
+	db.InitDB()
 	gin.SetMode(gin.TestMode)
-
-	header := testingcommmon.PrepareAndGetAuthHeader(t)
-	t.Cleanup(testingcommmon.ClearTables)
+	testWallet := testingcommon.GenerateWallet()
+	header := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
+	t.Cleanup(testingcommon.ClearTables)
 	url := "/api/v1.0/profile"
 	rr := httptest.NewRecorder()
 	req, err := http.NewRequest("GET", url, nil)
