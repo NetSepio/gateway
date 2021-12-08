@@ -36,7 +36,7 @@ func postClaimRole(c *gin.Context) {
 		c.Status(http.StatusInternalServerError)
 		return
 	}
-	message := role.Eula + "m"
+	message := role.Eula
 	fmt.Println("signed with", message)
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 

@@ -54,7 +54,7 @@ func requestRole(t *testing.T, headers string) roleid.GetRoleIdResponse {
 	return res
 }
 func getSignature(eula string, hexPrivateKey string) string {
-	message := eula + "m"
+	message := eula
 	fmt.Println(message)
 
 	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)

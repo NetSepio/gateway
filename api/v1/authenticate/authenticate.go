@@ -25,7 +25,7 @@ func authenticate(c *gin.Context) {
 	c.BindJSON(&req)
 
 	// Append userId to the message
-	message := req.FlowId + "m"
+	message := req.FlowId
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
 	if err == cryptosign.ErrFlowIdNotFound {

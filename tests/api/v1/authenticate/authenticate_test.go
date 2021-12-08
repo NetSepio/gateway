@@ -104,7 +104,7 @@ func callFlowIdApi(walletAddress string, t *testing.T) (flowidString string) {
 
 func getSignature(flowId string, walletAddress string) string {
 	hexPrivateKey := walletAddress
-	message := flowId + "m"
+	message := flowId
 	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)
 
 	privateKey, err := crypto.HexToECDSA(hexPrivateKey)
