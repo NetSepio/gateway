@@ -1,5 +1,8 @@
-# marketplace-engine
+# Marketplace Engine
 REST APIs for Web3 Auth and Smart Contract Functionalities
+
+[![.github/workflows/test.yml](https://github.com/TheLazarusNetwork/marketplace-engine/actions/workflows/test.yml/badge.svg)](https://github.com/TheLazarusNetwork/marketplace-engine/actions/workflows/test.yml)
+
 
 # Getting Started
 
