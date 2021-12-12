@@ -5,6 +5,7 @@ import (
 	"netsepio-api/models/claims"
 	"netsepio-api/util/pkg/auth"
 	"netsepio-api/util/pkg/cryptosign"
+	"netsepio-api/util/pkg/httphelper"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -29,12 +30,12 @@ func authenticate(c *gin.Context) {
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
 	if err == cryptosign.ErrFlowIdNotFound {
-		c.String(http.StatusNotFound, err.Error())
+		httphelper.ErrResponse(c, http.StatusNotFound, "Flow Id not found")
 		return
 	}
 
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
 	if isCorrect {
@@ -42,13 +43,15 @@ func authenticate(c *gin.Context) {
 		jwtPrivateKey := os.Getenv("JWT_PRIVATE_KEY")
 		jwtToken, err := auth.GenerateToken(customClaims, jwtPrivateKey)
 		if err != nil {
-			c.String(http.StatusInternalServerError, "Internal Server Error Occured")
+			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+			return
 		}
-		c.JSON(http.StatusOK, map[string]string{
-			"token": jwtToken,
-		})
+		payload := AuthenticatePayload{
+			Token: jwtToken,
+		}
+		httphelper.SuccessResponse(c, "Token generated successfully", payload)
 	} else {
-		c.String(http.StatusForbidden, "Wallet Address is not correct")
+		httphelper.ErrResponse(c, http.StatusForbidden, "Wallet Address is not correct")
 		return
 	}
 }

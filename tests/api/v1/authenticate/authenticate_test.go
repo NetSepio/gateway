@@ -10,6 +10,7 @@ import (
 	"netsepio-api/api/v1/authenticate"
 	"netsepio-api/api/v1/flowid"
 	"netsepio-api/app"
+	"netsepio-api/types"
 	testingcommmon "netsepio-api/util/testingcommon"
 	"testing"
 
@@ -91,13 +92,15 @@ func callFlowIdApi(walletAddress string, t *testing.T) (flowidString string) {
 	}
 	app.GinApp.ServeHTTP(rr, req)
 	assert.Equal(t, http.StatusOK, rr.Code, "Failed to call flowApi")
-	var flowIdResponse flowid.GetFlowIdResponse
+	var flowIdPayload flowid.GetFlowIdPayload
+	var res types.ApiResponse
 	decoder := json.NewDecoder(rr.Result().Body)
-	err = decoder.Decode(&flowIdResponse)
+	err = decoder.Decode(&res)
+	testingcommmon.ExtractPayload(&res, &flowIdPayload)
 	if err != nil {
 		t.Fatal(err)
 	}
-	return flowIdResponse.FlowId
+	return flowIdPayload.FlowId
 }
 
 func getSignature(flowId string, walletAddress string) string {

@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"netsepio-api/api/v1/profile"
 	"netsepio-api/app"
-	"netsepio-api/config"
-	"netsepio-api/db"
+	"netsepio-api/models"
+	"netsepio-api/types"
 	"netsepio-api/util/testingcommon"
 	"testing"
 
@@ -48,8 +48,7 @@ func Test_PatchProfile(t *testing.T) {
 }
 
 func Test_GetProfile(t *testing.T) {
-	config.Init()
-	db.InitDB()
+	app.Init()
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()
 	header := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
@@ -62,9 +61,11 @@ func Test_GetProfile(t *testing.T) {
 		t.Fatal(err)
 	}
 	app.GinApp.ServeHTTP(rr, req)
-	var user profile.GetProfileResponse
+	var response types.ApiResponse
 	body := rr.Body
-	json.NewDecoder(body).Decode(&user)
+	json.NewDecoder(body).Decode(&response)
+	var user models.User
+	testingcommon.ExtractPayload(&response, &user)
 	if err != nil {
 		t.Fatal(err)
 	}

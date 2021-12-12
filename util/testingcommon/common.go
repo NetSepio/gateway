@@ -1,10 +1,13 @@
 package testingcommon
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"netsepio-api/db"
 	"netsepio-api/models"
 	"netsepio-api/models/claims"
+	"netsepio-api/types"
 	"netsepio-api/util/pkg/auth"
 	"os"
 	"testing"
@@ -73,6 +76,14 @@ func GenerateWallet() *TestWallet {
 	}
 	fmt.Println("wallet address gen:", address)
 	return &testWallet
+}
+
+// Converts map created by json decoder to struct
+// out should be pointer (&payload)
+func ExtractPayload(response *types.ApiResponse, out interface{}) {
+	buf := new(bytes.Buffer)
+	json.NewEncoder(buf).Encode(response.Payload)
+	json.NewDecoder(buf).Decode(out)
 }
 
 func ClearTables() {

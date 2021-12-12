@@ -6,7 +6,7 @@ type PatchProfileRequest struct {
 	ProfilePictureUrl string `json:"profilePictureUrl,omitempty"`
 }
 
-type GetProfileResponse struct {
+type GetProfilePayload struct {
 	Name              string `json:"name,omitempty"`
 	WalletAddress     string `json:"walletAddress"`
 	ProfilePictureUrl string `json:"profilePictureUrl,omitempty"`

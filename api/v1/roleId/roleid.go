@@ -7,6 +7,7 @@ import (
 	jwtMiddleWare "netsepio-api/middleware/auth/jwt"
 	"netsepio-api/models"
 	"netsepio-api/util/pkg/flowid"
+	"netsepio-api/util/pkg/httphelper"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -28,33 +29,39 @@ func getRoleId(c *gin.Context) {
 	fmt.Println("roleid called , walletaddress is - ", walletAddress)
 	roleId, exist := c.Params.Get("roleId")
 	if !exist {
-		c.Status(http.StatusInternalServerError)
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+
 		return
 	}
 	roleIdInt, err := strconv.Atoi(roleId)
 	if err != nil {
 		logrus.Error(err)
-		c.Status(http.StatusInternalServerError)
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+
 		return
 	}
 	var role models.Role
 	err = db.Db.Model(&models.Role{}).Where("role_id = ?", roleIdInt).First(&role).Error
 	if err == gorm.ErrRecordNotFound {
-		c.String(http.StatusNotFound, err.Error())
+		httphelper.ErrResponse(c, http.StatusNotFound, err.Error())
+
 	} else if err != nil {
-		c.Status(http.StatusInternalServerError)
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+
 	} else {
 		flowId, err := flowid.GenerateFlowId(walletAddress, true, models.ROLE, roleIdInt)
 		if err != nil {
 			logrus.Error(err)
+			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 			c.Status(http.StatusInternalServerError)
 			return
 		}
 
-		response := GetRoleIdResponse{
+		payload := GetRoleIdPayload{
 			role.Eula, flowId,
 		}
-		c.JSON(200, response)
+		httphelper.SuccessResponse(c, "Flow id successfully generated", payload)
+
 	}
 
 }

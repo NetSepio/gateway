@@ -4,7 +4,9 @@ import (
 	"net/http"
 	"netsepio-api/db"
 	"netsepio-api/models"
+	"netsepio-api/types"
 	"netsepio-api/util/pkg/flowid"
+	"netsepio-api/util/pkg/httphelper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -25,14 +27,14 @@ func getFlowId(c *gin.Context) {
 	err := c.BindJSON(&request)
 	if err != nil {
 		log.Error(err)
-		c.Status(http.StatusInternalServerError)
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
 	dbRes := db.Db.Model(&models.User{}).Where("wallet_address = ?", request.WalletAddress).First(&user)
 	// If there is an error and that error is not of "record not found"
 	if dbRes.Error != nil && dbRes.Error != gorm.ErrRecordNotFound {
 		log.Error(err)
-		c.Status(http.StatusInternalServerError)
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
 	// If wallet address exist
@@ -40,24 +42,31 @@ func getFlowId(c *gin.Context) {
 		flowId, err := flowid.GenerateFlowId(request.WalletAddress, true, models.AUTH, 0)
 		if err != nil {
 			log.Error(err)
-			c.Status(http.StatusInternalServerError)
+			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+
 			return
 		}
-		c.JSON(http.StatusOK, GetFlowIdResponse{
-			Message: "flow id generated",
-			FlowId:  flowId,
-		})
+		payload := GetFlowIdPayload{
+			FlowId: flowId,
+		}
+		response := types.ApiResponse{
+			Status:  http.StatusOK,
+			Payload: payload,
+		}
+		c.JSON(http.StatusOK, response)
 	} else {
 		//If wallet address doesn't exist
 		flowId, err := flowid.GenerateFlowId(request.WalletAddress, false, models.AUTH, 0)
 		if err != nil {
 			log.Error(err)
-			c.Status(http.StatusInternalServerError)
+			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+
 			return
 		}
-		c.JSON(http.StatusOK, GetFlowIdResponse{
-			Message: "TODO eula",
-			FlowId:  flowId,
-		})
+		payload := GetFlowIdPayload{
+			FlowId: flowId,
+			Eula:   "TODO eula",
+		}
+		httphelper.SuccessResponse(c, "Role successfully claimed", payload)
 	}
 }

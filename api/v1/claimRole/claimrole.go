@@ -7,6 +7,7 @@ import (
 	"netsepio-api/middleware/auth/jwt"
 	"netsepio-api/models"
 	"netsepio-api/util/pkg/cryptosign"
+	"netsepio-api/util/pkg/httphelper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -29,11 +30,11 @@ func postClaimRole(c *gin.Context) {
 	//Message containing flowId
 	role, err := getRoleByFlowId(req.FlowId)
 	if err == gorm.ErrRecordNotFound {
-		c.String(http.StatusNotFound, "flow id not found")
+		httphelper.ErrResponse(c, http.StatusNotFound, "flow id not found")
 		return
 	}
 	if err != nil {
-		c.Status(http.StatusInternalServerError)
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
 	message := role.Eula
@@ -41,14 +42,15 @@ func postClaimRole(c *gin.Context) {
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
 	if err == cryptosign.ErrFlowIdNotFound {
-		c.String(http.StatusNotFound, err.Error())
+		httphelper.ErrResponse(c, http.StatusNotFound, err.Error())
 		return
 	} else if err != nil {
-		c.Status(http.StatusInternalServerError)
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		return
 	}
 
 	if !isCorrect {
-		c.Status(http.StatusForbidden)
+		httphelper.ErrResponse(c, http.StatusForbidden, "Wallet address is not correct")
 		return
 	}
 
@@ -59,11 +61,11 @@ func postClaimRole(c *gin.Context) {
 		Append(models.UserRole{WalletAddress: walletAddress, RoleId: role.RoleId}).
 		Error
 	if err != nil {
-		c.Status(http.StatusInternalServerError)
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		logrus.Println(err)
 		return
 	} else {
-		c.Status(http.StatusOK)
+		httphelper.SuccessResponse(c, "Role successfully claimed", nil)
 	}
 
 }

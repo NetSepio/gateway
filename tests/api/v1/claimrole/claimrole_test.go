@@ -10,6 +10,7 @@ import (
 	claimrole "netsepio-api/api/v1/claimRole"
 	roleid "netsepio-api/api/v1/roleId"
 	"netsepio-api/app"
+	"netsepio-api/types"
 	"netsepio-api/util/testingcommon"
 	"testing"
 
@@ -28,7 +29,7 @@ func Test_PostClaimRole(t *testing.T) {
 	url := "/api/v1.0/claimrole"
 	rr := httptest.NewRecorder()
 	requestRoleRes := requestRole(t, headers)
-	signature := getSignature(requestRoleRes.Message, testWallet.PrivateKey)
+	signature := getSignature(requestRoleRes.Eula, testWallet.PrivateKey)
 	reqBody := claimrole.ClaimRoleRequest{
 		Signature: signature, FlowId: requestRoleRes.FlowId,
 	}
@@ -42,7 +43,7 @@ func Test_PostClaimRole(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 }
 
-func requestRole(t *testing.T, headers string) roleid.GetRoleIdResponse {
+func requestRole(t *testing.T, headers string) roleid.GetRoleIdPayload {
 	url := "/api/v1.0/roleId/2"
 	rr := httptest.NewRecorder()
 	req, err := http.NewRequest("GET", url, nil)
@@ -51,9 +52,11 @@ func requestRole(t *testing.T, headers string) roleid.GetRoleIdResponse {
 	}
 	req.Header.Add("Authorization", headers)
 	app.GinApp.ServeHTTP(rr, req)
-	var res roleid.GetRoleIdResponse
+	var res types.ApiResponse
 	json.NewDecoder(rr.Result().Body).Decode(&res)
-	return res
+	var getRoleIdPayload roleid.GetRoleIdPayload
+	testingcommon.ExtractPayload(&res, &getRoleIdPayload)
+	return getRoleIdPayload
 }
 func getSignature(eula string, hexPrivateKey string) string {
 	message := eula
