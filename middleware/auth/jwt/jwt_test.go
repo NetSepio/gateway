@@ -39,10 +39,8 @@ func Test_JWT(t *testing.T) {
 			t.Fatal(err)
 		}
 		statusCode := callApi(t, token)
-		fmt.Println(statusCode)
-		var oldT *models.User
-		db.Db.Model(&models.User{}).Find(&newUser).First(&oldT)
-		fmt.Println(":ildt", oldT)
+		var user *models.User
+		db.Db.Model(&models.User{}).Find(&newUser).First(&user)
 		assert.Equal(t, http.StatusOK, statusCode)
 	})
 

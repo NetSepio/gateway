@@ -1,7 +1,6 @@
 package claimrole
 
 import (
-	"fmt"
 	"net/http"
 	"netsepio-api/db"
 	"netsepio-api/middleware/auth/jwt"
@@ -38,7 +37,6 @@ func postClaimRole(c *gin.Context) {
 		return
 	}
 	message := role.Eula
-	fmt.Println("signed with", message)
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
 	if err == cryptosign.ErrFlowIdNotFound {

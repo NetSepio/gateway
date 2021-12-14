@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 	"runtime"
 
-	loggingconfig "netsepio-api/config/logging"
+	. "netsepio-api/util/pkg/logwrapper"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	log "github.com/sirupsen/logrus"
 )
 
 func Init() {
@@ -22,7 +22,12 @@ func Init() {
 
 		err := godotenv.Load(filepath.Join(basepath, ".env"))
 		if err != nil {
-			log.WithFields(loggingconfig.StandardFields).Fatalf("Error in reading the config file: %v", err)
+			Log.Fatalf("Error in reading the config file: %v", err)
 		}
+
+		//Set gin gonic mode now since gin gonic reads env on init which runs before this function
+		mode := os.Getenv(gin.EnvGinMode)
+		gin.SetMode(mode)
+
 	}
 }

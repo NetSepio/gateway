@@ -74,7 +74,6 @@ func GenerateWallet() *TestWallet {
 		PrivateKey:    privateKeyHex[2:],
 		WalletAddress: address,
 	}
-	fmt.Println("wallet address gen:", address)
 	return &testWallet
 }
 

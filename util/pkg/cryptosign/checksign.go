@@ -42,11 +42,9 @@ func CheckSign(signature string, flowId string, message string) (string, bool, e
 	if err := res.Error; err != nil {
 		return "", false, err
 	}
-	fmt.Println("signature", signature)
 	if flowIdData.WalletAddress == walletAddress.String() {
 		return flowIdData.WalletAddress, true, nil
 	} else {
-		fmt.Println("Expected wallet address - ", flowIdData.WalletAddress, "Wallet address used to sign message", walletAddress.String())
 		return "", false, nil
 	}
 }

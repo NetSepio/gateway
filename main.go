@@ -1,14 +1,15 @@
 package main
 
 import (
-	"log"
 	"netsepio-api/app"
+	. "netsepio-api/util/pkg/logwrapper"
 )
 
 func main() {
 	app.Init()
+	Log.Info("Starting app")
 	err := app.GinApp.Run(":8000")
 	if err != nil {
-		log.Fatal(err)
+		Log.Fatal(err)
 	}
 }

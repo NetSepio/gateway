@@ -1,7 +1,6 @@
 package roleid
 
 import (
-	"fmt"
 	"net/http"
 	"netsepio-api/db"
 	jwtMiddleWare "netsepio-api/middleware/auth/jwt"
@@ -26,7 +25,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 func getRoleId(c *gin.Context) {
 	walletAddress := c.GetString("walletAddress")
-	fmt.Println("roleid called , walletaddress is - ", walletAddress)
 	roleId, exist := c.Params.Get("roleId")
 	if !exist {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
