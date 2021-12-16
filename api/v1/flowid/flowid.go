@@ -23,23 +23,21 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 func getFlowId(c *gin.Context) {
 	var user models.User
-	var request GetFlowIdRequest
-	err := c.BindJSON(&request)
-	if err != nil {
-		log.Error(err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+	walletAddress := c.Query("walletAddress")
+	if walletAddress == "" {
+		httphelper.ErrResponse(c, http.StatusBadRequest, "Wallet address (walletAddress) is required")
 		return
 	}
-	dbRes := db.Db.Model(&models.User{}).Where("wallet_address = ?", request.WalletAddress).First(&user)
+	dbRes := db.Db.Model(&models.User{}).Where("wallet_address = ?", walletAddress).First(&user)
 	// If there is an error and that error is not of "record not found"
 	if dbRes.Error != nil && dbRes.Error != gorm.ErrRecordNotFound {
-		log.Error(err)
+		log.Error(dbRes.Error)
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
 	// If wallet address exist
 	if dbRes.Error != gorm.ErrRecordNotFound {
-		flowId, err := flowid.GenerateFlowId(request.WalletAddress, true, models.AUTH, 0)
+		flowId, err := flowid.GenerateFlowId(walletAddress, true, models.AUTH, 0)
 		if err != nil {
 			log.Error(err)
 			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
@@ -56,7 +54,7 @@ func getFlowId(c *gin.Context) {
 		c.JSON(http.StatusOK, response)
 	} else {
 		//If wallet address doesn't exist
-		flowId, err := flowid.GenerateFlowId(request.WalletAddress, false, models.AUTH, 0)
+		flowId, err := flowid.GenerateFlowId(walletAddress, false, models.AUTH, 0)
 		if err != nil {
 			log.Error(err)
 			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")

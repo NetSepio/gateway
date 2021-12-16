@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"netsepio-api/api/v1/authenticate"
 	"netsepio-api/api/v1/flowid"
 	"netsepio-api/app"
@@ -77,16 +78,16 @@ func Test_PostAuthenticate(t *testing.T) {
 
 func callFlowIdApi(walletAddress string, t *testing.T) (flowidString string) {
 	// Call flowid api
-	url := "/api/v1.0/flowid"
-	rr := httptest.NewRecorder()
-	body := flowid.GetFlowIdRequest{
-		WalletAddress: walletAddress,
-	}
-	jsonBody, err := json.Marshal(body)
+	u, err := url.Parse("/api/v1.0/flowid")
+	q := url.Values{}
+	q.Set("walletAddress", walletAddress)
+	u.RawQuery = q.Encode()
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
-	req, err := http.NewRequest("GET", url, bytes.NewBuffer(jsonBody))
+	rr := httptest.NewRecorder()
+	req, err := http.NewRequest("GET", u.String(), nil)
+	req.URL.RawQuery = q.Encode()
 	if err != nil {
 		t.Error(err)
 	}

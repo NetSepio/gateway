@@ -1,11 +1,9 @@
 package flowid
 
 import (
-	"bytes"
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"netsepio-api/api/v1/flowid"
+	"net/url"
 	"netsepio-api/app"
 	"netsepio-api/util/testingcommon"
 	"testing"
@@ -22,16 +20,13 @@ func Test_GetFlowId(t *testing.T) {
 	app.Init()
 
 	testWalletAddress := testingcommon.GenerateWallet().WalletAddress
-	url := "/api/v1.0/flowid"
+	u, err := url.Parse("/api/v1.0/flowid")
+	q := url.Values{}
+	q.Set("walletAddress", testWalletAddress)
+	u.RawQuery = q.Encode()
 	rr := httptest.NewRecorder()
-	body := flowid.GetFlowIdRequest{
-		WalletAddress: testWalletAddress,
-	}
-	jsonBody, err := json.Marshal(body)
-	if err != nil {
-		t.Error(err)
-	}
-	req, err := http.NewRequest("GET", url, bytes.NewBuffer(jsonBody))
+
+	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		t.Error(err)
 	}
