@@ -21,6 +21,9 @@ func Test_GetFlowId(t *testing.T) {
 
 	testWalletAddress := testingcommon.GenerateWallet().WalletAddress
 	u, err := url.Parse("/api/v1.0/flowid")
+	if err != nil {
+		t.Fatal(err)
+	}
 	q := url.Values{}
 	q.Set("walletAddress", testWalletAddress)
 	u.RawQuery = q.Encode()
