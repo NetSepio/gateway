@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	ErrAuthHeaderMissing = errors.New("Authorization header is required")
+	ErrAuthHeaderMissing = errors.New("authorization header is required")
 )
 
 func JWT(c *gin.Context) {
@@ -29,9 +29,9 @@ func JWT(c *gin.Context) {
 		return
 	}
 	jwtToken := headers.Authorization[7:]
-	token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
+	token, _ := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
 		jwtPrivateKet := []byte(os.Getenv("JWT_PRIVATE_KEY"))

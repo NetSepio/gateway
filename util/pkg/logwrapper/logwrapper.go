@@ -13,11 +13,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Event struct {
-	id      int
-	message string
-}
-
 var Log *logrus.Entry
 
 func init() {

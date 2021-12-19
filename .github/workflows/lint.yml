@@ -1,0 +1,14 @@
+name: "Lint"
+on: ["push", "pull_request"]
+
+jobs:
+  ci:
+    name: "Run go vet and staticcheck"
+    runs-on: ubuntu-latest
+    container: golang:buster
+    steps:
+      - uses: actions/checkout@v1
+      - run: "go vet ./..."
+      - uses: dominikh/staticcheck-action@v1.1.0
+        with:
+          install-go: false

@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	ErrFlowIdNotFound = errors.New("Flow id not found")
+	ErrFlowIdNotFound = errors.New("flow id not found")
 )
 
 func CheckSign(signature string, flowId string, message string) (string, bool, error) {

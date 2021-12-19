@@ -32,7 +32,7 @@ func Test_PostAuthenticate(t *testing.T) {
 
 	router := app.GinApp
 
-	url := fmt.Sprintf("/api/v1.0/authenticate")
+	url := "/api/v1.0/authenticate"
 
 	t.Run("Should return 200 with correct wallet address", func(t *testing.T) {
 		signature := getSignature(flowId, testWallet.PrivateKey)
