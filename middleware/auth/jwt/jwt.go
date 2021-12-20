@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"netsepio-api/util/pkg/httphelper"
+	"netsepio-api/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v4"
@@ -49,7 +50,7 @@ func JWT(c *gin.Context) {
 			if err.Error() == gorm.ErrRecordNotFound.Error() {
 				c.AbortWithStatus(http.StatusForbidden)
 			} else {
-				log.Println(err)
+				logwrapper.Log.Error(err)
 				c.AbortWithStatus(http.StatusInternalServerError)
 			}
 		} else {
