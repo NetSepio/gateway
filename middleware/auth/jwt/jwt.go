@@ -8,6 +8,8 @@ import (
 	"netsepio-api/models"
 	"os"
 
+	"netsepio-api/util/pkg/httphelper"
+
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/jinzhu/gorm"
@@ -25,7 +27,8 @@ func JWT(c *gin.Context) {
 		return
 	}
 	if headers.Authorization == "" {
-		c.AbortWithError(http.StatusBadRequest, ErrAuthHeaderMissing)
+		httphelper.ErrResponse(c, http.StatusBadRequest, ErrAuthHeaderMissing.Error())
+		c.Abort()
 		return
 	}
 	jwtToken := headers.Authorization[7:]
