@@ -46,9 +46,10 @@ func JWT(c *gin.Context) {
 
 		err := db.Db.Model(&models.User{}).Where("wallet_address = ?", walletAddress.(string)).First(&models.User{}).Error
 		if err != nil {
-			if err == gorm.ErrRecordNotFound {
+			if err.Error() == gorm.ErrRecordNotFound.Error() {
 				c.AbortWithStatus(http.StatusForbidden)
 			} else {
+				log.Println(err)
 				c.AbortWithStatus(http.StatusInternalServerError)
 			}
 		} else {
