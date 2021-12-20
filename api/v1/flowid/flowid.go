@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"netsepio-api/db"
 	"netsepio-api/models"
-	"netsepio-api/types"
 	"netsepio-api/util/pkg/flowid"
 	"netsepio-api/util/pkg/httphelper"
 
@@ -47,11 +46,7 @@ func getFlowId(c *gin.Context) {
 		payload := GetFlowIdPayload{
 			FlowId: flowId,
 		}
-		response := types.ApiResponse{
-			Status:  http.StatusOK,
-			Payload: payload,
-		}
-		c.JSON(http.StatusOK, response)
+		httphelper.SuccessResponse(c, "Flowid successfully generated", payload)
 	} else {
 		//If wallet address doesn't exist
 		flowId, err := flowid.GenerateFlowId(walletAddress, false, models.AUTH, 0)
@@ -65,6 +60,6 @@ func getFlowId(c *gin.Context) {
 			FlowId: flowId,
 			Eula:   "TODO eula",
 		}
-		httphelper.SuccessResponse(c, "Role successfully claimed", payload)
+		httphelper.SuccessResponse(c, "Flowid successfully generated", payload)
 	}
 }
