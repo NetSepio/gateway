@@ -67,5 +67,5 @@ func getProfile(c *gin.Context) {
 	payload := GetProfilePayload{
 		user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country, userRolesIds,
 	}
-	httphelper.SuccessResponse(c, "Token generated successfully", payload)
+	httphelper.SuccessResponse(c, "Profile fetched successfully", payload)
 }
