@@ -29,7 +29,7 @@ func Test_PostClaimRole(t *testing.T) {
 	url := "/api/v1.0/claimrole"
 	rr := httptest.NewRecorder()
 	requestRoleRes := requestRole(t, headers)
-	signature := getSignature(requestRoleRes.Eula, testWallet.PrivateKey)
+	signature := getSignature(requestRoleRes.Eula, requestRoleRes.FlowId, testWallet.PrivateKey)
 	reqBody := claimrole.ClaimRoleRequest{
 		Signature: signature, FlowId: requestRoleRes.FlowId,
 	}
@@ -40,7 +40,7 @@ func Test_PostClaimRole(t *testing.T) {
 	}
 	req.Header.Add("Authorization", headers)
 	app.GinApp.ServeHTTP(rr, req)
-	assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
+	assert.Equal(t, http.StatusOK, rr.Result().StatusCode, rr.Body.String())
 }
 
 func requestRole(t *testing.T, headers string) roleid.GetRoleIdPayload {
@@ -58,9 +58,8 @@ func requestRole(t *testing.T, headers string) roleid.GetRoleIdPayload {
 	testingcommon.ExtractPayload(&res, &getRoleIdPayload)
 	return getRoleIdPayload
 }
-func getSignature(eula string, hexPrivateKey string) string {
-	message := eula
-	fmt.Println(message)
+func getSignature(eula string, flowId string, hexPrivateKey string) string {
+	message := eula + flowId
 
 	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)
 

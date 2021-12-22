@@ -36,7 +36,7 @@ func postClaimRole(c *gin.Context) {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
-	message := role.Eula
+	message := role.Eula + req.FlowId
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
 	if err == cryptosign.ErrFlowIdNotFound {

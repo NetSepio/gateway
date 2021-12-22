@@ -2,10 +2,13 @@ package authenticate
 
 import (
 	"net/http"
+	"netsepio-api/db"
+	"netsepio-api/models"
 	"netsepio-api/models/claims"
 	"netsepio-api/util/pkg/auth"
 	"netsepio-api/util/pkg/cryptosign"
 	"netsepio-api/util/pkg/httphelper"
+	"netsepio-api/util/pkg/logwrapper"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -25,8 +28,16 @@ func authenticate(c *gin.Context) {
 	var req AuthenticateRequest
 	c.BindJSON(&req)
 
-	// Append userId to the message
-	message := req.FlowId
+	var role models.Role
+	var defaultRoleId = 1
+	err := db.Db.Model(&models.Role{}).First(&role, defaultRoleId).Error
+	if err != nil {
+		logwrapper.Log.Error(err)
+		httphelper.ErrResponse(c, 500, "Unexpected error occured")
+		return
+	}
+
+	message := role.Eula + req.FlowId
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
 	if err == cryptosign.ErrFlowIdNotFound {

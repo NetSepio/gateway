@@ -27,7 +27,7 @@ func Test_PostAuthenticate(t *testing.T) {
 	app.Init()
 
 	testWallet := testingcommmon.GenerateWallet()
-	flowId := callFlowIdApi(testWallet.WalletAddress, t)
+	eula, flowId := callFlowIdApi(testWallet.WalletAddress, t)
 	t.Cleanup(testingcommmon.ClearTables)
 
 	router := app.GinApp
@@ -35,7 +35,7 @@ func Test_PostAuthenticate(t *testing.T) {
 	url := "/api/v1.0/authenticate"
 
 	t.Run("Should return 200 with correct wallet address", func(t *testing.T) {
-		signature := getSignature(flowId, testWallet.PrivateKey)
+		signature := getSignature(eula, flowId, testWallet.PrivateKey)
 		body := authenticate.AuthenticateRequest{Signature: signature, FlowId: flowId}
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
@@ -54,7 +54,7 @@ func Test_PostAuthenticate(t *testing.T) {
 	t.Run("Should return 403 with different wallet address", func(t *testing.T) {
 		// Different private key will result in different wallet address
 		differentPrivatekey := "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-		signature := getSignature(flowId, differentPrivatekey)
+		signature := getSignature(eula, flowId, differentPrivatekey)
 		body := authenticate.AuthenticateRequest{Signature: signature, FlowId: flowId}
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
@@ -76,7 +76,7 @@ func Test_PostAuthenticate(t *testing.T) {
 
 }
 
-func callFlowIdApi(walletAddress string, t *testing.T) (flowidString string) {
+func callFlowIdApi(walletAddress string, t *testing.T) (eula string, flowidString string) {
 	// Call flowid api
 	u, err := url.Parse("/api/v1.0/flowid")
 	q := url.Values{}
@@ -101,12 +101,12 @@ func callFlowIdApi(walletAddress string, t *testing.T) (flowidString string) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	return flowIdPayload.FlowId
+	return flowIdPayload.Eula, flowIdPayload.FlowId
 }
 
-func getSignature(flowId string, walletAddress string) string {
+func getSignature(eula string, flowId string, walletAddress string) string {
 	hexPrivateKey := walletAddress
-	message := flowId
+	message := eula + flowId
 	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)
 
 	privateKey, err := crypto.HexToECDSA(hexPrivateKey)

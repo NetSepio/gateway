@@ -6,6 +6,7 @@ import (
 	"netsepio-api/models"
 	"netsepio-api/util/pkg/flowid"
 	"netsepio-api/util/pkg/httphelper"
+	"netsepio-api/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -56,9 +57,17 @@ func getFlowId(c *gin.Context) {
 
 			return
 		}
+		var role models.Role
+		var defaultRoleId = 1
+		err = db.Db.Model(&models.Role{}).First(&role, defaultRoleId).Error
+		if err != nil {
+			logwrapper.Log.Error(err)
+			httphelper.ErrResponse(c, 500, "Unexpected error occured")
+			return
+		}
 		payload := GetFlowIdPayload{
 			FlowId: flowId,
-			Eula:   "TODO eula",
+			Eula:   role.Eula,
 		}
 		httphelper.SuccessResponse(c, "Flowid successfully generated", payload)
 	}
