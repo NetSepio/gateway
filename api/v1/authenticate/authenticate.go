@@ -28,9 +28,23 @@ func authenticate(c *gin.Context) {
 	var req AuthenticateRequest
 	c.BindJSON(&req)
 
+	//Get flowid type
+	var flowIdData models.FlowId
+	err := db.Db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
+	if err != nil {
+		logwrapper.Log.Error(err)
+		httphelper.ErrResponse(c, 500, "Unexpected error occured")
+		return
+	}
+
+	if flowIdData.FlowIdType != models.AUTH {
+		httphelper.ErrResponse(c, http.StatusBadRequest, "Flow id not created for auth")
+		return
+	}
+
 	var role models.Role
 	var defaultRoleId = 1
-	err := db.Db.Model(&models.Role{}).First(&role, defaultRoleId).Error
+	err = db.Db.Model(&models.Role{}).First(&role, defaultRoleId).Error
 	if err != nil {
 		logwrapper.Log.Error(err)
 		httphelper.ErrResponse(c, 500, "Unexpected error occured")
