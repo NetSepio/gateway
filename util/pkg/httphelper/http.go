@@ -3,7 +3,7 @@ package httphelper
 import (
 	"net/http"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/types"
+	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,4 +1,4 @@
-package wallet
+package auth
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"math/big"
 	"os"
 
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/ethwallet"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -17,19 +18,14 @@ import (
 var Auth *bind.TransactOpts
 
 func InitAuth(client *ethclient.Client) *bind.TransactOpts {
-	// nodeUrl := os.Getenv("NODE_URL")
-	// client, err := ethclient.Dial(nodeUrl)
-	// if err != nil {
-	// 	logwrapper.Fatalf("failed to dial client at url %v, error: %v", nodeUrl, err.Error())
-	// }
+
 	if Auth != nil {
 		//Auth is already initialized, return that object
 		return Auth
 	}
 
 	mnemonic := os.Getenv("MNEMONIC")
-
-	privateKey, publicKey, _, err := hdWallet(mnemonic) // Verify: https://iancoleman.io/bip39/
+	privateKey, publicKey, _, err := ethwallet.HdWallet(mnemonic) // Verify: https://iancoleman.io/bip39/
 	if err != nil {
 		fmt.Printf("Error: %+v", err)
 	}

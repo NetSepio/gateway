@@ -9,10 +9,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
 	claimrole "github.com/TheLazarusNetwork/marketplace-engine/api/v1/claimRole"
 	roleid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/roleId"
 	"github.com/TheLazarusNetwork/marketplace-engine/app"
-	"github.com/TheLazarusNetwork/marketplace-engine/types"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"

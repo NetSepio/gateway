@@ -3,8 +3,8 @@ package profile
 import (
 	"net/http"
 
+	jwtMiddleWare "github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
 	"github.com/TheLazarusNetwork/marketplace-engine/db"
-	jwtMiddleWare "github.com/TheLazarusNetwork/marketplace-engine/middleware/auth/jwt"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
 

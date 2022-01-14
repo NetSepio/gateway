@@ -10,10 +10,10 @@ import (
 	"net/url"
 	"testing"
 
+	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
 	"github.com/TheLazarusNetwork/marketplace-engine/api/v1/authenticate"
 	"github.com/TheLazarusNetwork/marketplace-engine/api/v1/flowid"
 	"github.com/TheLazarusNetwork/marketplace-engine/app"
-	"github.com/TheLazarusNetwork/marketplace-engine/types"
 	testingcommmon "github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"

@@ -7,10 +7,10 @@ import (
 	"os"
 	"testing"
 
+	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
 	"github.com/TheLazarusNetwork/marketplace-engine/db"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/models/claims"
-	"github.com/TheLazarusNetwork/marketplace-engine/types"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/auth"
 
 	"crypto/ecdsa"

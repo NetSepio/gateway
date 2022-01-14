@@ -1,4 +1,4 @@
-package wallet
+package ethwallet
 
 import (
 	"crypto/ecdsa"
@@ -8,7 +8,7 @@ import (
 	"github.com/tyler-smith/go-bip39"
 )
 
-func hdWallet(mnemonic string) (*ecdsa.PrivateKey, *ecdsa.PublicKey, *string, error) {
+func HdWallet(mnemonic string) (*ecdsa.PrivateKey, *ecdsa.PublicKey, *string, error) {
 	// Generate a Bip32 HD wallet for the mnemonic and a user supplied password
 	seed := bip39.NewSeed(mnemonic, "")
 	// Generate a new master node using the seed.

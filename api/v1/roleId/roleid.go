@@ -4,8 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
+	jwtMiddleWare "github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
 	"github.com/TheLazarusNetwork/marketplace-engine/db"
-	jwtMiddleWare "github.com/TheLazarusNetwork/marketplace-engine/middleware/auth/jwt"
+	"github.com/TheLazarusNetwork/marketplace-engine/generated/smartcontract/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/flowid"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
@@ -25,6 +27,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func getRoleId(c *gin.Context) {
+	instance := creatify.GetInstance(smartcontract.GetClient())
+	instance.CREATORROLE(nil)
 	walletAddress := c.GetString("walletAddress")
 	roleId, exist := c.Params.Get("roleId")
 	if !exist {
