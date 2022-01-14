@@ -2,7 +2,8 @@ package httphelper
 
 import (
 	"net/http"
-	"netsepio-api/types"
+
+	"github.com/TheLazarusNetwork/marketplace-engine/types"
 
 	"github.com/gin-gonic/gin"
 )

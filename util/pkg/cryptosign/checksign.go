@@ -3,8 +3,9 @@ package cryptosign
 import (
 	"errors"
 	"fmt"
-	"netsepio-api/db"
-	"netsepio-api/models"
+
+	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/models"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"

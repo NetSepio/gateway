@@ -7,12 +7,13 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
-	claimrole "netsepio-api/api/v1/claimRole"
-	roleid "netsepio-api/api/v1/roleId"
-	"netsepio-api/app"
-	"netsepio-api/types"
-	"netsepio-api/util/testingcommon"
 	"testing"
+
+	claimrole "github.com/TheLazarusNetwork/marketplace-engine/api/v1/claimRole"
+	roleid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/roleId"
+	"github.com/TheLazarusNetwork/marketplace-engine/app"
+	"github.com/TheLazarusNetwork/marketplace-engine/types"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"

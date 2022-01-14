@@ -1,10 +1,11 @@
 package claims
 
 import (
-	"netsepio-api/util/pkg/logwrapper"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
 	jwt "github.com/golang-jwt/jwt/v4"
 )

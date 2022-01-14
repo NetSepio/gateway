@@ -1,11 +1,11 @@
 package app
 
 import (
-	"netsepio-api/api"
-	"netsepio-api/db"
-	"netsepio-api/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/marketplace-engine/api"
+	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
-	"netsepio-api/config"
+	"github.com/TheLazarusNetwork/marketplace-engine/config"
 
 	"github.com/gin-gonic/gin"
 )

@@ -4,12 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"netsepio-api/db"
-	"netsepio-api/models"
 	"os"
 
-	"netsepio-api/util/pkg/httphelper"
-	"netsepio-api/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/models"
+
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v4"

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"netsepio-api/app"
-	"netsepio-api/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/marketplace-engine/app"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 )
 
 func main() {

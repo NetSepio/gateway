@@ -6,7 +6,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"netsepio-api/models"
+	"github.com/TheLazarusNetwork/marketplace-engine/models"
 
 	"github.com/jinzhu/gorm"
 

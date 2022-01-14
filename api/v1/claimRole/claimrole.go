@@ -2,11 +2,12 @@ package claimrole
 
 import (
 	"net/http"
-	"netsepio-api/db"
-	"netsepio-api/middleware/auth/jwt"
-	"netsepio-api/models"
-	"netsepio-api/util/pkg/cryptosign"
-	"netsepio-api/util/pkg/httphelper"
+
+	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/middleware/auth/jwt"
+	"github.com/TheLazarusNetwork/marketplace-engine/models"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/cryptosign"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"

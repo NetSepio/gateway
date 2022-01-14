@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"netsepio-api/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

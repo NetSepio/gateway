@@ -4,9 +4,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"netsepio-api/app"
-	"netsepio-api/util/testingcommon"
 	"testing"
+
+	"github.com/TheLazarusNetwork/marketplace-engine/app"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

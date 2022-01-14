@@ -2,14 +2,15 @@ package authenticate
 
 import (
 	"net/http"
-	"netsepio-api/db"
-	"netsepio-api/models"
-	"netsepio-api/models/claims"
-	"netsepio-api/util/pkg/auth"
-	"netsepio-api/util/pkg/cryptosign"
-	"netsepio-api/util/pkg/httphelper"
-	"netsepio-api/util/pkg/logwrapper"
 	"os"
+
+	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/models"
+	"github.com/TheLazarusNetwork/marketplace-engine/models/claims"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/auth"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/cryptosign"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 )

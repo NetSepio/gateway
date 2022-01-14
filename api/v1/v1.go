@@ -1,11 +1,11 @@
 package apiv1
 
 import (
-	authenticate "netsepio-api/api/v1/authenticate"
-	claimrole "netsepio-api/api/v1/claimRole"
-	flowid "netsepio-api/api/v1/flowid"
-	"netsepio-api/api/v1/profile"
-	roleid "netsepio-api/api/v1/roleId"
+	authenticate "github.com/TheLazarusNetwork/marketplace-engine/api/v1/authenticate"
+	claimrole "github.com/TheLazarusNetwork/marketplace-engine/api/v1/claimRole"
+	flowid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/flowid"
+	"github.com/TheLazarusNetwork/marketplace-engine/api/v1/profile"
+	roleid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/roleId"
 
 	"github.com/gin-gonic/gin"
 )

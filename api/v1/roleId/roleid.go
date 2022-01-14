@@ -2,12 +2,13 @@ package roleid
 
 import (
 	"net/http"
-	"netsepio-api/db"
-	jwtMiddleWare "netsepio-api/middleware/auth/jwt"
-	"netsepio-api/models"
-	"netsepio-api/util/pkg/flowid"
-	"netsepio-api/util/pkg/httphelper"
 	"strconv"
+
+	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	jwtMiddleWare "github.com/TheLazarusNetwork/marketplace-engine/middleware/auth/jwt"
+	"github.com/TheLazarusNetwork/marketplace-engine/models"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/flowid"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"

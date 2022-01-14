@@ -8,12 +8,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"netsepio-api/api/v1/authenticate"
-	"netsepio-api/api/v1/flowid"
-	"netsepio-api/app"
-	"netsepio-api/types"
-	testingcommmon "netsepio-api/util/testingcommon"
 	"testing"
+
+	"github.com/TheLazarusNetwork/marketplace-engine/api/v1/authenticate"
+	"github.com/TheLazarusNetwork/marketplace-engine/api/v1/flowid"
+	"github.com/TheLazarusNetwork/marketplace-engine/app"
+	"github.com/TheLazarusNetwork/marketplace-engine/types"
+	testingcommmon "github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
