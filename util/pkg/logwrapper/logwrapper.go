@@ -15,7 +15,7 @@ import (
 
 var Log *logrus.Entry
 
-func init() {
+func Init() {
 	appName, ok := os.LookupEnv("APP_NAME")
 
 	if !ok {
