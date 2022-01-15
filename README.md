@@ -13,7 +13,7 @@ docker run --name="marketplace" --rm -d -p 5432:5432 \
 -e POSTGRES_PASSWORD=revotic \
 -e POSTGRES_USER=revotic \
 -e POSTGRES_DB=marketplace \
-postgres
+postgres -c log_statement=all
 `
 
 ## Steps to get started
