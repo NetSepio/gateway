@@ -15,6 +15,9 @@ func GetInstance(client *ethclient.Client) *Creatify {
 		return instance
 	}
 	envContractAddress := os.Getenv("CREATIFY_CONTRACT_ADDRESS")
+	if envContractAddress == "" {
+		logwrapper.Fatalf("environment variable %v is required", "CREATIFY_CONTRACT_ADDRESS")
+	}
 	addr := common.HexToAddress(envContractAddress)
 	var err error
 	instance, err = NewCreatify(addr, client)
