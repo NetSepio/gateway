@@ -14,7 +14,7 @@ func GetInstance(client *ethclient.Client) *Creatify {
 	if instance != nil {
 		return instance
 	}
-	envContractAddress := os.Getenv("CREATIFY_CONTRACT_ADDRESs")
+	envContractAddress := os.Getenv("CREATIFY_CONTRACT_ADDRESS")
 	addr := common.HexToAddress(envContractAddress)
 	var err error
 	instance, err = NewCreatify(addr, client)

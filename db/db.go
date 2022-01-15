@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
 	"github.com/jinzhu/gorm"
 
@@ -42,13 +45,33 @@ func InitDB() {
 	//Create user_roles table
 	Db.Exec(`create table if not exists user_roles (
 			wallet_address text,
-			role_id int,
+			role_id text,
 			unique (wallet_address,role_id)
 			)`)
 
+	//Create flow id
+	Db.Exec(`
+	DO $$ BEGIN
+		CREATE TYPE flow_id_type AS ENUM (
+			'AUTH',
+			'ROLE');
+	EXCEPTION
+    	WHEN duplicate_object THEN null;
+	END $$;`)
+
+	creatorRoleId, err := creatify.GetRole(creatify.CREATOR_ROLE)
+	if err != nil {
+		logwrapper.Fatal(err)
+	}
+	operatorRoleId, err := creatify.GetRole(creatify.OPERATOR_ROLE)
+	if err != nil {
+		logwrapper.Fatal(err)
+	}
+
+	// TODO: create role only if they does not exist
 	rolesToBeAdded := []models.Role{
-		{Name: "Investor", RoleId: 1, Eula: "TODO Investor EULA"},
-		{Name: "Manager", RoleId: 2, Eula: "TODO Manager EULA"}}
+		{Name: "Creator Role", RoleId: hexutil.Encode(creatorRoleId[:]), Eula: "TODO Creator EULA"},
+		{Name: "Operator Role", RoleId: hexutil.Encode(operatorRoleId[:]), Eula: "TODO Operator EULA"}}
 	for _, role := range rolesToBeAdded {
 		if err := Db.Model(&models.Role{}).FirstOrCreate(&role).Error; err != nil {
 			log.Fatal(err)

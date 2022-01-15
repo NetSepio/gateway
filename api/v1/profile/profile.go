@@ -55,9 +55,9 @@ func getProfile(c *gin.Context) {
 		return
 	}
 	err = db.Db.Model(&user).Association("Roles").Find(&userRoles).Error
-	userRolesIds := make([]int, 0, 1)
+	userRolesIds := make([]string, 0, 1)
 	for _, userRole := range userRoles {
-		userRolesIds = append(userRolesIds, userRole.RoleId)
+		userRolesIds = append(userRolesIds, string(userRole.RoleId[:]))
 	}
 	if err != nil {
 		logrus.Error(err)

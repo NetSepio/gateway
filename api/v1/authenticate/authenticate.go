@@ -43,16 +43,13 @@ func authenticate(c *gin.Context) {
 		return
 	}
 
-	var role models.Role
-	var defaultRoleId = 1
-	err = db.Db.Model(&models.Role{}).First(&role, defaultRoleId).Error
 	if err != nil {
 		logwrapper.Log.Error(err)
 		httphelper.ErrResponse(c, 500, "Unexpected error occured")
 		return
 	}
-
-	message := role.Eula + req.FlowId
+	userAuthEULA := "TODO AUTH EULA"
+	message := userAuthEULA + req.FlowId
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
 	if err == cryptosign.ErrFlowIdNotFound {

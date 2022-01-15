@@ -38,7 +38,7 @@ func getFlowId(c *gin.Context) {
 	}
 	// If wallet address exist
 	if dbRes.Error != gorm.ErrRecordNotFound {
-		flowId, err := flowid.GenerateFlowId(walletAddress, true, models.AUTH, 0)
+		flowId, err := flowid.GenerateFlowId(walletAddress, true, models.AUTH, "")
 		if err != nil {
 			log.Error(err)
 			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
@@ -51,24 +51,22 @@ func getFlowId(c *gin.Context) {
 		httphelper.SuccessResponse(c, "Flowid successfully generated", payload)
 	} else {
 		//If wallet address doesn't exist
-		flowId, err := flowid.GenerateFlowId(walletAddress, false, models.AUTH, 0)
+		flowId, err := flowid.GenerateFlowId(walletAddress, false, models.AUTH, "")
 		if err != nil {
 			log.Error(err)
 			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 
 			return
 		}
-		var role models.Role
-		var defaultRoleId = 1
-		err = db.Db.Model(&models.Role{}).First(&role, defaultRoleId).Error
 		if err != nil {
 			logwrapper.Log.Error(err)
 			httphelper.ErrResponse(c, 500, "Unexpected error occured")
 			return
 		}
+		userAuthEULA := "TODO AUTH EULA"
 		payload := GetFlowIdPayload{
 			FlowId: flowId,
-			Eula:   role.Eula,
+			Eula:   userAuthEULA,
 		}
 		httphelper.SuccessResponse(c, "Flowid successfully generated", payload)
 	}

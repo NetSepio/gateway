@@ -8,6 +8,7 @@ import (
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/cryptosign"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -37,6 +38,7 @@ func postClaimRole(c *gin.Context) {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
+	logwrapper.Log.Info("Hopeed signed with ", role.Eula+req.FlowId)
 	message := role.Eula + req.FlowId
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
@@ -77,7 +79,7 @@ func getRoleByFlowId(flowId string) (models.Role, error) {
 	}
 
 	var role models.Role
-	err = db.Db.Model(&models.Role{}).First(&role, flowIdRecord.RelatedRoleId).Error
+	err = db.Db.Model(&models.Role{}).Where("role_id = ?", flowIdRecord.RelatedRoleId).First(&role).Error
 	if err != nil {
 		return models.Role{}, err
 	}

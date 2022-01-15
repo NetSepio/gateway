@@ -25,5 +25,5 @@ type FlowId struct {
 	FlowIdType    FlowIdType `sql:"flow_id_type"`
 	WalletAddress string
 	FlowId        string `gorm:"primary_key"`
-	RelatedRoleId int
+	RelatedRoleId string
 }

@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/db"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/models/claims"
@@ -38,6 +39,10 @@ func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 }
 
 func CreateTestUser(t *testing.T, walletAddress string) {
+	createrRoleId, err := creatify.GetRole(creatify.CREATOR_ROLE)
+	if err != nil {
+		t.Fatalf("Failed to get role %v, error: %v", "CREATER_ROLE", err.Error())
+	}
 	user := models.User{
 		Name:              "Jack",
 		ProfilePictureUrl: "https://revoticengineering.com/",
@@ -45,11 +50,11 @@ func CreateTestUser(t *testing.T, walletAddress string) {
 		Country:           "India",
 		Roles: []models.UserRole{
 			{
-				WalletAddress: walletAddress, RoleId: 1,
+				WalletAddress: walletAddress, RoleId: hexutil.Encode(createrRoleId[:]),
 			},
 		},
 	}
-	err := db.Db.Model(&models.User{}).Create(&user).Error
+	err = db.Db.Model(&models.User{}).Create(&user).Error
 	if err != nil {
 		t.Fatal(err)
 	}

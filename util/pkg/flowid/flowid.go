@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func GenerateFlowId(walletAddress string, update bool, flowIdType models.FlowIdType, relatedRoleId int) (string, error) {
+func GenerateFlowId(walletAddress string, update bool, flowIdType models.FlowIdType, relatedRoleId string) (string, error) {
 	flowId := uuid.NewString()
 	if update {
 		// User exist so update
@@ -29,12 +29,6 @@ func GenerateFlowId(walletAddress string, update bool, flowIdType models.FlowIdT
 			FlowIds: []models.FlowId{{
 				FlowIdType: flowIdType, WalletAddress: walletAddress, FlowId: flowId, RelatedRoleId: relatedRoleId,
 			}},
-			Roles: []models.UserRole{
-				{
-					WalletAddress: walletAddress,
-					RoleId:        1,
-				},
-			},
 		}
 		if err := db.Db.Create(newUser).Error; err != nil {
 			return "", err

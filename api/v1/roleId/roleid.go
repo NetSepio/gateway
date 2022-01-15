@@ -2,12 +2,9 @@ package roleid
 
 import (
 	"net/http"
-	"strconv"
 
 	jwtMiddleWare "github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
 	"github.com/TheLazarusNetwork/marketplace-engine/db"
-	"github.com/TheLazarusNetwork/marketplace-engine/generated/smartcontract/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/flowid"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
@@ -27,8 +24,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func getRoleId(c *gin.Context) {
-	instance := creatify.GetInstance(smartcontract.GetClient())
-	instance.CREATORROLE(nil)
 	walletAddress := c.GetString("walletAddress")
 	roleId, exist := c.Params.Get("roleId")
 	if !exist {
@@ -36,15 +31,8 @@ func getRoleId(c *gin.Context) {
 
 		return
 	}
-	roleIdInt, err := strconv.Atoi(roleId)
-	if err != nil {
-		logrus.Error(err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-
-		return
-	}
 	var role models.Role
-	err = db.Db.Model(&models.Role{}).Where("role_id = ?", roleIdInt).First(&role).Error
+	err := db.Db.Model(&models.Role{}).Where("role_id = ?", roleId).First(&role).Error
 	if err == gorm.ErrRecordNotFound {
 		httphelper.ErrResponse(c, http.StatusNotFound, err.Error())
 
@@ -52,7 +40,7 @@ func getRoleId(c *gin.Context) {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 
 	} else {
-		flowId, err := flowid.GenerateFlowId(walletAddress, true, models.ROLE, roleIdInt)
+		flowId, err := flowid.GenerateFlowId(walletAddress, true, models.ROLE, roleId)
 		if err != nil {
 			logrus.Error(err)
 			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
