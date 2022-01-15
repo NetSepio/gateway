@@ -25,10 +25,12 @@ func JWT(c *gin.Context) {
 	var headers GenericAuthHeaders
 	err := c.BindHeader(&headers)
 	if err != nil {
+		logValidationFailed(headers.Authorization, err)
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 	if headers.Authorization == "" {
+		logValidationFailed(headers.Authorization, err)
 		httphelper.ErrResponse(c, http.StatusBadRequest, ErrAuthHeaderMissing.Error())
 		c.Abort()
 		return
@@ -48,6 +50,7 @@ func JWT(c *gin.Context) {
 
 		err := db.Db.Model(&models.User{}).Where("wallet_address = ?", walletAddress.(string)).First(&models.User{}).Error
 		if err != nil {
+			logValidationFailed(headers.Authorization, err)
 			if err.Error() == gorm.ErrRecordNotFound.Error() {
 				c.AbortWithStatus(http.StatusForbidden)
 			} else {
@@ -59,6 +62,11 @@ func JWT(c *gin.Context) {
 			c.Next()
 		}
 	} else {
+		logValidationFailed(headers.Authorization, err)
 		c.AbortWithStatus(http.StatusForbidden)
 	}
+}
+
+func logValidationFailed(token string, err error) {
+	logwrapper.Warnf("validation failed with token %v and error: %v", token, err)
 }
