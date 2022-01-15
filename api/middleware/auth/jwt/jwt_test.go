@@ -12,6 +12,7 @@ import (
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/models/claims"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/auth"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
 
 	"github.com/gin-gonic/gin"
@@ -20,6 +21,7 @@ import (
 
 func Test_JWT(t *testing.T) {
 	config.Init()
+	logwrapper.Init()
 	db.InitDB()
 	gin.SetMode(gin.TestMode)
 	testWalletAddress := testingcommon.GenerateWallet().WalletAddress
