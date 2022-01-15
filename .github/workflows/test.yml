@@ -16,7 +16,7 @@ jobs:
       DB_PASSWORD: postgres
       DB_NAME: postgres
       DB_PORT: 5432
-      NODE_URL:  ${{ secrets.NODE_URL }}
+      POLYGON_RPC:  ${{ secrets.POLYGON_RPC }}
       MNEMONIC:  ${{ secrets.MNEMONIC }}
       CREATIFY_CONTRACT_ADDRESS: ${{ secrets.CREATIFY_CONTRACT_ADDRESS }}
 
