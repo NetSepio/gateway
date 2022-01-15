@@ -63,15 +63,10 @@ func InitDB() {
 	if err != nil {
 		logwrapper.Fatal(err)
 	}
-	operatorRoleId, err := creatify.GetRole(creatify.OPERATOR_ROLE)
-	if err != nil {
-		logwrapper.Fatal(err)
-	}
 
 	// TODO: create role only if they does not exist
 	rolesToBeAdded := []models.Role{
-		{Name: "Creator Role", RoleId: hexutil.Encode(creatorRoleId[:]), Eula: "TODO Creator EULA"},
-		{Name: "Operator Role", RoleId: hexutil.Encode(operatorRoleId[:]), Eula: "TODO Operator EULA"}}
+		{Name: "Creator Role", RoleId: hexutil.Encode(creatorRoleId[:]), Eula: "TODO Creator EULA"}}
 	for _, role := range rolesToBeAdded {
 		if err := Db.Model(&models.Role{}).FirstOrCreate(&role).Error; err != nil {
 			log.Fatal(err)
