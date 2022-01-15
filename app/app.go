@@ -15,9 +15,9 @@ var GinApp *gin.Engine
 
 func Init() {
 	config.Init()
+	logwrapper.Init()
 	creatify.InitRolesId()
 	GinApp = gin.Default()
 	api.ApplyRoutes(GinApp)
 	db.InitDB()
-	logwrapper.Init()
 }
