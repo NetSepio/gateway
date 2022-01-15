@@ -13,6 +13,7 @@ import (
 	claimrole "github.com/TheLazarusNetwork/marketplace-engine/api/v1/claimRole"
 	roleid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/roleId"
 	"github.com/TheLazarusNetwork/marketplace-engine/app"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -45,7 +46,12 @@ func Test_PostClaimRole(t *testing.T) {
 }
 
 func requestRole(t *testing.T, headers string) roleid.GetRoleIdPayload {
-	url := "/api/v1.0/roleId/2"
+	creatorRole, err := creatify.GetRole(creatify.CREATOR_ROLE)
+	if err != nil {
+		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())
+	}
+
+	url := "/api/v1.0/roleId/" + hexutil.Encode(creatorRole[:])
 	rr := httptest.NewRecorder()
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

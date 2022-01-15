@@ -7,7 +7,9 @@ import (
 	"testing"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/app"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -19,10 +21,15 @@ func Test_GetRoleId(t *testing.T) {
 	testWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
 	t.Cleanup(testingcommon.ClearTables)
+	creatorRole, err := creatify.GetRole(creatify.CREATOR_ROLE)
+	if err != nil {
+		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())
+	}
+
 	url := "/api/v1.0/roleId/%v"
 	t.Run("Get role EULA with flowId when roleId exist", func(t *testing.T) {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequest("GET", fmt.Sprintf(url, 2), nil)
+		req, err := http.NewRequest("GET", fmt.Sprintf(url, hexutil.Encode(creatorRole[:])), nil)
 		if err != nil {
 			t.Fatal(err)
 		}
