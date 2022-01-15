@@ -8,13 +8,13 @@ REST APIs for Web3 Auth and Smart Contract Functionalities
 # Getting Started
 
 ## Postgres for development
-`
+```bash
 docker run --name="marketplace" --rm -d -p 5432:5432 \
 -e POSTGRES_PASSWORD=revotic \
 -e POSTGRES_USER=revotic \
 -e POSTGRES_DB=marketplace \
 postgres
-`
+```
 
 ## Steps to get started
 - Run `go get ./...` to install dependencies
