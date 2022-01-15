@@ -8,14 +8,19 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
 	claimrole "github.com/TheLazarusNetwork/marketplace-engine/api/v1/claimRole"
 	roleid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/roleId"
 	"github.com/TheLazarusNetwork/marketplace-engine/app"
 	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract/auth"
+	smartcontractcreatify "github.com/TheLazarusNetwork/marketplace-engine/generated/smartcontract/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/gin-gonic/gin"
@@ -42,9 +47,48 @@ func Test_PostClaimRole(t *testing.T) {
 	}
 	req.Header.Add("Authorization", headers)
 	app.GinApp.ServeHTTP(rr, req)
-	assert.Equal(t, http.StatusOK, rr.Result().StatusCode, rr.Body.String())
+	ok := assert.Equal(t, http.StatusOK, rr.Result().StatusCode, rr.Body.String())
+	if !ok {
+		t.FailNow()
+	}
+	instance := creatify.GetInstance(smartcontract.GetClient())
+	creatorRole, err := creatify.GetRole(creatify.CREATOR_ROLE)
+	if err != nil {
+		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())
+	}
+	addr := common.HexToAddress(testWallet.WalletAddress)
+	roleGrantedChannel := make(chan *smartcontractcreatify.CreatifyRoleGranted, 10)
+	subs, err := instance.WatchRoleGranted(nil, roleGrantedChannel, [][32]byte{creatorRole}, []common.Address{addr}, []common.Address{auth.GetAuth(smartcontract.GetClient()).From})
+	if err != nil {
+		t.Fatalf("failed to listen to an event %v, error: %v", "RoleGranted", err.Error())
+	}
+
+	//Check if role trasaction is successfull
+	hasRole, err := instance.HasRole(nil, creatorRole, addr)
+	if err != nil {
+		t.Fatalf("failed to call %v smart contract function HasRole , error: %v", "CREATIFY", err.Error())
+	}
+	success := false
+	if !hasRole {
+		go failAfter(t, &success, 10*time.Second, roleGrantedChannel)
+		event := <-roleGrantedChannel
+		subs.Unsubscribe()
+		if event != nil && event.Account.String() != addr.String() {
+			log.Fatal("user doesn't have role in blockchain")
+		} else {
+			success = true
+		}
+	}
+
 }
 
+func failAfter(t *testing.T, success *bool, duration time.Duration, ch chan *smartcontractcreatify.CreatifyRoleGranted) {
+	time.Sleep(duration)
+	if !*success {
+		close(ch)
+		t.Fatalf("didn't got any response from %v after %v", "RoleGranted", duration)
+	}
+}
 func requestRole(t *testing.T, headers string) roleid.GetRoleIdPayload {
 	creatorRole, err := creatify.GetRole(creatify.CREATOR_ROLE)
 	if err != nil {

@@ -4,10 +4,17 @@ import (
 	"net/http"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract/auth"
 	"github.com/TheLazarusNetwork/marketplace-engine/db"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/cryptosign"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -53,8 +60,24 @@ func postClaimRole(c *gin.Context) {
 		return
 	}
 
+	client := smartcontract.GetClient()
+	instance := creatify.GetInstance(client)
+	roleIdBytesSlice, err := hexutil.Decode(role.RoleId)
+	if err != nil {
+		logwrapper.Warnf("failed to decode hex string : %v, for role for wallet address %v", role.RoleId, walletAddress)
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		return
+	}
+	walletAddressHex := common.HexToAddress(walletAddress)
+	var roleIdBytes [32]byte
+	copy(roleIdBytes[:], roleIdBytesSlice)
+	_, err = instance.GrantRole(auth.GetAuth(client), roleIdBytes, walletAddressHex)
+	if err != nil {
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		logwrapper.Warnf("failed to grant role to user with walletaddress %v, error: %v", walletAddress, err.Error())
+		return
+	}
 	// Update user role
-	logrus.Println("walletaddress", walletAddress, "roleId", role.RoleId)
 	err = db.Db.Model(&models.User{WalletAddress: walletAddress}).
 		Association("Roles").
 		Append(models.UserRole{WalletAddress: walletAddress, RoleId: role.RoleId}).
