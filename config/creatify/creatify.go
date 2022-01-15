@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
-	"github.com/TheLazarusNetwork/marketplace-engine/generated/smartcontract/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 )
 
@@ -37,7 +36,7 @@ func GetRole(role tRole) ([32]byte, error) {
 }
 func InitRolesId() {
 
-	instance := creatify.GetInstance(smartcontract.GetClient())
+	instance := GetInstance(smartcontract.GetClient())
 	creatorRoleId, err := instance.CREATORROLE(nil)
 	if err != nil {
 		logwrapper.Fatalf("Failed to get %v, error: %v", "CREATORROLE", err.Error())
