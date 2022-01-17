@@ -24,12 +24,13 @@ import (
 
 // TODO: Write test to verify expiry
 func Test_PostAuthenticate(t *testing.T) {
+	app.Init()
+	t.Cleanup(testingcommmon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	app.Init()
 
 	testWallet := testingcommmon.GenerateWallet()
 	eula, flowId := callFlowIdApi(testWallet.WalletAddress, t)
-	t.Cleanup(testingcommmon.ClearTables)
 
 	router := app.GinApp
 

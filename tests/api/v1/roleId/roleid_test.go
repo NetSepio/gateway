@@ -18,9 +18,9 @@ import (
 func Test_GetRoleId(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	app.Init()
+	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
-	t.Cleanup(testingcommon.ClearTables)
 	creatorRole, err := creatify.GetRole(creatify.CREATOR_ROLE)
 	if err != nil {
 		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())

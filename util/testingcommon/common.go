@@ -80,10 +80,3 @@ func ExtractPayload(response *types.ApiResponse, out interface{}) {
 	json.NewEncoder(buf).Encode(response.Payload)
 	json.NewDecoder(buf).Decode(out)
 }
-
-func ClearTables() {
-	db := dbconfig.GetDb()
-	db.Delete(&models.User{})
-	db.Delete(&models.FlowId{})
-	db.Delete(&models.UserRole{})
-}

@@ -20,8 +20,10 @@ import (
 )
 
 func Test_JWT(t *testing.T) {
-	db := dbconfig.GetDb()
+
 	config.Init()
+	db := dbconfig.GetDb()
+	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	logwrapper.Init()
 	gin.SetMode(gin.TestMode)
 	testWalletAddress := testingcommon.GenerateWallet().WalletAddress

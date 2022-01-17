@@ -20,9 +20,9 @@ import (
 
 func Test_PatchProfile(t *testing.T) {
 	app.Init()
+	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	header := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
-	t.Cleanup(testingcommon.ClearTables)
 
 	url := "/api/v1.0/profile"
 
@@ -50,10 +50,10 @@ func Test_PatchProfile(t *testing.T) {
 
 func Test_GetProfile(t *testing.T) {
 	app.Init()
+	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()
 	header := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
-	t.Cleanup(testingcommon.ClearTables)
 	url := "/api/v1.0/profile"
 	rr := httptest.NewRecorder()
 	req, err := http.NewRequest("GET", url, nil)

@@ -28,11 +28,12 @@ import (
 )
 
 func Test_PostClaimRole(t *testing.T) {
+	app.Init()
+	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	app.Init()
 	testWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
-	t.Cleanup(testingcommon.ClearTables)
 	url := "/api/v1.0/claimrole"
 	rr := httptest.NewRecorder()
 	requestRoleRes := requestRole(t, headers)

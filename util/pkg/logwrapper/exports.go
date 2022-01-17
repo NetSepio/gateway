@@ -19,3 +19,7 @@ func Warn(args ...interface{}) {
 func Info(args ...interface{}) {
 	Log.Info(args...)
 }
+
+func Infof(format string, args ...interface{}) {
+	Log.Infof(format, args...)
+}
