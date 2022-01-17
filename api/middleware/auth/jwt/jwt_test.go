@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/config"
-	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/models/claims"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/auth"
@@ -20,20 +20,20 @@ import (
 )
 
 func Test_JWT(t *testing.T) {
+	db := dbconfig.GetDb()
 	config.Init()
 	logwrapper.Init()
-	db.InitDB()
 	gin.SetMode(gin.TestMode)
 	testWalletAddress := testingcommon.GenerateWallet().WalletAddress
 	newUser := models.User{
 		WalletAddress: testWalletAddress,
 	}
-	err := db.Db.Model(&models.User{}).Create(&newUser).Error
+	err := db.Model(&models.User{}).Create(&newUser).Error
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer func() {
-		db.Db.Delete(&newUser)
+		db.Delete(&newUser)
 	}()
 	t.Run("Should return 200 with correct JWT", func(t *testing.T) {
 		newClaims := claims.New(testWalletAddress)

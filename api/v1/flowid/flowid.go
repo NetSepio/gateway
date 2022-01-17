@@ -3,7 +3,7 @@ package flowid
 import (
 	"net/http"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/flowid"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
@@ -23,13 +23,14 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func getFlowId(c *gin.Context) {
+	db := dbconfig.GetDb()
 	var user models.User
 	walletAddress := c.Query("walletAddress")
 	if walletAddress == "" {
 		httphelper.ErrResponse(c, http.StatusBadRequest, "Wallet address (walletAddress) is required")
 		return
 	}
-	dbRes := db.Db.Model(&models.User{}).Where("wallet_address = ?", walletAddress).First(&user)
+	dbRes := db.Model(&models.User{}).Where("wallet_address = ?", walletAddress).First(&user)
 	// If there is an error and that error is not of "record not found"
 	if dbRes.Error != nil && dbRes.Error != gorm.ErrRecordNotFound {
 		log.Error(dbRes.Error)

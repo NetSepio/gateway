@@ -5,9 +5,9 @@ import (
 
 	"github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
 	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
 	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract/auth"
-	"github.com/TheLazarusNetwork/marketplace-engine/db"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/cryptosign"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
@@ -31,6 +31,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func postClaimRole(c *gin.Context) {
+	db := dbconfig.GetDb()
 	var req ClaimRoleRequest
 	c.BindJSON(&req)
 
@@ -78,7 +79,7 @@ func postClaimRole(c *gin.Context) {
 		return
 	}
 	// Update user role
-	err = db.Db.Model(&models.User{WalletAddress: walletAddress}).
+	err = db.Model(&models.User{WalletAddress: walletAddress}).
 		Association("Roles").
 		Append(models.UserRole{WalletAddress: walletAddress, RoleId: role.RoleId}).
 		Error
@@ -93,14 +94,15 @@ func postClaimRole(c *gin.Context) {
 }
 
 func getRoleByFlowId(flowId string) (models.Role, error) {
+	db := dbconfig.GetDb()
 	var flowIdRecord models.FlowId
-	err := db.Db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdRecord).Error
+	err := db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdRecord).Error
 	if err != nil {
 		return models.Role{}, err
 	}
 
 	var role models.Role
-	err = db.Db.Model(&models.Role{}).Where("role_id = ?", flowIdRecord.RelatedRoleId).First(&role).Error
+	err = db.Model(&models.Role{}).Where("role_id = ?", flowIdRecord.RelatedRoleId).First(&role).Error
 	if err != nil {
 		return models.Role{}, err
 	}

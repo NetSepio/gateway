@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	jwtMiddleWare "github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
-	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/flowid"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
@@ -24,6 +24,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func getRoleId(c *gin.Context) {
+	db := dbconfig.GetDb()
 	walletAddress := c.GetString("walletAddress")
 	roleId, exist := c.Params.Get("roleId")
 	if !exist {
@@ -32,7 +33,7 @@ func getRoleId(c *gin.Context) {
 		return
 	}
 	var role models.Role
-	err := db.Db.Model(&models.Role{}).Where("role_id = ?", roleId).First(&role).Error
+	err := db.Model(&models.Role{}).Where("role_id = ?", roleId).First(&role).Error
 	if err == gorm.ErrRecordNotFound {
 		httphelper.ErrResponse(c, http.StatusNotFound, err.Error())
 

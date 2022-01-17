@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -17,6 +17,7 @@ var (
 
 func CheckSign(signature string, flowId string, message string) (string, bool, error) {
 
+	db := dbconfig.GetDb()
 	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)
 	newMsgHash := crypto.Keccak256Hash([]byte(newMsg))
 	signatureInBytes, err := hexutil.Decode(signature)
@@ -35,7 +36,7 @@ func CheckSign(signature string, flowId string, message string) (string, bool, e
 	//Get address from public key
 	walletAddress := crypto.PubkeyToAddress(*pubKey)
 	var flowIdData models.FlowId
-	res := db.Db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData)
+	res := db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData)
 
 	if res.RecordNotFound() {
 		return "", false, ErrFlowIdNotFound

@@ -1,7 +1,7 @@
 package flowid
 
 import (
-	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 
 	"github.com/google/uuid"
@@ -9,10 +9,11 @@ import (
 )
 
 func GenerateFlowId(walletAddress string, update bool, flowIdType models.FlowIdType, relatedRoleId string) (string, error) {
+	db := dbconfig.GetDb()
 	flowId := uuid.NewString()
 	if update {
 		// User exist so update
-		association := db.Db.Model(&models.User{
+		association := db.Model(&models.User{
 			WalletAddress: walletAddress,
 		}).Association("FlowIds")
 		if err := association.Error; err != nil {
@@ -30,7 +31,7 @@ func GenerateFlowId(walletAddress string, update bool, flowIdType models.FlowIdT
 				FlowIdType: flowIdType, WalletAddress: walletAddress, FlowId: flowId, RelatedRoleId: relatedRoleId,
 			}},
 		}
-		if err := db.Db.Create(newUser).Error; err != nil {
+		if err := db.Create(newUser).Error; err != nil {
 			return "", err
 		}
 

@@ -1,4 +1,4 @@
-package db
+package dbconfig
 
 import (
 	"fmt"
@@ -16,10 +16,13 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-var Db *gorm.DB
+var db *gorm.DB
 
-func InitDB() {
-
+// Return singleton instance of db, initiates it before if it is not initiated already
+func GetDb() *gorm.DB {
+	if db != nil {
+		return db
+	}
 	var (
 		host     = os.Getenv("DB_HOST")
 		username = os.Getenv("DB_USERNAME")
@@ -31,26 +34,26 @@ func InitDB() {
 	psqlInfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable port=%s",
 		host, username, password, dbname, port)
 	var err error
-	Db, err = gorm.Open("postgres", psqlInfo)
+	db, err = gorm.Open("postgres", psqlInfo)
 	if err != nil {
 		log.Fatal("failed to connect database", err)
 	}
 
-	if err = Db.DB().Ping(); err != nil {
+	if err = db.DB().Ping(); err != nil {
 		log.Fatal("failed to ping database", err)
 	}
-	if err := Db.AutoMigrate(&models.FlowId{}, &models.User{}, &models.Role{}).Error; err != nil {
+	if err := db.AutoMigrate(&models.FlowId{}, &models.User{}, &models.Role{}).Error; err != nil {
 		log.Fatal(err)
 	}
 	//Create user_roles table
-	Db.Exec(`create table if not exists user_roles (
+	db.Exec(`create table if not exists user_roles (
 			wallet_address text,
 			role_id text,
 			unique (wallet_address,role_id)
 			)`)
 
 	//Create flow id
-	Db.Exec(`
+	db.Exec(`
 	DO $$ BEGIN
 		CREATE TYPE flow_id_type AS ENUM (
 			'AUTH',
@@ -68,9 +71,9 @@ func InitDB() {
 	rolesToBeAdded := []models.Role{
 		{Name: "Creator Role", RoleId: hexutil.Encode(creatorRoleId[:]), Eula: "TODO Creator EULA"}}
 	for _, role := range rolesToBeAdded {
-		if err := Db.Model(&models.Role{}).FirstOrCreate(&role).Error; err != nil {
+		if err := db.Model(&models.Role{}).FirstOrCreate(&role).Error; err != nil {
 			log.Fatal(err)
 		}
 	}
-
+	return db
 }

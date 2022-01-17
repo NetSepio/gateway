@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/models/claims"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/auth"
@@ -25,13 +25,14 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 func authenticate(c *gin.Context) {
 
+	db := dbconfig.GetDb()
 	//TODO remove flow id if 200
 	var req AuthenticateRequest
 	c.BindJSON(&req)
 
 	//Get flowid type
 	var flowIdData models.FlowId
-	err := db.Db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
+	err := db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
 	if err != nil {
 		logwrapper.Log.Error(err)
 		httphelper.ErrResponse(c, 500, "Unexpected error occured")

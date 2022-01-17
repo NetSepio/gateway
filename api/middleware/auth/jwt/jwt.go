@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
@@ -22,6 +22,7 @@ var (
 )
 
 func JWT(c *gin.Context) {
+	db := dbconfig.GetDb()
 	var headers GenericAuthHeaders
 	err := c.BindHeader(&headers)
 	if err != nil {
@@ -48,7 +49,7 @@ func JWT(c *gin.Context) {
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		walletAddress := claims["walletAddress"]
 
-		err := db.Db.Model(&models.User{}).Where("wallet_address = ?", walletAddress.(string)).First(&models.User{}).Error
+		err := db.Model(&models.User{}).Where("wallet_address = ?", walletAddress.(string)).First(&models.User{}).Error
 		if err != nil {
 			logValidationFailed(headers.Authorization, err)
 			if err.Error() == gorm.ErrRecordNotFound.Error() {

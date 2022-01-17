@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
-	"github.com/TheLazarusNetwork/marketplace-engine/db"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/models/claims"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/auth"
@@ -24,7 +24,6 @@ import (
 
 func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 	gin.SetMode(gin.TestMode)
-	db.InitDB()
 	CreateTestUser(t, testWalletAddress)
 	customClaims := claims.New(testWalletAddress)
 	jwtPrivateKey := os.Getenv("JWT_PRIVATE_KEY")
@@ -38,13 +37,14 @@ func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 }
 
 func CreateTestUser(t *testing.T, walletAddress string) {
+	db := dbconfig.GetDb()
 	user := models.User{
 		Name:              "Jack",
 		ProfilePictureUrl: "https://revoticengineering.com/",
 		WalletAddress:     walletAddress,
 		Country:           "India",
 	}
-	err := db.Db.Model(&models.User{}).Create(&user).Error
+	err := db.Model(&models.User{}).Create(&user).Error
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -82,7 +82,8 @@ func ExtractPayload(response *types.ApiResponse, out interface{}) {
 }
 
 func ClearTables() {
-	db.Db.Delete(&models.User{})
-	db.Db.Delete(&models.FlowId{})
-	db.Db.Delete(&models.UserRole{})
+	db := dbconfig.GetDb()
+	db.Delete(&models.User{})
+	db.Delete(&models.FlowId{})
+	db.Delete(&models.UserRole{})
 }
