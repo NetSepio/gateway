@@ -23,3 +23,11 @@ func Info(args ...interface{}) {
 func Infof(format string, args ...interface{}) {
 	Log.Infof(format, args...)
 }
+
+func Error(args ...interface{}) {
+	Log.Error(args...)
+}
+
+func Errorf(format string, args ...interface{}) {
+	Log.Errorf(format, args...)
+}

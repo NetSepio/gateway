@@ -36,7 +36,10 @@ func GetRole(role tRole) ([32]byte, error) {
 }
 func InitRolesId() {
 
-	instance := GetInstance(smartcontract.GetClient())
+	instance, err := GetInstance(smartcontract.GetClient())
+	if err != nil {
+		logwrapper.Fatalf("failed to get instance for %v , error: %v", "CREATIFY", err.Error())
+	}
 	creatorRoleId, err := instance.CREATORROLE(nil)
 	if err != nil {
 		logwrapper.Fatalf("Failed to get %v, error: %v", "CREATORROLE", err.Error())

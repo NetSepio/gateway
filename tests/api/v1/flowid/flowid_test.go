@@ -19,8 +19,6 @@ func Test_GetFlowId(t *testing.T) {
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 
-	app.Init()
-
 	testWalletAddress := testingcommon.GenerateWallet().WalletAddress
 	u, err := url.Parse("/api/v1.0/flowid")
 	if err != nil {

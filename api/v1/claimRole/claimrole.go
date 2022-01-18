@@ -2,17 +2,18 @@ package claimrole
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract/auth"
+	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract/rawtrasaction"
+	gcreatify "github.com/TheLazarusNetwork/marketplace-engine/generated/smartcontract/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/cryptosign"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
@@ -61,8 +62,12 @@ func postClaimRole(c *gin.Context) {
 		return
 	}
 
-	client := smartcontract.GetClient()
-	instance := creatify.GetInstance(client)
+	// client := smartcontract.GetClient()
+	// instance, err := creatify.GetInstance(client)
+	if err != nil {
+		logwrapper.Errorf("failed to get instance for %v , error: %v", "CREATIFY", err.Error())
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+	}
 	roleIdBytesSlice, err := hexutil.Decode(role.RoleId)
 	if err != nil {
 		logwrapper.Warnf("failed to decode hex string : %v, for role for wallet address %v", role.RoleId, walletAddress)
@@ -72,12 +77,28 @@ func postClaimRole(c *gin.Context) {
 	walletAddressHex := common.HexToAddress(walletAddress)
 	var roleIdBytes [32]byte
 	copy(roleIdBytes[:], roleIdBytesSlice)
-	_, err = instance.GrantRole(auth.GetAuth(client), roleIdBytes, walletAddressHex)
+	if err != nil {
+		logwrapper.Errorf("failed to parse ABI for %v, error: %v", "CREATIFY", err.Error())
+		httphelper.ErrResponse(c, 500, "unexpected error occured")
+		return
+	}
+	// authBindOpts, err := auth.GetAuth(client)
+
+	if err != nil {
+		logwrapper.Errorf("failed to get auth, error: %v", err.Error())
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		return
+	}
+	abiS := gcreatify.CreatifyABI
+	abiP, _ := abi.JSON(strings.NewReader(abiS))
+	tx, err := rawtrasaction.SendRawTrasac(&abiP, "grantRole", roleIdBytes, walletAddressHex)
+	// tx, err := instance.GrantRole(authBindOpts, roleIdBytes, walletAddressHex)
 	if err != nil {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		logwrapper.Warnf("failed to grant role to user with walletaddress %v, error: %v", walletAddress, err.Error())
 		return
 	}
+	logwrapper.Infof("trasaction hash is %v", tx.Hash().String())
 	// Update user role
 	err = db.Model(&models.User{WalletAddress: walletAddress}).
 		Association("Roles").

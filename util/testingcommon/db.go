@@ -24,7 +24,7 @@ func DeleteCreatedEntities() func() {
 		if scope.PrimaryKey() == "" {
 			return
 		}
-		fmt.Printf("Inserted entities of %s with %s=%v\n", scope.TableName(), scope.PrimaryKey(), scope.PrimaryKeyValue())
+		// fmt.Printf("Inserted entities of %s with %s=%v\n", scope.TableName(), scope.PrimaryKey(), scope.PrimaryKeyValue())
 
 		entries = append(entries, entity{table: scope.TableName(), keyname: scope.PrimaryKey(), key: scope.PrimaryKeyValue()})
 	})
@@ -41,7 +41,7 @@ func DeleteCreatedEntities() func() {
 		// reverse order of their insertion
 		for i := len(entries) - 1; i >= 0; i-- {
 			entry := entries[i]
-			fmt.Printf("Deleting entities from '%s' table with key %v\n", entry.table, entry.key)
+			// fmt.Printf("Deleting entities from '%s' table with key %v\n", entry.table, entry.key)
 
 			var deleteValue string
 			switch v := entry.key.(type) {

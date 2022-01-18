@@ -52,14 +52,22 @@ func Test_PostClaimRole(t *testing.T) {
 	if !ok {
 		t.FailNow()
 	}
-	instance := creatify.GetInstance(smartcontract.GetClient())
+	instance, err := creatify.GetInstance(smartcontract.GetClient())
+	if err != nil {
+		t.Fatalf("failed to get instance for %v , error: %v", "CREATIFY", err.Error())
+	}
 	creatorRole, err := creatify.GetRole(creatify.CREATOR_ROLE)
 	if err != nil {
 		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())
 	}
 	addr := common.HexToAddress(testWallet.WalletAddress)
 	roleGrantedChannel := make(chan *smartcontractcreatify.CreatifyRoleGranted, 10)
-	subs, err := instance.WatchRoleGranted(nil, roleGrantedChannel, [][32]byte{creatorRole}, []common.Address{addr}, []common.Address{auth.GetAuth(smartcontract.GetClient()).From})
+	authBindOpts, err := auth.GetAuth(smartcontract.GetClient())
+
+	if err != nil {
+		t.Fatalf("failed to get auth, error: %v", err.Error())
+	}
+	subs, err := instance.WatchRoleGranted(nil, roleGrantedChannel, [][32]byte{creatorRole}, []common.Address{addr}, []common.Address{authBindOpts.From})
 	if err != nil {
 		t.Fatalf("failed to listen to an event %v, error: %v", "RoleGranted", err.Error())
 	}
@@ -87,7 +95,7 @@ func failAfter(t *testing.T, success *bool, duration time.Duration, ch chan *sma
 	time.Sleep(duration)
 	if !*success {
 		close(ch)
-		t.Fatalf("didn't got any response from %v after %v", "RoleGranted", duration)
+		t.Errorf("didn't got any response from %v after %v", "RoleGranted", duration)
 	}
 }
 func requestRole(t *testing.T, headers string) roleid.GetRoleIdPayload {

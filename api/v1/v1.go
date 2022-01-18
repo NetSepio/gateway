@@ -3,6 +3,7 @@ package apiv1
 import (
 	authenticate "github.com/TheLazarusNetwork/marketplace-engine/api/v1/authenticate"
 	claimrole "github.com/TheLazarusNetwork/marketplace-engine/api/v1/claimRole"
+	delegateartifactcreation "github.com/TheLazarusNetwork/marketplace-engine/api/v1/delegateArtifactCreation"
 	flowid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/flowid"
 	"github.com/TheLazarusNetwork/marketplace-engine/api/v1/profile"
 	roleid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/roleId"
@@ -19,5 +20,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		profile.ApplyRoutes(v1)
 		roleid.ApplyRoutes(v1)
 		claimrole.ApplyRoutes(v1)
+		delegateartifactcreation.ApplyRoutes(v1)
 	}
 }
