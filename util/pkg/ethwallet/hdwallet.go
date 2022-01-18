@@ -37,8 +37,8 @@ func HdWallet(mnemonic string) (*ecdsa.PrivateKey, *ecdsa.PublicKey, *string, er
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	// This gives the path: m/44H/60H/0H/0/0
-	acc44H60H0H00, err := acc44H60H0H0.Derive(0)
+	// This gives the path: m/44H/60H/0H/0/1
+	acc44H60H0H00, err := acc44H60H0H0.Derive(1)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -48,6 +48,6 @@ func HdWallet(mnemonic string) (*ecdsa.PrivateKey, *ecdsa.PublicKey, *string, er
 	}
 	privateKey := btcecPrivKey.ToECDSA()
 	publicKey := &privateKey.PublicKey // Starts with 0x04. Contains DER encoding of the public key (which is what Bitcoin and all its fork uses)
-	path := "m/44H/60H/0H/0/0"
+	path := "m/44H/60H/0H/0/1"
 	return privateKey, publicKey, &path, nil
 }
