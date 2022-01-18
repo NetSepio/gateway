@@ -27,7 +27,7 @@ func GetAuth(client *ethclient.Client) (*bind.TransactOpts, error) {
 	if auth == nil {
 		// mnemonic := envutil.MustGetEnv("MNEMONIC")
 		privateKeyHex := envutil.MustGetEnv("PRIVATE_KEY")
-		privateKey, err := crypto.HexToECDSA(privateKeyHex)
+		privateKey, err = crypto.HexToECDSA(privateKeyHex)
 		publicKey = &privateKey.PublicKey
 		// privateKey, publicKey, _, err = ethwallet.HdWallet(mnemonic) // Verify: https://iancoleman.io/bip39/
 		if err != nil {
