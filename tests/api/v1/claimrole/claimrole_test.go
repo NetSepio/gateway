@@ -52,7 +52,11 @@ func Test_PostClaimRole(t *testing.T) {
 	if !ok {
 		t.FailNow()
 	}
-	instance, err := creatify.GetInstance(smartcontract.GetClient())
+	client, err := smartcontract.GetClient()
+	if err != nil {
+		t.Fatal(err)
+	}
+	instance, err := creatify.GetInstance(client)
 	if err != nil {
 		t.Fatalf("failed to get instance for %v , error: %v", "CREATIFY", err.Error())
 	}
@@ -62,7 +66,8 @@ func Test_PostClaimRole(t *testing.T) {
 	}
 	addr := common.HexToAddress(testWallet.WalletAddress)
 	roleGrantedChannel := make(chan *smartcontractcreatify.CreatifyRoleGranted, 10)
-	authBindOpts, err := auth.GetAuth(smartcontract.GetClient())
+
+	authBindOpts, err := auth.GetAuth(client)
 
 	if err != nil {
 		t.Fatalf("failed to get auth, error: %v", err.Error())

@@ -9,15 +9,16 @@ import (
 
 var client *ethclient.Client
 
-func GetClient() *ethclient.Client {
+func GetClient() (*ethclient.Client, error) {
 	if client != nil {
-		return client
+		return client, nil
 	}
 	nodeUrl := os.Getenv("POLYGON_RPC")
 	var err error
 	client, err = ethclient.Dial(nodeUrl)
 	if err != nil {
-		logwrapper.Fatalf("failed to dial client at url %v, error: %v", nodeUrl, err.Error())
+		logwrapper.Errorf("failed to dial client at url %v, error: %v", nodeUrl, err.Error())
+		return nil, err
 	}
-	return client
+	return client, nil
 }

@@ -2,8 +2,6 @@ package rawtrasaction
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"math/big"
 	"os"
 	"strings"
@@ -27,21 +25,20 @@ func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Tran
 		logwrapper.Errorf("failed to parse JSON abi, error %v", err)
 		return nil, err
 	}
-	client := smartcontract.GetClient()
+	client, err := smartcontract.GetClient()
+	if err != nil {
+		return nil, err
+	}
 	mnemonic := os.Getenv("MNEMONIC")
 	privateKey, publicKey, _, err := ethwallet.HdWallet(mnemonic) // Verify: https://iancoleman.io/bip39/
 	if err != nil {
-		fmt.Printf("Error: %+v", err)
+		logwrapper.Errorf("failed to get private and public key from mnemonic, error %v", err.Error())
 		return nil, err
 	}
 
 	nonce, err := client.PendingNonceAt(context.Background(), crypto.PubkeyToAddress(*publicKey))
 	if err != nil {
 		logwrapper.Warnf("failed to get nonce")
-		return nil, err
-	}
-	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 	envContractAddress := envutil.MustGetEnv("CREATIFY_CONTRACT_ADDRESS")
