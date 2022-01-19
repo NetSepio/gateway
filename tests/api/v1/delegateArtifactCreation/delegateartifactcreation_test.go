@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	delegateartifactcreation "github.com/TheLazarusNetwork/marketplace-engine/api/v1/delegateArtifactCreation"
 	"github.com/TheLazarusNetwork/marketplace-engine/app"
@@ -15,6 +16,7 @@ import (
 )
 
 func TestDelegateArtifactCreation(t *testing.T) {
+	time.Sleep(4 * time.Second)
 	app.Init()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)

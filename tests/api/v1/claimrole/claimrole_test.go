@@ -28,6 +28,7 @@ import (
 )
 
 func Test_PostClaimRole(t *testing.T) {
+	defer time.Sleep(4 * time.Second)
 	app.Init()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
