@@ -96,7 +96,8 @@ func postClaimRole(c *gin.Context) {
 		logwrapper.Warnf("failed to grant role to user with walletaddress %v, error: %v", walletAddress, err.Error())
 		return
 	}
-	logwrapper.Infof("trasaction hash is %v", tx.Hash().String())
+	transactionHash := tx.Hash().String()
+	logwrapper.Infof("trasaction hash is %v", transactionHash)
 	// Update user role
 	err = db.Model(&models.User{WalletAddress: walletAddress}).
 		Association("Roles").
@@ -107,7 +108,10 @@ func postClaimRole(c *gin.Context) {
 		logwrapper.Error(err)
 		return
 	} else {
-		httphelper.SuccessResponse(c, "Role successfully claimed", nil)
+		payload := ClaimRolePayload{
+			TransactionHash: transactionHash,
+		}
+		httphelper.SuccessResponse(c, "Role successfully claimed", payload)
 	}
 
 }
