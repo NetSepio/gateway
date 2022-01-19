@@ -2,7 +2,6 @@ package claimrole
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
 	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
@@ -13,7 +12,6 @@ import (
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
@@ -89,9 +87,9 @@ func postClaimRole(c *gin.Context) {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
-	abiS := gcreatify.CreatifyABI
-	abiP, _ := abi.JSON(strings.NewReader(abiS))
-	tx, err := rawtrasaction.SendRawTrasac(&abiP, "grantRole", roleIdBytes, walletAddressHex)
+
+	tx, err := rawtrasaction.SendRawTrasac(gcreatify.CreatifyABI, "grantRole", roleIdBytes, walletAddressHex)
+
 	// tx, err := instance.GrantRole(authBindOpts, roleIdBytes, walletAddressHex)
 	if err != nil {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")

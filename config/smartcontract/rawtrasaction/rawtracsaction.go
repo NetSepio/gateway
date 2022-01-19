@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/big"
 	"os"
+	"strings"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/envutil"
@@ -19,7 +20,13 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
-func SendRawTrasac(abiP *abi.ABI, method string, args ...interface{}) (*types.Transaction, error) {
+func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Transaction, error) {
+
+	abiP, err := abi.JSON(strings.NewReader(abiS))
+	if err != nil {
+		logwrapper.Errorf("failed to parse JSON abi, error %v", err)
+		return nil, err
+	}
 	client := smartcontract.GetClient()
 	mnemonic := os.Getenv("MNEMONIC")
 	privateKey, publicKey, _, err := ethwallet.HdWallet(mnemonic) // Verify: https://iancoleman.io/bip39/
