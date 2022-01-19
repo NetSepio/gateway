@@ -17,7 +17,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/sirupsen/logrus"
 )
 
 // ApplyRoutes applies router to gin Router
@@ -41,7 +40,7 @@ func postClaimRole(c *gin.Context) {
 		return
 	}
 	if err != nil {
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httphelper.NewInternalServerError(c, "failed to get role by flowid, error %v", err.Error())
 		return
 	}
 	message := role.Eula + req.FlowId
@@ -51,6 +50,7 @@ func postClaimRole(c *gin.Context) {
 		httphelper.ErrResponse(c, http.StatusNotFound, err.Error())
 		return
 	} else if err != nil {
+		logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
@@ -104,7 +104,7 @@ func postClaimRole(c *gin.Context) {
 		Error
 	if err != nil {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-		logrus.Println(err)
+		logwrapper.Error(err)
 		return
 	} else {
 		httphelper.SuccessResponse(c, "Role successfully claimed", nil)

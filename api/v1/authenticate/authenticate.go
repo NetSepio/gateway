@@ -34,7 +34,7 @@ func authenticate(c *gin.Context) {
 	var flowIdData models.FlowId
 	err := db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
 	if err != nil {
-		logwrapper.Log.Error(err)
+		logwrapper.Error(err)
 		httphelper.ErrResponse(c, 500, "Unexpected error occured")
 		return
 	}
@@ -45,7 +45,7 @@ func authenticate(c *gin.Context) {
 	}
 
 	if err != nil {
-		logwrapper.Log.Error(err)
+		logwrapper.Error(err)
 		httphelper.ErrResponse(c, 500, "Unexpected error occured")
 		return
 	}
@@ -59,6 +59,7 @@ func authenticate(c *gin.Context) {
 	}
 
 	if err != nil {
+		logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
@@ -67,7 +68,7 @@ func authenticate(c *gin.Context) {
 		jwtPrivateKey := os.Getenv("JWT_PRIVATE_KEY")
 		jwtToken, err := auth.GenerateToken(customClaims, jwtPrivateKey)
 		if err != nil {
-			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+			httphelper.NewInternalServerError(c, "failed to generate token, error %v", err.Error())
 			return
 		}
 		payload := AuthenticatePayload{

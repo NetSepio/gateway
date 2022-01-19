@@ -60,7 +60,7 @@ func getFlowId(c *gin.Context) {
 			return
 		}
 		if err != nil {
-			logwrapper.Log.Error(err)
+			logwrapper.Error(err)
 			httphelper.ErrResponse(c, 500, "Unexpected error occured")
 			return
 		}
