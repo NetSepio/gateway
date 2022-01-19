@@ -61,7 +61,7 @@ Note - Some unset data is emitted.
 #### Updates profile data like name, profile picture URL, etc.
 
 ```
-  POST /profile
+  PATCH /profile
 ```
 
 | Parameter | Type     | 
@@ -72,7 +72,7 @@ Note - Some unset data is emitted.
 
 #### Returns flow ID and Eula which should be signed and passed to claim Role in order to successful verification and claim of role
 ```
-  POST /roleId/{{roleId}}
+  GET /roleId/{{roleId}}
 ```
 
 #### Successfully complete role claim by sending signature which is obtained from signing eula+flowId which was returned from roleId API (aka Request role)
