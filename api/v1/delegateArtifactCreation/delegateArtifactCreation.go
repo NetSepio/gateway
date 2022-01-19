@@ -3,6 +3,7 @@ package delegateartifactcreation
 import (
 	"net/http"
 
+	"github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
 	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract/rawtrasaction"
 	gcreatify "github.com/TheLazarusNetwork/marketplace-engine/generated/smartcontract/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
@@ -15,6 +16,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/delegateArtifactCreation")
 	{
+		g.Use(jwt.JWT)
 		g.POST("", deletegateArtifactCreation)
 	}
 }
@@ -36,5 +38,10 @@ func deletegateArtifactCreation(c *gin.Context) {
 		httphelper.NewInternalServerError(c, "failed to call %v of %v, error: %v", "delegateArtifactCreation", "Creatify", err.Error())
 		return
 	}
-	logwrapper.Infof("trasaction hash is %v", tx.Hash().String())
+	transactionHash := tx.Hash().String()
+	payload := DelegateArtifactCreationPayload{
+		TransactionHash: transactionHash,
+	}
+	logwrapper.Infof("trasaction hash is %v", transactionHash)
+	httphelper.SuccessResponse(c, "request successfully send, artififact will be delegated soon", payload)
 }
