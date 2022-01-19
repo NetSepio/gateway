@@ -59,6 +59,11 @@ func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Tran
 
 	logwrapper.Infof("nonce is %v", nonce)
 
+	maxPriorityFeePerGas, err := client.SuggestGasTipCap(context.Background())
+	if err != nil {
+		logwrapper.Errorf("failed to suggestGasTipCap, error %v", err)
+		return nil, err
+	}
 	config := &params.ChainConfig{
 		ChainID: big.NewInt(80001),
 	}
@@ -68,7 +73,6 @@ func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Tran
 	blk, _ := client.BlockByNumber(context.Background(), bignumBn)
 	baseFee := misc.CalcBaseFee(config, blk.Header())
 	big2 := big.NewInt(2)
-	maxPriorityFeePerGas := big.NewInt(2500000000)
 	mulRes := big.NewInt(0).Mul(baseFee, big2)
 	maxFeePerGas := big.NewInt(0).Add(mulRes, maxPriorityFeePerGas)
 	tx := types.NewTx(&types.DynamicFeeTx{
