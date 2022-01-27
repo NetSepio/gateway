@@ -3,7 +3,6 @@ package rawtrasaction
 import (
 	"context"
 	"math/big"
-	"os"
 	"strings"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
@@ -29,7 +28,7 @@ func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Tran
 	if err != nil {
 		return nil, err
 	}
-	mnemonic := os.Getenv("MNEMONIC")
+	mnemonic := envutil.MustGetEnv("MNEMONIC")
 	privateKey, publicKey, _, err := ethwallet.HdWallet(mnemonic) // Verify: https://iancoleman.io/bip39/
 	if err != nil {
 		logwrapper.Errorf("failed to get private and public key from mnemonic, error %v", err.Error())

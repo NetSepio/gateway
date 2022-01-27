@@ -1,11 +1,10 @@
 package config
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 	"runtime"
-
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -22,7 +21,7 @@ func Init() {
 
 		err := godotenv.Load(filepath.Join(basepath, ".env"))
 		if err != nil {
-			logwrapper.Log.Fatalf("Error in reading the config file: %v", err)
+			log.Fatalf("Error in reading the config file: %v", err)
 		}
 
 		//Set gin gonic mode now since gin gonic reads env on init which runs before this function

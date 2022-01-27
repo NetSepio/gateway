@@ -2,13 +2,13 @@ package dbconfig
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/envutil"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
 	"github.com/jinzhu/gorm"
@@ -24,11 +24,11 @@ func GetDb() *gorm.DB {
 		return db
 	}
 	var (
-		host     = os.Getenv("DB_HOST")
-		username = os.Getenv("DB_USERNAME")
-		password = os.Getenv("DB_PASSWORD")
-		dbname   = os.Getenv("DB_NAME")
-		port     = os.Getenv("DB_PORT")
+		host     = envutil.MustGetEnv("DB_HOST")
+		username = envutil.MustGetEnv("DB_USERNAME")
+		password = envutil.MustGetEnv("DB_PASSWORD")
+		dbname   = envutil.MustGetEnv("DB_NAME")
+		port     = envutil.MustGetEnv("DB_PORT")
 	)
 
 	psqlInfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable port=%s",

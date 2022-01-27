@@ -27,7 +27,6 @@ func Test_PostAuthenticate(t *testing.T) {
 	app.Init()
 	t.Cleanup(testingcommmon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
-	app.Init()
 
 	testWallet := testingcommmon.GenerateWallet()
 	eula, flowId := callFlowIdApi(testWallet.WalletAddress, t)

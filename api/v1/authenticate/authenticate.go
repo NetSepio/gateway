@@ -2,13 +2,13 @@ package authenticate
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
 	"github.com/TheLazarusNetwork/marketplace-engine/models/claims"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/auth"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/cryptosign"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/envutil"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
@@ -65,7 +65,7 @@ func authenticate(c *gin.Context) {
 	}
 	if isCorrect {
 		customClaims := claims.New(walletAddress)
-		jwtPrivateKey := os.Getenv("JWT_PRIVATE_KEY")
+		jwtPrivateKey := envutil.MustGetEnv("JWT_PRIVATE_KEY")
 		jwtToken, err := auth.GenerateToken(customClaims, jwtPrivateKey)
 		if err != nil {
 			httphelper.NewInternalServerError(c, "failed to generate token, error %v", err.Error())

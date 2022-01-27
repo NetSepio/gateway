@@ -1,8 +1,7 @@
 package smartcontract
 
 import (
-	"os"
-
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/envutil"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
@@ -13,7 +12,7 @@ func GetClient() (*ethclient.Client, error) {
 	if client != nil {
 		return client, nil
 	}
-	nodeUrl := os.Getenv("POLYGON_RPC")
+	nodeUrl := envutil.MustGetEnv("POLYGON_RPC")
 	var err error
 	client, err = ethclient.Dial(nodeUrl)
 	if err != nil {
