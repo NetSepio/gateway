@@ -28,14 +28,13 @@ func Test_PostAuthenticate(t *testing.T) {
 	t.Cleanup(testingcommmon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 
-	testWallet := testingcommmon.GenerateWallet()
-	eula, flowId := callFlowIdApi(testWallet.WalletAddress, t)
-
 	router := app.GinApp
 
 	url := "/api/v1.0/authenticate"
 
 	t.Run("Should return 200 with correct wallet address", func(t *testing.T) {
+		testWallet := testingcommmon.GenerateWallet()
+		eula, flowId := callFlowIdApi(testWallet.WalletAddress, t)
 		signature := getSignature(eula, flowId, testWallet.PrivateKey)
 		body := authenticate.AuthenticateRequest{Signature: signature, FlowId: flowId}
 		jsonBody, err := json.Marshal(body)
@@ -53,6 +52,8 @@ func Test_PostAuthenticate(t *testing.T) {
 		assert.Equal(t, http.StatusOK, rr.Code, rr.Body.String())
 	})
 	t.Run("Should return 403 with different wallet address", func(t *testing.T) {
+		testWallet := testingcommmon.GenerateWallet()
+		eula, flowId := callFlowIdApi(testWallet.WalletAddress, t)
 		// Different private key will result in different wallet address
 		differentPrivatekey := "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 		signature := getSignature(eula, flowId, differentPrivatekey)
