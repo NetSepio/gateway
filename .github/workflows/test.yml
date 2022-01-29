@@ -19,6 +19,7 @@ jobs:
       POLYGON_RPC:  ${{ secrets.POLYGON_RPC }}
       MNEMONIC:  ${{ secrets.MNEMONIC }}
       CREATIFY_CONTRACT_ADDRESS: ${{ secrets.CREATIFY_CONTRACT_ADDRESS }}
+      JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
 
     services:
       postgres:
