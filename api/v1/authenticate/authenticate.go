@@ -71,6 +71,7 @@ func authenticate(c *gin.Context) {
 			httphelper.NewInternalServerError(c, "failed to generate token, error %v", err.Error())
 			return
 		}
+		db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{})
 		payload := AuthenticatePayload{
 			Token: jwtToken,
 		}

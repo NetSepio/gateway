@@ -108,6 +108,7 @@ func postClaimRole(c *gin.Context) {
 		logwrapper.Error(err)
 		return
 	} else {
+		db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{})
 		payload := ClaimRolePayload{
 			TransactionHash: transactionHash,
 		}
