@@ -28,9 +28,15 @@ var (
 	_ = event.NewSubscription
 )
 
+// LibPartPart is an auto generated low-level Go binding around an user-defined struct.
+type LibPartPart struct {
+	Account common.Address
+	Value   *big.Int
+}
+
 // CreatifyMetaData contains all meta data concerning the Creatify contract.
 var CreatifyMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"baseTokenURI\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"marketplaceAddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"}],\"name\":\"ArtifactCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"CREATOR_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"OPERATOR_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"metadataHash\",\"type\":\"string\"}],\"name\":\"createArtifact\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"metadataHash\",\"type\":\"string\"}],\"name\":\"delegateArtifactCreation\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"marketplace\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"baseTokenURI\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"marketplaceAddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenID\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"metaDataUri\",\"type\":\"string\"}],\"name\":\"ArtifactCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"addresspayable\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"value\",\"type\":\"uint96\"}],\"indexed\":false,\"internalType\":\"structLibPart.Part[]\",\"name\":\"royalties\",\"type\":\"tuple[]\"}],\"name\":\"RoyaltiesSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"CREATIFY_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CREATIFY_CREATOR_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"CREATIFY_OPERATOR_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"metadataHash\",\"type\":\"string\"}],\"name\":\"createArtifact\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"metadataHash\",\"type\":\"string\"}],\"name\":\"delegateArtifactCreation\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"getRaribleV2Royalties\",\"outputs\":[{\"components\":[{\"internalType\":\"addresspayable\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"value\",\"type\":\"uint96\"}],\"internalType\":\"structLibPart.Part[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"marketplace\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_salePrice\",\"type\":\"uint256\"}],\"name\":\"royaltyInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"royaltyAmount\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"addresspayable\",\"name\":\"_royaltiesReceipientAddress\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"_percentageBasisPoints\",\"type\":\"uint96\"}],\"name\":\"setRoyalties\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
 // CreatifyABI is the input ABI used to generate the binding from.
@@ -179,12 +185,12 @@ func (_Creatify *CreatifyTransactorRaw) Transact(opts *bind.TransactOpts, method
 	return _Creatify.Contract.contract.Transact(opts, method, params...)
 }
 
-// CREATORROLE is a free data retrieval call binding the contract method 0x8aeda25a.
+// CREATIFYADMINROLE is a free data retrieval call binding the contract method 0x4e6401d9.
 //
-// Solidity: function CREATOR_ROLE() view returns(bytes32)
-func (_Creatify *CreatifyCaller) CREATORROLE(opts *bind.CallOpts) ([32]byte, error) {
+// Solidity: function CREATIFY_ADMIN_ROLE() view returns(bytes32)
+func (_Creatify *CreatifyCaller) CREATIFYADMINROLE(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _Creatify.contract.Call(opts, &out, "CREATOR_ROLE")
+	err := _Creatify.contract.Call(opts, &out, "CREATIFY_ADMIN_ROLE")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -196,18 +202,80 @@ func (_Creatify *CreatifyCaller) CREATORROLE(opts *bind.CallOpts) ([32]byte, err
 
 }
 
-// CREATORROLE is a free data retrieval call binding the contract method 0x8aeda25a.
+// CREATIFYADMINROLE is a free data retrieval call binding the contract method 0x4e6401d9.
 //
-// Solidity: function CREATOR_ROLE() view returns(bytes32)
-func (_Creatify *CreatifySession) CREATORROLE() ([32]byte, error) {
-	return _Creatify.Contract.CREATORROLE(&_Creatify.CallOpts)
+// Solidity: function CREATIFY_ADMIN_ROLE() view returns(bytes32)
+func (_Creatify *CreatifySession) CREATIFYADMINROLE() ([32]byte, error) {
+	return _Creatify.Contract.CREATIFYADMINROLE(&_Creatify.CallOpts)
 }
 
-// CREATORROLE is a free data retrieval call binding the contract method 0x8aeda25a.
+// CREATIFYADMINROLE is a free data retrieval call binding the contract method 0x4e6401d9.
 //
-// Solidity: function CREATOR_ROLE() view returns(bytes32)
-func (_Creatify *CreatifyCallerSession) CREATORROLE() ([32]byte, error) {
-	return _Creatify.Contract.CREATORROLE(&_Creatify.CallOpts)
+// Solidity: function CREATIFY_ADMIN_ROLE() view returns(bytes32)
+func (_Creatify *CreatifyCallerSession) CREATIFYADMINROLE() ([32]byte, error) {
+	return _Creatify.Contract.CREATIFYADMINROLE(&_Creatify.CallOpts)
+}
+
+// CREATIFYCREATORROLE is a free data retrieval call binding the contract method 0xe7895a9d.
+//
+// Solidity: function CREATIFY_CREATOR_ROLE() view returns(bytes32)
+func (_Creatify *CreatifyCaller) CREATIFYCREATORROLE(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _Creatify.contract.Call(opts, &out, "CREATIFY_CREATOR_ROLE")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// CREATIFYCREATORROLE is a free data retrieval call binding the contract method 0xe7895a9d.
+//
+// Solidity: function CREATIFY_CREATOR_ROLE() view returns(bytes32)
+func (_Creatify *CreatifySession) CREATIFYCREATORROLE() ([32]byte, error) {
+	return _Creatify.Contract.CREATIFYCREATORROLE(&_Creatify.CallOpts)
+}
+
+// CREATIFYCREATORROLE is a free data retrieval call binding the contract method 0xe7895a9d.
+//
+// Solidity: function CREATIFY_CREATOR_ROLE() view returns(bytes32)
+func (_Creatify *CreatifyCallerSession) CREATIFYCREATORROLE() ([32]byte, error) {
+	return _Creatify.Contract.CREATIFYCREATORROLE(&_Creatify.CallOpts)
+}
+
+// CREATIFYOPERATORROLE is a free data retrieval call binding the contract method 0x83d6d7a2.
+//
+// Solidity: function CREATIFY_OPERATOR_ROLE() view returns(bytes32)
+func (_Creatify *CreatifyCaller) CREATIFYOPERATORROLE(opts *bind.CallOpts) ([32]byte, error) {
+	var out []interface{}
+	err := _Creatify.contract.Call(opts, &out, "CREATIFY_OPERATOR_ROLE")
+
+	if err != nil {
+		return *new([32]byte), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
+
+	return out0, err
+
+}
+
+// CREATIFYOPERATORROLE is a free data retrieval call binding the contract method 0x83d6d7a2.
+//
+// Solidity: function CREATIFY_OPERATOR_ROLE() view returns(bytes32)
+func (_Creatify *CreatifySession) CREATIFYOPERATORROLE() ([32]byte, error) {
+	return _Creatify.Contract.CREATIFYOPERATORROLE(&_Creatify.CallOpts)
+}
+
+// CREATIFYOPERATORROLE is a free data retrieval call binding the contract method 0x83d6d7a2.
+//
+// Solidity: function CREATIFY_OPERATOR_ROLE() view returns(bytes32)
+func (_Creatify *CreatifyCallerSession) CREATIFYOPERATORROLE() ([32]byte, error) {
+	return _Creatify.Contract.CREATIFYOPERATORROLE(&_Creatify.CallOpts)
 }
 
 // DEFAULTADMINROLE is a free data retrieval call binding the contract method 0xa217fddf.
@@ -239,37 +307,6 @@ func (_Creatify *CreatifySession) DEFAULTADMINROLE() ([32]byte, error) {
 // Solidity: function DEFAULT_ADMIN_ROLE() view returns(bytes32)
 func (_Creatify *CreatifyCallerSession) DEFAULTADMINROLE() ([32]byte, error) {
 	return _Creatify.Contract.DEFAULTADMINROLE(&_Creatify.CallOpts)
-}
-
-// OPERATORROLE is a free data retrieval call binding the contract method 0xf5b541a6.
-//
-// Solidity: function OPERATOR_ROLE() view returns(bytes32)
-func (_Creatify *CreatifyCaller) OPERATORROLE(opts *bind.CallOpts) ([32]byte, error) {
-	var out []interface{}
-	err := _Creatify.contract.Call(opts, &out, "OPERATOR_ROLE")
-
-	if err != nil {
-		return *new([32]byte), err
-	}
-
-	out0 := *abi.ConvertType(out[0], new([32]byte)).(*[32]byte)
-
-	return out0, err
-
-}
-
-// OPERATORROLE is a free data retrieval call binding the contract method 0xf5b541a6.
-//
-// Solidity: function OPERATOR_ROLE() view returns(bytes32)
-func (_Creatify *CreatifySession) OPERATORROLE() ([32]byte, error) {
-	return _Creatify.Contract.OPERATORROLE(&_Creatify.CallOpts)
-}
-
-// OPERATORROLE is a free data retrieval call binding the contract method 0xf5b541a6.
-//
-// Solidity: function OPERATOR_ROLE() view returns(bytes32)
-func (_Creatify *CreatifyCallerSession) OPERATORROLE() ([32]byte, error) {
-	return _Creatify.Contract.OPERATORROLE(&_Creatify.CallOpts)
 }
 
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
@@ -332,6 +369,37 @@ func (_Creatify *CreatifySession) GetApproved(tokenId *big.Int) (common.Address,
 // Solidity: function getApproved(uint256 tokenId) view returns(address)
 func (_Creatify *CreatifyCallerSession) GetApproved(tokenId *big.Int) (common.Address, error) {
 	return _Creatify.Contract.GetApproved(&_Creatify.CallOpts, tokenId)
+}
+
+// GetRaribleV2Royalties is a free data retrieval call binding the contract method 0xcad96cca.
+//
+// Solidity: function getRaribleV2Royalties(uint256 id) view returns((address,uint96)[])
+func (_Creatify *CreatifyCaller) GetRaribleV2Royalties(opts *bind.CallOpts, id *big.Int) ([]LibPartPart, error) {
+	var out []interface{}
+	err := _Creatify.contract.Call(opts, &out, "getRaribleV2Royalties", id)
+
+	if err != nil {
+		return *new([]LibPartPart), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([]LibPartPart)).(*[]LibPartPart)
+
+	return out0, err
+
+}
+
+// GetRaribleV2Royalties is a free data retrieval call binding the contract method 0xcad96cca.
+//
+// Solidity: function getRaribleV2Royalties(uint256 id) view returns((address,uint96)[])
+func (_Creatify *CreatifySession) GetRaribleV2Royalties(id *big.Int) ([]LibPartPart, error) {
+	return _Creatify.Contract.GetRaribleV2Royalties(&_Creatify.CallOpts, id)
+}
+
+// GetRaribleV2Royalties is a free data retrieval call binding the contract method 0xcad96cca.
+//
+// Solidity: function getRaribleV2Royalties(uint256 id) view returns((address,uint96)[])
+func (_Creatify *CreatifyCallerSession) GetRaribleV2Royalties(id *big.Int) ([]LibPartPart, error) {
+	return _Creatify.Contract.GetRaribleV2Royalties(&_Creatify.CallOpts, id)
 }
 
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
@@ -611,6 +679,51 @@ func (_Creatify *CreatifySession) Paused() (bool, error) {
 // Solidity: function paused() view returns(bool)
 func (_Creatify *CreatifyCallerSession) Paused() (bool, error) {
 	return _Creatify.Contract.Paused(&_Creatify.CallOpts)
+}
+
+// RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
+//
+// Solidity: function royaltyInfo(uint256 _tokenId, uint256 _salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_Creatify *CreatifyCaller) RoyaltyInfo(opts *bind.CallOpts, _tokenId *big.Int, _salePrice *big.Int) (struct {
+	Receiver      common.Address
+	RoyaltyAmount *big.Int
+}, error) {
+	var out []interface{}
+	err := _Creatify.contract.Call(opts, &out, "royaltyInfo", _tokenId, _salePrice)
+
+	outstruct := new(struct {
+		Receiver      common.Address
+		RoyaltyAmount *big.Int
+	})
+	if err != nil {
+		return *outstruct, err
+	}
+
+	outstruct.Receiver = *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+	outstruct.RoyaltyAmount = *abi.ConvertType(out[1], new(*big.Int)).(**big.Int)
+
+	return *outstruct, err
+
+}
+
+// RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
+//
+// Solidity: function royaltyInfo(uint256 _tokenId, uint256 _salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_Creatify *CreatifySession) RoyaltyInfo(_tokenId *big.Int, _salePrice *big.Int) (struct {
+	Receiver      common.Address
+	RoyaltyAmount *big.Int
+}, error) {
+	return _Creatify.Contract.RoyaltyInfo(&_Creatify.CallOpts, _tokenId, _salePrice)
+}
+
+// RoyaltyInfo is a free data retrieval call binding the contract method 0x2a55205a.
+//
+// Solidity: function royaltyInfo(uint256 _tokenId, uint256 _salePrice) view returns(address receiver, uint256 royaltyAmount)
+func (_Creatify *CreatifyCallerSession) RoyaltyInfo(_tokenId *big.Int, _salePrice *big.Int) (struct {
+	Receiver      common.Address
+	RoyaltyAmount *big.Int
+}, error) {
+	return _Creatify.Contract.RoyaltyInfo(&_Creatify.CallOpts, _tokenId, _salePrice)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
@@ -1028,6 +1141,27 @@ func (_Creatify *CreatifySession) SetApprovalForAll(operator common.Address, app
 // Solidity: function setApprovalForAll(address operator, bool approved) returns()
 func (_Creatify *CreatifyTransactorSession) SetApprovalForAll(operator common.Address, approved bool) (*types.Transaction, error) {
 	return _Creatify.Contract.SetApprovalForAll(&_Creatify.TransactOpts, operator, approved)
+}
+
+// SetRoyalties is a paid mutator transaction binding the contract method 0x143094db.
+//
+// Solidity: function setRoyalties(uint256 _tokenId, address _royaltiesReceipientAddress, uint96 _percentageBasisPoints) returns()
+func (_Creatify *CreatifyTransactor) SetRoyalties(opts *bind.TransactOpts, _tokenId *big.Int, _royaltiesReceipientAddress common.Address, _percentageBasisPoints *big.Int) (*types.Transaction, error) {
+	return _Creatify.contract.Transact(opts, "setRoyalties", _tokenId, _royaltiesReceipientAddress, _percentageBasisPoints)
+}
+
+// SetRoyalties is a paid mutator transaction binding the contract method 0x143094db.
+//
+// Solidity: function setRoyalties(uint256 _tokenId, address _royaltiesReceipientAddress, uint96 _percentageBasisPoints) returns()
+func (_Creatify *CreatifySession) SetRoyalties(_tokenId *big.Int, _royaltiesReceipientAddress common.Address, _percentageBasisPoints *big.Int) (*types.Transaction, error) {
+	return _Creatify.Contract.SetRoyalties(&_Creatify.TransactOpts, _tokenId, _royaltiesReceipientAddress, _percentageBasisPoints)
+}
+
+// SetRoyalties is a paid mutator transaction binding the contract method 0x143094db.
+//
+// Solidity: function setRoyalties(uint256 _tokenId, address _royaltiesReceipientAddress, uint96 _percentageBasisPoints) returns()
+func (_Creatify *CreatifyTransactorSession) SetRoyalties(_tokenId *big.Int, _royaltiesReceipientAddress common.Address, _percentageBasisPoints *big.Int) (*types.Transaction, error) {
+	return _Creatify.Contract.SetRoyalties(&_Creatify.TransactOpts, _tokenId, _royaltiesReceipientAddress, _percentageBasisPoints)
 }
 
 // TransferFrom is a paid mutator transaction binding the contract method 0x23b872dd.
@@ -1457,14 +1591,15 @@ func (it *CreatifyArtifactCreatedIterator) Close() error {
 
 // CreatifyArtifactCreated represents a ArtifactCreated event raised by the Creatify contract.
 type CreatifyArtifactCreated struct {
-	TokenID *big.Int
-	Creator common.Address
-	Raw     types.Log // Blockchain specific contextual infos
+	TokenID     *big.Int
+	Creator     common.Address
+	MetaDataUri string
+	Raw         types.Log // Blockchain specific contextual infos
 }
 
-// FilterArtifactCreated is a free log retrieval operation binding the contract event 0xf44929f6f20c2834f73c9f2afadf1f6d919c24036ecc26d325d4bdde99a4a829.
+// FilterArtifactCreated is a free log retrieval operation binding the contract event 0xa9c6dfece4407c611c25470081b4040479895cfd325b1c56a232ae9e89b40b70.
 //
-// Solidity: event ArtifactCreated(uint256 tokenID, address indexed creator)
+// Solidity: event ArtifactCreated(uint256 tokenID, address indexed creator, string metaDataUri)
 func (_Creatify *CreatifyFilterer) FilterArtifactCreated(opts *bind.FilterOpts, creator []common.Address) (*CreatifyArtifactCreatedIterator, error) {
 
 	var creatorRule []interface{}
@@ -1479,9 +1614,9 @@ func (_Creatify *CreatifyFilterer) FilterArtifactCreated(opts *bind.FilterOpts, 
 	return &CreatifyArtifactCreatedIterator{contract: _Creatify.contract, event: "ArtifactCreated", logs: logs, sub: sub}, nil
 }
 
-// WatchArtifactCreated is a free log subscription operation binding the contract event 0xf44929f6f20c2834f73c9f2afadf1f6d919c24036ecc26d325d4bdde99a4a829.
+// WatchArtifactCreated is a free log subscription operation binding the contract event 0xa9c6dfece4407c611c25470081b4040479895cfd325b1c56a232ae9e89b40b70.
 //
-// Solidity: event ArtifactCreated(uint256 tokenID, address indexed creator)
+// Solidity: event ArtifactCreated(uint256 tokenID, address indexed creator, string metaDataUri)
 func (_Creatify *CreatifyFilterer) WatchArtifactCreated(opts *bind.WatchOpts, sink chan<- *CreatifyArtifactCreated, creator []common.Address) (event.Subscription, error) {
 
 	var creatorRule []interface{}
@@ -1521,9 +1656,9 @@ func (_Creatify *CreatifyFilterer) WatchArtifactCreated(opts *bind.WatchOpts, si
 	}), nil
 }
 
-// ParseArtifactCreated is a log parse operation binding the contract event 0xf44929f6f20c2834f73c9f2afadf1f6d919c24036ecc26d325d4bdde99a4a829.
+// ParseArtifactCreated is a log parse operation binding the contract event 0xa9c6dfece4407c611c25470081b4040479895cfd325b1c56a232ae9e89b40b70.
 //
-// Solidity: event ArtifactCreated(uint256 tokenID, address indexed creator)
+// Solidity: event ArtifactCreated(uint256 tokenID, address indexed creator, string metaDataUri)
 func (_Creatify *CreatifyFilterer) ParseArtifactCreated(log types.Log) (*CreatifyArtifactCreated, error) {
 	event := new(CreatifyArtifactCreated)
 	if err := _Creatify.contract.UnpackLog(event, "ArtifactCreated", log); err != nil {
@@ -2147,6 +2282,141 @@ func (_Creatify *CreatifyFilterer) WatchRoleRevoked(opts *bind.WatchOpts, sink c
 func (_Creatify *CreatifyFilterer) ParseRoleRevoked(log types.Log) (*CreatifyRoleRevoked, error) {
 	event := new(CreatifyRoleRevoked)
 	if err := _Creatify.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// CreatifyRoyaltiesSetIterator is returned from FilterRoyaltiesSet and is used to iterate over the raw logs and unpacked data for RoyaltiesSet events raised by the Creatify contract.
+type CreatifyRoyaltiesSetIterator struct {
+	Event *CreatifyRoyaltiesSet // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *CreatifyRoyaltiesSetIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(CreatifyRoyaltiesSet)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(CreatifyRoyaltiesSet)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *CreatifyRoyaltiesSetIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *CreatifyRoyaltiesSetIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// CreatifyRoyaltiesSet represents a RoyaltiesSet event raised by the Creatify contract.
+type CreatifyRoyaltiesSet struct {
+	TokenId   *big.Int
+	Royalties []LibPartPart
+	Raw       types.Log // Blockchain specific contextual infos
+}
+
+// FilterRoyaltiesSet is a free log retrieval operation binding the contract event 0x3fa96d7b6bcbfe71ef171666d84db3cf52fa2d1c8afdb1cc8e486177f208b7df.
+//
+// Solidity: event RoyaltiesSet(uint256 tokenId, (address,uint96)[] royalties)
+func (_Creatify *CreatifyFilterer) FilterRoyaltiesSet(opts *bind.FilterOpts) (*CreatifyRoyaltiesSetIterator, error) {
+
+	logs, sub, err := _Creatify.contract.FilterLogs(opts, "RoyaltiesSet")
+	if err != nil {
+		return nil, err
+	}
+	return &CreatifyRoyaltiesSetIterator{contract: _Creatify.contract, event: "RoyaltiesSet", logs: logs, sub: sub}, nil
+}
+
+// WatchRoyaltiesSet is a free log subscription operation binding the contract event 0x3fa96d7b6bcbfe71ef171666d84db3cf52fa2d1c8afdb1cc8e486177f208b7df.
+//
+// Solidity: event RoyaltiesSet(uint256 tokenId, (address,uint96)[] royalties)
+func (_Creatify *CreatifyFilterer) WatchRoyaltiesSet(opts *bind.WatchOpts, sink chan<- *CreatifyRoyaltiesSet) (event.Subscription, error) {
+
+	logs, sub, err := _Creatify.contract.WatchLogs(opts, "RoyaltiesSet")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(CreatifyRoyaltiesSet)
+				if err := _Creatify.contract.UnpackLog(event, "RoyaltiesSet", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseRoyaltiesSet is a log parse operation binding the contract event 0x3fa96d7b6bcbfe71ef171666d84db3cf52fa2d1c8afdb1cc8e486177f208b7df.
+//
+// Solidity: event RoyaltiesSet(uint256 tokenId, (address,uint96)[] royalties)
+func (_Creatify *CreatifyFilterer) ParseRoyaltiesSet(log types.Log) (*CreatifyRoyaltiesSet, error) {
+	event := new(CreatifyRoyaltiesSet)
+	if err := _Creatify.contract.UnpackLog(event, "RoyaltiesSet", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

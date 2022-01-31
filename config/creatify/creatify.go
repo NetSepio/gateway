@@ -43,20 +43,20 @@ func InitRolesId() {
 	if err != nil {
 		logwrapper.Fatalf("failed to get instance for %v , error: %v", "CREATIFY", err.Error())
 	}
-	creatorRoleId, err := instance.CREATORROLE(nil)
+	creatorRoleId, err := instance.CREATIFYCREATORROLE(nil)
 	if err != nil {
-		logwrapper.Fatalf("Failed to get %v, error: %v", "CREATORROLE", err.Error())
+		logwrapper.Fatalf("Failed to get %v, error: %v", "CREATIFYCREATORROLE", err.Error())
 	}
 	roles[CREATOR_ROLE] = creatorRoleId
-	adminRoleId, err := instance.DEFAULTADMINROLE(nil)
+	adminRoleId, err := instance.CREATIFYADMINROLE(nil)
 	if err != nil {
-		logwrapper.Fatalf("Failed to get %v, error: %v", "DEFAULTADMINROLE", err.Error())
+		logwrapper.Fatalf("Failed to get %v, error: %v", "CREATIFYADMINROLE", err.Error())
 	}
 	roles[ADMIN_ROLE] = adminRoleId
 
-	operatorRoleId, err := instance.OPERATORROLE(nil)
+	operatorRoleId, err := instance.CREATIFYOPERATORROLE(nil)
 	if err != nil {
-		logwrapper.Fatalf("Failed to get %v, error: %v", "OPERATORROLE", err.Error())
+		logwrapper.Fatalf("Failed to get %v, error: %v", "CREATIFYOPERATORROLE", err.Error())
 	}
 	roles[OPERATOR_ROLE] = operatorRoleId
 }
