@@ -20,11 +20,10 @@ import (
 )
 
 func Test_JWT(t *testing.T) {
-	logwrapper.Init()
 	config.Init("../../../../.env")
+	logwrapper.Init("../../../../logs")
 	db := dbconfig.GetDb()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
-	logwrapper.Init()
 	gin.SetMode(gin.TestMode)
 	testWalletAddress := testingcommon.GenerateWallet().WalletAddress
 	newUser := models.User{

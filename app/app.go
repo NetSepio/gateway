@@ -13,9 +13,9 @@ import (
 
 var GinApp *gin.Engine
 
-func Init(envPath string) {
+func Init(envPath string, logBasePath string) {
 	config.Init(envPath)
-	logwrapper.Init()
+	logwrapper.Init(logBasePath)
 	creatify.InitRolesId()
 	GinApp = gin.Default()
 	api.ApplyRoutes(GinApp)

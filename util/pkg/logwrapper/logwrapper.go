@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 
@@ -15,7 +14,7 @@ import (
 
 var Log *logrus.Entry
 
-func Init() {
+func Init(basepath string) {
 	appName, ok := os.LookupEnv("APP_NAME")
 
 	if !ok {
@@ -32,13 +31,9 @@ func Init() {
 	}
 	Log.Logger.SetFormatter(&logrus.JSONFormatter{})
 
-	//Fix for filePath in tests
-	var (
-		_, b, _, _ = runtime.Caller(0)
-		basepath   = filepath.Join(filepath.Dir(b), "../../..")
-	)
 	timeNow := strings.Replace(time.Now().Format(time.UnixDate), ":", "_", -1)
-	filePath := fmt.Sprintf("%v/logs/%v.log", basepath, timeNow)
+	fileName := fmt.Sprintf("%v.log", timeNow)
+	filePath := filepath.Join(basepath, fileName)
 	file, err := os.Create(filePath)
 	if err != nil {
 		Log.Fatalf("Error creating log file: %v", err)

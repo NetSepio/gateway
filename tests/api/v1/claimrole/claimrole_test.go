@@ -29,7 +29,7 @@ import (
 
 func Test_PostClaimRole(t *testing.T) {
 	defer time.Sleep(4 * time.Second)
-	app.Init("../../../../.env")
+	app.Init("../../../../.env", "../../../../logs")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()

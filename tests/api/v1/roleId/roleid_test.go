@@ -17,7 +17,7 @@ import (
 
 func Test_GetRoleId(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	app.Init("../../../../.env")
+	app.Init("../../../../.env", "../../../../logs")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)

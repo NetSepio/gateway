@@ -24,7 +24,7 @@ import (
 
 // TODO: Write test to verify expiry
 func Test_PostAuthenticate(t *testing.T) {
-	app.Init("../../../../.env")
+	app.Init("../../../../.env", "../../../../logs")
 	t.Cleanup(testingcommmon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 
