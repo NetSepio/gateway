@@ -15,7 +15,7 @@ import (
 
 //TODO add test for testing when wallet address exist
 func Test_GetFlowId(t *testing.T) {
-	app.Init()
+	app.Init("../../../../.env")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 

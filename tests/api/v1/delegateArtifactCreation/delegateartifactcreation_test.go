@@ -17,7 +17,7 @@ import (
 
 func TestDelegateArtifactCreation(t *testing.T) {
 	time.Sleep(4 * time.Second)
-	app.Init()
+	app.Init("../../../../.env")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()

@@ -2,9 +2,9 @@ package app
 
 import (
 	"github.com/TheLazarusNetwork/marketplace-engine/api"
+	"github.com/TheLazarusNetwork/marketplace-engine/config"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/config"
 	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
 	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
 
@@ -13,8 +13,8 @@ import (
 
 var GinApp *gin.Engine
 
-func Init() {
-	config.Init()
+func Init(envPath string) {
+	config.Init(envPath)
 	logwrapper.Init()
 	creatify.InitRolesId()
 	GinApp = gin.Default()

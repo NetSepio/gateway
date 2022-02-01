@@ -19,7 +19,7 @@ import (
 )
 
 func Test_PatchProfile(t *testing.T) {
-	app.Init()
+	app.Init("../../../../.env")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	header := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
@@ -49,7 +49,7 @@ func Test_PatchProfile(t *testing.T) {
 }
 
 func Test_GetProfile(t *testing.T) {
-	app.Init()
+	app.Init("../../../../.env")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()

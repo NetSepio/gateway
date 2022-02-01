@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	app.Init()
+	app.Init(".env")
 	logwrapper.Log.Info("Starting app")
 	err := app.GinApp.Run(":8000")
 	if err != nil {

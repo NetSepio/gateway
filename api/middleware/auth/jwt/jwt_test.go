@@ -21,7 +21,7 @@ import (
 
 func Test_JWT(t *testing.T) {
 	logwrapper.Init()
-	config.Init()
+	config.Init("../../../../.env")
 	db := dbconfig.GetDb()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	logwrapper.Init()
