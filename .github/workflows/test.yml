@@ -20,6 +20,8 @@ jobs:
       MNEMONIC:  ${{ secrets.MNEMONIC }}
       CREATIFY_CONTRACT_ADDRESS: ${{ secrets.CREATIFY_CONTRACT_ADDRESS }}
       JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      CREATOR_EULA: TODO CREATOR EULA
+      AUTH_EULA: TODO AUTH EULA
 
     services:
       postgres:

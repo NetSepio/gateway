@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/TheLazarusNetwork/marketplace-engine/models"
+	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/envutil"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/flowid"
 	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
 
@@ -33,7 +34,7 @@ func getFlowId(c *gin.Context) {
 
 		return
 	}
-	userAuthEULA := "TODO AUTH EULA"
+	userAuthEULA := envutil.MustGetEnv("AUTH_EULA")
 	payload := GetFlowIdPayload{
 		FlowId: flowId,
 		Eula:   userAuthEULA,

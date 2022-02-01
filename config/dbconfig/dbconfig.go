@@ -67,9 +67,11 @@ func GetDb() *gorm.DB {
 		logwrapper.Fatal(err)
 	}
 
+	creatorEula := envutil.MustGetEnv("CREATOR_EULA")
+
 	// TODO: create role only if they does not exist
 	rolesToBeAdded := []models.Role{
-		{Name: "Creator Role", RoleId: hexutil.Encode(creatorRoleId[:]), Eula: "TODO Creator EULA"}}
+		{Name: "Creator Role", RoleId: hexutil.Encode(creatorRoleId[:]), Eula: creatorEula}}
 	for _, role := range rolesToBeAdded {
 		if err := db.Model(&models.Role{}).FirstOrCreate(&role).Error; err != nil {
 			log.Fatal(err)

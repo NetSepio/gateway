@@ -49,7 +49,7 @@ func authenticate(c *gin.Context) {
 		httphelper.ErrResponse(c, 500, "Unexpected error occured")
 		return
 	}
-	userAuthEULA := "TODO AUTH EULA"
+	userAuthEULA := envutil.MustGetEnv("AUTH_EULA")
 	message := userAuthEULA + req.FlowId
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
