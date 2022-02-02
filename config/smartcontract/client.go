@@ -1,8 +1,8 @@
 package smartcontract
 
 import (
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 

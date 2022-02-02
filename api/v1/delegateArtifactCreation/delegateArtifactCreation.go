@@ -3,11 +3,11 @@ package delegateartifactcreation
 import (
 	"net/http"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract/rawtrasaction"
-	gcreatify "github.com/TheLazarusNetwork/marketplace-engine/generated/smartcontract/creatify"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/middleware/auth/jwt"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract/rawtrasaction"
+	"github.com/TheLazarusNetwork/netsepio-engine/generated/smartcontract/gennetsepio"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/gin-gonic/gin"
 )
@@ -29,13 +29,13 @@ func deletegateArtifactCreation(c *gin.Context) {
 		return
 	}
 
-	creatorAddr := common.HexToAddress(request.CreatorAddress)
-	abiS := gcreatify.CreatifyABI
+	voterAddr := common.HexToAddress(request.Voter)
+	abiS := gennetsepio.GennetsepioABI
 
-	tx, err := rawtrasaction.SendRawTrasac(abiS, "delegateArtifactCreation", creatorAddr, request.MetaDataHash)
+	tx, err := rawtrasaction.SendRawTrasac(abiS, "delegateReviewCreation", request.Category, request.DomainAddress, request.SiteUrl, request.SiteType, request.SiteTag, request.SiteSafety, request.MetaDataUri, voterAddr)
 
 	if err != nil {
-		httphelper.NewInternalServerError(c, "failed to call %v of %v, error: %v", "delegateArtifactCreation", "Creatify", err.Error())
+		httphelper.NewInternalServerError(c, "failed to call %v of %v, error: %v", "delegateReviewCreation", "NETSEPIO", err.Error())
 		return
 	}
 	transactionHash := tx.Hash().String()

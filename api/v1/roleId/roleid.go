@@ -3,12 +3,12 @@ package roleid
 import (
 	"net/http"
 
-	jwtMiddleWare "github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/marketplace-engine/models"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/flowid"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
+	jwtMiddleWare "github.com/TheLazarusNetwork/netsepio-engine/api/middleware/auth/jwt"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
+	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/flowid"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"

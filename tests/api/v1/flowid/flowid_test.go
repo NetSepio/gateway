@@ -6,8 +6,8 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/app"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
+	"github.com/TheLazarusNetwork/netsepio-engine/app"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

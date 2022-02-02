@@ -10,11 +10,11 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
-	"github.com/TheLazarusNetwork/marketplace-engine/api/v1/authenticate"
-	"github.com/TheLazarusNetwork/marketplace-engine/api/v1/flowid"
-	"github.com/TheLazarusNetwork/marketplace-engine/app"
-	testingcommmon "github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/authenticate"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/flowid"
+	"github.com/TheLazarusNetwork/netsepio-engine/app"
+	testingcommmon "github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"

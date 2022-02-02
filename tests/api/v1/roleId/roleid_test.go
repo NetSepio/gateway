@@ -6,9 +6,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/app"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
+	"github.com/TheLazarusNetwork/netsepio-engine/app"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/netsepio"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +21,7 @@ func Test_GetRoleId(t *testing.T) {
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
-	creatorRole, err := creatify.GetRole(creatify.CREATOR_ROLE)
+	creatorRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
 	if err != nil {
 		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())
 	}

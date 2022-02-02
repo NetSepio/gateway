@@ -16,9 +16,9 @@ jobs:
       DB_PASSWORD: postgres
       DB_NAME: postgres
       DB_PORT: 5432
-      POLYGON_RPC:  ${{ secrets.POLYGON_RPC }}
-      MNEMONIC:  ${{ secrets.MNEMONIC }}
-      CREATIFY_CONTRACT_ADDRESS: ${{ secrets.CREATIFY_CONTRACT_ADDRESS }}
+      POLYGON_RPC: ${{ secrets.POLYGON_RPC }}
+      MNEMONIC: ${{ secrets.MNEMONIC }}
+      NETSEPIO_CONTRACT_ADDRESS: ${{ secrets.NETSEPIO_CONTRACT_ADDRESS }}
       JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
       CREATOR_EULA: TODO CREATOR EULA
       AUTH_EULA: TODO AUTH EULA

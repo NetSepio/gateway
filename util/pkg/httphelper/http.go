@@ -3,8 +3,8 @@ package httphelper
 import (
 	"net/http"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 )

@@ -7,11 +7,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
-	"github.com/TheLazarusNetwork/marketplace-engine/api/v1/profile"
-	"github.com/TheLazarusNetwork/marketplace-engine/app"
-	"github.com/TheLazarusNetwork/marketplace-engine/models"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/profile"
+	"github.com/TheLazarusNetwork/netsepio-engine/app"
+	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"

@@ -1,10 +1,10 @@
-package creatify
+package netsepio
 
 import (
 	"errors"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 )
 
 type tRole int
@@ -14,7 +14,7 @@ var (
 )
 
 const (
-	CREATOR_ROLE  tRole = iota
+	VOTER_ROLE    tRole = iota
 	ADMIN_ROLE    tRole = iota
 	OPERATOR_ROLE tRole = iota
 )
@@ -41,22 +41,22 @@ func InitRolesId() {
 	}
 	instance, err := GetInstance(client)
 	if err != nil {
-		logwrapper.Fatalf("failed to get instance for %v , error: %v", "CREATIFY", err.Error())
+		logwrapper.Fatalf("failed to get instance for %v , error: %v", "NETSEPIO", err.Error())
 	}
-	creatorRoleId, err := instance.CREATIFYCREATORROLE(nil)
+	voterRoleId, err := instance.NETSEPIOVOTERROLE(nil)
 	if err != nil {
-		logwrapper.Fatalf("Failed to get %v, error: %v", "CREATIFYCREATORROLE", err.Error())
+		logwrapper.Fatalf("Failed to get %v, error: %v", "NETSEPIOVOTERROLE", err.Error())
 	}
-	roles[CREATOR_ROLE] = creatorRoleId
-	adminRoleId, err := instance.CREATIFYADMINROLE(nil)
+	roles[VOTER_ROLE] = voterRoleId
+	adminRoleId, err := instance.NETSEPIOADMINROLE(nil)
 	if err != nil {
-		logwrapper.Fatalf("Failed to get %v, error: %v", "CREATIFYADMINROLE", err.Error())
+		logwrapper.Fatalf("Failed to get %v, error: %v", "NETSEPIOADMINROLE", err.Error())
 	}
 	roles[ADMIN_ROLE] = adminRoleId
 
-	operatorRoleId, err := instance.CREATIFYOPERATORROLE(nil)
+	operatorRoleId, err := instance.NETSEPIOMODERATORROLE(nil)
 	if err != nil {
-		logwrapper.Fatalf("Failed to get %v, error: %v", "CREATIFYOPERATORROLE", err.Error())
+		logwrapper.Fatalf("Failed to get %v, error: %v", "NETSEPIOMODERATORROLE", err.Error())
 	}
 	roles[OPERATOR_ROLE] = operatorRoleId
 }

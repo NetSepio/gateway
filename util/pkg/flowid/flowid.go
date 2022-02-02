@@ -1,8 +1,8 @@
 package flowid
 
 import (
-	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/marketplace-engine/models"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
+	"github.com/TheLazarusNetwork/netsepio-engine/models"
 
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"

@@ -1,4 +1,4 @@
-module github.com/TheLazarusNetwork/marketplace-engine
+module github.com/TheLazarusNetwork/netsepio-engine
 
 go 1.16
 

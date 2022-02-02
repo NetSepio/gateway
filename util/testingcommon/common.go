@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/marketplace-engine/models"
-	"github.com/TheLazarusNetwork/marketplace-engine/models/claims"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/auth"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/envutil"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
+	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/TheLazarusNetwork/netsepio-engine/models/claims"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/auth"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
 
 	"crypto/ecdsa"
 	"log"

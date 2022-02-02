@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/marketplace-engine/models"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
+	"github.com/TheLazarusNetwork/netsepio-engine/models"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"

@@ -1,12 +1,12 @@
 package apiv1
 
 import (
-	authenticate "github.com/TheLazarusNetwork/marketplace-engine/api/v1/authenticate"
-	claimrole "github.com/TheLazarusNetwork/marketplace-engine/api/v1/claimRole"
-	delegateartifactcreation "github.com/TheLazarusNetwork/marketplace-engine/api/v1/delegateArtifactCreation"
-	flowid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/flowid"
-	"github.com/TheLazarusNetwork/marketplace-engine/api/v1/profile"
-	roleid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/roleId"
+	authenticate "github.com/TheLazarusNetwork/netsepio-engine/api/v1/authenticate"
+	claimrole "github.com/TheLazarusNetwork/netsepio-engine/api/v1/claimRole"
+	delegateartifactcreation "github.com/TheLazarusNetwork/netsepio-engine/api/v1/delegateArtifactCreation"
+	flowid "github.com/TheLazarusNetwork/netsepio-engine/api/v1/flowid"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/profile"
+	roleid "github.com/TheLazarusNetwork/netsepio-engine/api/v1/roleId"
 
 	"github.com/gin-gonic/gin"
 )

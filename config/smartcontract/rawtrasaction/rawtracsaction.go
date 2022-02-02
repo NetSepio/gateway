@@ -5,10 +5,10 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/ethwallet"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/ethwallet"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/consensus/misc"
@@ -40,7 +40,7 @@ func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Tran
 		logwrapper.Warnf("failed to get nonce")
 		return nil, err
 	}
-	envContractAddress := envutil.MustGetEnv("CREATIFY_CONTRACT_ADDRESS")
+	envContractAddress := envutil.MustGetEnv("NETSEPIO_CONTRACT_ADDRESS")
 
 	toAddress := common.HexToAddress(envContractAddress)
 
@@ -79,7 +79,7 @@ func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Tran
 		Nonce:     nonce,
 		GasFeeCap: maxFeePerGas,
 		GasTipCap: maxPriorityFeePerGas,
-		Gas:       310000,
+		Gas:       1310000,
 		To:        &toAddress,
 		Data:      bytesData,
 	})

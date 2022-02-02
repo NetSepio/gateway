@@ -10,15 +10,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/api/types"
-	claimrole "github.com/TheLazarusNetwork/marketplace-engine/api/v1/claimRole"
-	roleid "github.com/TheLazarusNetwork/marketplace-engine/api/v1/roleId"
-	"github.com/TheLazarusNetwork/marketplace-engine/app"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract/auth"
-	smartcontractcreatify "github.com/TheLazarusNetwork/marketplace-engine/generated/smartcontract/creatify"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/testingcommon"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
+	claimrole "github.com/TheLazarusNetwork/netsepio-engine/api/v1/claimRole"
+	roleid "github.com/TheLazarusNetwork/netsepio-engine/api/v1/roleId"
+	"github.com/TheLazarusNetwork/netsepio-engine/app"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/netsepio"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract/auth"
+	"github.com/TheLazarusNetwork/netsepio-engine/generated/smartcontract/gennetsepio"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -56,16 +56,16 @@ func Test_PostClaimRole(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	instance, err := creatify.GetInstance(client)
+	instance, err := netsepio.GetInstance(client)
 	if err != nil {
-		t.Fatalf("failed to get instance for %v , error: %v", "CREATIFY", err.Error())
+		t.Fatalf("failed to get instance for %v , error: %v", "NETSEPIO", err.Error())
 	}
-	creatorRole, err := creatify.GetRole(creatify.CREATOR_ROLE)
+	creatorRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
 	if err != nil {
 		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())
 	}
 	addr := common.HexToAddress(testWallet.WalletAddress)
-	roleGrantedChannel := make(chan *smartcontractcreatify.CreatifyRoleGranted, 10)
+	roleGrantedChannel := make(chan *gennetsepio.GennetsepioRoleGranted, 10)
 
 	authBindOpts, err := auth.GetAuth(client)
 
@@ -80,7 +80,7 @@ func Test_PostClaimRole(t *testing.T) {
 	//Check if role trasaction is successfull
 	hasRole, err := instance.HasRole(nil, creatorRole, addr)
 	if err != nil {
-		t.Fatalf("failed to call %v smart contract function HasRole , error: %v", "CREATIFY", err.Error())
+		t.Fatalf("failed to call %v smart contract function HasRole , error: %v", "NETSEPIO", err.Error())
 	}
 	success := false
 	if !hasRole {
@@ -96,7 +96,7 @@ func Test_PostClaimRole(t *testing.T) {
 
 }
 
-func failAfter(t *testing.T, success *bool, duration time.Duration, ch chan *smartcontractcreatify.CreatifyRoleGranted) {
+func failAfter(t *testing.T, success *bool, duration time.Duration, ch chan *gennetsepio.GennetsepioRoleGranted) {
 	time.Sleep(duration)
 	if !*success {
 		close(ch)
@@ -104,7 +104,7 @@ func failAfter(t *testing.T, success *bool, duration time.Duration, ch chan *sma
 	}
 }
 func requestRole(t *testing.T, headers string) roleid.GetRoleIdPayload {
-	creatorRole, err := creatify.GetRole(creatify.CREATOR_ROLE)
+	creatorRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
 	if err != nil {
 		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())
 	}

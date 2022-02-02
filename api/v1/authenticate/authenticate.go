@@ -3,14 +3,14 @@ package authenticate
 import (
 	"net/http"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/marketplace-engine/models"
-	"github.com/TheLazarusNetwork/marketplace-engine/models/claims"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/auth"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/cryptosign"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
+	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/TheLazarusNetwork/netsepio-engine/models/claims"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/auth"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/cryptosign"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 )

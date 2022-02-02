@@ -3,14 +3,14 @@ package claimrole
 import (
 	"net/http"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/api/middleware/auth/jwt"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/marketplace-engine/config/smartcontract/rawtrasaction"
-	gcreatify "github.com/TheLazarusNetwork/marketplace-engine/generated/smartcontract/creatify"
-	"github.com/TheLazarusNetwork/marketplace-engine/models"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/cryptosign"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/httphelper"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/netsepio-engine/api/middleware/auth/jwt"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract/rawtrasaction"
+	"github.com/TheLazarusNetwork/netsepio-engine/generated/smartcontract/gennetsepio"
+	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/cryptosign"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -61,9 +61,9 @@ func postClaimRole(c *gin.Context) {
 	}
 
 	// client := smartcontract.GetClient()
-	// instance, err := creatify.GetInstance(client)
+	// instance, err := netsepio.GetInstance(client)
 	if err != nil {
-		logwrapper.Errorf("failed to get instance for %v , error: %v", "CREATIFY", err.Error())
+		logwrapper.Errorf("failed to get instance for %v , error: %v", "NETSEPIO", err.Error())
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 	}
 	roleIdBytesSlice, err := hexutil.Decode(role.RoleId)
@@ -76,7 +76,7 @@ func postClaimRole(c *gin.Context) {
 	var roleIdBytes [32]byte
 	copy(roleIdBytes[:], roleIdBytesSlice)
 	if err != nil {
-		logwrapper.Errorf("failed to parse ABI for %v, error: %v", "CREATIFY", err.Error())
+		logwrapper.Errorf("failed to parse ABI for %v, error: %v", "NETSEPIO", err.Error())
 		httphelper.ErrResponse(c, 500, "unexpected error occured")
 		return
 	}
@@ -88,7 +88,7 @@ func postClaimRole(c *gin.Context) {
 		return
 	}
 
-	tx, err := rawtrasaction.SendRawTrasac(gcreatify.CreatifyABI, "grantRole", roleIdBytes, walletAddressHex)
+	tx, err := rawtrasaction.SendRawTrasac(gennetsepio.GennetsepioABI, "grantRole", roleIdBytes, walletAddressHex)
 
 	// tx, err := instance.GrantRole(authBindOpts, roleIdBytes, walletAddressHex)
 	if err != nil {

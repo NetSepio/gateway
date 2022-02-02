@@ -6,10 +6,10 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/TheLazarusNetwork/marketplace-engine/config/creatify"
-	"github.com/TheLazarusNetwork/marketplace-engine/models"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/marketplace-engine/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/netsepio-engine/config/netsepio"
+	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 
 	"github.com/jinzhu/gorm"
 
@@ -62,12 +62,12 @@ func GetDb() *gorm.DB {
     	WHEN duplicate_object THEN null;
 	END $$;`)
 
-	creatorRoleId, err := creatify.GetRole(creatify.CREATOR_ROLE)
+	creatorRoleId, err := netsepio.GetRole(netsepio.VOTER_ROLE)
 	if err != nil {
 		logwrapper.Fatal(err)
 	}
 
-	creatorEula := envutil.MustGetEnv("CREATOR_EULA")
+	creatorEula := envutil.MustGetEnv("OPERATOR_EULA")
 
 	// TODO: create role only if they does not exist
 	rolesToBeAdded := []models.Role{
