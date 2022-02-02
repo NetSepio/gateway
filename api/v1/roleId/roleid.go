@@ -42,7 +42,7 @@ func getRoleId(c *gin.Context) {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 
 	} else {
-		flowId, err := flowid.GenerateFlowId(walletAddress, true, models.ROLE, roleId)
+		flowId, err := flowid.GenerateFlowId(walletAddress, models.ROLE, roleId)
 		if err != nil {
 			logwrapper.Error(err)
 			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")

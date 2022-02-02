@@ -3,14 +3,20 @@ package flowid
 import (
 	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/jinzhu/gorm"
 
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
 
-func GenerateFlowId(walletAddress string, update bool, flowIdType models.FlowIdType, relatedRoleId string) (string, error) {
+func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string) (string, error) {
 	db := dbconfig.GetDb()
 	flowId := uuid.NewString()
+	var update bool
+	update = true
+	if err := db.Model(&models.User{}).Find(&models.User{}).Error; err == gorm.ErrRecordNotFound {
+		update = false
+	}
 	if update {
 		// User exist so update
 		association := db.Model(&models.User{
