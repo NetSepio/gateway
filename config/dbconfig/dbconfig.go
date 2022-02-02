@@ -62,16 +62,15 @@ func GetDb() *gorm.DB {
     	WHEN duplicate_object THEN null;
 	END $$;`)
 
-	creatorRoleId, err := netsepio.GetRole(netsepio.VOTER_ROLE)
+	voterRoleId, err := netsepio.GetRole(netsepio.VOTER_ROLE)
 	if err != nil {
 		logwrapper.Fatal(err)
 	}
 
-	creatorEula := envutil.MustGetEnv("OPERATOR_EULA")
+	voterEula := envutil.MustGetEnv("VOTER_EULA")
 
-	// TODO: create role only if they does not exist
 	rolesToBeAdded := []models.Role{
-		{Name: "Creator Role", RoleId: hexutil.Encode(creatorRoleId[:]), Eula: creatorEula}}
+		{Name: "Voter Role", RoleId: hexutil.Encode(voterRoleId[:]), Eula: voterEula}}
 	for _, role := range rolesToBeAdded {
 		if err := db.Model(&models.Role{}).FirstOrCreate(&role).Error; err != nil {
 			log.Fatal(err)
