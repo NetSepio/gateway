@@ -1,8 +1,8 @@
 # NETSEPIO Engine
 REST APIs for Web3 Auth and Smart Contract Functionalities
 
-[![.github/workflows/test.yml](https://github.com/TheLazarusNetwork/netsepio-engine/actions/workflows/test.yml/badge.svg)](https://github.com/TheLazarusNetwork/netsepio-engine/actions/workflows/test.yml)
-[![Lint](https://github.com/TheLazarusNetwork/netsepio-engine/actions/workflows/lint.yml/badge.svg)](https://github.com/TheLazarusNetwork/netsepio-engine/actions/workflows/lint.yml)
+[![.github/workflows/test.yml](https://github.com/NetSepio/Engine/actions/workflows/test.yml/badge.svg)](https://github.com/TheLazarusNetwork/netsepio-engine/actions/workflows/test.yml)
+[![Lint](https://github.com/NetSepio/Engine/actions/workflows/lint.yml/badge.svg)](https://github.com/TheLazarusNetwork/netsepio-engine/actions/workflows/lint.yml)
 
 # Getting Started
 
