@@ -60,9 +60,9 @@ func Test_PostClaimRole(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get instance for %v , error: %v", "NETSEPIO", err.Error())
 	}
-	creatorRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
+	voterRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
 	if err != nil {
-		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())
+		t.Fatalf("failed to get role id for %v , error: %v", "VOTER ROLE", err.Error())
 	}
 	addr := common.HexToAddress(testWallet.WalletAddress)
 	roleGrantedChannel := make(chan *gennetsepio.GennetsepioRoleGranted, 10)
@@ -72,13 +72,13 @@ func Test_PostClaimRole(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get auth, error: %v", err.Error())
 	}
-	subs, err := instance.WatchRoleGranted(nil, roleGrantedChannel, [][32]byte{creatorRole}, []common.Address{addr}, []common.Address{authBindOpts.From})
+	subs, err := instance.WatchRoleGranted(nil, roleGrantedChannel, [][32]byte{voterRole}, []common.Address{addr}, []common.Address{authBindOpts.From})
 	if err != nil {
 		t.Fatalf("failed to listen to an event %v, error: %v", "RoleGranted", err.Error())
 	}
 
 	//Check if role trasaction is successfull
-	hasRole, err := instance.HasRole(nil, creatorRole, addr)
+	hasRole, err := instance.HasRole(nil, voterRole, addr)
 	if err != nil {
 		t.Fatalf("failed to call %v smart contract function HasRole , error: %v", "NETSEPIO", err.Error())
 	}
@@ -104,12 +104,12 @@ func failAfter(t *testing.T, success *bool, duration time.Duration, ch chan *gen
 	}
 }
 func requestRole(t *testing.T, headers string) roleid.GetRoleIdPayload {
-	creatorRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
+	voterRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
 	if err != nil {
-		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())
+		t.Fatalf("failed to get role id for %v , error: %v", "VOTER ROLE", err.Error())
 	}
 
-	url := "/api/v1.0/roleId/" + hexutil.Encode(creatorRole[:])
+	url := "/api/v1.0/roleId/" + hexutil.Encode(voterRole[:])
 	rr := httptest.NewRecorder()
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

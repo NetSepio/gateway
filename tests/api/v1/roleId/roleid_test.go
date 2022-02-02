@@ -21,15 +21,15 @@ func Test_GetRoleId(t *testing.T) {
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
-	creatorRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
+	voterRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
 	if err != nil {
-		t.Fatalf("failed to get role id for %v , error: %v", "CREATOR ROLE", err.Error())
+		t.Fatalf("failed to get role id for %v , error: %v", "VOTER ROLE", err.Error())
 	}
 
 	url := "/api/v1.0/roleId/%v"
 	t.Run("Get role EULA with flowId when roleId exist", func(t *testing.T) {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequest("GET", fmt.Sprintf(url, hexutil.Encode(creatorRole[:])), nil)
+		req, err := http.NewRequest("GET", fmt.Sprintf(url, hexutil.Encode(voterRole[:])), nil)
 		if err != nil {
 			t.Fatal(err)
 		}

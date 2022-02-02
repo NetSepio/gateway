@@ -84,12 +84,12 @@ Note - Some unset data is emitted.
 | `flowId`  | **Required**. `string` | 
 | `signature`  | **Required**. `string` |
 
-#### Delegate artifact creation to other creator
+#### Delegate review creation to other voter
 ```
-  POST /delegateArtifactCreation
+  POST /delegateReviewCreation
 ```
 | Parameter | Type     | 
 | :-------- | :------- | 
-| `creatorAddress`  | **Required**. `string` | 
-| `metaDataHash`  | **Required**. `string` |
+| `voter`  | **Required**. `string` | 
+| `MetaDataUri`  | **Required**. `string` |
 
