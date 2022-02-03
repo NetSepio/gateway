@@ -1,4 +1,4 @@
-package delegateartifactcreation
+package delegatereviewcreation
 
 import (
 	"bytes"
@@ -8,14 +8,14 @@ import (
 	"testing"
 	"time"
 
-	delegateartifactcreation "github.com/TheLazarusNetwork/netsepio-engine/api/v1/delegateArtifactCreation"
+	delegatereviewcreation "github.com/TheLazarusNetwork/netsepio-engine/api/v1/delegateReviewCreation"
 	"github.com/TheLazarusNetwork/netsepio-engine/app"
 	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDelegateArtifactCreation(t *testing.T) {
+func TestDelegateReviewCreation(t *testing.T) {
 	time.Sleep(4 * time.Second)
 	app.Init("../../../../.env", "../../../../logs")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
@@ -23,10 +23,10 @@ func TestDelegateArtifactCreation(t *testing.T) {
 	testWallet := testingcommon.GenerateWallet()
 	voterWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
-	url := "/api/v1.0/delegateArtifactCreation"
+	url := "/api/v1.0/delegateReviewCreation"
 	rr := httptest.NewRecorder()
 
-	reqBody := delegateartifactcreation.DelegateArtifactCreationRequest{
+	reqBody := delegatereviewcreation.DelegateReviewCreationRequest{
 		Voter:         voterWallet.WalletAddress,
 		MetaDataUri:   "QmSYRXWGGqVDAHKTwfnYQDR74d4bfwXxudFosbGA695AWS",
 		Category:      "Website",
