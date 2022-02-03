@@ -1,14 +1,14 @@
-FROM golang as builder
+FROM golang:alpine as builder
 WORKDIR /app
 COPY go.mod .
 COPY go.sum .
+RUN apk add build-base
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 go build -o gateway .
+RUN go build -o gateway .
 
 
 FROM alpine
 WORKDIR /app
 COPY --from=builder /app/gateway .
-RUN mkdir logs
 CMD [ "./gateway" ]
