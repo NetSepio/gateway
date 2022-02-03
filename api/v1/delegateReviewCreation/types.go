@@ -1,6 +1,6 @@
-package delegateartifactcreation
+package delegatereviewcreation
 
-type DelegateArtifactCreationRequest struct {
+type DelegateReviewCreationRequest struct {
 	Category      string `json:"category" binding:"required"`
 	DomainAddress string `json:"domainAddress" binding:"required"`
 	SiteUrl       string `json:"siteUrl" binding:"required"`
@@ -11,6 +11,6 @@ type DelegateArtifactCreationRequest struct {
 	Voter         string `json:"voter" binding:"required"`
 }
 
-type DelegateArtifactCreationPayload struct {
+type DelegateReviewCreationPayload struct {
 	TransactionHash string `json:"transactionHash"`
 }

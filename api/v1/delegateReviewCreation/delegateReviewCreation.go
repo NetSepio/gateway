@@ -1,4 +1,4 @@
-package delegateartifactcreation
+package delegatereviewcreation
 
 import (
 	"net/http"
@@ -14,15 +14,15 @@ import (
 
 // ApplyRoutes applies router to gin Router
 func ApplyRoutes(r *gin.RouterGroup) {
-	g := r.Group("/delegateArtifactCreation")
+	g := r.Group("/delegateReviewCreation")
 	{
 		g.Use(jwt.JWT)
-		g.POST("", deletegateArtifactCreation)
+		g.POST("", deletegateReviewCreation)
 	}
 }
 
-func deletegateArtifactCreation(c *gin.Context) {
-	var request DelegateArtifactCreationRequest
+func deletegateReviewCreation(c *gin.Context) {
+	var request DelegateReviewCreationRequest
 	err := c.BindJSON(&request)
 	if err != nil {
 		httphelper.ErrResponse(c, http.StatusForbidden, "payload is invalid")
@@ -39,7 +39,7 @@ func deletegateArtifactCreation(c *gin.Context) {
 		return
 	}
 	transactionHash := tx.Hash().String()
-	payload := DelegateArtifactCreationPayload{
+	payload := DelegateReviewCreationPayload{
 		TransactionHash: transactionHash,
 	}
 	logwrapper.Infof("trasaction hash is %v", transactionHash)
