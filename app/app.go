@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/TheLazarusNetwork/netsepio-engine/api"
+	"github.com/TheLazarusNetwork/netsepio-engine/app/routines/webreview"
 	"github.com/TheLazarusNetwork/netsepio-engine/config"
 	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 
@@ -20,4 +21,5 @@ func Init(envPath string, logBasePath string) {
 	GinApp = gin.Default()
 	api.ApplyRoutes(GinApp)
 	dbconfig.GetDb()
+	go webreview.Init()
 }
