@@ -35,7 +35,7 @@ func Init() {
 		websiteURL := e.SiteURL
 		domain, err := url.Parse(websiteURL)
 		if err != nil {
-			logwrapper.Warnf("failed to parse url, error: ", err.Error())
+			logwrapper.Warnf("failed to parse url, error: %v", err.Error())
 		}
 		htmlFile := domain.Host
 
