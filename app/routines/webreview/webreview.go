@@ -33,6 +33,9 @@ func Init() {
 
 	reviewCreatedChannel := make(chan *gennetsepio.GennetsepioReviewCreated)
 	_, err = netsepioInstance.WatchReviewCreated(nil, reviewCreatedChannel, []common.Address{}, []*big.Int{})
+	if err != nil {
+		logwrapper.Fatalf("failed to watch ReviewCreated, error: %v", err.Error())
+	}
 	for e := range reviewCreatedChannel {
 		dirName := path.Join("storage", e.TokenId.String())
 		err := os.Mkdir(dirName, os.ModePerm)
@@ -68,7 +71,6 @@ func Init() {
 		}
 		// create context
 		ctx, cancel := chromedp.NewContext(context.Background())
-		defer cancel()
 
 		// capture screenshot of an element
 		var buf []byte
@@ -99,6 +101,7 @@ func Init() {
 		if err != nil {
 			logwrapper.Warnf("failed to remove dir %v, error:%v", dirName, err.Error())
 		}
+		cancel()
 	}
 
 }

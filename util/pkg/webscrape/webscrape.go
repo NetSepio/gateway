@@ -58,17 +58,18 @@ func AddFileToIpfs(filePath string) (string, error) {
 	ig := ipfsGateway.NewShell("https://ipfs.infura.io:5001")
 	// Create io reader from a local file
 	file, err := os.Open(filePath)
-	defer file.Close()
+
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 
 	//Uploads file to ipfs and returns metahash
 	hash, err := ig.Add(file)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
-	return hash, err
+	file.Close()
+	return hash, nil
 }
 
 //GetObjectFromIpfs get object from ipfs and writes to the specified file
