@@ -31,12 +31,3 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-      - name: Create CodeDeploy Deployment
-        id: deploy
-        run: |
-          # Assuming the Deployment Group is already setup
-          aws deploy create-deployment \
-            --application-name CDNetSepio \
-            --deployment-group-name CDNetSepio-DepGrp \
-            --deployment-config-name CodeDeployDefault.OneAtATime \
