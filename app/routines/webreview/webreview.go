@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"math/big"
 	"net/url"
+	"os"
 	"path"
 
 	"github.com/TheLazarusNetwork/netsepio-engine/config/netsepio"
@@ -20,6 +21,7 @@ import (
 
 func Init() {
 
+	os.Mkdir("storage", os.ModePerm)
 	client, err := smartcontract.GetClient()
 	if err != nil {
 		logwrapper.Fatalf("failed to get eth client, error: %v", err.Error())
@@ -32,26 +34,37 @@ func Init() {
 	reviewCreatedChannel := make(chan *gennetsepio.GennetsepioReviewCreated)
 	_, err = netsepioInstance.WatchReviewCreated(nil, reviewCreatedChannel, []common.Address{}, []*big.Int{})
 	for e := range reviewCreatedChannel {
+		dirName := path.Join("storage", e.TokenId.String())
+		err := os.Mkdir(dirName, os.ModePerm)
+		if err != nil {
+			logwrapper.Warnf("failed to create folder %v, error: %v", dirName, err.Error())
+			continue
+		}
+
 		websiteURL := e.SiteURL
 		domain, err := url.Parse(websiteURL)
 		if err != nil {
 			logwrapper.Warnf("failed to parse url, error: %v", err.Error())
+			continue
 		}
 		htmlFile := domain.Host
 
-		err = ws.CheckDomain("storage/", websiteURL)
+		err = ws.CheckDomain(dirName, websiteURL)
 		if err != nil {
 			logwrapper.Warnf("failed to checkDomain for websiteURL : %v, error: %v", websiteURL, err.Error())
+			continue
 		}
-		hash, err := ws.AddFileToIpfs(path.Join("storage/", htmlFile))
+		filePath := path.Join(dirName, htmlFile)
+		hash, err := ws.AddFileToIpfs(filePath)
 		if err != nil {
-			logwrapper.Warnf("failed to add file to ipfs for websiteURL : %v, error: %v", websiteURL, err.Error())
+			logwrapper.Warnf("failed to add file: %v to ipfs for websiteURL : %v, error: %v", filePath, websiteURL, err.Error())
+			continue
 		}
-		fmt.Printf("https://ipfs.infura.io/ipfs/" + hash)
 
-		err = ws.GetObjectFromIpfs(hash, "storage/output.txt")
+		err = ws.GetObjectFromIpfs(hash, path.Join(dirName, "output.txt"))
 		if err != nil {
 			logwrapper.Warnf("failed to run GetObjectFromIpfs for hash: %v, error: %v", hash, err.Error())
+			continue
 		}
 		// create context
 		ctx, cancel := chromedp.NewContext(context.Background())
@@ -62,8 +75,9 @@ func Init() {
 		// capture entire browser viewport, returning png with quality=90
 		if err := chromedp.Run(ctx, ws.FullScreenshot(websiteURL, 90, &buf)); err != nil {
 			logwrapper.Warnf("failed to run chromedp, error: %v", err.Error())
+			continue
 		}
-		fileName := fmt.Sprintf("storage/%vfullScreenshot.png", e.TokenId)
+		fileName := fmt.Sprintf("%v/fullScreenshot.png", dirName)
 		if err := ioutil.WriteFile(fileName, buf, 0644); err != nil {
 			logwrapper.Warnf("failed to write file: %v, error:%v", fileName, err)
 			continue
@@ -74,14 +88,17 @@ func Init() {
 			logwrapper.Warnf("failed to add file to ipfs for fullScreenShot : %v", err.Error())
 			continue
 		}
-		fmt.Printf("https://ipfs.infura.io/ipfs/" + hash)
 		// netsepioInstance.UpdateReview(nil, e.TokenId, hash)
-		tx, err := rawtrasaction.SendRawTrasac(gennetsepio.GennetsepioABI, "updateReview", e.TokenId, hash)
+		_, err = rawtrasaction.SendRawTrasac(gennetsepio.GennetsepioABI, "updateReview", e.TokenId, hash)
 		if err != nil {
 			logwrapper.Warnf("failed to updateReview for tokenId %v : %v", e.TokenId, err.Error())
 			continue
 		}
-		fmt.Printf("tx hash is %v", tx.Hash().String())
+
+		err = os.RemoveAll(dirName)
+		if err != nil {
+			logwrapper.Warnf("failed to remove dir %v, error:%v", dirName, err.Error())
+		}
 	}
 
 }
