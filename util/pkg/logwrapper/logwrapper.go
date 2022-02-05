@@ -34,11 +34,17 @@ func Init(basepath string) {
 	timeNow := strings.Replace(time.Now().Format(time.UnixDate), ":", "_", -1)
 	fileName := fmt.Sprintf("%v.log", timeNow)
 	filePath := filepath.Join(basepath, fileName)
-	file, err := os.Create(filePath)
-	if err != nil {
-		Log.Fatalf("Error creating log file: %v", err)
+	logToFile, ok := os.LookupEnv("LOG_TO_FILE")
+	if !ok {
+		Log.Fatal("env var LOG_TO_FILE is undefined")
 	}
-	writer := io.MultiWriter(file, os.Stdout)
-	Log.Logger.SetOutput(writer)
-	gin.DefaultWriter = writer
+	if logToFile == "true" {
+		file, err := os.Create(filePath)
+		if err != nil {
+			Log.Fatalf("Error creating log file: %v", err)
+		}
+		writer := io.MultiWriter(file, os.Stdout)
+		Log.Logger.SetOutput(writer)
+		gin.DefaultWriter = writer
+	}
 }
