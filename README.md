@@ -1,4 +1,5 @@
 # NETSEPIO Engine
+
 REST APIs for Web3 Auth and Smart Contract Functionalities
 
 [![.github/workflows/test.yml](https://github.com/NetSepio/Engine/actions/workflows/test.yml/badge.svg)](https://github.com/TheLazarusNetwork/netsepio-engine/actions/workflows/test.yml)
@@ -7,20 +8,21 @@ REST APIs for Web3 Auth and Smart Contract Functionalities
 # Getting Started
 
 ## Postgres for development
+
 ```bash
 docker run --name="netsepio" --rm -d -p 5432:5432 \
--e POSTGRES_PASSWORD=revotic \
--e POSTGRES_USER=revotic \
+-e POSTGRES_PASSWORD=netsepio \
+-e POSTGRES_USER=netsepio \
 -e POSTGRES_DB=netsepio \
 postgres -c log_statement=all
 ```
 
 ## Steps to get started
+
 - Run `go get ./...` to install dependencies
 - Set up env variables or create `.env` file as per [`.env-sample`](https://github.com/TheLazarusNetwork/netsepio-engine/blob/main/.env-sample) file
 - Run `go test ./...` to make sure setup is working
 - Run `go run main.go` to start server
-
 
 ## API Reference
 
@@ -35,6 +37,7 @@ for example, `Bearer mytokenabcd`
 ### APIs
 
 #### Returns flow ID and EULA which should be signed and send to authenticate API in order to get the JWT which can be used for accessing all other APIs
+
 ```
   GET /flowid?walletAddress={{wallet address}}
 ```
@@ -45,13 +48,13 @@ for example, `Bearer mytokenabcd`
   POST /authenticate
 ```
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `flowId`  | `string` | **Required**. flowId you got from flowId API |
-| `signature`  | `string` | **Required**. signature obtained by signing flowId+EULA |
-
+| Parameter   | Type     | Description                                             |
+| :---------- | :------- | :------------------------------------------------------ |
+| `flowId`    | `string` | **Required**. flowId you got from flowId API            |
+| `signature` | `string` | **Required**. signature obtained by signing flowId+EULA |
 
 #### Get profile details of user present in the system.
+
 Note - Some unset data is emitted.
 
 ```
@@ -64,32 +67,36 @@ Note - Some unset data is emitted.
   PATCH /profile
 ```
 
-| Parameter | Type     | 
-| :-------- | :------- | 
-| `name`  | `string` | 
-| `country`  | `string` |
-| `profilePictureUrl`  | `string` |
+| Parameter           | Type     |
+| :------------------ | :------- |
+| `name`              | `string` |
+| `country`           | `string` |
+| `profilePictureUrl` | `string` |
 
 #### Returns flow ID and Eula which should be signed and passed to claim Role in order to successful verification and claim of role
+
 ```
   GET /roleId/{{roleId}}
 ```
 
 #### Successfully complete role claim by sending signature which is obtained from signing eula+flowId which was returned from roleId API (aka Request role)
+
 ```
   POST /claimrole
 ```
-| Parameter | Type     | 
-| :-------- | :------- | 
-| `flowId`  | **Required**. `string` | 
-| `signature`  | **Required**. `string` |
+
+| Parameter   | Type                   |
+| :---------- | :--------------------- |
+| `flowId`    | **Required**. `string` |
+| `signature` | **Required**. `string` |
 
 #### Delegate review creation to other voter
+
 ```
   POST /delegateReviewCreation
 ```
-| Parameter | Type     | 
-| :-------- | :------- | 
-| `voter`  | **Required**. `string` | 
-| `MetaDataUri`  | **Required**. `string` |
 
+| Parameter     | Type                   |
+| :------------ | :--------------------- |
+| `voter`       | **Required**. `string` |
+| `MetaDataUri` | **Required**. `string` |
