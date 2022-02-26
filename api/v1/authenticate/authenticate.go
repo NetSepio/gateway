@@ -34,8 +34,8 @@ func authenticate(c *gin.Context) {
 	var flowIdData models.FlowId
 	err := db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
 	if err != nil {
-		logwrapper.Error(err)
-		httphelper.ErrResponse(c, 500, "Unexpected error occured")
+		logwrapper.Errorf("failed to get flowId, error %v", err)
+		httphelper.ErrResponse(c, http.StatusNotFound, "flow id not found")
 		return
 	}
 

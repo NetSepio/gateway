@@ -75,22 +75,9 @@ func postClaimRole(c *gin.Context) {
 	walletAddressHex := common.HexToAddress(walletAddress)
 	var roleIdBytes [32]byte
 	copy(roleIdBytes[:], roleIdBytesSlice)
-	if err != nil {
-		logwrapper.Errorf("failed to parse ABI for %v, error: %v", "NETSEPIO", err.Error())
-		httphelper.ErrResponse(c, 500, "unexpected error occured")
-		return
-	}
-	// authBindOpts, err := auth.GetAuth(client)
-
-	if err != nil {
-		logwrapper.Errorf("failed to get auth, error: %v", err.Error())
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-		return
-	}
 
 	tx, err := rawtrasaction.SendRawTrasac(gennetsepio.GennetsepioABI, "grantRole", roleIdBytes, walletAddressHex)
 
-	// tx, err := instance.GrantRole(authBindOpts, roleIdBytes, walletAddressHex)
 	if err != nil {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		logwrapper.Warnf("failed to grant role to user with walletaddress %v, error: %v", walletAddress, err.Error())
@@ -98,22 +85,11 @@ func postClaimRole(c *gin.Context) {
 	}
 	transactionHash := tx.Hash().String()
 	logwrapper.Infof("trasaction hash is %v", transactionHash)
-	// Update user role
-	err = db.Model(&models.User{WalletAddress: walletAddress}).
-		Association("Roles").
-		Append(models.UserRole{WalletAddress: walletAddress, RoleId: role.RoleId}).
-		Error
-	if err != nil {
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-		logwrapper.Error(err)
-		return
-	} else {
-		db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{})
-		payload := ClaimRolePayload{
-			TransactionHash: transactionHash,
-		}
-		httphelper.SuccessResponse(c, "Role successfully claimed", payload)
+	db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{})
+	payload := ClaimRolePayload{
+		TransactionHash: transactionHash,
 	}
+	httphelper.SuccessResponse(c, "Role successfully claimed", payload)
 
 }
 

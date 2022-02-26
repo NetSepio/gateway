@@ -7,9 +7,8 @@ type PatchProfileRequest struct {
 }
 
 type GetProfilePayload struct {
-	Name              string   `json:"name,omitempty"`
-	WalletAddress     string   `json:"walletAddress"`
-	ProfilePictureUrl string   `json:"profilePictureUrl,omitempty"`
-	Country           string   `json:"country,omitempty"`
-	Roles             []string `json:"roles"`
+	Name              string `json:"name,omitempty"`
+	WalletAddress     string `json:"walletAddress"`
+	ProfilePictureUrl string `json:"profilePictureUrl,omitempty"`
+	Country           string `json:"country,omitempty"`
 }

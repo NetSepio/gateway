@@ -48,7 +48,6 @@ func getProfile(c *gin.Context) {
 	db := dbconfig.GetDb()
 	walletAddress := c.GetString("walletAddress")
 	var user models.User
-	var userRoles []models.UserRole
 	err := db.Model(&models.User{}).Select("name, profile_picture_url,country, wallet_address").Where("wallet_address = ?", walletAddress).First(&user).Error
 	if err != nil {
 		logrus.Error(err)
@@ -56,19 +55,9 @@ func getProfile(c *gin.Context) {
 
 		return
 	}
-	err = db.Model(&user).Association("Roles").Find(&userRoles).Error
-	userRolesIds := make([]string, 0, 1)
-	for _, userRole := range userRoles {
-		userRolesIds = append(userRolesIds, string(userRole.RoleId[:]))
-	}
-	if err != nil {
-		logrus.Error(err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 
-		return
-	}
 	payload := GetProfilePayload{
-		user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country, userRolesIds,
+		user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country,
 	}
 	httphelper.SuccessResponse(c, "Profile fetched successfully", payload)
 }
