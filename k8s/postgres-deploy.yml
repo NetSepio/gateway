@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgress-pod
+  labels:
+    name: postgress-pod
+spec:
+  containers:
+  - name: postgress-pod
+    image: postgres
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "100m"
+    ports:
+      - containerPort: 5432
+    env:
+      - name: "POSTGRES_PASSWORD"
+        value: "revotic"
+      - name: "POSTGRES_USER"
+        value: "revotic"
+      - name: "POSTGRES_DB"
+        value: "netsepio"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-svc
+spec:
+  selector:
+    name: postgress-pod
+  ports:
+  - port: 5432
+    targetPort: 5432
