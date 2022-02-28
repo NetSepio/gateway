@@ -22,8 +22,8 @@ spec:
             httpGet:
               path: /api/v1.0/healthcheck
               port: 3000
-          initialDelaySeconds: 3
-          periodSeconds: 3
+            initialDelaySeconds: 3
+            periodSeconds: 3
           ports:
             - containerPort: 3000
           volumeMounts:
