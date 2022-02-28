@@ -22,6 +22,7 @@ jobs:
       JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
       VOTER_EULA: TODO VOTER EULA
       AUTH_EULA: TODO AUTH EULA
+      ALLOWED_ORIGIN: "*"
 
     services:
       postgres:
