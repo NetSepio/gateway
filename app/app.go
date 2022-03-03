@@ -23,7 +23,7 @@ func Init(envPath string, logBasePath string) {
 
 	GinApp = gin.Default()
 
-	corsM := cors.New(cors.Config{AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
+	corsM := cors.New(cors.Config{AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD","OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type","Authorization"},
 		AllowCredentials: false,
 		MaxAge:           12 * time.Hour,
