@@ -43,5 +43,5 @@ func deletegateReviewCreation(c *gin.Context) {
 		TransactionHash: transactionHash,
 	}
 	logwrapper.Infof("trasaction hash is %v", transactionHash)
-	httphelper.SuccessResponse(c, "request successfully send, artififact will be delegated soon", payload)
+	httphelper.SuccessResponse(c, "request successfully send, review will be delegated soon", payload)
 }
