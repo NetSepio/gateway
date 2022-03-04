@@ -10,11 +10,10 @@ import (
 	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
 	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/profile"
 	"github.com/TheLazarusNetwork/netsepio-engine/app"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
 	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
+	"github.com/sirupsen/logrus"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -64,8 +63,10 @@ func Test_GetProfile(t *testing.T) {
 	app.GinApp.ServeHTTP(rr, req)
 	var response types.ApiResponse
 	body := rr.Body
+	logrus.Fatal(body.String())
+
 	json.NewDecoder(body).Decode(&response)
-	var user models.User
+	var user profile.GetProfilePayload
 	testingcommon.ExtractPayload(&response, &user)
 	if err != nil {
 		t.Fatal(err)
@@ -74,5 +75,5 @@ func Test_GetProfile(t *testing.T) {
 	assert.Equal(t, "Jack", user.Name)
 	assert.Equal(t, "https://revoticengineering.com/", user.ProfilePictureUrl)
 	assert.Equal(t, "India", user.Country)
-	logrus.Debug(user)
+
 }
