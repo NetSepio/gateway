@@ -29,6 +29,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func postClaimRole(c *gin.Context) {
+	walletAddressGin := c.GetString("walletAddress")
 	db := dbconfig.GetDb()
 	var req ClaimRoleRequest
 	c.BindJSON(&req)
@@ -55,7 +56,7 @@ func postClaimRole(c *gin.Context) {
 		return
 	}
 
-	if !isCorrect {
+	if !isCorrect || walletAddressGin != walletAddress {
 		httphelper.ErrResponse(c, http.StatusForbidden, "Wallet address is not correct")
 		return
 	}

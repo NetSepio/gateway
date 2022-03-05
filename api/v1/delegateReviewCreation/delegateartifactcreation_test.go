@@ -8,16 +8,18 @@ import (
 	"testing"
 	"time"
 
-	delegatereviewcreation "github.com/TheLazarusNetwork/netsepio-engine/api/v1/delegateReviewCreation"
-	"github.com/TheLazarusNetwork/netsepio-engine/app"
+	"github.com/TheLazarusNetwork/netsepio-engine/config"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
+
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDelegateReviewCreation(t *testing.T) {
 	time.Sleep(4 * time.Second)
-	app.Init("../../../../.env", "../../../../logs")
+	config.Init("../../../.env")
+	logwrapper.Init("../../../logs")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()
@@ -26,7 +28,7 @@ func TestDelegateReviewCreation(t *testing.T) {
 	url := "/api/v1.0/delegateReviewCreation"
 	rr := httptest.NewRecorder()
 
-	reqBody := delegatereviewcreation.DelegateReviewCreationRequest{
+	reqBody := DelegateReviewCreationRequest{
 		Voter:         voterWallet.WalletAddress,
 		MetaDataUri:   "QmSYRXWGGqVDAHKTwfnYQDR74d4bfwXxudFosbGA695AWS",
 		Category:      "Website",
@@ -42,7 +44,9 @@ func TestDelegateReviewCreation(t *testing.T) {
 		t.Fatal(err)
 	}
 	req.Header.Add("Authorization", headers)
-	app.GinApp.ServeHTTP(rr, req)
+	c, _ := gin.CreateTestContext(rr)
+	c.Request = req
+	deletegateReviewCreation(c)
 	ok := assert.Equal(t, http.StatusOK, rr.Result().StatusCode, rr.Body.String())
 	if !ok {
 		t.FailNow()

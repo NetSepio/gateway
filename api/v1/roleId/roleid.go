@@ -19,17 +19,16 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/roleId")
 	{
 		g.Use(jwtMiddleWare.JWT)
-		g.GET(":roleId", getRoleId)
+		g.GET(":roleId", GetRoleId)
 	}
 }
 
-func getRoleId(c *gin.Context) {
+func GetRoleId(c *gin.Context) {
 	db := dbconfig.GetDb()
 	walletAddress := c.GetString("walletAddress")
 	roleId, exist := c.Params.Get("roleId")
 	if !exist {
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-
+		httphelper.ErrResponse(c, http.StatusBadRequest, "Param roleId is required")
 		return
 	}
 	var role models.Role
@@ -38,13 +37,12 @@ func getRoleId(c *gin.Context) {
 		httphelper.ErrResponse(c, http.StatusNotFound, err.Error())
 
 	} else if err != nil {
-		logwrapper.Error(err)
+		logwrapper.Errorf("failed to fetch details for roleId: %v, error: %v", roleId, err.Error())
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-
 	} else {
 		flowId, err := flowid.GenerateFlowId(walletAddress, models.ROLE, roleId)
 		if err != nil {
-			logwrapper.Error(err)
+			logwrapper.Errorf("failed to generate flow id, err: %v", err.Error())
 			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 			c.Status(http.StatusInternalServerError)
 			return

@@ -6,7 +6,8 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/app"
+	"github.com/TheLazarusNetwork/netsepio-engine/config"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +16,8 @@ import (
 
 //TODO add test for testing when wallet address exist
 func Test_GetFlowId(t *testing.T) {
-	app.Init("../../../../.env", "../../../../logs")
+	config.Init("../../../.env")
+	logwrapper.Init("../../../logs")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 
@@ -33,6 +35,8 @@ func Test_GetFlowId(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	app.GinApp.ServeHTTP(rr, req)
+	c, _ := gin.CreateTestContext(rr)
+	c.Request = req
+	GetFlowId(c)
 	assert.Equal(t, rr.Result().StatusCode, http.StatusOK)
 }
