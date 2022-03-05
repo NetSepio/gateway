@@ -3,6 +3,7 @@ package profile
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -80,7 +81,15 @@ type rolesResponse struct {
 			Roles []string `json:"roles"`
 		} `json:"user"`
 	} `json:"data"`
+
+	Errors []struct {
+		Message string `json:"message"`
+	} `json:"errors"`
 }
+
+var (
+	errStatusCode = errors.New("status code is not 200")
+)
 
 func getRoles(walletAddress string) ([]string, error) {
 	jsonData := map[string]string{
@@ -105,11 +114,19 @@ func getRoles(walletAddress string) ([]string, error) {
 	if err != nil {
 		return []string{}, err
 	}
+
+	if response.StatusCode != 200 {
+		return []string{}, errStatusCode
+	}
 	data, _ := ioutil.ReadAll(response.Body)
 	var res rolesResponse
 	err = json.Unmarshal(data, &res)
 	if err != nil {
 		return []string{}, err
+	}
+
+	if len(res.Errors) > 1 {
+		return []string{}, errors.New(res.Errors[0].Message)
 	}
 	err = response.Body.Close()
 	if err != nil {
