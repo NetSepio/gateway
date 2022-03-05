@@ -9,12 +9,10 @@ import (
 
 	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
 	"github.com/TheLazarusNetwork/netsepio-engine/config"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
 	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -58,6 +56,7 @@ func Test_GetProfile(t *testing.T) {
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()
+
 	header := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
 	url := "/api/v1.0/profile"
 	rr := httptest.NewRecorder()
@@ -72,15 +71,14 @@ func Test_GetProfile(t *testing.T) {
 	getProfile(c)
 	var response types.ApiResponse
 	body := rr.Body
+
 	json.NewDecoder(body).Decode(&response)
-	var user models.User
+	var user GetProfilePayload
 	testingcommon.ExtractPayload(&response, &user)
-	if err != nil {
-		t.Fatal(err)
-	}
+
 	assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 	assert.Equal(t, "Jack", user.Name)
 	assert.Equal(t, "https://revoticengineering.com/", user.ProfilePictureUrl)
 	assert.Equal(t, "India", user.Country)
-	logrus.Debug(user)
+
 }

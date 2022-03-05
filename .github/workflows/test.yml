@@ -1,10 +1,6 @@
 name: "Test"
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: push
 
 jobs:
   test:
@@ -20,6 +16,7 @@ jobs:
       MNEMONIC: ${{ secrets.MNEMONIC }}
       NETSEPIO_CONTRACT_ADDRESS: ${{ secrets.NETSEPIO_CONTRACT_ADDRESS }}
       JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      GRAPH_API: ${{ secrets.GRAPH_API }}
       VOTER_EULA: TODO VOTER EULA
       AUTH_EULA: TODO AUTH EULA
       ALLOWED_ORIGIN: "*"

@@ -1,12 +1,21 @@
 package profile
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strings"
+	"time"
 
 	jwtMiddleWare "github.com/TheLazarusNetwork/netsepio-engine/api/middleware/auth/jwt"
 	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
 	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -52,12 +61,76 @@ func getProfile(c *gin.Context) {
 	if err != nil {
 		logrus.Error(err)
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-
 		return
 	}
 
+	roles, err := getRoles(user.WalletAddress)
+	if err != nil {
+		logwrapper.Errorf("Failed to fetch roles from graph api %s", err)
+		return
+	}
 	payload := GetProfilePayload{
-		user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country,
+		user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country, roles,
 	}
 	httphelper.SuccessResponse(c, "Profile fetched successfully", payload)
+}
+
+type rolesResponse struct {
+	Data struct {
+		User struct {
+			Roles []string `json:"roles"`
+		} `json:"user"`
+	} `json:"data"`
+
+	Errors []struct {
+		Message string `json:"message"`
+	} `json:"errors"`
+}
+
+var (
+	errStatusCode = errors.New("status code is not 200")
+)
+
+func getRoles(walletAddress string) ([]string, error) {
+	jsonData := map[string]string{
+		"query": fmt.Sprintf(`
+		{ 
+			user(id:"%v"){
+				roles
+			}
+		}
+	`, strings.ToLower(walletAddress)),
+	}
+
+	jsonValue, _ := json.Marshal(jsonData)
+
+	request, err := http.NewRequest("POST", envutil.MustGetEnv("GRAPH_API"), bytes.NewBuffer(jsonValue))
+	if err != nil {
+		return []string{}, err
+	}
+	client := &http.Client{Timeout: time.Second * 10}
+	response, err := client.Do(request)
+
+	if err != nil {
+		return []string{}, err
+	}
+
+	if response.StatusCode != 200 {
+		return []string{}, errStatusCode
+	}
+	data, _ := ioutil.ReadAll(response.Body)
+	var res rolesResponse
+	err = json.Unmarshal(data, &res)
+	if err != nil {
+		return []string{}, err
+	}
+
+	if len(res.Errors) > 1 {
+		return []string{}, errors.New(res.Errors[0].Message)
+	}
+	err = response.Body.Close()
+	if err != nil {
+		logwrapper.Warnf("failed to close body, error :%s", err)
+	}
+	return res.Data.User.Roles, nil
 }
