@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
-	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/profile"
-	"github.com/TheLazarusNetwork/netsepio-engine/app"
+	"github.com/TheLazarusNetwork/netsepio-engine/config"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,8 @@ import (
 )
 
 func Test_PatchProfile(t *testing.T) {
-	app.Init("../../../../.env", "../../../../logs")
+	config.Init("../../../.env")
+	logwrapper.Init("../../../logs")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	header := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
@@ -28,7 +29,7 @@ func Test_PatchProfile(t *testing.T) {
 	t.Run("Update name", func(t *testing.T) {
 		rr := httptest.NewRecorder()
 
-		requestBody := profile.PatchProfileRequest{
+		requestBody := PatchProfileRequest{
 			Name: "Yash",
 		}
 		jsonData, err := json.Marshal(requestBody)
@@ -40,14 +41,18 @@ func Test_PatchProfile(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		c, _ := gin.CreateTestContext(rr)
+		c.Request = req
+		c.Set("walletAddress", testWallet.WalletAddress)
 
-		app.GinApp.ServeHTTP(rr, req)
+		patchProfile(c)
 		assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 	})
 }
 
 func Test_GetProfile(t *testing.T) {
-	app.Init("../../../../.env", "../../../../logs")
+	config.Init("../../../.env")
+	logwrapper.Init("../../../logs")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()
@@ -60,12 +65,15 @@ func Test_GetProfile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	app.GinApp.ServeHTTP(rr, req)
+	c, _ := gin.CreateTestContext(rr)
+	c.Request = req
+	c.Set("walletAddress", testWallet.WalletAddress)
+	getProfile(c)
 	var response types.ApiResponse
 	body := rr.Body
 
 	json.NewDecoder(body).Decode(&response)
-	var user profile.GetProfilePayload
+	var user GetProfilePayload
 	testingcommon.ExtractPayload(&response, &user)
 
 	assert.Equal(t, http.StatusOK, rr.Result().StatusCode)

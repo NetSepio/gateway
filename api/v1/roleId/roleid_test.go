@@ -6,8 +6,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/app"
+	"github.com/TheLazarusNetwork/netsepio-engine/config"
 	"github.com/TheLazarusNetwork/netsepio-engine/config/netsepio"
+	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
@@ -17,7 +18,8 @@ import (
 
 func Test_GetRoleId(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	app.Init("../../../../.env", "../../../../logs")
+	config.Init("../../../.env")
+	logwrapper.Init("../../../logs")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
@@ -34,7 +36,12 @@ func Test_GetRoleId(t *testing.T) {
 			t.Fatal(err)
 		}
 		req.Header.Add("Authorization", headers)
-		app.GinApp.ServeHTTP(rr, req)
+		c, _ := gin.CreateTestContext(rr)
+		c.Request = req
+		// c.Params = gin.Params{{Key: "", Value: }
+		c.Set("walletAddress", testWallet.WalletAddress)
+		c.Params = gin.Params{{Key: "roleId", Value: hexutil.Encode(voterRole[:])}}
+		GetRoleId(c)
 		assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 	})
 	t.Run("Get not found message when roleId doesn't exist", func(t *testing.T) {
@@ -44,7 +51,11 @@ func Test_GetRoleId(t *testing.T) {
 			t.Fatal(err)
 		}
 		req.Header.Add("Authorization", headers)
-		app.GinApp.ServeHTTP(rr, req)
+		c, _ := gin.CreateTestContext(rr)
+		c.Request = req
+		c.Set("walletAddress", testWallet.WalletAddress)
+		c.Params = gin.Params{{Key: "roleId", Value: "58"}}
+		GetRoleId(c)
 		assert.Equal(t, http.StatusNotFound, rr.Result().StatusCode)
 	})
 

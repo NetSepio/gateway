@@ -16,11 +16,11 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/flowid")
 	{
-		g.GET("", getFlowId)
+		g.GET("", GetFlowId)
 	}
 }
 
-func getFlowId(c *gin.Context) {
+func GetFlowId(c *gin.Context) {
 	walletAddress := c.Query("walletAddress")
 	if walletAddress == "" {
 		httphelper.ErrResponse(c, http.StatusBadRequest, "Wallet address (walletAddress) is required")
