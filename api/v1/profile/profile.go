@@ -96,6 +96,9 @@ func getRoles(walletAddress string) ([]string, error) {
 	jsonValue, _ := json.Marshal(jsonData)
 
 	request, err := http.NewRequest("POST", envutil.MustGetEnv("GRAPH_API"), bytes.NewBuffer(jsonValue))
+	if err != nil {
+		return []string{}, err
+	}
 	client := &http.Client{Timeout: time.Second * 10}
 	response, err := client.Do(request)
 
