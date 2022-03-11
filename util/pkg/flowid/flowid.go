@@ -26,8 +26,10 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 			logrus.Error(err)
 			return "", err
 		}
-		association.Append(&models.FlowId{FlowIdType: flowIdType, WalletAddress: walletAddress, FlowId: flowId, RelatedRoleId: relatedRoleId})
-
+		err := association.Append(&models.FlowId{FlowIdType: flowIdType, WalletAddress: walletAddress, FlowId: flowId, RelatedRoleId: relatedRoleId}).Error
+		if err != nil {
+			return "", err
+		}
 	} else {
 		// User doesn't exist so create
 
