@@ -3,6 +3,7 @@ package cryptosign
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
 	"github.com/TheLazarusNetwork/netsepio-engine/models"
@@ -44,7 +45,7 @@ func CheckSign(signature string, flowId string, message string) (string, bool, e
 	if err := res.Error; err != nil {
 		return "", false, err
 	}
-	if flowIdData.WalletAddress == walletAddress.String() {
+	if strings.ToLower(flowIdData.WalletAddress) == strings.ToLower(walletAddress.String()) {
 		return flowIdData.WalletAddress, true, nil
 	} else {
 		return "", false, nil
