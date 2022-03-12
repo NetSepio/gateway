@@ -45,7 +45,7 @@ func CheckSign(signature string, flowId string, message string) (string, bool, e
 	if err := res.Error; err != nil {
 		return "", false, err
 	}
-	if strings.ToLower(flowIdData.WalletAddress) == strings.ToLower(walletAddress.String()) {
+	if strings.EqualFold(flowIdData.WalletAddress, walletAddress.String()) {
 		return flowIdData.WalletAddress, true, nil
 	} else {
 		return "", false, nil
