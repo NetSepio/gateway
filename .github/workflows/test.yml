@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Install gotestsum
-        run: go install gotest.tools/gotestsum
+        run: go install gotest.tools/gotestsum@latest
       - uses: actions/checkout@v2
       - name: Build
         run: go build -v ./...
