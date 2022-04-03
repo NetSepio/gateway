@@ -23,16 +23,16 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 func GetFlowId(c *gin.Context) {
 	walletAddress := c.Query("walletAddress")
+
+	if walletAddress == "" {
+		httphelper.ErrResponse(c, http.StatusBadRequest, "Wallet address (walletAddress) is required")
+		return
+	}
 	_, err := hexutil.Decode(walletAddress)
 	if err != nil {
 		httphelper.ErrResponse(c, http.StatusBadRequest, "Wallet address (walletAddress) is not valid")
 		return
 	}
-	if walletAddress == "" {
-		httphelper.ErrResponse(c, http.StatusBadRequest, "Wallet address (walletAddress) is required")
-		return
-	}
-
 	flowId, err := flowid.GenerateFlowId(walletAddress, models.AUTH, "")
 	if err != nil {
 		log.Error(err)
