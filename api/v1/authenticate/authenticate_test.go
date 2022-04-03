@@ -64,7 +64,7 @@ func Test_PostAuthenticate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		newWalletAddress := testWallet.WalletAddress + "b"
+		newWalletAddress := testWallet.WalletAddress + "ba"
 		callFlowIdApi(newWalletAddress, t)
 
 		rr := httptest.NewRecorder()
@@ -86,6 +86,7 @@ func callFlowIdApi(walletAddress string, t *testing.T) (eula string, flowidStrin
 	// Call flowid api
 	u, err := url.Parse("/api/v1.0/flowid")
 	q := url.Values{}
+	logwrapper.Infof("walletAddress: %v\n", walletAddress)
 	q.Set("walletAddress", walletAddress)
 	u.RawQuery = q.Encode()
 	if err != nil {
