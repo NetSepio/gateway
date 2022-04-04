@@ -2,8 +2,8 @@
 
 REST APIs for Web3 Auth and Smart Contract Functionalities
 
-[![.github/workflows/test.yml](https://github.com/NetSepio/Engine/actions/workflows/test.yml/badge.svg)](https://github.com/TheLazarusNetwork/netsepio-engine/actions/workflows/test.yml)
-[![Lint](https://github.com/NetSepio/Engine/actions/workflows/lint.yml/badge.svg)](https://github.com/TheLazarusNetwork/netsepio-engine/actions/workflows/lint.yml)
+[![.github/workflows/test.yml](https://github.com/NetSepio/Engine/actions/workflows/test.yml/badge.svg)](https://github.com/NetSepio/gateway/actions/workflows/test.yml)
+[![Lint](https://github.com/NetSepio/Engine/actions/workflows/lint.yml/badge.svg)](https://github.com/NetSepio/gateway/actions/workflows/lint.yml)
 
 # Getting Started
 
@@ -20,7 +20,7 @@ postgres -c log_statement=all
 ## Steps to get started
 
 - Run `go get ./...` to install dependencies
-- Set up env variables or create `.env` file as per [`.env-sample`](https://github.com/TheLazarusNetwork/netsepio-engine/blob/main/.env-sample) file
+- Set up env variables or create `.env` file as per [`.env-sample`](https://github.com/NetSepio/gateway/blob/main/.env-sample) file
 - Run `go test ./...` to make sure setup is working
 - Run `go run main.go` to start server
 

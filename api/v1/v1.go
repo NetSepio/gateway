@@ -1,13 +1,13 @@
 package apiv1
 
 import (
-	authenticate "github.com/TheLazarusNetwork/netsepio-engine/api/v1/authenticate"
-	claimrole "github.com/TheLazarusNetwork/netsepio-engine/api/v1/claimRole"
-	delegatereviewcreation "github.com/TheLazarusNetwork/netsepio-engine/api/v1/delegateReviewCreation"
-	flowid "github.com/TheLazarusNetwork/netsepio-engine/api/v1/flowid"
-	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/healthcheck"
-	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/profile"
-	roleid "github.com/TheLazarusNetwork/netsepio-engine/api/v1/roleId"
+	authenticate "github.com/NetSepio/gateway/api/v1/authenticate"
+	claimrole "github.com/NetSepio/gateway/api/v1/claimRole"
+	delegatereviewcreation "github.com/NetSepio/gateway/api/v1/delegateReviewCreation"
+	flowid "github.com/NetSepio/gateway/api/v1/flowid"
+	"github.com/NetSepio/gateway/api/v1/healthcheck"
+	"github.com/NetSepio/gateway/api/v1/profile"
+	roleid "github.com/NetSepio/gateway/api/v1/roleId"
 
 	"github.com/gin-gonic/gin"
 )

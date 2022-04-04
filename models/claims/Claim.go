@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/util/pkg/envutil"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	jwt "github.com/golang-jwt/jwt/v4"
 )

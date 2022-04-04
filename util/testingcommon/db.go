@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/jinzhu/gorm"
 )
 

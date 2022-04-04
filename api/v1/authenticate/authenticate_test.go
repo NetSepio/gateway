@@ -10,11 +10,11 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
-	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/flowid"
-	"github.com/TheLazarusNetwork/netsepio-engine/config"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
-	testingcommmon "github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
+	"github.com/NetSepio/gateway/api/types"
+	"github.com/NetSepio/gateway/api/v1/flowid"
+	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	testingcommmon "github.com/NetSepio/gateway/util/testingcommon"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
