@@ -3,14 +3,14 @@ package claimrole
 import (
 	"net/http"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/api/middleware/auth/jwt"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract/rawtrasaction"
-	"github.com/TheLazarusNetwork/netsepio-engine/generated/smartcontract/gennetsepio"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/cryptosign"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/api/middleware/auth/jwt"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/smartcontract/rawtrasaction"
+	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/pkg/cryptosign"
+	"github.com/NetSepio/gateway/util/pkg/httphelper"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"

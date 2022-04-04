@@ -6,10 +6,10 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/config/netsepio"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/config/netsepio"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/pkg/envutil"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/jinzhu/gorm"
 

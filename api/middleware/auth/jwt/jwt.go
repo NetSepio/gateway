@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/models"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/util/pkg/envutil"
+	"github.com/NetSepio/gateway/util/pkg/httphelper"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt/v4"

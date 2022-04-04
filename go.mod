@@ -1,4 +1,4 @@
-module github.com/TheLazarusNetwork/netsepio-engine
+module github.com/NetSepio/gateway
 
 go 1.16
 

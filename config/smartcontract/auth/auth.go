@@ -5,9 +5,9 @@ import (
 	"crypto/ecdsa"
 	"math/big"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/ethwallet"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/util/pkg/envutil"
+	"github.com/NetSepio/gateway/util/pkg/ethwallet"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"

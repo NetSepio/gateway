@@ -3,10 +3,10 @@ package flowid
 import (
 	"net/http"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/flowid"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/pkg/envutil"
+	"github.com/NetSepio/gateway/util/pkg/flowid"
+	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/gin-gonic/gin"

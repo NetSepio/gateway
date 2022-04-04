@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
-	"github.com/TheLazarusNetwork/netsepio-engine/models/claims"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/auth"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
+	"github.com/NetSepio/gateway/api/types"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/models/claims"
+	"github.com/NetSepio/gateway/util/pkg/auth"
+	"github.com/NetSepio/gateway/util/pkg/envutil"
 
 	"crypto/ecdsa"
 	"log"

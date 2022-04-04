@@ -3,13 +3,13 @@ package app
 import (
 	"time"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/api"
-	"github.com/TheLazarusNetwork/netsepio-engine/config"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/api"
+	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/util/pkg/envutil"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/netsepio"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/netsepio"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -23,8 +23,8 @@ func Init(envPath string, logBasePath string) {
 
 	GinApp = gin.Default()
 
-	corsM := cors.New(cors.Config{AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD","OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type","Authorization"},
+	corsM := cors.New(cors.Config{AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: false,
 		MaxAge:           12 * time.Hour,
 		AllowOrigins:     []string{envutil.MustGetEnv("ALLOWED_ORIGIN")}})

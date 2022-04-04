@@ -6,9 +6,9 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/config"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
+	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/util/testingcommon"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
