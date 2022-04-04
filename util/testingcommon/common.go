@@ -3,7 +3,6 @@ package testingcommon
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/NetSepio/gateway/api/types"
@@ -26,13 +25,13 @@ func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 	gin.SetMode(gin.TestMode)
 	CreateTestUser(t, testWalletAddress)
 	customClaims := claims.New(testWalletAddress)
-	jwtPrivateKey := envutil.MustGetEnv("JWT_PRIVATE_KEY")
-	token, err := auth.GenerateToken(customClaims, jwtPrivateKey)
+	pasetoPrivateKey := envutil.MustGetEnv("PASETO_PRIVATE_KEY")
+	token, err := auth.GenerateToken(customClaims, pasetoPrivateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
-	header := fmt.Sprintf("Bearer %v", token)
 
+	header := token
 	return header
 }
 

@@ -3,7 +3,7 @@ package claimrole
 import (
 	"net/http"
 
-	"github.com/NetSepio/gateway/api/middleware/auth/jwt"
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/smartcontract/rawtrasaction"
 	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
@@ -23,7 +23,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/claimrole")
 	{
-		g.Use(jwt.JWT)
+		g.Use(paseto.PASETO)
 		g.POST("", postClaimRole)
 	}
 }

@@ -3,7 +3,7 @@ package roleid
 import (
 	"net/http"
 
-	jwtMiddleWare "github.com/NetSepio/gateway/api/middleware/auth/jwt"
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/flowid"
@@ -18,7 +18,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/roleId")
 	{
-		g.Use(jwtMiddleWare.JWT)
+		g.Use(paseto.PASETO)
 		g.GET(":roleId", GetRoleId)
 	}
 }

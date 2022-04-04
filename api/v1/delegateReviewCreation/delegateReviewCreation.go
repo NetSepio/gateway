@@ -3,7 +3,7 @@ package delegatereviewcreation
 import (
 	"net/http"
 
-	"github.com/NetSepio/gateway/api/middleware/auth/jwt"
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/smartcontract/rawtrasaction"
 	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
@@ -16,7 +16,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/delegateReviewCreation")
 	{
-		g.Use(jwt.JWT)
+		g.Use(paseto.PASETO)
 		g.POST("", deletegateReviewCreation)
 	}
 }

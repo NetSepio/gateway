@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	jwtMiddleWare "github.com/NetSepio/gateway/api/middleware/auth/jwt"
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/envutil"
@@ -25,7 +25,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/profile")
 	{
-		g.Use(jwtMiddleWare.JWT)
+		g.Use(paseto.PASETO)
 		g.PATCH("", patchProfile)
 		g.GET("", getProfile)
 	}

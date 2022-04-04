@@ -1,19 +1,17 @@
-package jwt
+package paseto
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
-	"github.com/NetSepio/gateway/config/dbconfig"
-	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/models/claims"
+	"github.com/vk-rv/pvx"
 
 	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
-	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/jinzhu/gorm"
 )
 
@@ -21,8 +19,7 @@ var (
 	ErrAuthHeaderMissing = errors.New("authorization header is required")
 )
 
-func JWT(c *gin.Context) {
-	db := dbconfig.GetDb()
+func PASETO(c *gin.Context) {
 	var headers GenericAuthHeaders
 	err := c.BindHeader(&headers)
 	if err != nil {
@@ -36,21 +33,21 @@ func JWT(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	jwtToken := headers.Authorization[7:]
-	token, _ := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
+	pasetoToken := headers.Authorization
+	pv4 := pvx.NewPV4Local()
+	k := envutil.MustGetEnv("PASETO_PRIVATE_KEY")
+	symK := pvx.NewSymmetricKey([]byte(k), pvx.Version4)
+	var cc claims.CustomClaims
+	err = pv4.
+		Decrypt(pasetoToken, symK).
+		ScanClaims(&cc)
+	if err != nil {
+		logValidationFailed(headers.Authorization, err)
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	} else {
 
-		jwtPrivateKet := []byte(envutil.MustGetEnv("JWT_PRIVATE_KEY"))
-		return jwtPrivateKet, nil
-	})
-
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		walletAddress := claims["walletAddress"]
-
-		err := db.Model(&models.User{}).Where("wallet_address = ?", walletAddress.(string)).First(&models.User{}).Error
-		if err != nil {
+		if err := cc.Valid(); err != nil {
 			logValidationFailed(headers.Authorization, err)
 			if err.Error() == gorm.ErrRecordNotFound.Error() {
 				c.AbortWithStatus(http.StatusForbidden)
@@ -59,12 +56,9 @@ func JWT(c *gin.Context) {
 				c.AbortWithStatus(http.StatusInternalServerError)
 			}
 		} else {
-			c.Set("walletAddress", walletAddress)
+			c.Set("walletAddress", cc.WalletAddress)
 			c.Next()
 		}
-	} else {
-		logValidationFailed(headers.Authorization, err)
-		c.AbortWithStatus(http.StatusForbidden)
 	}
 }
 
