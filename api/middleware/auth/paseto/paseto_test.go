@@ -61,9 +61,9 @@ func Test_PASETO(t *testing.T) {
 		expiration := time.Now().Add(time.Second * 2)
 		signedBy := envutil.MustGetEnv("SIGNED_BY")
 		newClaims := claims.CustomClaims{
-			testWalletAddress,
-			signedBy,
-			pvx.RegisteredClaims{
+			WalletAddress: testWalletAddress,
+			SignedBy:      signedBy,
+			RegisteredClaims: pvx.RegisteredClaims{
 				Expiration: &expiration,
 			},
 		}
