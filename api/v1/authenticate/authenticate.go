@@ -65,15 +65,15 @@ func authenticate(c *gin.Context) {
 	}
 	if isCorrect {
 		customClaims := claims.New(walletAddress)
-		jwtPrivateKey := envutil.MustGetEnv("JWT_PRIVATE_KEY")
-		jwtToken, err := auth.GenerateToken(customClaims, jwtPrivateKey)
+		pasetoPrivateKey := envutil.MustGetEnv("PASETO_PRIVATE_KEY")
+		pasetoToken, err := auth.GenerateToken(customClaims, pasetoPrivateKey)
 		if err != nil {
 			httphelper.NewInternalServerError(c, "failed to generate token, error %v", err.Error())
 			return
 		}
 		db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{})
 		payload := AuthenticatePayload{
-			Token: jwtToken,
+			Token: pasetoToken,
 		}
 		httphelper.SuccessResponse(c, "Token generated successfully", payload)
 	} else {

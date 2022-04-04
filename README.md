@@ -28,21 +28,19 @@ postgres -c log_statement=all
 
 ### Auth
 
-For protected APIs use bearer token which can be obtained after calling authenticate API.
+For protected APIs use PASETO token which can be obtained after calling authenticate API.
 
-Use `Authorization` key in header in order to send token,
-also since it is bearer token append `Bearer ` as suffix
-for example, `Bearer mytokenabcd`
+Use `Authorization` key in header in order to send token
 
 ### APIs
 
-#### Returns flow ID and EULA which should be signed and send to authenticate API in order to get the JWT which can be used for accessing all other APIs
+#### Returns flow ID and EULA which should be signed and send to authenticate API in order to get the PASETO which can be used for accessing all other APIs
 
 ```
   GET /flowid?walletAddress={{wallet address}}
 ```
 
-#### Request JWT for the user who accepted the EULA by signing it with flow ID, i.e. flowid+EULA.
+#### Request PASETO for the user who accepted the EULA by signing it with flow ID, i.e. flowid+EULA.
 
 ```
   POST /authenticate

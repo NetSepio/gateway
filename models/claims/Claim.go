@@ -5,35 +5,49 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
-
-	jwt "github.com/golang-jwt/jwt/v4"
+	"github.com/vk-rv/pvx"
 )
 
 type CustomClaims struct {
 	WalletAddress string `json:"walletAddress"`
 	SignedBy      string `json:"signedBy"`
-	jwt.RegisteredClaims
+	pvx.RegisteredClaims
+}
+
+func (c CustomClaims) Valid() error {
+	db := dbconfig.GetDb()
+	if err := c.RegisteredClaims.Valid(); err != nil {
+		return err
+	}
+	err := db.Model(&models.User{}).Where("wallet_address = ?", c.WalletAddress).First(&models.User{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func New(walletAddress string) CustomClaims {
-	jwtExpirationInHours, ok := os.LookupEnv("JWT_EXPIRATION_IN_HOURS")
-	jwtExpirationInHoursInt := time.Duration(24)
+	pasetoExpirationInHours, ok := os.LookupEnv("PASETO_EXPIRATION_IN_HOURS")
+	pasetoExpirationInHoursInt := time.Duration(24)
 	if ok {
-		res, err := strconv.Atoi(jwtExpirationInHours)
+		res, err := strconv.Atoi(pasetoExpirationInHours)
 		if err != nil {
-			logwrapper.Log.Warnf("Failed to parse JWT_EXPIRATION_IN_HOURS as int : %v", err.Error())
+			logwrapper.Log.Warnf("Failed to parse PASETO_EXPIRATION_IN_HOURS as int : %v", err.Error())
 		} else {
-			jwtExpirationInHoursInt = time.Duration(res)
+			pasetoExpirationInHoursInt = time.Duration(res)
 		}
 	}
+	expiration := time.Now().Add(pasetoExpirationInHoursInt * time.Hour)
 	signedBy := envutil.MustGetEnv("SIGNED_BY")
 	return CustomClaims{
 		walletAddress,
 		signedBy,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(jwtExpirationInHoursInt * time.Hour)),
+		pvx.RegisteredClaims{
+			Expiration: &expiration,
 		},
 	}
 }
