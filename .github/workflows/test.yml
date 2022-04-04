@@ -20,6 +20,7 @@ jobs:
       VOTER_EULA: TODO VOTER EULA
       AUTH_EULA: TODO AUTH EULA
       ALLOWED_ORIGIN: "*"
+      SIGNED_BY: "NetSepio"
 
     services:
       postgres:
