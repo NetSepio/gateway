@@ -9,7 +9,7 @@ import (
 func main() {
 	app.Init(".env", "logs")
 	logwrapper.Log.Info("Starting app")
-	port := envutil.MustGetEnv("PORT")
+	port := envutil.MustGetEnv("APP_PORT")
 	err := app.GinApp.Run(":" + port)
 	if err != nil {
 		logwrapper.Log.Fatal(err)
