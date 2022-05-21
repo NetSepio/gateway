@@ -3,8 +3,8 @@ package netsepio
 import (
 	"errors"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/config/smartcontract"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 )
 
 type tRole int

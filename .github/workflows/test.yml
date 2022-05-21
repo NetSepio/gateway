@@ -1,10 +1,6 @@
 name: "Test"
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: push
 
 jobs:
   test:
@@ -19,9 +15,12 @@ jobs:
       POLYGON_RPC: ${{ secrets.POLYGON_RPC }}
       MNEMONIC: ${{ secrets.MNEMONIC }}
       NETSEPIO_CONTRACT_ADDRESS: ${{ secrets.NETSEPIO_CONTRACT_ADDRESS }}
-      JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      PASETO_PRIVATE_KEY: ${{ secrets.PASETO_PRIVATE_KEY }}
+      GRAPH_API: ${{ secrets.GRAPH_API }}
       VOTER_EULA: TODO VOTER EULA
       AUTH_EULA: TODO AUTH EULA
+      ALLOWED_ORIGIN: "*"
+      SIGNED_BY: "NetSepio"
 
     services:
       postgres:
@@ -36,9 +35,9 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v2
       - name: Install gotestsum
-        run: go get -u gotest.tools/gotestsum
+        run: go install gotest.tools/gotestsum@latest
+      - uses: actions/checkout@v2
       - name: Build
         run: go build -v ./...
       - name: Test

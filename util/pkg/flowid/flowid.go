@@ -1,8 +1,8 @@
 package flowid
 
 import (
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/models"
 	"github.com/jinzhu/gorm"
 
 	"github.com/google/uuid"
@@ -26,8 +26,10 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 			logrus.Error(err)
 			return "", err
 		}
-		association.Append(&models.FlowId{FlowIdType: flowIdType, WalletAddress: walletAddress, FlowId: flowId, RelatedRoleId: relatedRoleId})
-
+		err := association.Append(&models.FlowId{FlowIdType: flowIdType, WalletAddress: walletAddress, FlowId: flowId, RelatedRoleId: relatedRoleId}).Error
+		if err != nil {
+			return "", err
+		}
 	} else {
 		// User doesn't exist so create
 

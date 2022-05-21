@@ -3,9 +3,10 @@ package cryptosign
 import (
 	"errors"
 	"fmt"
+	"strings"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/models"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -44,7 +45,7 @@ func CheckSign(signature string, flowId string, message string) (string, bool, e
 	if err := res.Error; err != nil {
 		return "", false, err
 	}
-	if flowIdData.WalletAddress == walletAddress.String() {
+	if strings.EqualFold(flowIdData.WalletAddress, walletAddress.String()) {
 		return flowIdData.WalletAddress, true, nil
 	} else {
 		return "", false, nil

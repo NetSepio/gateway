@@ -31,14 +31,10 @@ func Init(basepath string) {
 	}
 	Log.Logger.SetFormatter(&logrus.JSONFormatter{})
 
-	timeNow := strings.Replace(time.Now().Format(time.UnixDate), ":", "_", -1)
-	fileName := fmt.Sprintf("%v.log", timeNow)
-	filePath := filepath.Join(basepath, fileName)
-	logToFile, ok := os.LookupEnv("LOG_TO_FILE")
-	if !ok {
-		Log.Fatal("env var LOG_TO_FILE is undefined")
-	}
-	if logToFile == "true" {
+	if os.Getenv("LOG_TO_FILE") == "true" {
+		timeNow := strings.Replace(time.Now().Format(time.UnixDate), ":", "_", -1)
+		fileName := fmt.Sprintf("%v.log", timeNow)
+		filePath := filepath.Join(basepath, fileName)
 		file, err := os.Create(filePath)
 		if err != nil {
 			Log.Fatalf("Error creating log file: %v", err)

@@ -3,12 +3,12 @@ package roleid
 import (
 	"net/http"
 
-	jwtMiddleWare "github.com/TheLazarusNetwork/netsepio-engine/api/middleware/auth/jwt"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/flowid"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/pkg/flowid"
+	"github.com/NetSepio/gateway/util/pkg/httphelper"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -18,18 +18,17 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/roleId")
 	{
-		g.Use(jwtMiddleWare.JWT)
-		g.GET(":roleId", getRoleId)
+		g.Use(paseto.PASETO)
+		g.GET(":roleId", GetRoleId)
 	}
 }
 
-func getRoleId(c *gin.Context) {
+func GetRoleId(c *gin.Context) {
 	db := dbconfig.GetDb()
 	walletAddress := c.GetString("walletAddress")
 	roleId, exist := c.Params.Get("roleId")
 	if !exist {
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-
+		httphelper.ErrResponse(c, http.StatusBadRequest, "Param roleId is required")
 		return
 	}
 	var role models.Role
@@ -38,13 +37,12 @@ func getRoleId(c *gin.Context) {
 		httphelper.ErrResponse(c, http.StatusNotFound, err.Error())
 
 	} else if err != nil {
-		logwrapper.Error(err)
+		logwrapper.Errorf("failed to fetch details for roleId: %v, error: %v", roleId, err.Error())
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-
 	} else {
 		flowId, err := flowid.GenerateFlowId(walletAddress, models.ROLE, roleId)
 		if err != nil {
-			logwrapper.Error(err)
+			logwrapper.Errorf("failed to generate flow id, err: %v", err.Error())
 			httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 			c.Status(http.StatusInternalServerError)
 			return

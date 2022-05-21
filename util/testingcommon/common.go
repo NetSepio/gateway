@@ -3,15 +3,14 @@ package testingcommon
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"testing"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
-	"github.com/TheLazarusNetwork/netsepio-engine/models/claims"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/auth"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
+	"github.com/NetSepio/gateway/api/types"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/models/claims"
+	"github.com/NetSepio/gateway/util/pkg/auth"
+	"github.com/NetSepio/gateway/util/pkg/envutil"
 
 	"crypto/ecdsa"
 	"log"
@@ -26,13 +25,13 @@ func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 	gin.SetMode(gin.TestMode)
 	CreateTestUser(t, testWalletAddress)
 	customClaims := claims.New(testWalletAddress)
-	jwtPrivateKey := envutil.MustGetEnv("JWT_PRIVATE_KEY")
-	token, err := auth.GenerateToken(customClaims, jwtPrivateKey)
+	pasetoPrivateKey := envutil.MustGetEnv("PASETO_PRIVATE_KEY")
+	token, err := auth.GenerateToken(customClaims, pasetoPrivateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
-	header := fmt.Sprintf("Bearer %v", token)
 
+	header := token
 	return header
 }
 

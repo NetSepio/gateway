@@ -3,7 +3,7 @@ package envutil
 import (
 	"os"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 )
 
 func MustGetEnv(key string) string {

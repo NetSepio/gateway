@@ -1,0 +1,17 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+metadata:
+  name: gateway
+build:
+  artifacts:
+    - image: 560914023379.dkr.ecr.us-east-2.amazonaws.com/netsepio-gateway
+      docker:
+        dockerfile: Dockerfile
+deploy:
+  kubectl:
+    defaultNamespace: netsepio
+    manifests:
+      - k8s/gateway-deploy.yml
+      - k8s/ingress-service.yml
+      - k8s/postgres-deploy.yml
+

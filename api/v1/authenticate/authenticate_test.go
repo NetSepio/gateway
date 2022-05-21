@@ -1,4 +1,4 @@
-package authenticate_test
+package authenticate
 
 import (
 	"bytes"
@@ -10,11 +10,11 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
-	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/authenticate"
-	"github.com/TheLazarusNetwork/netsepio-engine/api/v1/flowid"
-	"github.com/TheLazarusNetwork/netsepio-engine/app"
-	testingcommmon "github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
+	"github.com/NetSepio/gateway/api/types"
+	"github.com/NetSepio/gateway/api/v1/flowid"
+	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	testingcommmon "github.com/NetSepio/gateway/util/testingcommon"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -24,11 +24,10 @@ import (
 
 // TODO: Write test to verify expiry
 func Test_PostAuthenticate(t *testing.T) {
-	app.Init("../../../../.env", "../../../../logs")
+	config.Init("../../../.env")
+	logwrapper.Init("../../../logs")
 	t.Cleanup(testingcommmon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
-
-	router := app.GinApp
 
 	url := "/api/v1.0/authenticate"
 
@@ -36,7 +35,7 @@ func Test_PostAuthenticate(t *testing.T) {
 		testWallet := testingcommmon.GenerateWallet()
 		eula, flowId := callFlowIdApi(testWallet.WalletAddress, t)
 		signature := getSignature(eula, flowId, testWallet.PrivateKey)
-		body := authenticate.AuthenticateRequest{Signature: signature, FlowId: flowId}
+		body := AuthenticateRequest{Signature: signature, FlowId: flowId}
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
 			t.Fatal(err)
@@ -48,7 +47,10 @@ func Test_PostAuthenticate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		router.ServeHTTP(rr, req)
+
+		c, _ := gin.CreateTestContext(rr)
+		c.Request = req
+		authenticate(c)
 		assert.Equal(t, http.StatusOK, rr.Code, rr.Body.String())
 	})
 	t.Run("Should return 403 with different wallet address", func(t *testing.T) {
@@ -57,12 +59,12 @@ func Test_PostAuthenticate(t *testing.T) {
 		// Different private key will result in different wallet address
 		differentPrivatekey := "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 		signature := getSignature(eula, flowId, differentPrivatekey)
-		body := authenticate.AuthenticateRequest{Signature: signature, FlowId: flowId}
+		body := AuthenticateRequest{Signature: signature, FlowId: flowId}
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
 			t.Fatal(err)
 		}
-		newWalletAddress := testWallet.WalletAddress + "b"
+		newWalletAddress := testWallet.WalletAddress + "ba"
 		callFlowIdApi(newWalletAddress, t)
 
 		rr := httptest.NewRecorder()
@@ -72,7 +74,9 @@ func Test_PostAuthenticate(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		router.ServeHTTP(rr, req)
+		c, _ := gin.CreateTestContext(rr)
+		c.Request = req
+		authenticate(c)
 		assert.Equal(t, http.StatusForbidden, rr.Code, rr.Body.String())
 	})
 
@@ -82,6 +86,7 @@ func callFlowIdApi(walletAddress string, t *testing.T) (eula string, flowidStrin
 	// Call flowid api
 	u, err := url.Parse("/api/v1.0/flowid")
 	q := url.Values{}
+	logwrapper.Infof("walletAddress: %v\n", walletAddress)
 	q.Set("walletAddress", walletAddress)
 	u.RawQuery = q.Encode()
 	if err != nil {
@@ -93,7 +98,9 @@ func callFlowIdApi(walletAddress string, t *testing.T) (eula string, flowidStrin
 	if err != nil {
 		t.Error(err)
 	}
-	app.GinApp.ServeHTTP(rr, req)
+	c, _ := gin.CreateTestContext(rr)
+	c.Request = req
+	flowid.GetFlowId(c)
 	assert.Equal(t, http.StatusOK, rr.Code, "Failed to call flowApi")
 	var flowIdPayload flowid.GetFlowIdPayload
 	var res types.ApiResponse

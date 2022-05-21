@@ -10,15 +10,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/api/types"
-	claimrole "github.com/TheLazarusNetwork/netsepio-engine/api/v1/claimRole"
-	roleid "github.com/TheLazarusNetwork/netsepio-engine/api/v1/roleId"
-	"github.com/TheLazarusNetwork/netsepio-engine/app"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/netsepio"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract/auth"
-	"github.com/TheLazarusNetwork/netsepio-engine/generated/smartcontract/gennetsepio"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/testingcommon"
+	"github.com/NetSepio/gateway/api/types"
+	roleid "github.com/NetSepio/gateway/api/v1/roleId"
+	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/config/netsepio"
+	"github.com/NetSepio/gateway/config/smartcontract"
+	"github.com/NetSepio/gateway/config/smartcontract/auth"
+	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/util/testingcommon"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -29,16 +29,17 @@ import (
 
 func Test_PostClaimRole(t *testing.T) {
 	defer time.Sleep(4 * time.Second)
-	app.Init("../../../../.env", "../../../../logs")
+	config.Init("../../../.env")
+	logwrapper.Init("../../../logs")
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
 	url := "/api/v1.0/claimrole"
 	rr := httptest.NewRecorder()
-	requestRoleRes := requestRole(t, headers)
+	requestRoleRes := requestRole(t, headers, testWallet.WalletAddress)
 	signature := getSignature(requestRoleRes.Eula, requestRoleRes.FlowId, testWallet.PrivateKey)
-	reqBody := claimrole.ClaimRoleRequest{
+	reqBody := ClaimRoleRequest{
 		Signature: signature, FlowId: requestRoleRes.FlowId,
 	}
 	jsonBytes, _ := json.Marshal(reqBody)
@@ -47,7 +48,10 @@ func Test_PostClaimRole(t *testing.T) {
 		t.Fatal(err)
 	}
 	req.Header.Add("Authorization", headers)
-	app.GinApp.ServeHTTP(rr, req)
+	c, _ := gin.CreateTestContext(rr)
+	c.Request = req
+	c.Set("walletAddress", testWallet.WalletAddress)
+	postClaimRole(c)
 	ok := assert.Equal(t, http.StatusOK, rr.Result().StatusCode, rr.Body.String())
 	if !ok {
 		t.FailNow()
@@ -103,7 +107,7 @@ func failAfter(t *testing.T, success *bool, duration time.Duration, ch chan *gen
 		t.Errorf("didn't got any response from %v after %v", "RoleGranted", duration)
 	}
 }
-func requestRole(t *testing.T, headers string) roleid.GetRoleIdPayload {
+func requestRole(t *testing.T, headers string, walletAddres string) roleid.GetRoleIdPayload {
 	voterRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
 	if err != nil {
 		t.Fatalf("failed to get role id for %v , error: %v", "VOTER ROLE", err.Error())
@@ -116,7 +120,14 @@ func requestRole(t *testing.T, headers string) roleid.GetRoleIdPayload {
 		t.Fatal(err)
 	}
 	req.Header.Add("Authorization", headers)
-	app.GinApp.ServeHTTP(rr, req)
+	c, _ := gin.CreateTestContext(rr)
+	c.Params = gin.Params{{Key: "roleId", Value: hexutil.Encode(voterRole[:])}}
+	c.Request = req
+	c.Set("walletAddress", walletAddres)
+	roleid.GetRoleId(c)
+	if rr.Result().StatusCode != 200 {
+		t.Fatalf("failed to fetch flowId for role request, error: %v", rr.Body.String())
+	}
 	var res types.ApiResponse
 	json.NewDecoder(rr.Result().Body).Decode(&res)
 	var getRoleIdPayload roleid.GetRoleIdPayload

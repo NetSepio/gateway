@@ -1,4 +1,4 @@
-package jwt
+package paseto
 
 type GenericAuthHeaders struct {
 	Authorization string
