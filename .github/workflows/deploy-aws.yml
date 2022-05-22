@@ -1,4 +1,4 @@
-name: "Deploy to ECR"
+name: "Deploy to EKS"
 on:
   push:
     branches: [master, thisisommore/ci-cd-for-aws-ec-6]
