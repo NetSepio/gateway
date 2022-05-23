@@ -1,7 +1,7 @@
 name: "Deploy to EKS"
 on:
   push:
-    branches: [master, thisisommore/ci-cd-for-aws-ec-6]
+    branches: [main]
 
 jobs:
   build:
