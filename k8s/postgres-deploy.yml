@@ -27,9 +27,10 @@ spec:
               value: "netsepio"
             - name: "POSTGRES_DB"
               value: "netsepio"
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
           volumeMounts:
-            - mountPath: "/var/lib/postgresql/"
-              subPath: "data"
+            - mountPath: "/var/lib/postgresql/data"
               name: postgres-pv-storage
       volumes:
         - name: postgres-pv-storage
