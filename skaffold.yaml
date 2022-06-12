@@ -13,5 +13,3 @@ deploy:
     manifests:
       - k8s/gateway-deploy.yml
       - k8s/ingress-service.yml
-      - k8s/postgres-deploy.yml
-
