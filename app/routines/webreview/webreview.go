@@ -1,7 +1,9 @@
 package webreview
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"math/big"
@@ -58,17 +60,12 @@ func Init() {
 			continue
 		}
 		filePath := path.Join(dirName, htmlFile)
-		hash, err := ws.AddFileToIpfs(filePath)
+		indexFileHash, err := ws.AddFileToIpfs(filePath)
 		if err != nil {
 			logwrapper.Warnf("failed to add file: %v to ipfs for websiteURL : %v, error: %v", filePath, websiteURL, err.Error())
 			continue
 		}
 
-		err = ws.GetObjectFromIpfs(hash, path.Join(dirName, "output.txt"))
-		if err != nil {
-			logwrapper.Warnf("failed to run GetObjectFromIpfs for hash: %v, error: %v", hash, err.Error())
-			continue
-		}
 		// create context
 		ctx, cancel := chromedp.NewContext(context.Background())
 
@@ -85,18 +82,34 @@ func Init() {
 			continue
 		}
 
-		hash, err = ws.AddFileToIpfs(fileName)
+		screenShotHash, err := ws.AddFileToIpfs(fileName)
 		if err != nil {
 			logwrapper.Warnf("failed to add file to ipfs for fullScreenShot : %v", err.Error())
 			continue
 		}
-		// netsepioInstance.UpdateReview(nil, e.TokenId, hash)
-		_, err = rawtrasaction.SendRawTrasac(gennetsepio.GennetsepioABI, "updateReview", e.TokenId, hash)
+
+		metaData := MetaData{
+			WebsiteScreenShot: screenShotHash,
+			IndexFile:         indexFileHash,
+		}
+		data, err := json.Marshal(&metaData)
+		if err != nil {
+			logwrapper.Warnf("failed to marshal JSON for tokenId %v : %s", e.TokenId, err)
+			continue
+		}
+
+		metaDataHash, err := ws.AddToIpfs(bytes.NewReader(data))
+		if err != nil {
+			logwrapper.Warnf("failed to add file to ipfs for fullScreenShot : %v", err.Error())
+			continue
+		}
+		// netsepioInstance.UpdateReview(nil, e.TokenId, metaDataHash)
+		_, err = rawtrasaction.SendRawTrasac(gennetsepio.GennetsepioABI, "updateReview", e.TokenId, metaDataHash)
 		if err != nil {
 			logwrapper.Warnf("failed to updateReview for tokenId %v : %v", e.TokenId, err.Error())
 			continue
 		}
-
+		logwrapper.Infof("metadata hash is %s", metaDataHash)
 		err = os.RemoveAll(dirName)
 		if err != nil {
 			logwrapper.Warnf("failed to remove dir %v, error:%v", dirName, err.Error())
