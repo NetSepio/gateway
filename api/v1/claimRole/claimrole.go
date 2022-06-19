@@ -3,14 +3,14 @@ package claimrole
 import (
 	"net/http"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/api/middleware/auth/jwt"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract/rawtrasaction"
-	"github.com/TheLazarusNetwork/netsepio-engine/generated/smartcontract/gennetsepio"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/cryptosign"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/smartcontract/rawtrasaction"
+	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/pkg/cryptosign"
+	"github.com/NetSepio/gateway/util/pkg/httphelper"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -23,12 +23,13 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/claimrole")
 	{
-		g.Use(jwt.JWT)
+		g.Use(paseto.PASETO)
 		g.POST("", postClaimRole)
 	}
 }
 
 func postClaimRole(c *gin.Context) {
+	walletAddressGin := c.GetString("walletAddress")
 	db := dbconfig.GetDb()
 	var req ClaimRoleRequest
 	c.BindJSON(&req)
@@ -55,7 +56,7 @@ func postClaimRole(c *gin.Context) {
 		return
 	}
 
-	if !isCorrect {
+	if !isCorrect || walletAddressGin != walletAddress {
 		httphelper.ErrResponse(c, http.StatusForbidden, "Wallet address is not correct")
 		return
 	}
@@ -75,22 +76,9 @@ func postClaimRole(c *gin.Context) {
 	walletAddressHex := common.HexToAddress(walletAddress)
 	var roleIdBytes [32]byte
 	copy(roleIdBytes[:], roleIdBytesSlice)
-	if err != nil {
-		logwrapper.Errorf("failed to parse ABI for %v, error: %v", "NETSEPIO", err.Error())
-		httphelper.ErrResponse(c, 500, "unexpected error occured")
-		return
-	}
-	// authBindOpts, err := auth.GetAuth(client)
-
-	if err != nil {
-		logwrapper.Errorf("failed to get auth, error: %v", err.Error())
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-		return
-	}
 
 	tx, err := rawtrasaction.SendRawTrasac(gennetsepio.GennetsepioABI, "grantRole", roleIdBytes, walletAddressHex)
 
-	// tx, err := instance.GrantRole(authBindOpts, roleIdBytes, walletAddressHex)
 	if err != nil {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		logwrapper.Warnf("failed to grant role to user with walletaddress %v, error: %v", walletAddress, err.Error())
@@ -98,22 +86,11 @@ func postClaimRole(c *gin.Context) {
 	}
 	transactionHash := tx.Hash().String()
 	logwrapper.Infof("trasaction hash is %v", transactionHash)
-	// Update user role
-	err = db.Model(&models.User{WalletAddress: walletAddress}).
-		Association("Roles").
-		Append(models.UserRole{WalletAddress: walletAddress, RoleId: role.RoleId}).
-		Error
-	if err != nil {
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-		logwrapper.Error(err)
-		return
-	} else {
-		db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{})
-		payload := ClaimRolePayload{
-			TransactionHash: transactionHash,
-		}
-		httphelper.SuccessResponse(c, "Role successfully claimed", payload)
+	db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{})
+	payload := ClaimRolePayload{
+		TransactionHash: transactionHash,
 	}
+	httphelper.SuccessResponse(c, "Role successfully claimed", payload)
 
 }
 

@@ -3,14 +3,14 @@ package authenticate
 import (
 	"net/http"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/config/dbconfig"
-	"github.com/TheLazarusNetwork/netsepio-engine/models"
-	"github.com/TheLazarusNetwork/netsepio-engine/models/claims"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/auth"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/cryptosign"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/envutil"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/httphelper"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/models/claims"
+	"github.com/NetSepio/gateway/util/pkg/auth"
+	"github.com/NetSepio/gateway/util/pkg/cryptosign"
+	"github.com/NetSepio/gateway/util/pkg/envutil"
+	"github.com/NetSepio/gateway/util/pkg/httphelper"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,8 +34,8 @@ func authenticate(c *gin.Context) {
 	var flowIdData models.FlowId
 	err := db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
 	if err != nil {
-		logwrapper.Error(err)
-		httphelper.ErrResponse(c, 500, "Unexpected error occured")
+		logwrapper.Errorf("failed to get flowId, error %v", err)
+		httphelper.ErrResponse(c, http.StatusNotFound, "flow id not found")
 		return
 	}
 
@@ -65,15 +65,15 @@ func authenticate(c *gin.Context) {
 	}
 	if isCorrect {
 		customClaims := claims.New(walletAddress)
-		jwtPrivateKey := envutil.MustGetEnv("JWT_PRIVATE_KEY")
-		jwtToken, err := auth.GenerateToken(customClaims, jwtPrivateKey)
+		pasetoPrivateKey := envutil.MustGetEnv("PASETO_PRIVATE_KEY")
+		pasetoToken, err := auth.GenerateToken(customClaims, pasetoPrivateKey)
 		if err != nil {
 			httphelper.NewInternalServerError(c, "failed to generate token, error %v", err.Error())
 			return
 		}
 		db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{})
 		payload := AuthenticatePayload{
-			Token: jwtToken,
+			Token: pasetoToken,
 		}
 		httphelper.SuccessResponse(c, "Token generated successfully", payload)
 	} else {

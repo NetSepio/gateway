@@ -10,8 +10,8 @@ tasks:
       go get && go build ./...
     command: |
       docker run --name="netsepio" --rm -d -p 5432:5432 \
-      -e POSTGRES_PASSWORD=revotic \
-      -e POSTGRES_USER=revotic \
+      -e POSTGRES_PASSWORD=netsepio \
+      -e POSTGRES_USER=netsepio \
       -e POSTGRES_DB=netsepio \
       postgres -c log_statement=all
 vscode:
