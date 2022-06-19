@@ -3,12 +3,8 @@ package app
 import (
 	"time"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/api"
-	"github.com/TheLazarusNetwork/netsepio-engine/app/routines/webreview"
-	"github.com/TheLazarusNetwork/netsepio-engine/config"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
-
 	"github.com/NetSepio/gateway/api"
+	"github.com/NetSepio/gateway/app/routines/webreview"
 	"github.com/NetSepio/gateway/config"
 	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"

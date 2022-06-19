@@ -11,12 +11,12 @@ import (
 	"os"
 	"path"
 
-	"github.com/TheLazarusNetwork/netsepio-engine/config/netsepio"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract"
-	"github.com/TheLazarusNetwork/netsepio-engine/config/smartcontract/rawtrasaction"
-	"github.com/TheLazarusNetwork/netsepio-engine/generated/smartcontract/gennetsepio"
-	"github.com/TheLazarusNetwork/netsepio-engine/util/pkg/logwrapper"
-	ws "github.com/TheLazarusNetwork/netsepio-engine/util/pkg/webscrape"
+	"github.com/NetSepio/gateway/config/netsepio"
+	"github.com/NetSepio/gateway/config/smartcontract"
+	"github.com/NetSepio/gateway/config/smartcontract/rawtrasaction"
+	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	ws "github.com/NetSepio/gateway/util/pkg/webscrape"
 	"github.com/chromedp/chromedp"
 	"github.com/ethereum/go-ethereum/common"
 )
