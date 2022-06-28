@@ -98,3 +98,11 @@ Note - Some unset data is emitted.
 | :------------ | :--------------------- |
 | `voter`       | **Required**. `string` |
 | `MetaDataUri` | **Required**. `string` |
+
+```
+  POST /feedback
+```
+
+| Parameter  | Type                   |
+| :--------- | :--------------------- |
+| `feedback` | **Required**. `string` |

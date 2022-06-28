@@ -25,7 +25,10 @@ func ApplyRoutes(r *gin.RouterGroup) {
 func createFeedback(c *gin.Context) {
 	db := dbconfig.GetDb()
 	var requestBody PostFeedbackRequest
-	c.BindJSON(&requestBody)
+	err := c.BindJSON(&requestBody)
+	if err != nil {
+		return
+	}
 	walletAddress := c.GetString("walletAddress")
 
 	result := db.Model(&models.User{}).Where("wallet_address = ?", walletAddress).
