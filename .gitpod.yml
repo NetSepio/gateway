@@ -14,8 +14,13 @@ tasks:
       -e POSTGRES_USER=netsepio \
       -e POSTGRES_DB=netsepio \
       postgres -c log_statement=all
+      gp sync-done db
       cp .env-sample .env
       air
+  
+  - command: |
+      gp sync-wait db
+      docker exec -it netsepio psql -U netsepio
 vscode:
   extensions:
     - golang.go

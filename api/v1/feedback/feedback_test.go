@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
 
@@ -27,8 +28,9 @@ func Test_PostFeedback(t *testing.T) {
 	t.Run("Should be able to add feedback", func(t *testing.T) {
 		rr := httptest.NewRecorder()
 
-		requestBody := PostFeedbackRequest{
+		requestBody := models.UserFeedback{
 			Feedback: "Very helpfull for avoiding spam and harmfull domains",
+			Rating:   5,
 		}
 		jsonData, err := json.Marshal(requestBody)
 		if err != nil {

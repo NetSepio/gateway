@@ -42,7 +42,7 @@ func GetDb() *gorm.DB {
 	if err = db.DB().Ping(); err != nil {
 		log.Fatal("failed to ping database", err)
 	}
-	if err := db.AutoMigrate(&models.FlowId{}, &models.User{}, &models.Role{}).Error; err != nil {
+	if err := db.AutoMigrate(&models.UserFeedback{}, &models.FlowId{}, &models.User{}, &models.Role{}).Error; err != nil {
 		log.Fatal(err)
 	}
 	//Create user_roles table
