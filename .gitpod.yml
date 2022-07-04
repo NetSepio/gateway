@@ -16,13 +16,13 @@ tasks:
       -e POSTGRES_USER=netsepio \
       -e POSTGRES_DB=netsepio \
       postgres -c log_statement=all
+      sleep 12
       gp sync-done db
       cp .env-sample .env
       air
   
   - name: postgres shell
     command: |
-      sleep 5
       gp sync-await db
       docker exec -it netsepio psql -U netsepio
     
