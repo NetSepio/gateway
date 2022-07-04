@@ -7,8 +7,6 @@ import (
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
-	"github.com/jinzhu/gorm"
-	"github.com/lib/pq"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,26 +22,22 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 func createFeedback(c *gin.Context) {
 	db := dbconfig.GetDb()
-	var requestBody PostFeedbackRequest
-	err := c.BindJSON(&requestBody)
+	var newFeedback models.UserFeedback
+	err := c.BindJSON(&newFeedback)
 	if err != nil {
+		httphelper.ErrResponse(c, http.StatusBadRequest, "body is invalid")
 		return
 	}
 	walletAddress := c.GetString("walletAddress")
 
-	result := db.Model(&models.User{}).Where("wallet_address = ?", walletAddress).
-		Update("feedbacks", gorm.Expr("feedbacks || ?", pq.StringArray([]string{requestBody.Feedback})))
+	association := db.Model(&models.User{
+		WalletAddress: walletAddress,
+	}).Association("feedbacks")
 
+	result := association.Append(newFeedback)
 	if result.Error != nil {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
-
-		return
-	}
-	if result.RowsAffected == 0 {
-		httphelper.ErrResponse(c, http.StatusNotFound, "Record not found")
-
 		return
 	}
 	httphelper.SuccessResponse(c, "Feedback added", nil)
-
 }

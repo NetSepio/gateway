@@ -103,6 +103,7 @@ Note - Some unset data is emitted.
   POST /feedback
 ```
 
-| Parameter  | Type                   |
-| :--------- | :--------------------- |
-| `feedback` | **Required**. `string` |
+| Parameter  | Type                                      |
+| :--------- | :---------------------------------------- |
+| `feedback` | **Required**. `string`                    |
+| `rating`   | **Required**. `int` `ranging from 0 to 5` |
