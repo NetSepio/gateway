@@ -20,3 +20,5 @@ storage
 # Env file
 .env
 logs
+
+tmp
