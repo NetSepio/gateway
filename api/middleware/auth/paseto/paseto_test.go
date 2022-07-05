@@ -1,13 +1,16 @@
 package paseto
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 
+	"github.com/NetSepio/gateway/api/types"
 	"github.com/NetSepio/gateway/config"
 	"github.com/NetSepio/gateway/config/dbconfig"
+	customstatuscodes "github.com/NetSepio/gateway/constants/http/custom_status_codes"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
@@ -43,21 +46,21 @@ func Test_PASETO(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		statusCode := callApi(t, token)
-		assert.Equal(t, http.StatusOK, statusCode)
+		rr := callApi(t, token)
+		assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 	})
 
-	t.Run("Should return 403 with incorret PASETO", func(t *testing.T) {
+	t.Run("Should return 401 with incorret PASETO", func(t *testing.T) {
 		newClaims := claims.New(testWalletAddress)
-		token, err := auth.GenerateToken(newClaims, "this private key is valid key")
+		token, err := auth.GenerateToken(newClaims, "aaaabbaa")
 		if err != nil {
 			t.Fatal(err)
 		}
-		statusCode := callApi(t, token)
-		assert.Equal(t, http.StatusForbidden, statusCode)
+		rr := callApi(t, token)
+		assert.Equal(t, http.StatusUnauthorized, rr.Result().StatusCode)
 	})
 
-	t.Run("Should return 403 with expired PASETO", func(t *testing.T) {
+	t.Run("Should return 401 and 4011 with expired PASETO", func(t *testing.T) {
 		expiration := time.Now().Add(time.Second * 2)
 		signedBy := envutil.MustGetEnv("SIGNED_BY")
 		newClaims := claims.CustomClaims{
@@ -73,13 +76,20 @@ func Test_PASETO(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		statusCode := callApi(t, token)
-		assert.Equal(t, http.StatusForbidden, statusCode)
+		rr := callApi(t, token)
+		assert.Equal(t, http.StatusUnauthorized, rr.Result().StatusCode)
+		var response types.ApiResponse
+		body := rr.Body
+		err = json.NewDecoder(body).Decode(&response)
+		if err != nil {
+			t.Fatal(err)
+		}
+		assert.Equal(t, customstatuscodes.TokenExpired, response.StatusCode)
 	})
 
 }
 
-func callApi(t *testing.T, token string) int {
+func callApi(t *testing.T, token string) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
 	ginTestApp := gin.New()
 
@@ -91,7 +101,7 @@ func callApi(t *testing.T, token string) int {
 	ginTestApp.Use(PASETO)
 	ginTestApp.Use(successHander)
 	ginTestApp.ServeHTTP(rr, rq)
-	return rr.Result().StatusCode
+	return rr
 }
 
 func successHander(c *gin.Context) {

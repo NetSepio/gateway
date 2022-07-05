@@ -107,3 +107,9 @@ Note - Some unset data is emitted.
 | :--------- | :---------------------------------------- |
 | `feedback` | **Required**. `string`                    |
 | `rating`   | **Required**. `int` `ranging from 0 to 5` |
+
+## Custom status codes
+
+| Code   | Meaning         |
+| :----- | :-------------- |
+| `4011` | `Token expired` |
