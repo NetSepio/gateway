@@ -8,13 +8,13 @@ import (
 	customstatuscodes "github.com/NetSepio/gateway/constants/http/custom_status_codes"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/vk-rv/pvx"
+	"gorm.io/gorm"
 
 	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 )
 
 var (

@@ -7,6 +7,7 @@ import (
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
+	"gorm.io/gorm"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -37,12 +38,12 @@ func CheckSign(signature string, flowId string, message string) (string, bool, e
 	//Get address from public key
 	walletAddress := crypto.PubkeyToAddress(*pubKey)
 	var flowIdData models.FlowId
-	res := db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData)
+	err = db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData).Error
 
-	if res.RecordNotFound() {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return "", false, ErrFlowIdNotFound
 	}
-	if err := res.Error; err != nil {
+	if err != nil {
 		return "", false, err
 	}
 	if strings.EqualFold(flowIdData.WalletAddress, walletAddress.String()) {

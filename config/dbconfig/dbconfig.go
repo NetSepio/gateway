@@ -5,15 +5,14 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 
 	"github.com/NetSepio/gateway/config/netsepio"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
-	"github.com/jinzhu/gorm"
-
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/driver/postgres"
 )
 
 var db *gorm.DB
@@ -31,20 +30,39 @@ func GetDb() *gorm.DB {
 		port     = envutil.MustGetEnv("DB_PORT")
 	)
 
-	psqlInfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable port=%s",
+	dns := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable port=%s",
 		host, username, password, dbname, port)
+
 	var err error
-	db, err = gorm.Open("postgres", psqlInfo)
+	db, err = gorm.Open(postgres.New(postgres.Config{
+		DSN: dns,
+	}))
 	if err != nil {
 		log.Fatal("failed to connect database", err)
 	}
 
-	if err = db.DB().Ping(); err != nil {
+	sqlDb, err := db.DB()
+	if err != nil {
 		log.Fatal("failed to ping database", err)
 	}
-	if err := db.AutoMigrate(&models.UserFeedback{}, &models.FlowId{}, &models.User{}, &models.Role{}).Error; err != nil {
+	if err = sqlDb.Ping(); err != nil {
+		log.Fatal("failed to ping database", err)
+	}
+
+	if err := db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserFeedback{}, &models.FlowId{}); err != nil {
 		log.Fatal(err)
 	}
+
+	// //Create user_feedback table
+	// db.Exec(`create table if not exists user_feedbacks (
+	// 		wallet_address text,
+	// 		feedback text,
+	// 		rating int,
+	// 		created_at date DEFAULT now(),
+	// 		CONSTRAINT fk_users FOREIGN KEY (wallet_address) REFERENCES users(wallet_address),
+	// 		unique(wallet_address,feedback,rating)
+	// 		)`)
+
 	//Create user_roles table
 	db.Exec(`create table if not exists user_roles (
 			wallet_address text,

@@ -38,7 +38,7 @@ func patchProfile(c *gin.Context) {
 	walletAddress := c.GetString("walletAddress")
 	result := db.Model(&models.User{}).
 		Where("wallet_address = ?", walletAddress).
-		Update(requestBody)
+		Updates(requestBody)
 	if result.Error != nil {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 

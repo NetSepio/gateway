@@ -7,6 +7,7 @@ import (
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,13 +30,19 @@ func createFeedback(c *gin.Context) {
 		return
 	}
 	walletAddress := c.GetString("walletAddress")
-
+	newFeedback.WalletAddress = walletAddress
 	association := db.Model(&models.User{
 		WalletAddress: walletAddress,
-	}).Association("feedbacks")
+	}).Association("Feedbacks")
 
-	result := association.Append(newFeedback)
-	if result.Error != nil {
+	if err = association.Error; err != nil {
+		logwrapper.Errorf("failed to associate feedbacks with users, %s", err)
+		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		return
+	}
+	err = association.Append(&newFeedback)
+	if err != nil {
+		logwrapper.Errorf("failed to add new feedback, %s", err)
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
 		return
 	}
