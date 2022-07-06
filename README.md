@@ -106,7 +106,7 @@ Note - Some unset data is emitted.
 | Parameter  | Type                                      |
 | :--------- | :---------------------------------------- |
 | `feedback` | **Required**. `string`                    |
-| `rating`   | **Required**. `int` `ranging from 0 to 5` |
+| `rating`   | **Required**. `int` `ranging from 1 to 5` |
 
 ## Custom status codes
 
