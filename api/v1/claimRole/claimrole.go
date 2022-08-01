@@ -90,7 +90,7 @@ func postClaimRole(c *gin.Context) {
 	payload := ClaimRolePayload{
 		TransactionHash: transactionHash,
 	}
-	httphelper.SuccessResponse(c, "Role successfully claimed", payload)
+	httphelper.SuccessResponse(c, "role grant transaction has been broadcasted", payload)
 
 }
 
