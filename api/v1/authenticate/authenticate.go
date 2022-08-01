@@ -28,11 +28,15 @@ func authenticate(c *gin.Context) {
 	db := dbconfig.GetDb()
 	//TODO remove flow id if 200
 	var req AuthenticateRequest
-	c.BindJSON(&req)
+	err := c.BindJSON(&req)
+	if err != nil {
+		httphelper.ErrResponse(c, http.StatusForbidden, "payload is invalid")
+		return
+	}
 
 	//Get flowid type
 	var flowIdData models.FlowId
-	err := db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
+	err = db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
 	if err != nil {
 		logwrapper.Errorf("failed to get flowId, error %v", err)
 		httphelper.ErrResponse(c, http.StatusNotFound, "flow id not found")
@@ -71,7 +75,11 @@ func authenticate(c *gin.Context) {
 			httphelper.NewInternalServerError(c, "failed to generate token, error %v", err.Error())
 			return
 		}
-		db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{})
+		err = db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{}).Error
+		if err != nil {
+			httphelper.NewInternalServerError(c, "", "failed to delete flowId, error %v", err.Error())
+			return
+		}
 		payload := AuthenticatePayload{
 			Token: pasetoToken,
 		}

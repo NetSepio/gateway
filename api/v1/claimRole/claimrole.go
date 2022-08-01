@@ -32,7 +32,11 @@ func postClaimRole(c *gin.Context) {
 	walletAddressGin := c.GetString("walletAddress")
 	db := dbconfig.GetDb()
 	var req ClaimRoleRequest
-	c.BindJSON(&req)
+	err := c.BindJSON(&req)
+	if err != nil {
+		httphelper.ErrResponse(c, http.StatusForbidden, "payload is invalid")
+		return
+	}
 
 	//Message containing flowId
 	role, err := getRoleByFlowId(req.FlowId)
@@ -86,7 +90,11 @@ func postClaimRole(c *gin.Context) {
 	}
 	transactionHash := tx.Hash().String()
 	logwrapper.Infof("trasaction hash is %v", transactionHash)
-	db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{})
+	err = db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{}).Error
+	if err != nil {
+		httphelper.NewInternalServerError(c, "", "failed to delete flowId, error %v", err.Error())
+		return
+	}
 	payload := ClaimRolePayload{
 		TransactionHash: transactionHash,
 	}

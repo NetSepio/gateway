@@ -34,7 +34,11 @@ func ApplyRoutes(r *gin.RouterGroup) {
 func patchProfile(c *gin.Context) {
 	db := dbconfig.GetDb()
 	var requestBody PatchProfileRequest
-	c.BindJSON(&requestBody)
+	err := c.BindJSON(&requestBody)
+	if err != nil {
+		httphelper.ErrResponse(c, http.StatusForbidden, "payload is invalid")
+		return
+	}
 	walletAddress := c.GetString("walletAddress")
 	result := db.Model(&models.User{}).
 		Where("wallet_address = ?", walletAddress).
