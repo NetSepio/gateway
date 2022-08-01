@@ -113,8 +113,7 @@ func callFlowIdApi(walletAddress string, t *testing.T) (eula string, flowidStrin
 	return flowIdPayload.Eula, flowIdPayload.FlowId
 }
 
-func getSignature(eula string, flowId string, walletAddress string) string {
-	hexPrivateKey := walletAddress
+func getSignature(eula string, flowId string, hexPrivateKey string) string {
 	message := eula + flowId
 	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)
 
