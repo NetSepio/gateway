@@ -38,7 +38,7 @@ func Test_GetFlowId(t *testing.T) {
 		c, _ := gin.CreateTestContext(rr)
 		c.Request = req
 		GetFlowId(c)
-		assert.Equal(t, rr.Result().StatusCode, http.StatusBadRequest)
+		assert.Equal(t, http.StatusBadRequest, rr.Result().StatusCode)
 	})
 	t.Run("Should be able to get flow id", func(t *testing.T) {
 
@@ -54,7 +54,7 @@ func Test_GetFlowId(t *testing.T) {
 		c, _ := gin.CreateTestContext(rr)
 		c.Request = req
 		GetFlowId(c)
-		assert.Equal(t, rr.Result().StatusCode, http.StatusOK)
+		assert.Equal(t, http.StatusOK, rr.Result().StatusCode)
 	})
 
 }
