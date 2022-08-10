@@ -28,7 +28,6 @@ func CheckDomain(basePath string, domain string) (err error) {
 	if err != nil {
 		return err
 	}
-	fmt.Printf(response.Status)
 	defer response.Body.Close()
 
 	parsedURL, err := url.Parse(domain)
@@ -45,12 +44,11 @@ func CheckDomain(basePath string, domain string) (err error) {
 	defer outFile.Close()
 
 	// Copy data from the response to standard output
-	n, err := io.Copy(outFile, response.Body)
+	_, err = io.Copy(outFile, response.Body)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println("Number of bytes copied:", n)
 	return nil
 }
 

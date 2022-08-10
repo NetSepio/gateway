@@ -109,7 +109,6 @@ func Init() {
 			logwrapper.Warnf("failed to updateReview for tokenId %v : %v", e.TokenId, err.Error())
 			continue
 		}
-		logwrapper.Infof("metadata hash is %s", metaDataHash)
 		err = os.RemoveAll(dirName)
 		if err != nil {
 			logwrapper.Warnf("failed to remove dir %v, error:%v", dirName, err.Error())
