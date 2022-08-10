@@ -77,7 +77,7 @@ func authenticate(c *gin.Context) {
 		}
 		err = db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{}).Error
 		if err != nil {
-			httphelper.NewInternalServerError(c, "", "failed to delete flowId, error %v", err.Error())
+			httphelper.NewInternalServerError(c, "failed to delete flowId, error %v", err.Error())
 			return
 		}
 		payload := AuthenticatePayload{
