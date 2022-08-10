@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"math/big"
 	"net/url"
 	"os"
@@ -77,7 +76,7 @@ func Init() {
 			continue
 		}
 		fileName := fmt.Sprintf("%v/fullScreenshot.png", dirName)
-		if err := ioutil.WriteFile(fileName, buf, 0644); err != nil {
+		if err := os.WriteFile(fileName, buf, 0644); err != nil {
 			logwrapper.Warnf("failed to write file: %v, error:%v", fileName, err)
 			continue
 		}

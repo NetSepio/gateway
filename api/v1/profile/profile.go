@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -122,7 +122,7 @@ func getRoles(walletAddress string) ([]string, error) {
 	if response.StatusCode != 200 {
 		return []string{}, errStatusCode
 	}
-	data, _ := ioutil.ReadAll(response.Body)
+	data, _ := io.ReadAll(response.Body)
 	var res rolesResponse
 	err = json.Unmarshal(data, &res)
 	if err != nil {
