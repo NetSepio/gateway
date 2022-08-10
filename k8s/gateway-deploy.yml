@@ -16,8 +16,8 @@ spec:
           image: 560914023379.dkr.ecr.us-east-2.amazonaws.com/netsepio-gateway
           resources:
             limits:
-              memory: "128Mi"
-              cpu: "100m"
+              memory: "200Mi"
+              cpu: "200m"
           ports:
             - containerPort: 3000
           volumeMounts:
