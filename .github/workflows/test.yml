@@ -24,7 +24,8 @@ jobs:
       SIGNED_BY: "NetSepio"
       APP_NAME: NetSepio
       IPFS_NODE_URL: https://ipfs.infura.io:5001
-
+      APP_PORT: 3000
+      GIN_MODE: test
     services:
       postgres:
         image: postgres
