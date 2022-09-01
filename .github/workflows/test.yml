@@ -23,6 +23,7 @@ jobs:
       ALLOWED_ORIGIN: "*"
       SIGNED_BY: "NetSepio"
       APP_NAME: NetSepio
+      IPFS_NODE_URL: https://ipfs.infura.io:5001
 
     services:
       postgres:
