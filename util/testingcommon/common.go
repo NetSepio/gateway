@@ -7,10 +7,10 @@ import (
 
 	"github.com/NetSepio/gateway/api/types"
 	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 
 	"crypto/ecdsa"
 	"log"
@@ -25,7 +25,7 @@ func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 	gin.SetMode(gin.TestMode)
 	CreateTestUser(t, testWalletAddress)
 	customClaims := claims.New(testWalletAddress)
-	pasetoPrivateKey := envutil.MustGetEnv("PASETO_PRIVATE_KEY")
+	pasetoPrivateKey := envconfig.EnvVars.PASETO_PRIVATE_KEY
 	token, err := auth.GenerateToken(customClaims, pasetoPrivateKey)
 	if err != nil {
 		t.Fatal(err)

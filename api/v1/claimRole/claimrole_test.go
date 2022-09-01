@@ -12,7 +12,7 @@ import (
 
 	"github.com/NetSepio/gateway/api/types"
 	roleid "github.com/NetSepio/gateway/api/v1/roleId"
-	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/config/netsepio"
 	"github.com/NetSepio/gateway/config/smartcontract"
 	"github.com/NetSepio/gateway/config/smartcontract/auth"
@@ -29,8 +29,8 @@ import (
 
 func Test_PostClaimRole(t *testing.T) {
 	defer time.Sleep(4 * time.Second)
-	config.Init("../../../.env")
-	logwrapper.Init("../../../logs")
+	envconfig.InitEnvVars()
+	logwrapper.Init()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()

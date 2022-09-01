@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/vk-rv/pvx"
 )
@@ -42,7 +42,7 @@ func New(walletAddress string) CustomClaims {
 		}
 	}
 	expiration := time.Now().Add(pasetoExpirationInHoursInt * time.Hour)
-	signedBy := envutil.MustGetEnv("SIGNED_BY")
+	signedBy := envconfig.EnvVars.SIGNED_BY
 	return CustomClaims{
 		walletAddress,
 		signedBy,

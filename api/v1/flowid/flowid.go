@@ -3,8 +3,8 @@ package flowid
 import (
 	"net/http"
 
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/flowid"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -40,7 +40,7 @@ func GetFlowId(c *gin.Context) {
 
 		return
 	}
-	userAuthEULA := envutil.MustGetEnv("AUTH_EULA")
+	userAuthEULA := envconfig.EnvVars.AUTH_EULA
 	payload := GetFlowIdPayload{
 		FlowId: flowId,
 		Eula:   userAuthEULA,

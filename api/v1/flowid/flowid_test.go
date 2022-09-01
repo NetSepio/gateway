@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
 
@@ -16,8 +16,9 @@ import (
 
 //TODO add test for testing when wallet address exist
 func Test_GetFlowId(t *testing.T) {
-	config.Init("../../../.env")
-	logwrapper.Init("../../../logs")
+
+	envconfig.InitEnvVars()
+	logwrapper.Init()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWalletAddress := testingcommon.GenerateWallet().WalletAddress

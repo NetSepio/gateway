@@ -3,8 +3,8 @@ package netsepio
 import (
 	"errors"
 
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -20,7 +20,7 @@ func GetInstance(client *ethclient.Client) (*gennetsepio.Gennetsepio, error) {
 	if instance != nil {
 		return instance, nil
 	}
-	envContractAddress := envutil.MustGetEnv("NETSEPIO_CONTRACT_ADDRESS")
+	envContractAddress := envconfig.EnvVars.NETSEPIO_CONTRACT_ADDRESS
 	if envContractAddress == "" {
 		logwrapper.Errorf("environment variable %v is required", "NETSEPIO_CONTRACT_ADDRESS")
 		return nil, errEnvVariableNotDefined

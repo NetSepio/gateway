@@ -1,7 +1,7 @@
 package smartcontract
 
 import (
-	"github.com/NetSepio/gateway/util/pkg/envutil"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
@@ -12,7 +12,7 @@ func GetClient() (*ethclient.Client, error) {
 	if client != nil {
 		return client, nil
 	}
-	nodeUrl := envutil.MustGetEnv("POLYGON_RPC")
+	nodeUrl := envconfig.EnvVars.POLYGON_RPC
 	var err error
 	client, err = ethclient.Dial(nodeUrl)
 	if err != nil {

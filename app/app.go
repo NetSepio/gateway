@@ -5,11 +5,10 @@ import (
 
 	"github.com/NetSepio/gateway/api"
 	"github.com/NetSepio/gateway/app/routines/webreview"
-	"github.com/NetSepio/gateway/config"
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/config/netsepio"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -17,9 +16,9 @@ import (
 
 var GinApp *gin.Engine
 
-func Init(envPath string, logBasePath string) {
-	config.Init(envPath)
-	logwrapper.Init(logBasePath)
+func Init() {
+	envconfig.InitEnvVars()
+	logwrapper.Init()
 	netsepio.InitRolesId()
 
 	GinApp = gin.Default()
@@ -28,7 +27,7 @@ func Init(envPath string, logBasePath string) {
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: false,
 		MaxAge:           12 * time.Hour,
-		AllowOrigins:     []string{envutil.MustGetEnv("ALLOWED_ORIGIN")}})
+		AllowOrigins:     envconfig.EnvVars.ALLOWED_ORIGIN})
 	GinApp.Use(corsM)
 	api.ApplyRoutes(GinApp)
 	dbconfig.GetDb()

@@ -8,13 +8,12 @@ import (
 	"time"
 
 	"github.com/NetSepio/gateway/api/types"
-	"github.com/NetSepio/gateway/config"
 	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/envconfig"
 	customstatuscodes "github.com/NetSepio/gateway/constants/http/custom_status_codes"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
 	"github.com/vk-rv/pvx"
@@ -24,8 +23,8 @@ import (
 )
 
 func Test_PASETO(t *testing.T) {
-	config.Init("../../../../.env")
-	logwrapper.Init("../../../../logs")
+	envconfig.InitEnvVars()
+	logwrapper.Init()
 	db := dbconfig.GetDb()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
@@ -42,7 +41,7 @@ func Test_PASETO(t *testing.T) {
 	}()
 	t.Run("Should return 200 with correct PASETO", func(t *testing.T) {
 		newClaims := claims.New(testWalletAddress)
-		token, err := auth.GenerateToken(newClaims, envutil.MustGetEnv("PASETO_PRIVATE_KEY"))
+		token, err := auth.GenerateToken(newClaims, envconfig.EnvVars.PASETO_PRIVATE_KEY)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -62,7 +61,7 @@ func Test_PASETO(t *testing.T) {
 
 	t.Run("Should return 401 and 4011 with expired PASETO", func(t *testing.T) {
 		expiration := time.Now().Add(time.Second * 2)
-		signedBy := envutil.MustGetEnv("SIGNED_BY")
+		signedBy := envconfig.EnvVars.SIGNED_BY
 		newClaims := claims.CustomClaims{
 			WalletAddress: testWalletAddress,
 			SignedBy:      signedBy,
@@ -71,7 +70,7 @@ func Test_PASETO(t *testing.T) {
 			},
 		}
 		time.Sleep(time.Second * 2)
-		token, err := auth.GenerateToken(newClaims, envutil.MustGetEnv("PASETO_PRIVATE_KEY"))
+		token, err := auth.GenerateToken(newClaims, envconfig.EnvVars.PASETO_PRIVATE_KEY)
 		if err != nil {
 			t.Fatal(err)
 		}

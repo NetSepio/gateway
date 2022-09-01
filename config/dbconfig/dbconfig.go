@@ -7,9 +7,9 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/config/netsepio"
 	"github.com/NetSepio/gateway/models"
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"gorm.io/driver/postgres"
@@ -23,14 +23,14 @@ func GetDb() *gorm.DB {
 		return db
 	}
 	var (
-		host     = envutil.MustGetEnv("DB_HOST")
-		username = envutil.MustGetEnv("DB_USERNAME")
-		password = envutil.MustGetEnv("DB_PASSWORD")
-		dbname   = envutil.MustGetEnv("DB_NAME")
-		port     = envutil.MustGetEnv("DB_PORT")
+		host     = envconfig.EnvVars.DB_HOST
+		username = envconfig.EnvVars.DB_USERNAME
+		password = envconfig.EnvVars.DB_PASSWORD
+		dbname   = envconfig.EnvVars.DB_NAME
+		port     = envconfig.EnvVars.DB_PORT
 	)
 
-	dns := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable port=%s",
+	dns := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable port=%d",
 		host, username, password, dbname, port)
 
 	var err error
@@ -53,17 +53,6 @@ func GetDb() *gorm.DB {
 		log.Fatal(err)
 	}
 
-	// //Create user_feedback table
-	// db.Exec(`create table if not exists user_feedbacks (
-	// 		wallet_address text,
-	// 		feedback text,
-	// 		rating int,
-	// 		created_at date DEFAULT now(),
-	// 		CONSTRAINT fk_users FOREIGN KEY (wallet_address) REFERENCES users(wallet_address),
-	// 		unique(wallet_address,feedback,rating)
-	// 		)`)
-
-	//Create user_roles table
 	db.Exec(`create table if not exists user_roles (
 			wallet_address text,
 			role_id text,
@@ -85,7 +74,7 @@ func GetDb() *gorm.DB {
 		logwrapper.Fatal(err)
 	}
 
-	voterEula := envutil.MustGetEnv("VOTER_EULA")
+	voterEula := envconfig.EnvVars.VOTER_EULA
 
 	rolesToBeAdded := []models.Role{
 		{Name: "Voter Role", RoleId: hexutil.Encode(voterRoleId[:]), Eula: voterEula}}

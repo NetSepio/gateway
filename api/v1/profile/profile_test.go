@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/NetSepio/gateway/api/types"
-	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
 
@@ -17,8 +17,9 @@ import (
 )
 
 func Test_PatchProfile(t *testing.T) {
-	config.Init("../../../.env")
-	logwrapper.Init("../../../logs")
+
+	envconfig.InitEnvVars()
+	logwrapper.Init()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	header := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
@@ -51,8 +52,9 @@ func Test_PatchProfile(t *testing.T) {
 }
 
 func Test_GetProfile(t *testing.T) {
-	config.Init("../../../.env")
-	logwrapper.Init("../../../logs")
+
+	envconfig.InitEnvVars()
+	logwrapper.Init()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()

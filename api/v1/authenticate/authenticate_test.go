@@ -12,7 +12,7 @@ import (
 
 	"github.com/NetSepio/gateway/api/types"
 	"github.com/NetSepio/gateway/api/v1/flowid"
-	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	testingcommmon "github.com/NetSepio/gateway/util/testingcommon"
 
@@ -24,8 +24,8 @@ import (
 
 // TODO: Write test to verify expiry
 func Test_PostAuthenticate(t *testing.T) {
-	config.Init("../../../.env")
-	logwrapper.Init("../../../logs")
+	envconfig.InitEnvVars()
+	logwrapper.Init()
 	t.Cleanup(testingcommmon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
 
@@ -18,8 +18,9 @@ import (
 
 func TestDelegateReviewCreation(t *testing.T) {
 	time.Sleep(4 * time.Second)
-	config.Init("../../../.env")
-	logwrapper.Init("../../../logs")
+
+	envconfig.InitEnvVars()
+	logwrapper.Init()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWallet := testingcommon.GenerateWallet()

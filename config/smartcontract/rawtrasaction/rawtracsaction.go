@@ -5,8 +5,8 @@ import (
 	"math/big"
 	"strings"
 
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/config/smartcontract"
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/ethwallet"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -28,7 +28,7 @@ func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Tran
 	if err != nil {
 		return nil, err
 	}
-	mnemonic := envutil.MustGetEnv("MNEMONIC")
+	mnemonic := envconfig.EnvVars.MNEMONIC
 	privateKey, publicKey, _, err := ethwallet.HdWallet(mnemonic) // Verify: https://iancoleman.io/bip39/
 	if err != nil {
 		logwrapper.Errorf("failed to get private and public key from mnemonic, error %v", err.Error())
@@ -40,7 +40,7 @@ func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Tran
 		logwrapper.Warnf("failed to get nonce")
 		return nil, err
 	}
-	envContractAddress := envutil.MustGetEnv("NETSEPIO_CONTRACT_ADDRESS")
+	envContractAddress := envconfig.EnvVars.NETSEPIO_CONTRACT_ADDRESS
 
 	toAddress := common.HexToAddress(envContractAddress)
 

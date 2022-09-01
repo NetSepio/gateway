@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
@@ -17,8 +17,9 @@ import (
 )
 
 func Test_PostFeedback(t *testing.T) {
-	config.Init("../../../.env")
-	logwrapper.Init("../../../logs")
+
+	envconfig.InitEnvVars()
+	logwrapper.Init()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	header := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)

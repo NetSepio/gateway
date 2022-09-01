@@ -8,7 +8,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/NetSepio/gateway/util/pkg/envutil"
+	"github.com/NetSepio/gateway/config/envconfig"
 	ipfsGateway "github.com/ipfs/go-ipfs-api"
 )
 
@@ -54,7 +54,7 @@ func CheckDomain(basePath string, domain string) (err error) {
 
 //AddFileToIpfs adds the specified file to IPFS and returns hash
 func AddFileToIpfs(filePath string) (string, error) {
-	ig := ipfsGateway.NewShell(envutil.MustGetEnv("IPFS_NODE_URL"))
+	ig := ipfsGateway.NewShell(envconfig.EnvVars.IPFS_NODE_URL)
 	// Create io reader from a local file
 	file, err := os.Open(filePath)
 
@@ -72,7 +72,7 @@ func AddFileToIpfs(filePath string) (string, error) {
 }
 
 func AddToIpfs(r io.Reader) (string, error) {
-	ig := ipfsGateway.NewShell(envutil.MustGetEnv("IPFS_NODE_URL"))
+	ig := ipfsGateway.NewShell(envconfig.EnvVars.IPFS_NODE_URL)
 
 	//Uploads file to ipfs and returns metahash
 	hash, err := ig.Add(r)
@@ -85,7 +85,7 @@ func AddToIpfs(r io.Reader) (string, error) {
 //GetObjectFromIpfs get object from ipfs and writes to the specified file
 func GetObjectFromIpfs(Hash string, filePath string) error {
 
-	ig := ipfsGateway.NewShell(envutil.MustGetEnv("IPFS_NODE_URL"))
+	ig := ipfsGateway.NewShell(envconfig.EnvVars.IPFS_NODE_URL)
 
 	err := ig.Get(Hash, filePath)
 	if err != nil {

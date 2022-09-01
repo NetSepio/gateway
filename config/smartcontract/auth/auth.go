@@ -5,7 +5,7 @@ import (
 	"crypto/ecdsa"
 	"math/big"
 
-	"github.com/NetSepio/gateway/util/pkg/envutil"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/util/pkg/ethwallet"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -26,7 +26,7 @@ var (
 func GetAuth(client *ethclient.Client) (*bind.TransactOpts, error) {
 
 	if auth == nil {
-		mnemonic := envutil.MustGetEnv("MNEMONIC")
+		mnemonic := envconfig.EnvVars.MNEMONIC
 		privateKey, publicKey, _, err = ethwallet.HdWallet(mnemonic) // Verify: https://iancoleman.io/bip39/
 		if err != nil {
 			logwrapper.Errorf("error while getting private and public keu from mnemonic, error: %v", err.Error())

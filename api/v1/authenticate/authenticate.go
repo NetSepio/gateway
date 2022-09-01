@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/cryptosign"
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
@@ -53,7 +53,7 @@ func authenticate(c *gin.Context) {
 		httphelper.ErrResponse(c, 500, "Unexpected error occured")
 		return
 	}
-	userAuthEULA := envutil.MustGetEnv("AUTH_EULA")
+	userAuthEULA := envconfig.EnvVars.AUTH_EULA
 	message := userAuthEULA + req.FlowId
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
@@ -69,7 +69,7 @@ func authenticate(c *gin.Context) {
 	}
 	if isCorrect {
 		customClaims := claims.New(walletAddress)
-		pasetoPrivateKey := envutil.MustGetEnv("PASETO_PRIVATE_KEY")
+		pasetoPrivateKey := envconfig.EnvVars.PASETO_PRIVATE_KEY
 		pasetoToken, err := auth.GenerateToken(customClaims, pasetoPrivateKey)
 		if err != nil {
 			httphelper.NewInternalServerError(c, "failed to generate token, error %v", err.Error())

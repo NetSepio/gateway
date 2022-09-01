@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/NetSepio/gateway/config"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/config/netsepio"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
@@ -18,8 +18,9 @@ import (
 
 func Test_GetRoleId(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	config.Init("../../../.env")
-	logwrapper.Init("../../../logs")
+
+	envconfig.InitEnvVars()
+	logwrapper.Init()
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)

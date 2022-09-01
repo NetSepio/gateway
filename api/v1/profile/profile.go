@@ -12,8 +12,8 @@ import (
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
@@ -108,7 +108,7 @@ func getRoles(walletAddress string) ([]string, error) {
 
 	jsonValue, _ := json.Marshal(jsonData)
 
-	request, err := http.NewRequest("POST", envutil.MustGetEnv("GRAPH_API"), bytes.NewBuffer(jsonValue))
+	request, err := http.NewRequest("POST", envconfig.EnvVars.GRAPH_API, bytes.NewBuffer(jsonValue))
 	if err != nil {
 		return []string{}, err
 	}

@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/NetSepio/gateway/config/envconfig"
 	customstatuscodes "github.com/NetSepio/gateway/constants/http/custom_status_codes"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/vk-rv/pvx"
 	"gorm.io/gorm"
 
-	"github.com/NetSepio/gateway/util/pkg/envutil"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
@@ -38,7 +38,7 @@ func PASETO(c *gin.Context) {
 	}
 	pasetoToken := headers.Authorization
 	pv4 := pvx.NewPV4Local()
-	k := envutil.MustGetEnv("PASETO_PRIVATE_KEY")
+	k := envconfig.EnvVars.PASETO_PRIVATE_KEY
 	symK := pvx.NewSymmetricKey([]byte(k), pvx.Version4)
 	var cc claims.CustomClaims
 	err = pv4.
