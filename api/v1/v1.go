@@ -4,6 +4,7 @@ import (
 	authenticate "github.com/NetSepio/gateway/api/v1/authenticate"
 	claimrole "github.com/NetSepio/gateway/api/v1/claimRole"
 	delegatereviewcreation "github.com/NetSepio/gateway/api/v1/delegateReviewCreation"
+	discordauth "github.com/NetSepio/gateway/api/v1/discordAuth"
 	"github.com/NetSepio/gateway/api/v1/feedback"
 	flowid "github.com/NetSepio/gateway/api/v1/flowid"
 	"github.com/NetSepio/gateway/api/v1/healthcheck"
@@ -25,5 +26,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		delegatereviewcreation.ApplyRoutes(v1)
 		healthcheck.ApplyRoutes(v1)
 		feedback.ApplyRoutes(v1)
+		discordauth.ApplyRoutes(v1)
 	}
 }

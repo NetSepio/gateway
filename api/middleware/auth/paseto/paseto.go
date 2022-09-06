@@ -26,12 +26,12 @@ func PASETO(c *gin.Context) {
 	err := c.BindHeader(&headers)
 	if err != nil {
 		err = fmt.Errorf("failed to bind header, %s", err)
-		logValidationFailed(headers.Authorization, err)
+		logValidationFailed(c.Request.RequestURI, headers.Authorization, err)
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 	if headers.Authorization == "" {
-		logValidationFailed(headers.Authorization, ErrAuthHeaderMissing)
+		logValidationFailed(c.Request.RequestURI, headers.Authorization, ErrAuthHeaderMissing)
 		httphelper.ErrResponse(c, http.StatusBadRequest, ErrAuthHeaderMissing.Error())
 		c.Abort()
 		return
@@ -49,7 +49,7 @@ func PASETO(c *gin.Context) {
 		if errors.As(err, &validationErr) {
 			if validationErr.HasExpiredErr() {
 				err = fmt.Errorf("failed to scan claims for paseto token, %s", err)
-				logValidationFailed(headers.Authorization, err)
+				logValidationFailed(c.Request.RequestURI, headers.Authorization, err)
 				httphelper.CErrResponse(c, http.StatusUnauthorized, customstatuscodes.TokenExpired, "token expired")
 				c.Abort()
 				return
@@ -57,12 +57,12 @@ func PASETO(c *gin.Context) {
 
 		}
 		err = fmt.Errorf("failed to scan claims for paseto token, %s", err)
-		logValidationFailed(headers.Authorization, err)
+		logValidationFailed(c.Request.RequestURI, headers.Authorization, err)
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	} else {
 		if err := cc.Valid(); err != nil {
-			logValidationFailed(headers.Authorization, err)
+			logValidationFailed(c.Request.RequestURI, headers.Authorization, err)
 			if err.Error() == gorm.ErrRecordNotFound.Error() {
 				c.AbortWithStatus(http.StatusUnauthorized)
 			} else {
@@ -77,6 +77,6 @@ func PASETO(c *gin.Context) {
 	}
 }
 
-func logValidationFailed(token string, err error) {
-	logwrapper.Warnf("validation failed with token %v and error: %v", token, err)
+func logValidationFailed(api string, token string, err error) {
+	logwrapper.Warnf("validation failed for api %s with token %v and error: %v", api, token, err)
 }
