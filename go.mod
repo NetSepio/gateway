@@ -26,8 +26,7 @@ require (
 	github.com/ugorji/go v1.2.6 // indirect
 	github.com/vk-rv/pvx v0.0.0-20210912195928-ac00bc32f6e7
 	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29 // indirect
-	golang.org/x/sys v0.0.0-20220403205710-6acee93ad0eb // indirect
-	google.golang.org/protobuf v1.27.1 // indirect
+	golang.org/x/oauth2 v0.0.0-20220822191816-0ebed06d0094 // indirect
 	gorm.io/driver/postgres v1.3.8
 	gorm.io/gorm v1.23.7
 )

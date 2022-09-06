@@ -28,6 +28,9 @@ type config struct {
 	ALLOWED_ORIGIN            []string      `env:"ALLOWED_ORIGIN,required" envSeparator:","`
 	GRAPH_API                 string        `env:"GRAPH_API,required"`
 	SIGNED_BY                 string        `env:"SIGNED_BY,required"`
+	DISCORD_CLIENT_ID         string        `env:"DISCORD_CLIENT_ID,required"`
+	DISCORD_CLIENT_SECRET     string        `env:"DISCORD_CLIENT_SECRET,required"`
+	DISCORD_REDIRECT_URL      string        `env:"DISCORD_REDIRECT_URL,required"`
 }
 
 var EnvVars config = config{}
