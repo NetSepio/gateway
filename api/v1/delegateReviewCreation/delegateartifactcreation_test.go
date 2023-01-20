@@ -31,7 +31,7 @@ func TestDelegateReviewCreation(t *testing.T) {
 		rr := httptest.NewRecorder()
 		reqBody := DelegateReviewCreationRequest{
 			Voter:         "invalidwalletaddr",
-			MetaDataUri:   "QmSYRXWGGqVDAHKTwfnYQDR74d4bfwXxudFosbGA695AWS",
+			MetaDataURI:   "QmSYRXWGGqVDAHKTwfnYQDR74d4bfwXxudFosbGA695AWS",
 			Category:      "Website",
 			DomainAddress: "ommore.me",
 			SiteUrl:       "todo.ommore.me",
@@ -57,7 +57,7 @@ func TestDelegateReviewCreation(t *testing.T) {
 		rr := httptest.NewRecorder()
 		reqBody := DelegateReviewCreationRequest{
 			Voter:         voterWallet.WalletAddress,
-			MetaDataUri:   "QmSYRXWGGqVDAHKTwfnYQDR74d4bfwXxudFosbGA695AWS",
+			MetaDataURI:   "QmSYRXWGGqVDAHKTwfnYQDR74d4bfwXxudFosbGA695AWS",
 			Category:      "Website",
 			DomainAddress: "ommore.me",
 			SiteUrl:       "todo.ommore.me",

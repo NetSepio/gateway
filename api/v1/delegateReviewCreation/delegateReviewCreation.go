@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
-	"github.com/NetSepio/gateway/config/smartcontract/rawtrasaction"
-	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
+	rawtrasaction "github.com/NetSepio/gateway/config/smartcontract/rawtransaction"
+	"github.com/NetSepio/gateway/generated/smartcontract/netsepio"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/common"
@@ -30,9 +30,9 @@ func deletegateReviewCreation(c *gin.Context) {
 	}
 
 	voterAddr := common.HexToAddress(request.Voter)
-	abiS := gennetsepio.GennetsepioABI
+	abiNetSepio := netsepio.NetsepioABI
 
-	tx, err := rawtrasaction.SendRawTrasac(abiS, "delegateReviewCreation", request.Category, request.DomainAddress, request.SiteUrl, request.SiteType, request.SiteTag, request.SiteSafety, request.MetaDataUri, voterAddr)
+	tx, err := rawtrasaction.SendRawTransaction(abiNetSepio, "delegateReviewCreation", request.Category, request.DomainAddress, request.SiteUrl, request.SiteType, request.SiteTag, request.SiteSafety, request.MetaDataURI, voterAddr)
 
 	if err != nil {
 		httphelper.NewInternalServerError(c, "failed to call %v of %v, error: %v", "delegateReviewCreation", "NETSEPIO", err.Error())

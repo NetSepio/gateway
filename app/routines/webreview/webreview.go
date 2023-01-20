@@ -12,8 +12,8 @@ import (
 
 	"github.com/NetSepio/gateway/config/netsepio"
 	"github.com/NetSepio/gateway/config/smartcontract"
-	"github.com/NetSepio/gateway/config/smartcontract/rawtrasaction"
-	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
+	rawtrasaction "github.com/NetSepio/gateway/config/smartcontract/rawtransaction"
+	netSepioContract "github.com/NetSepio/gateway/generated/smartcontract/netsepio"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	ws "github.com/NetSepio/gateway/util/pkg/webscrape"
 	"github.com/chromedp/chromedp"
@@ -32,7 +32,7 @@ func Init() {
 		logwrapper.Fatalf("failed to get Contract instance, error: %v", err.Error())
 	}
 
-	reviewCreatedChannel := make(chan *gennetsepio.GennetsepioReviewCreated)
+	reviewCreatedChannel := make(chan *netSepioContract.NetsepioReviewCreated)
 	_, err = netsepioInstance.WatchReviewCreated(nil, reviewCreatedChannel, []common.Address{}, []*big.Int{})
 	if err != nil {
 		logwrapper.Fatalf("failed to watch ReviewCreated, error: %v", err.Error())
@@ -103,7 +103,7 @@ func Init() {
 			continue
 		}
 		// netsepioInstance.UpdateReview(nil, e.TokenId, metaDataHash)
-		_, err = rawtrasaction.SendRawTrasac(gennetsepio.GennetsepioABI, "updateReview", e.TokenId, metaDataHash)
+		_, err = rawtrasaction.SendRawTransaction(netSepioContract.NetsepioABI, "updateReview", e.TokenId, metaDataHash)
 		if err != nil {
 			logwrapper.Warnf("failed to updateReview for tokenId %v : %v", e.TokenId, err.Error())
 			continue

@@ -14,12 +14,12 @@ jobs:
       DB_PORT: 5432
       POLYGON_RPC: ${{ secrets.POLYGON_RPC }}
       MNEMONIC: ${{ secrets.MNEMONIC }}
-      NETSEPIO_CONTRACT_ADDRESS: ${{ secrets.NETSEPIO_CONTRACT_ADDRESS }}
+      NETSEPIO_CONTRACT_ADDRESS: "0xd34353b3e30C340E7811564d0eD0B1B28faf3654"
       PASETO_PRIVATE_KEY: ${{ secrets.PASETO_PRIVATE_KEY }}
       PASETO_EXPIRATION: 48h
       GRAPH_API: ${{ secrets.GRAPH_API }}
-      VOTER_EULA: TODO VOTER EULA
-      AUTH_EULA: TODO AUTH EULA
+      VOTER_EULA: "I Accept the NetSepio Terms of Service https://netsepio.com/terms.html for getting the Voter Role. Challenge ID: "
+      AUTH_EULA: "I Accept the NetSepio Terms of Service https://netsepio.com/terms.html for accessing the application. Challenge ID: "
       ALLOWED_ORIGIN: "*"
       SIGNED_BY: "NetSepio"
       APP_NAME: NetSepio

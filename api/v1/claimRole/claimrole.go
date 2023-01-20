@@ -5,8 +5,8 @@ import (
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
-	"github.com/NetSepio/gateway/config/smartcontract/rawtrasaction"
-	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
+	"github.com/NetSepio/gateway/config/smartcontract/rawtransaction"
+	"github.com/NetSepio/gateway/generated/smartcontract/netsepio"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/cryptosign"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
@@ -81,7 +81,7 @@ func postClaimRole(c *gin.Context) {
 	var roleIdBytes [32]byte
 	copy(roleIdBytes[:], roleIdBytesSlice)
 
-	tx, err := rawtrasaction.SendRawTrasac(gennetsepio.GennetsepioABI, "grantRole", roleIdBytes, walletAddressHex)
+	tx, err := rawtransaction.SendRawTransaction(netsepio.NetsepioABI, "grantRole", roleIdBytes, walletAddressHex)
 
 	if err != nil {
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")

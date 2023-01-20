@@ -1,13 +1,10 @@
-# NETSEPIO Engine
+# NETSEPIO Gateway
 
-REST APIs for Web3 Auth and Smart Contract Functionalities
-
-[![.github/workflows/test.yml](https://github.com/NetSepio/Engine/actions/workflows/test.yml/badge.svg)](https://github.com/NetSepio/gateway/actions/workflows/test.yml)
-[![Lint](https://github.com/NetSepio/Engine/actions/workflows/lint.yml/badge.svg)](https://github.com/NetSepio/gateway/actions/workflows/lint.yml)
+REST APIs for Web3 Authentication and Smart Contract Functionalities
 
 # Getting Started
 
-## Postgres for development
+## PostgreSQL for development
 
 ```bash
 docker run --name="netsepio" --rm -d -p 5432:5432 \
@@ -112,4 +109,4 @@ Note - Some unset data is emitted.
 
 | Code   | Meaning         |
 | :----- | :-------------- |
-| `4011` | `Token expired` |
+| `4031` | `Token expired` |

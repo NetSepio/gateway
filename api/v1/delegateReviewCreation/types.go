@@ -7,7 +7,7 @@ type DelegateReviewCreationRequest struct {
 	SiteType      string `json:"siteType" binding:"required"`
 	SiteTag       string `json:"siteTag" binding:"required"`
 	SiteSafety    string `json:"siteSafety" binding:"required"`
-	MetaDataUri   string `json:"metaDataUri" binding:"required"`
+	MetaDataURI   string `json:"metaDataURI" binding:"required"`
 	Voter         string `json:"voter" binding:"required,hexadecimal"`
 }
 

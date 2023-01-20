@@ -16,7 +16,7 @@ import (
 	"github.com/NetSepio/gateway/config/netsepio"
 	"github.com/NetSepio/gateway/config/smartcontract"
 	"github.com/NetSepio/gateway/config/smartcontract/auth"
-	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
+	netSepioContract "github.com/NetSepio/gateway/generated/smartcontract/netsepio"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
 
@@ -69,7 +69,7 @@ func Test_PostClaimRole(t *testing.T) {
 		t.Fatalf("failed to get role id for %v , error: %v", "VOTER ROLE", err.Error())
 	}
 	addr := common.HexToAddress(testWallet.WalletAddress)
-	roleGrantedChannel := make(chan *gennetsepio.GennetsepioRoleGranted, 10)
+	roleGrantedChannel := make(chan *netSepioContract.NetsepioRoleGranted, 10)
 
 	authBindOpts, err := auth.GetAuth(client)
 
@@ -100,7 +100,7 @@ func Test_PostClaimRole(t *testing.T) {
 
 }
 
-func failAfter(t *testing.T, success *bool, duration time.Duration, ch chan *gennetsepio.GennetsepioRoleGranted) {
+func failAfter(t *testing.T, success *bool, duration time.Duration, ch chan *netSepioContract.NetsepioRoleGranted) {
 	time.Sleep(duration)
 	if !*success {
 		close(ch)

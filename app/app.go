@@ -26,7 +26,7 @@ func Init() {
 	corsM := cors.New(cors.Config{AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: false,
-		MaxAge:           12 * time.Hour,
+		MaxAge:           24 * time.Hour,
 		AllowOrigins:     envconfig.EnvVars.ALLOWED_ORIGIN})
 	GinApp.Use(corsM)
 	api.ApplyRoutes(GinApp)

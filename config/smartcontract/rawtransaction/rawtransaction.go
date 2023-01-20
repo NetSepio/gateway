@@ -1,4 +1,4 @@
-package rawtrasaction
+package rawtransaction
 
 import (
 	"context"
@@ -17,9 +17,9 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
-func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Transaction, error) {
+func SendRawTransaction(contractABI string, method string, args ...interface{}) (*types.Transaction, error) {
 
-	abiP, err := abi.JSON(strings.NewReader(abiS))
+	abiParsed, err := abi.JSON(strings.NewReader(contractABI))
 	if err != nil {
 		logwrapper.Errorf("failed to parse JSON abi, error %v", err)
 		return nil, err
@@ -50,7 +50,7 @@ func SendRawTrasac(abiS string, method string, args ...interface{}) (*types.Tran
 		return nil, err
 	}
 
-	bytesData, err := abiP.Pack(method, args...)
+	bytesData, err := abiParsed.Pack(method, args...)
 	if err != nil {
 		logwrapper.Errorf("failed to pack trasaction of method %v, error: %v", method, err)
 		return nil, err

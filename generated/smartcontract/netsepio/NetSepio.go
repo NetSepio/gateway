@@ -1,7 +1,7 @@
 // Code generated - DO NOT EDIT.
 // This file is a generated binding and any manual changes will be lost.
 
-package gennetsepio
+package netsepio
 
 import (
 	"errors"
@@ -28,113 +28,113 @@ var (
 	_ = event.NewSubscription
 )
 
-// GennetsepioMetaData contains all meta data concerning the Gennetsepio contract.
-var GennetsepioMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"category\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"domainAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"siteURL\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"siteType\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"siteTag\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"siteSafety\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"metadataURI\",\"type\":\"string\"}],\"name\":\"ReviewCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"ownerOrApproved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ReviewDeleted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"ownerOrApproved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"oldInfoHash\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"newInfoHash\",\"type\":\"string\"}],\"name\":\"ReviewUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NETSEPIO_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NETSEPIO_MODERATOR_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NETSEPIO_VOTER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"Reviews\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"category\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"domainAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteURL\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteType\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteTag\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteSafety\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"infoHash\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"category\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"domainAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteURL\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteType\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteTag\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteSafety\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"metadataURI\",\"type\":\"string\"}],\"name\":\"createReview\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"category\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"domainAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteURL\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteType\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteTag\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteSafety\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"metadataURI\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"}],\"name\":\"delegateReviewCreation\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"deleteReview\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"readMetadata\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"newInfoHash\",\"type\":\"string\"}],\"name\":\"updateReview\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+// NetsepioMetaData contains all meta data concerning the Netsepio contract.
+var NetsepioMetaData = &bind.MetaData{
+	ABI: "[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"category\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"domainAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"siteURL\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"siteType\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"siteTag\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"siteSafety\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"metadataURI\",\"type\":\"string\"}],\"name\":\"ReviewCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"ownerOrApproved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ReviewDeleted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"ownerOrApproved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"oldInfoHash\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"newInfoHash\",\"type\":\"string\"}],\"name\":\"ReviewUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NETSEPIO_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NETSEPIO_MODERATOR_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"NETSEPIO_VOTER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"Reviews\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"category\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"domainAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteURL\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteType\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteTag\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteSafety\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"infoHash\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"category\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"domainAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteURL\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteType\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteTag\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteSafety\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"metadataURI\",\"type\":\"string\"}],\"name\":\"createReview\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"category\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"domainAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteURL\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteType\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteTag\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"siteSafety\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"metadataURI\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"voter\",\"type\":\"address\"}],\"name\":\"delegateReviewCreation\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"deleteReview\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"getRoleMember\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleMemberCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"readMetadata\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"newInfoHash\",\"type\":\"string\"}],\"name\":\"updateReview\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 }
 
-// GennetsepioABI is the input ABI used to generate the binding from.
-// Deprecated: Use GennetsepioMetaData.ABI instead.
-var GennetsepioABI = GennetsepioMetaData.ABI
+// NetsepioABI is the input ABI used to generate the binding from.
+// Deprecated: Use NetsepioMetaData.ABI instead.
+var NetsepioABI = NetsepioMetaData.ABI
 
-// Gennetsepio is an auto generated Go binding around an Ethereum contract.
-type Gennetsepio struct {
-	GennetsepioCaller     // Read-only binding to the contract
-	GennetsepioTransactor // Write-only binding to the contract
-	GennetsepioFilterer   // Log filterer for contract events
+// Netsepio is an auto generated Go binding around an Ethereum contract.
+type Netsepio struct {
+	NetsepioCaller     // Read-only binding to the contract
+	NetsepioTransactor // Write-only binding to the contract
+	NetsepioFilterer   // Log filterer for contract events
 }
 
-// GennetsepioCaller is an auto generated read-only Go binding around an Ethereum contract.
-type GennetsepioCaller struct {
+// NetsepioCaller is an auto generated read-only Go binding around an Ethereum contract.
+type NetsepioCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// GennetsepioTransactor is an auto generated write-only Go binding around an Ethereum contract.
-type GennetsepioTransactor struct {
+// NetsepioTransactor is an auto generated write-only Go binding around an Ethereum contract.
+type NetsepioTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// GennetsepioFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
-type GennetsepioFilterer struct {
+// NetsepioFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
+type NetsepioFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// GennetsepioSession is an auto generated Go binding around an Ethereum contract,
+// NetsepioSession is an auto generated Go binding around an Ethereum contract,
 // with pre-set call and transact options.
-type GennetsepioSession struct {
-	Contract     *Gennetsepio      // Generic contract binding to set the session for
+type NetsepioSession struct {
+	Contract     *Netsepio         // Generic contract binding to set the session for
 	CallOpts     bind.CallOpts     // Call options to use throughout this session
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// GennetsepioCallerSession is an auto generated read-only Go binding around an Ethereum contract,
+// NetsepioCallerSession is an auto generated read-only Go binding around an Ethereum contract,
 // with pre-set call options.
-type GennetsepioCallerSession struct {
-	Contract *GennetsepioCaller // Generic contract caller binding to set the session for
-	CallOpts bind.CallOpts      // Call options to use throughout this session
+type NetsepioCallerSession struct {
+	Contract *NetsepioCaller // Generic contract caller binding to set the session for
+	CallOpts bind.CallOpts   // Call options to use throughout this session
 }
 
-// GennetsepioTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
+// NetsepioTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
 // with pre-set transact options.
-type GennetsepioTransactorSession struct {
-	Contract     *GennetsepioTransactor // Generic contract transactor binding to set the session for
-	TransactOpts bind.TransactOpts      // Transaction auth options to use throughout this session
+type NetsepioTransactorSession struct {
+	Contract     *NetsepioTransactor // Generic contract transactor binding to set the session for
+	TransactOpts bind.TransactOpts   // Transaction auth options to use throughout this session
 }
 
-// GennetsepioRaw is an auto generated low-level Go binding around an Ethereum contract.
-type GennetsepioRaw struct {
-	Contract *Gennetsepio // Generic contract binding to access the raw methods on
+// NetsepioRaw is an auto generated low-level Go binding around an Ethereum contract.
+type NetsepioRaw struct {
+	Contract *Netsepio // Generic contract binding to access the raw methods on
 }
 
-// GennetsepioCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
-type GennetsepioCallerRaw struct {
-	Contract *GennetsepioCaller // Generic read-only contract binding to access the raw methods on
+// NetsepioCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
+type NetsepioCallerRaw struct {
+	Contract *NetsepioCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// GennetsepioTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
-type GennetsepioTransactorRaw struct {
-	Contract *GennetsepioTransactor // Generic write-only contract binding to access the raw methods on
+// NetsepioTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
+type NetsepioTransactorRaw struct {
+	Contract *NetsepioTransactor // Generic write-only contract binding to access the raw methods on
 }
 
-// NewGennetsepio creates a new instance of Gennetsepio, bound to a specific deployed contract.
-func NewGennetsepio(address common.Address, backend bind.ContractBackend) (*Gennetsepio, error) {
-	contract, err := bindGennetsepio(address, backend, backend, backend)
+// NewNetsepio creates a new instance of Netsepio, bound to a specific deployed contract.
+func NewNetsepio(address common.Address, backend bind.ContractBackend) (*Netsepio, error) {
+	contract, err := bindNetsepio(address, backend, backend, backend)
 	if err != nil {
 		return nil, err
 	}
-	return &Gennetsepio{GennetsepioCaller: GennetsepioCaller{contract: contract}, GennetsepioTransactor: GennetsepioTransactor{contract: contract}, GennetsepioFilterer: GennetsepioFilterer{contract: contract}}, nil
+	return &Netsepio{NetsepioCaller: NetsepioCaller{contract: contract}, NetsepioTransactor: NetsepioTransactor{contract: contract}, NetsepioFilterer: NetsepioFilterer{contract: contract}}, nil
 }
 
-// NewGennetsepioCaller creates a new read-only instance of Gennetsepio, bound to a specific deployed contract.
-func NewGennetsepioCaller(address common.Address, caller bind.ContractCaller) (*GennetsepioCaller, error) {
-	contract, err := bindGennetsepio(address, caller, nil, nil)
+// NewNetsepioCaller creates a new read-only instance of Netsepio, bound to a specific deployed contract.
+func NewNetsepioCaller(address common.Address, caller bind.ContractCaller) (*NetsepioCaller, error) {
+	contract, err := bindNetsepio(address, caller, nil, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioCaller{contract: contract}, nil
+	return &NetsepioCaller{contract: contract}, nil
 }
 
-// NewGennetsepioTransactor creates a new write-only instance of Gennetsepio, bound to a specific deployed contract.
-func NewGennetsepioTransactor(address common.Address, transactor bind.ContractTransactor) (*GennetsepioTransactor, error) {
-	contract, err := bindGennetsepio(address, nil, transactor, nil)
+// NewNetsepioTransactor creates a new write-only instance of Netsepio, bound to a specific deployed contract.
+func NewNetsepioTransactor(address common.Address, transactor bind.ContractTransactor) (*NetsepioTransactor, error) {
+	contract, err := bindNetsepio(address, nil, transactor, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioTransactor{contract: contract}, nil
+	return &NetsepioTransactor{contract: contract}, nil
 }
 
-// NewGennetsepioFilterer creates a new log filterer instance of Gennetsepio, bound to a specific deployed contract.
-func NewGennetsepioFilterer(address common.Address, filterer bind.ContractFilterer) (*GennetsepioFilterer, error) {
-	contract, err := bindGennetsepio(address, nil, nil, filterer)
+// NewNetsepioFilterer creates a new log filterer instance of Netsepio, bound to a specific deployed contract.
+func NewNetsepioFilterer(address common.Address, filterer bind.ContractFilterer) (*NetsepioFilterer, error) {
+	contract, err := bindNetsepio(address, nil, nil, filterer)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioFilterer{contract: contract}, nil
+	return &NetsepioFilterer{contract: contract}, nil
 }
 
-// bindGennetsepio binds a generic wrapper to an already deployed contract.
-func bindGennetsepio(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(GennetsepioABI))
+// bindNetsepio binds a generic wrapper to an already deployed contract.
+func bindNetsepio(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+	parsed, err := abi.JSON(strings.NewReader(NetsepioABI))
 	if err != nil {
 		return nil, err
 	}
@@ -145,46 +145,46 @@ func bindGennetsepio(address common.Address, caller bind.ContractCaller, transac
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Gennetsepio *GennetsepioRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Gennetsepio.Contract.GennetsepioCaller.contract.Call(opts, result, method, params...)
+func (_Netsepio *NetsepioRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _Netsepio.Contract.NetsepioCaller.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Gennetsepio *GennetsepioRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.GennetsepioTransactor.contract.Transfer(opts)
+func (_Netsepio *NetsepioRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Netsepio.Contract.NetsepioTransactor.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Gennetsepio *GennetsepioRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.GennetsepioTransactor.contract.Transact(opts, method, params...)
+func (_Netsepio *NetsepioRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _Netsepio.Contract.NetsepioTransactor.contract.Transact(opts, method, params...)
 }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Gennetsepio *GennetsepioCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Gennetsepio.Contract.contract.Call(opts, result, method, params...)
+func (_Netsepio *NetsepioCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _Netsepio.Contract.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Gennetsepio *GennetsepioTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.contract.Transfer(opts)
+func (_Netsepio *NetsepioTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Netsepio.Contract.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Gennetsepio *GennetsepioTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.contract.Transact(opts, method, params...)
+func (_Netsepio *NetsepioTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _Netsepio.Contract.contract.Transact(opts, method, params...)
 }
 
 // DEFAULTADMINROLE is a free data retrieval call binding the contract method 0xa217fddf.
 //
 // Solidity: function DEFAULT_ADMIN_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioCaller) DEFAULTADMINROLE(opts *bind.CallOpts) ([32]byte, error) {
+func (_Netsepio *NetsepioCaller) DEFAULTADMINROLE(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "DEFAULT_ADMIN_ROLE")
+	err := _Netsepio.contract.Call(opts, &out, "DEFAULT_ADMIN_ROLE")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -199,23 +199,23 @@ func (_Gennetsepio *GennetsepioCaller) DEFAULTADMINROLE(opts *bind.CallOpts) ([3
 // DEFAULTADMINROLE is a free data retrieval call binding the contract method 0xa217fddf.
 //
 // Solidity: function DEFAULT_ADMIN_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioSession) DEFAULTADMINROLE() ([32]byte, error) {
-	return _Gennetsepio.Contract.DEFAULTADMINROLE(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioSession) DEFAULTADMINROLE() ([32]byte, error) {
+	return _Netsepio.Contract.DEFAULTADMINROLE(&_Netsepio.CallOpts)
 }
 
 // DEFAULTADMINROLE is a free data retrieval call binding the contract method 0xa217fddf.
 //
 // Solidity: function DEFAULT_ADMIN_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioCallerSession) DEFAULTADMINROLE() ([32]byte, error) {
-	return _Gennetsepio.Contract.DEFAULTADMINROLE(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioCallerSession) DEFAULTADMINROLE() ([32]byte, error) {
+	return _Netsepio.Contract.DEFAULTADMINROLE(&_Netsepio.CallOpts)
 }
 
 // NETSEPIOADMINROLE is a free data retrieval call binding the contract method 0x2297017f.
 //
 // Solidity: function NETSEPIO_ADMIN_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioCaller) NETSEPIOADMINROLE(opts *bind.CallOpts) ([32]byte, error) {
+func (_Netsepio *NetsepioCaller) NETSEPIOADMINROLE(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "NETSEPIO_ADMIN_ROLE")
+	err := _Netsepio.contract.Call(opts, &out, "NETSEPIO_ADMIN_ROLE")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -230,23 +230,23 @@ func (_Gennetsepio *GennetsepioCaller) NETSEPIOADMINROLE(opts *bind.CallOpts) ([
 // NETSEPIOADMINROLE is a free data retrieval call binding the contract method 0x2297017f.
 //
 // Solidity: function NETSEPIO_ADMIN_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioSession) NETSEPIOADMINROLE() ([32]byte, error) {
-	return _Gennetsepio.Contract.NETSEPIOADMINROLE(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioSession) NETSEPIOADMINROLE() ([32]byte, error) {
+	return _Netsepio.Contract.NETSEPIOADMINROLE(&_Netsepio.CallOpts)
 }
 
 // NETSEPIOADMINROLE is a free data retrieval call binding the contract method 0x2297017f.
 //
 // Solidity: function NETSEPIO_ADMIN_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioCallerSession) NETSEPIOADMINROLE() ([32]byte, error) {
-	return _Gennetsepio.Contract.NETSEPIOADMINROLE(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioCallerSession) NETSEPIOADMINROLE() ([32]byte, error) {
+	return _Netsepio.Contract.NETSEPIOADMINROLE(&_Netsepio.CallOpts)
 }
 
 // NETSEPIOMODERATORROLE is a free data retrieval call binding the contract method 0x6b1f3b5e.
 //
 // Solidity: function NETSEPIO_MODERATOR_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioCaller) NETSEPIOMODERATORROLE(opts *bind.CallOpts) ([32]byte, error) {
+func (_Netsepio *NetsepioCaller) NETSEPIOMODERATORROLE(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "NETSEPIO_MODERATOR_ROLE")
+	err := _Netsepio.contract.Call(opts, &out, "NETSEPIO_MODERATOR_ROLE")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -261,23 +261,23 @@ func (_Gennetsepio *GennetsepioCaller) NETSEPIOMODERATORROLE(opts *bind.CallOpts
 // NETSEPIOMODERATORROLE is a free data retrieval call binding the contract method 0x6b1f3b5e.
 //
 // Solidity: function NETSEPIO_MODERATOR_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioSession) NETSEPIOMODERATORROLE() ([32]byte, error) {
-	return _Gennetsepio.Contract.NETSEPIOMODERATORROLE(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioSession) NETSEPIOMODERATORROLE() ([32]byte, error) {
+	return _Netsepio.Contract.NETSEPIOMODERATORROLE(&_Netsepio.CallOpts)
 }
 
 // NETSEPIOMODERATORROLE is a free data retrieval call binding the contract method 0x6b1f3b5e.
 //
 // Solidity: function NETSEPIO_MODERATOR_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioCallerSession) NETSEPIOMODERATORROLE() ([32]byte, error) {
-	return _Gennetsepio.Contract.NETSEPIOMODERATORROLE(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioCallerSession) NETSEPIOMODERATORROLE() ([32]byte, error) {
+	return _Netsepio.Contract.NETSEPIOMODERATORROLE(&_Netsepio.CallOpts)
 }
 
 // NETSEPIOVOTERROLE is a free data retrieval call binding the contract method 0x30879cb7.
 //
 // Solidity: function NETSEPIO_VOTER_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioCaller) NETSEPIOVOTERROLE(opts *bind.CallOpts) ([32]byte, error) {
+func (_Netsepio *NetsepioCaller) NETSEPIOVOTERROLE(opts *bind.CallOpts) ([32]byte, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "NETSEPIO_VOTER_ROLE")
+	err := _Netsepio.contract.Call(opts, &out, "NETSEPIO_VOTER_ROLE")
 
 	if err != nil {
 		return *new([32]byte), err
@@ -292,21 +292,21 @@ func (_Gennetsepio *GennetsepioCaller) NETSEPIOVOTERROLE(opts *bind.CallOpts) ([
 // NETSEPIOVOTERROLE is a free data retrieval call binding the contract method 0x30879cb7.
 //
 // Solidity: function NETSEPIO_VOTER_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioSession) NETSEPIOVOTERROLE() ([32]byte, error) {
-	return _Gennetsepio.Contract.NETSEPIOVOTERROLE(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioSession) NETSEPIOVOTERROLE() ([32]byte, error) {
+	return _Netsepio.Contract.NETSEPIOVOTERROLE(&_Netsepio.CallOpts)
 }
 
 // NETSEPIOVOTERROLE is a free data retrieval call binding the contract method 0x30879cb7.
 //
 // Solidity: function NETSEPIO_VOTER_ROLE() view returns(bytes32)
-func (_Gennetsepio *GennetsepioCallerSession) NETSEPIOVOTERROLE() ([32]byte, error) {
-	return _Gennetsepio.Contract.NETSEPIOVOTERROLE(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioCallerSession) NETSEPIOVOTERROLE() ([32]byte, error) {
+	return _Netsepio.Contract.NETSEPIOVOTERROLE(&_Netsepio.CallOpts)
 }
 
 // Reviews is a free data retrieval call binding the contract method 0x113ea69f.
 //
 // Solidity: function Reviews(uint256 ) view returns(string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string infoHash)
-func (_Gennetsepio *GennetsepioCaller) Reviews(opts *bind.CallOpts, arg0 *big.Int) (struct {
+func (_Netsepio *NetsepioCaller) Reviews(opts *bind.CallOpts, arg0 *big.Int) (struct {
 	Category      string
 	DomainAddress string
 	SiteURL       string
@@ -316,7 +316,7 @@ func (_Gennetsepio *GennetsepioCaller) Reviews(opts *bind.CallOpts, arg0 *big.In
 	InfoHash      string
 }, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "Reviews", arg0)
+	err := _Netsepio.contract.Call(opts, &out, "Reviews", arg0)
 
 	outstruct := new(struct {
 		Category      string
@@ -346,7 +346,7 @@ func (_Gennetsepio *GennetsepioCaller) Reviews(opts *bind.CallOpts, arg0 *big.In
 // Reviews is a free data retrieval call binding the contract method 0x113ea69f.
 //
 // Solidity: function Reviews(uint256 ) view returns(string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string infoHash)
-func (_Gennetsepio *GennetsepioSession) Reviews(arg0 *big.Int) (struct {
+func (_Netsepio *NetsepioSession) Reviews(arg0 *big.Int) (struct {
 	Category      string
 	DomainAddress string
 	SiteURL       string
@@ -355,13 +355,13 @@ func (_Gennetsepio *GennetsepioSession) Reviews(arg0 *big.Int) (struct {
 	SiteSafety    string
 	InfoHash      string
 }, error) {
-	return _Gennetsepio.Contract.Reviews(&_Gennetsepio.CallOpts, arg0)
+	return _Netsepio.Contract.Reviews(&_Netsepio.CallOpts, arg0)
 }
 
 // Reviews is a free data retrieval call binding the contract method 0x113ea69f.
 //
 // Solidity: function Reviews(uint256 ) view returns(string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string infoHash)
-func (_Gennetsepio *GennetsepioCallerSession) Reviews(arg0 *big.Int) (struct {
+func (_Netsepio *NetsepioCallerSession) Reviews(arg0 *big.Int) (struct {
 	Category      string
 	DomainAddress string
 	SiteURL       string
@@ -370,15 +370,15 @@ func (_Gennetsepio *GennetsepioCallerSession) Reviews(arg0 *big.Int) (struct {
 	SiteSafety    string
 	InfoHash      string
 }, error) {
-	return _Gennetsepio.Contract.Reviews(&_Gennetsepio.CallOpts, arg0)
+	return _Netsepio.Contract.Reviews(&_Netsepio.CallOpts, arg0)
 }
 
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
 //
 // Solidity: function balanceOf(address owner) view returns(uint256)
-func (_Gennetsepio *GennetsepioCaller) BalanceOf(opts *bind.CallOpts, owner common.Address) (*big.Int, error) {
+func (_Netsepio *NetsepioCaller) BalanceOf(opts *bind.CallOpts, owner common.Address) (*big.Int, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "balanceOf", owner)
+	err := _Netsepio.contract.Call(opts, &out, "balanceOf", owner)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -393,23 +393,23 @@ func (_Gennetsepio *GennetsepioCaller) BalanceOf(opts *bind.CallOpts, owner comm
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
 //
 // Solidity: function balanceOf(address owner) view returns(uint256)
-func (_Gennetsepio *GennetsepioSession) BalanceOf(owner common.Address) (*big.Int, error) {
-	return _Gennetsepio.Contract.BalanceOf(&_Gennetsepio.CallOpts, owner)
+func (_Netsepio *NetsepioSession) BalanceOf(owner common.Address) (*big.Int, error) {
+	return _Netsepio.Contract.BalanceOf(&_Netsepio.CallOpts, owner)
 }
 
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
 //
 // Solidity: function balanceOf(address owner) view returns(uint256)
-func (_Gennetsepio *GennetsepioCallerSession) BalanceOf(owner common.Address) (*big.Int, error) {
-	return _Gennetsepio.Contract.BalanceOf(&_Gennetsepio.CallOpts, owner)
+func (_Netsepio *NetsepioCallerSession) BalanceOf(owner common.Address) (*big.Int, error) {
+	return _Netsepio.Contract.BalanceOf(&_Netsepio.CallOpts, owner)
 }
 
 // GetApproved is a free data retrieval call binding the contract method 0x081812fc.
 //
 // Solidity: function getApproved(uint256 tokenId) view returns(address)
-func (_Gennetsepio *GennetsepioCaller) GetApproved(opts *bind.CallOpts, tokenId *big.Int) (common.Address, error) {
+func (_Netsepio *NetsepioCaller) GetApproved(opts *bind.CallOpts, tokenId *big.Int) (common.Address, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "getApproved", tokenId)
+	err := _Netsepio.contract.Call(opts, &out, "getApproved", tokenId)
 
 	if err != nil {
 		return *new(common.Address), err
@@ -424,23 +424,23 @@ func (_Gennetsepio *GennetsepioCaller) GetApproved(opts *bind.CallOpts, tokenId 
 // GetApproved is a free data retrieval call binding the contract method 0x081812fc.
 //
 // Solidity: function getApproved(uint256 tokenId) view returns(address)
-func (_Gennetsepio *GennetsepioSession) GetApproved(tokenId *big.Int) (common.Address, error) {
-	return _Gennetsepio.Contract.GetApproved(&_Gennetsepio.CallOpts, tokenId)
+func (_Netsepio *NetsepioSession) GetApproved(tokenId *big.Int) (common.Address, error) {
+	return _Netsepio.Contract.GetApproved(&_Netsepio.CallOpts, tokenId)
 }
 
 // GetApproved is a free data retrieval call binding the contract method 0x081812fc.
 //
 // Solidity: function getApproved(uint256 tokenId) view returns(address)
-func (_Gennetsepio *GennetsepioCallerSession) GetApproved(tokenId *big.Int) (common.Address, error) {
-	return _Gennetsepio.Contract.GetApproved(&_Gennetsepio.CallOpts, tokenId)
+func (_Netsepio *NetsepioCallerSession) GetApproved(tokenId *big.Int) (common.Address, error) {
+	return _Netsepio.Contract.GetApproved(&_Netsepio.CallOpts, tokenId)
 }
 
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
 //
 // Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
-func (_Gennetsepio *GennetsepioCaller) GetRoleAdmin(opts *bind.CallOpts, role [32]byte) ([32]byte, error) {
+func (_Netsepio *NetsepioCaller) GetRoleAdmin(opts *bind.CallOpts, role [32]byte) ([32]byte, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "getRoleAdmin", role)
+	err := _Netsepio.contract.Call(opts, &out, "getRoleAdmin", role)
 
 	if err != nil {
 		return *new([32]byte), err
@@ -455,23 +455,23 @@ func (_Gennetsepio *GennetsepioCaller) GetRoleAdmin(opts *bind.CallOpts, role [3
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
 //
 // Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
-func (_Gennetsepio *GennetsepioSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
-	return _Gennetsepio.Contract.GetRoleAdmin(&_Gennetsepio.CallOpts, role)
+func (_Netsepio *NetsepioSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
+	return _Netsepio.Contract.GetRoleAdmin(&_Netsepio.CallOpts, role)
 }
 
 // GetRoleAdmin is a free data retrieval call binding the contract method 0x248a9ca3.
 //
 // Solidity: function getRoleAdmin(bytes32 role) view returns(bytes32)
-func (_Gennetsepio *GennetsepioCallerSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
-	return _Gennetsepio.Contract.GetRoleAdmin(&_Gennetsepio.CallOpts, role)
+func (_Netsepio *NetsepioCallerSession) GetRoleAdmin(role [32]byte) ([32]byte, error) {
+	return _Netsepio.Contract.GetRoleAdmin(&_Netsepio.CallOpts, role)
 }
 
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
 // Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
-func (_Gennetsepio *GennetsepioCaller) GetRoleMember(opts *bind.CallOpts, role [32]byte, index *big.Int) (common.Address, error) {
+func (_Netsepio *NetsepioCaller) GetRoleMember(opts *bind.CallOpts, role [32]byte, index *big.Int) (common.Address, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "getRoleMember", role, index)
+	err := _Netsepio.contract.Call(opts, &out, "getRoleMember", role, index)
 
 	if err != nil {
 		return *new(common.Address), err
@@ -486,23 +486,23 @@ func (_Gennetsepio *GennetsepioCaller) GetRoleMember(opts *bind.CallOpts, role [
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
 // Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
-func (_Gennetsepio *GennetsepioSession) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
-	return _Gennetsepio.Contract.GetRoleMember(&_Gennetsepio.CallOpts, role, index)
+func (_Netsepio *NetsepioSession) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
+	return _Netsepio.Contract.GetRoleMember(&_Netsepio.CallOpts, role, index)
 }
 
 // GetRoleMember is a free data retrieval call binding the contract method 0x9010d07c.
 //
 // Solidity: function getRoleMember(bytes32 role, uint256 index) view returns(address)
-func (_Gennetsepio *GennetsepioCallerSession) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
-	return _Gennetsepio.Contract.GetRoleMember(&_Gennetsepio.CallOpts, role, index)
+func (_Netsepio *NetsepioCallerSession) GetRoleMember(role [32]byte, index *big.Int) (common.Address, error) {
+	return _Netsepio.Contract.GetRoleMember(&_Netsepio.CallOpts, role, index)
 }
 
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
 // Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
-func (_Gennetsepio *GennetsepioCaller) GetRoleMemberCount(opts *bind.CallOpts, role [32]byte) (*big.Int, error) {
+func (_Netsepio *NetsepioCaller) GetRoleMemberCount(opts *bind.CallOpts, role [32]byte) (*big.Int, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "getRoleMemberCount", role)
+	err := _Netsepio.contract.Call(opts, &out, "getRoleMemberCount", role)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -517,23 +517,23 @@ func (_Gennetsepio *GennetsepioCaller) GetRoleMemberCount(opts *bind.CallOpts, r
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
 // Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
-func (_Gennetsepio *GennetsepioSession) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
-	return _Gennetsepio.Contract.GetRoleMemberCount(&_Gennetsepio.CallOpts, role)
+func (_Netsepio *NetsepioSession) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
+	return _Netsepio.Contract.GetRoleMemberCount(&_Netsepio.CallOpts, role)
 }
 
 // GetRoleMemberCount is a free data retrieval call binding the contract method 0xca15c873.
 //
 // Solidity: function getRoleMemberCount(bytes32 role) view returns(uint256)
-func (_Gennetsepio *GennetsepioCallerSession) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
-	return _Gennetsepio.Contract.GetRoleMemberCount(&_Gennetsepio.CallOpts, role)
+func (_Netsepio *NetsepioCallerSession) GetRoleMemberCount(role [32]byte) (*big.Int, error) {
+	return _Netsepio.Contract.GetRoleMemberCount(&_Netsepio.CallOpts, role)
 }
 
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
 //
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
-func (_Gennetsepio *GennetsepioCaller) HasRole(opts *bind.CallOpts, role [32]byte, account common.Address) (bool, error) {
+func (_Netsepio *NetsepioCaller) HasRole(opts *bind.CallOpts, role [32]byte, account common.Address) (bool, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "hasRole", role, account)
+	err := _Netsepio.contract.Call(opts, &out, "hasRole", role, account)
 
 	if err != nil {
 		return *new(bool), err
@@ -548,23 +548,23 @@ func (_Gennetsepio *GennetsepioCaller) HasRole(opts *bind.CallOpts, role [32]byt
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
 //
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
-func (_Gennetsepio *GennetsepioSession) HasRole(role [32]byte, account common.Address) (bool, error) {
-	return _Gennetsepio.Contract.HasRole(&_Gennetsepio.CallOpts, role, account)
+func (_Netsepio *NetsepioSession) HasRole(role [32]byte, account common.Address) (bool, error) {
+	return _Netsepio.Contract.HasRole(&_Netsepio.CallOpts, role, account)
 }
 
 // HasRole is a free data retrieval call binding the contract method 0x91d14854.
 //
 // Solidity: function hasRole(bytes32 role, address account) view returns(bool)
-func (_Gennetsepio *GennetsepioCallerSession) HasRole(role [32]byte, account common.Address) (bool, error) {
-	return _Gennetsepio.Contract.HasRole(&_Gennetsepio.CallOpts, role, account)
+func (_Netsepio *NetsepioCallerSession) HasRole(role [32]byte, account common.Address) (bool, error) {
+	return _Netsepio.Contract.HasRole(&_Netsepio.CallOpts, role, account)
 }
 
 // IsApprovedForAll is a free data retrieval call binding the contract method 0xe985e9c5.
 //
 // Solidity: function isApprovedForAll(address owner, address operator) view returns(bool)
-func (_Gennetsepio *GennetsepioCaller) IsApprovedForAll(opts *bind.CallOpts, owner common.Address, operator common.Address) (bool, error) {
+func (_Netsepio *NetsepioCaller) IsApprovedForAll(opts *bind.CallOpts, owner common.Address, operator common.Address) (bool, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "isApprovedForAll", owner, operator)
+	err := _Netsepio.contract.Call(opts, &out, "isApprovedForAll", owner, operator)
 
 	if err != nil {
 		return *new(bool), err
@@ -579,23 +579,23 @@ func (_Gennetsepio *GennetsepioCaller) IsApprovedForAll(opts *bind.CallOpts, own
 // IsApprovedForAll is a free data retrieval call binding the contract method 0xe985e9c5.
 //
 // Solidity: function isApprovedForAll(address owner, address operator) view returns(bool)
-func (_Gennetsepio *GennetsepioSession) IsApprovedForAll(owner common.Address, operator common.Address) (bool, error) {
-	return _Gennetsepio.Contract.IsApprovedForAll(&_Gennetsepio.CallOpts, owner, operator)
+func (_Netsepio *NetsepioSession) IsApprovedForAll(owner common.Address, operator common.Address) (bool, error) {
+	return _Netsepio.Contract.IsApprovedForAll(&_Netsepio.CallOpts, owner, operator)
 }
 
 // IsApprovedForAll is a free data retrieval call binding the contract method 0xe985e9c5.
 //
 // Solidity: function isApprovedForAll(address owner, address operator) view returns(bool)
-func (_Gennetsepio *GennetsepioCallerSession) IsApprovedForAll(owner common.Address, operator common.Address) (bool, error) {
-	return _Gennetsepio.Contract.IsApprovedForAll(&_Gennetsepio.CallOpts, owner, operator)
+func (_Netsepio *NetsepioCallerSession) IsApprovedForAll(owner common.Address, operator common.Address) (bool, error) {
+	return _Netsepio.Contract.IsApprovedForAll(&_Netsepio.CallOpts, owner, operator)
 }
 
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
 //
 // Solidity: function name() view returns(string)
-func (_Gennetsepio *GennetsepioCaller) Name(opts *bind.CallOpts) (string, error) {
+func (_Netsepio *NetsepioCaller) Name(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "name")
+	err := _Netsepio.contract.Call(opts, &out, "name")
 
 	if err != nil {
 		return *new(string), err
@@ -610,23 +610,23 @@ func (_Gennetsepio *GennetsepioCaller) Name(opts *bind.CallOpts) (string, error)
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
 //
 // Solidity: function name() view returns(string)
-func (_Gennetsepio *GennetsepioSession) Name() (string, error) {
-	return _Gennetsepio.Contract.Name(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioSession) Name() (string, error) {
+	return _Netsepio.Contract.Name(&_Netsepio.CallOpts)
 }
 
 // Name is a free data retrieval call binding the contract method 0x06fdde03.
 //
 // Solidity: function name() view returns(string)
-func (_Gennetsepio *GennetsepioCallerSession) Name() (string, error) {
-	return _Gennetsepio.Contract.Name(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioCallerSession) Name() (string, error) {
+	return _Netsepio.Contract.Name(&_Netsepio.CallOpts)
 }
 
 // OwnerOf is a free data retrieval call binding the contract method 0x6352211e.
 //
 // Solidity: function ownerOf(uint256 tokenId) view returns(address)
-func (_Gennetsepio *GennetsepioCaller) OwnerOf(opts *bind.CallOpts, tokenId *big.Int) (common.Address, error) {
+func (_Netsepio *NetsepioCaller) OwnerOf(opts *bind.CallOpts, tokenId *big.Int) (common.Address, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "ownerOf", tokenId)
+	err := _Netsepio.contract.Call(opts, &out, "ownerOf", tokenId)
 
 	if err != nil {
 		return *new(common.Address), err
@@ -641,23 +641,23 @@ func (_Gennetsepio *GennetsepioCaller) OwnerOf(opts *bind.CallOpts, tokenId *big
 // OwnerOf is a free data retrieval call binding the contract method 0x6352211e.
 //
 // Solidity: function ownerOf(uint256 tokenId) view returns(address)
-func (_Gennetsepio *GennetsepioSession) OwnerOf(tokenId *big.Int) (common.Address, error) {
-	return _Gennetsepio.Contract.OwnerOf(&_Gennetsepio.CallOpts, tokenId)
+func (_Netsepio *NetsepioSession) OwnerOf(tokenId *big.Int) (common.Address, error) {
+	return _Netsepio.Contract.OwnerOf(&_Netsepio.CallOpts, tokenId)
 }
 
 // OwnerOf is a free data retrieval call binding the contract method 0x6352211e.
 //
 // Solidity: function ownerOf(uint256 tokenId) view returns(address)
-func (_Gennetsepio *GennetsepioCallerSession) OwnerOf(tokenId *big.Int) (common.Address, error) {
-	return _Gennetsepio.Contract.OwnerOf(&_Gennetsepio.CallOpts, tokenId)
+func (_Netsepio *NetsepioCallerSession) OwnerOf(tokenId *big.Int) (common.Address, error) {
+	return _Netsepio.Contract.OwnerOf(&_Netsepio.CallOpts, tokenId)
 }
 
 // Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
 // Solidity: function paused() view returns(bool)
-func (_Gennetsepio *GennetsepioCaller) Paused(opts *bind.CallOpts) (bool, error) {
+func (_Netsepio *NetsepioCaller) Paused(opts *bind.CallOpts) (bool, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "paused")
+	err := _Netsepio.contract.Call(opts, &out, "paused")
 
 	if err != nil {
 		return *new(bool), err
@@ -672,23 +672,23 @@ func (_Gennetsepio *GennetsepioCaller) Paused(opts *bind.CallOpts) (bool, error)
 // Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
 // Solidity: function paused() view returns(bool)
-func (_Gennetsepio *GennetsepioSession) Paused() (bool, error) {
-	return _Gennetsepio.Contract.Paused(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioSession) Paused() (bool, error) {
+	return _Netsepio.Contract.Paused(&_Netsepio.CallOpts)
 }
 
 // Paused is a free data retrieval call binding the contract method 0x5c975abb.
 //
 // Solidity: function paused() view returns(bool)
-func (_Gennetsepio *GennetsepioCallerSession) Paused() (bool, error) {
-	return _Gennetsepio.Contract.Paused(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioCallerSession) Paused() (bool, error) {
+	return _Netsepio.Contract.Paused(&_Netsepio.CallOpts)
 }
 
 // ReadMetadata is a free data retrieval call binding the contract method 0x48960a4f.
 //
 // Solidity: function readMetadata(uint256 tokenId) view returns(string)
-func (_Gennetsepio *GennetsepioCaller) ReadMetadata(opts *bind.CallOpts, tokenId *big.Int) (string, error) {
+func (_Netsepio *NetsepioCaller) ReadMetadata(opts *bind.CallOpts, tokenId *big.Int) (string, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "readMetadata", tokenId)
+	err := _Netsepio.contract.Call(opts, &out, "readMetadata", tokenId)
 
 	if err != nil {
 		return *new(string), err
@@ -703,23 +703,23 @@ func (_Gennetsepio *GennetsepioCaller) ReadMetadata(opts *bind.CallOpts, tokenId
 // ReadMetadata is a free data retrieval call binding the contract method 0x48960a4f.
 //
 // Solidity: function readMetadata(uint256 tokenId) view returns(string)
-func (_Gennetsepio *GennetsepioSession) ReadMetadata(tokenId *big.Int) (string, error) {
-	return _Gennetsepio.Contract.ReadMetadata(&_Gennetsepio.CallOpts, tokenId)
+func (_Netsepio *NetsepioSession) ReadMetadata(tokenId *big.Int) (string, error) {
+	return _Netsepio.Contract.ReadMetadata(&_Netsepio.CallOpts, tokenId)
 }
 
 // ReadMetadata is a free data retrieval call binding the contract method 0x48960a4f.
 //
 // Solidity: function readMetadata(uint256 tokenId) view returns(string)
-func (_Gennetsepio *GennetsepioCallerSession) ReadMetadata(tokenId *big.Int) (string, error) {
-	return _Gennetsepio.Contract.ReadMetadata(&_Gennetsepio.CallOpts, tokenId)
+func (_Netsepio *NetsepioCallerSession) ReadMetadata(tokenId *big.Int) (string, error) {
+	return _Netsepio.Contract.ReadMetadata(&_Netsepio.CallOpts, tokenId)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
 // Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
-func (_Gennetsepio *GennetsepioCaller) SupportsInterface(opts *bind.CallOpts, interfaceId [4]byte) (bool, error) {
+func (_Netsepio *NetsepioCaller) SupportsInterface(opts *bind.CallOpts, interfaceId [4]byte) (bool, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "supportsInterface", interfaceId)
+	err := _Netsepio.contract.Call(opts, &out, "supportsInterface", interfaceId)
 
 	if err != nil {
 		return *new(bool), err
@@ -734,23 +734,23 @@ func (_Gennetsepio *GennetsepioCaller) SupportsInterface(opts *bind.CallOpts, in
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
 // Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
-func (_Gennetsepio *GennetsepioSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
-	return _Gennetsepio.Contract.SupportsInterface(&_Gennetsepio.CallOpts, interfaceId)
+func (_Netsepio *NetsepioSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
+	return _Netsepio.Contract.SupportsInterface(&_Netsepio.CallOpts, interfaceId)
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.
 //
 // Solidity: function supportsInterface(bytes4 interfaceId) view returns(bool)
-func (_Gennetsepio *GennetsepioCallerSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
-	return _Gennetsepio.Contract.SupportsInterface(&_Gennetsepio.CallOpts, interfaceId)
+func (_Netsepio *NetsepioCallerSession) SupportsInterface(interfaceId [4]byte) (bool, error) {
+	return _Netsepio.Contract.SupportsInterface(&_Netsepio.CallOpts, interfaceId)
 }
 
 // Symbol is a free data retrieval call binding the contract method 0x95d89b41.
 //
 // Solidity: function symbol() view returns(string)
-func (_Gennetsepio *GennetsepioCaller) Symbol(opts *bind.CallOpts) (string, error) {
+func (_Netsepio *NetsepioCaller) Symbol(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "symbol")
+	err := _Netsepio.contract.Call(opts, &out, "symbol")
 
 	if err != nil {
 		return *new(string), err
@@ -765,23 +765,23 @@ func (_Gennetsepio *GennetsepioCaller) Symbol(opts *bind.CallOpts) (string, erro
 // Symbol is a free data retrieval call binding the contract method 0x95d89b41.
 //
 // Solidity: function symbol() view returns(string)
-func (_Gennetsepio *GennetsepioSession) Symbol() (string, error) {
-	return _Gennetsepio.Contract.Symbol(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioSession) Symbol() (string, error) {
+	return _Netsepio.Contract.Symbol(&_Netsepio.CallOpts)
 }
 
 // Symbol is a free data retrieval call binding the contract method 0x95d89b41.
 //
 // Solidity: function symbol() view returns(string)
-func (_Gennetsepio *GennetsepioCallerSession) Symbol() (string, error) {
-	return _Gennetsepio.Contract.Symbol(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioCallerSession) Symbol() (string, error) {
+	return _Netsepio.Contract.Symbol(&_Netsepio.CallOpts)
 }
 
 // TokenByIndex is a free data retrieval call binding the contract method 0x4f6ccce7.
 //
 // Solidity: function tokenByIndex(uint256 index) view returns(uint256)
-func (_Gennetsepio *GennetsepioCaller) TokenByIndex(opts *bind.CallOpts, index *big.Int) (*big.Int, error) {
+func (_Netsepio *NetsepioCaller) TokenByIndex(opts *bind.CallOpts, index *big.Int) (*big.Int, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "tokenByIndex", index)
+	err := _Netsepio.contract.Call(opts, &out, "tokenByIndex", index)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -796,23 +796,23 @@ func (_Gennetsepio *GennetsepioCaller) TokenByIndex(opts *bind.CallOpts, index *
 // TokenByIndex is a free data retrieval call binding the contract method 0x4f6ccce7.
 //
 // Solidity: function tokenByIndex(uint256 index) view returns(uint256)
-func (_Gennetsepio *GennetsepioSession) TokenByIndex(index *big.Int) (*big.Int, error) {
-	return _Gennetsepio.Contract.TokenByIndex(&_Gennetsepio.CallOpts, index)
+func (_Netsepio *NetsepioSession) TokenByIndex(index *big.Int) (*big.Int, error) {
+	return _Netsepio.Contract.TokenByIndex(&_Netsepio.CallOpts, index)
 }
 
 // TokenByIndex is a free data retrieval call binding the contract method 0x4f6ccce7.
 //
 // Solidity: function tokenByIndex(uint256 index) view returns(uint256)
-func (_Gennetsepio *GennetsepioCallerSession) TokenByIndex(index *big.Int) (*big.Int, error) {
-	return _Gennetsepio.Contract.TokenByIndex(&_Gennetsepio.CallOpts, index)
+func (_Netsepio *NetsepioCallerSession) TokenByIndex(index *big.Int) (*big.Int, error) {
+	return _Netsepio.Contract.TokenByIndex(&_Netsepio.CallOpts, index)
 }
 
 // TokenOfOwnerByIndex is a free data retrieval call binding the contract method 0x2f745c59.
 //
 // Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256)
-func (_Gennetsepio *GennetsepioCaller) TokenOfOwnerByIndex(opts *bind.CallOpts, owner common.Address, index *big.Int) (*big.Int, error) {
+func (_Netsepio *NetsepioCaller) TokenOfOwnerByIndex(opts *bind.CallOpts, owner common.Address, index *big.Int) (*big.Int, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "tokenOfOwnerByIndex", owner, index)
+	err := _Netsepio.contract.Call(opts, &out, "tokenOfOwnerByIndex", owner, index)
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -827,23 +827,23 @@ func (_Gennetsepio *GennetsepioCaller) TokenOfOwnerByIndex(opts *bind.CallOpts, 
 // TokenOfOwnerByIndex is a free data retrieval call binding the contract method 0x2f745c59.
 //
 // Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256)
-func (_Gennetsepio *GennetsepioSession) TokenOfOwnerByIndex(owner common.Address, index *big.Int) (*big.Int, error) {
-	return _Gennetsepio.Contract.TokenOfOwnerByIndex(&_Gennetsepio.CallOpts, owner, index)
+func (_Netsepio *NetsepioSession) TokenOfOwnerByIndex(owner common.Address, index *big.Int) (*big.Int, error) {
+	return _Netsepio.Contract.TokenOfOwnerByIndex(&_Netsepio.CallOpts, owner, index)
 }
 
 // TokenOfOwnerByIndex is a free data retrieval call binding the contract method 0x2f745c59.
 //
 // Solidity: function tokenOfOwnerByIndex(address owner, uint256 index) view returns(uint256)
-func (_Gennetsepio *GennetsepioCallerSession) TokenOfOwnerByIndex(owner common.Address, index *big.Int) (*big.Int, error) {
-	return _Gennetsepio.Contract.TokenOfOwnerByIndex(&_Gennetsepio.CallOpts, owner, index)
+func (_Netsepio *NetsepioCallerSession) TokenOfOwnerByIndex(owner common.Address, index *big.Int) (*big.Int, error) {
+	return _Netsepio.Contract.TokenOfOwnerByIndex(&_Netsepio.CallOpts, owner, index)
 }
 
 // TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
 //
 // Solidity: function tokenURI(uint256 tokenId) view returns(string)
-func (_Gennetsepio *GennetsepioCaller) TokenURI(opts *bind.CallOpts, tokenId *big.Int) (string, error) {
+func (_Netsepio *NetsepioCaller) TokenURI(opts *bind.CallOpts, tokenId *big.Int) (string, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "tokenURI", tokenId)
+	err := _Netsepio.contract.Call(opts, &out, "tokenURI", tokenId)
 
 	if err != nil {
 		return *new(string), err
@@ -858,23 +858,23 @@ func (_Gennetsepio *GennetsepioCaller) TokenURI(opts *bind.CallOpts, tokenId *bi
 // TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
 //
 // Solidity: function tokenURI(uint256 tokenId) view returns(string)
-func (_Gennetsepio *GennetsepioSession) TokenURI(tokenId *big.Int) (string, error) {
-	return _Gennetsepio.Contract.TokenURI(&_Gennetsepio.CallOpts, tokenId)
+func (_Netsepio *NetsepioSession) TokenURI(tokenId *big.Int) (string, error) {
+	return _Netsepio.Contract.TokenURI(&_Netsepio.CallOpts, tokenId)
 }
 
 // TokenURI is a free data retrieval call binding the contract method 0xc87b56dd.
 //
 // Solidity: function tokenURI(uint256 tokenId) view returns(string)
-func (_Gennetsepio *GennetsepioCallerSession) TokenURI(tokenId *big.Int) (string, error) {
-	return _Gennetsepio.Contract.TokenURI(&_Gennetsepio.CallOpts, tokenId)
+func (_Netsepio *NetsepioCallerSession) TokenURI(tokenId *big.Int) (string, error) {
+	return _Netsepio.Contract.TokenURI(&_Netsepio.CallOpts, tokenId)
 }
 
 // TotalSupply is a free data retrieval call binding the contract method 0x18160ddd.
 //
 // Solidity: function totalSupply() view returns(uint256)
-func (_Gennetsepio *GennetsepioCaller) TotalSupply(opts *bind.CallOpts) (*big.Int, error) {
+func (_Netsepio *NetsepioCaller) TotalSupply(opts *bind.CallOpts) (*big.Int, error) {
 	var out []interface{}
-	err := _Gennetsepio.contract.Call(opts, &out, "totalSupply")
+	err := _Netsepio.contract.Call(opts, &out, "totalSupply")
 
 	if err != nil {
 		return *new(*big.Int), err
@@ -889,314 +889,314 @@ func (_Gennetsepio *GennetsepioCaller) TotalSupply(opts *bind.CallOpts) (*big.In
 // TotalSupply is a free data retrieval call binding the contract method 0x18160ddd.
 //
 // Solidity: function totalSupply() view returns(uint256)
-func (_Gennetsepio *GennetsepioSession) TotalSupply() (*big.Int, error) {
-	return _Gennetsepio.Contract.TotalSupply(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioSession) TotalSupply() (*big.Int, error) {
+	return _Netsepio.Contract.TotalSupply(&_Netsepio.CallOpts)
 }
 
 // TotalSupply is a free data retrieval call binding the contract method 0x18160ddd.
 //
 // Solidity: function totalSupply() view returns(uint256)
-func (_Gennetsepio *GennetsepioCallerSession) TotalSupply() (*big.Int, error) {
-	return _Gennetsepio.Contract.TotalSupply(&_Gennetsepio.CallOpts)
+func (_Netsepio *NetsepioCallerSession) TotalSupply() (*big.Int, error) {
+	return _Netsepio.Contract.TotalSupply(&_Netsepio.CallOpts)
 }
 
 // Approve is a paid mutator transaction binding the contract method 0x095ea7b3.
 //
 // Solidity: function approve(address to, uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioTransactor) Approve(opts *bind.TransactOpts, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "approve", to, tokenId)
+func (_Netsepio *NetsepioTransactor) Approve(opts *bind.TransactOpts, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "approve", to, tokenId)
 }
 
 // Approve is a paid mutator transaction binding the contract method 0x095ea7b3.
 //
 // Solidity: function approve(address to, uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioSession) Approve(to common.Address, tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.Approve(&_Gennetsepio.TransactOpts, to, tokenId)
+func (_Netsepio *NetsepioSession) Approve(to common.Address, tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.Contract.Approve(&_Netsepio.TransactOpts, to, tokenId)
 }
 
 // Approve is a paid mutator transaction binding the contract method 0x095ea7b3.
 //
 // Solidity: function approve(address to, uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) Approve(to common.Address, tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.Approve(&_Gennetsepio.TransactOpts, to, tokenId)
+func (_Netsepio *NetsepioTransactorSession) Approve(to common.Address, tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.Contract.Approve(&_Netsepio.TransactOpts, to, tokenId)
 }
 
 // CreateReview is a paid mutator transaction binding the contract method 0x6297fac1.
 //
 // Solidity: function createReview(string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string metadataURI) returns()
-func (_Gennetsepio *GennetsepioTransactor) CreateReview(opts *bind.TransactOpts, category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "createReview", category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI)
+func (_Netsepio *NetsepioTransactor) CreateReview(opts *bind.TransactOpts, category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "createReview", category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI)
 }
 
 // CreateReview is a paid mutator transaction binding the contract method 0x6297fac1.
 //
 // Solidity: function createReview(string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string metadataURI) returns()
-func (_Gennetsepio *GennetsepioSession) CreateReview(category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.CreateReview(&_Gennetsepio.TransactOpts, category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI)
+func (_Netsepio *NetsepioSession) CreateReview(category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string) (*types.Transaction, error) {
+	return _Netsepio.Contract.CreateReview(&_Netsepio.TransactOpts, category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI)
 }
 
 // CreateReview is a paid mutator transaction binding the contract method 0x6297fac1.
 //
 // Solidity: function createReview(string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string metadataURI) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) CreateReview(category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.CreateReview(&_Gennetsepio.TransactOpts, category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI)
+func (_Netsepio *NetsepioTransactorSession) CreateReview(category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string) (*types.Transaction, error) {
+	return _Netsepio.Contract.CreateReview(&_Netsepio.TransactOpts, category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI)
 }
 
 // DelegateReviewCreation is a paid mutator transaction binding the contract method 0xb1c58bba.
 //
 // Solidity: function delegateReviewCreation(string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string metadataURI, address voter) returns()
-func (_Gennetsepio *GennetsepioTransactor) DelegateReviewCreation(opts *bind.TransactOpts, category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string, voter common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "delegateReviewCreation", category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI, voter)
+func (_Netsepio *NetsepioTransactor) DelegateReviewCreation(opts *bind.TransactOpts, category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string, voter common.Address) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "delegateReviewCreation", category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI, voter)
 }
 
 // DelegateReviewCreation is a paid mutator transaction binding the contract method 0xb1c58bba.
 //
 // Solidity: function delegateReviewCreation(string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string metadataURI, address voter) returns()
-func (_Gennetsepio *GennetsepioSession) DelegateReviewCreation(category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string, voter common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.DelegateReviewCreation(&_Gennetsepio.TransactOpts, category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI, voter)
+func (_Netsepio *NetsepioSession) DelegateReviewCreation(category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string, voter common.Address) (*types.Transaction, error) {
+	return _Netsepio.Contract.DelegateReviewCreation(&_Netsepio.TransactOpts, category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI, voter)
 }
 
 // DelegateReviewCreation is a paid mutator transaction binding the contract method 0xb1c58bba.
 //
 // Solidity: function delegateReviewCreation(string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string metadataURI, address voter) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) DelegateReviewCreation(category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string, voter common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.DelegateReviewCreation(&_Gennetsepio.TransactOpts, category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI, voter)
+func (_Netsepio *NetsepioTransactorSession) DelegateReviewCreation(category string, domainAddress string, siteURL string, siteType string, siteTag string, siteSafety string, metadataURI string, voter common.Address) (*types.Transaction, error) {
+	return _Netsepio.Contract.DelegateReviewCreation(&_Netsepio.TransactOpts, category, domainAddress, siteURL, siteType, siteTag, siteSafety, metadataURI, voter)
 }
 
 // DeleteReview is a paid mutator transaction binding the contract method 0xd71e4890.
 //
 // Solidity: function deleteReview(uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioTransactor) DeleteReview(opts *bind.TransactOpts, tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "deleteReview", tokenId)
+func (_Netsepio *NetsepioTransactor) DeleteReview(opts *bind.TransactOpts, tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "deleteReview", tokenId)
 }
 
 // DeleteReview is a paid mutator transaction binding the contract method 0xd71e4890.
 //
 // Solidity: function deleteReview(uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioSession) DeleteReview(tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.DeleteReview(&_Gennetsepio.TransactOpts, tokenId)
+func (_Netsepio *NetsepioSession) DeleteReview(tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.Contract.DeleteReview(&_Netsepio.TransactOpts, tokenId)
 }
 
 // DeleteReview is a paid mutator transaction binding the contract method 0xd71e4890.
 //
 // Solidity: function deleteReview(uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) DeleteReview(tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.DeleteReview(&_Gennetsepio.TransactOpts, tokenId)
+func (_Netsepio *NetsepioTransactorSession) DeleteReview(tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.Contract.DeleteReview(&_Netsepio.TransactOpts, tokenId)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
 //
 // Solidity: function grantRole(bytes32 role, address account) returns()
-func (_Gennetsepio *GennetsepioTransactor) GrantRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "grantRole", role, account)
+func (_Netsepio *NetsepioTransactor) GrantRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "grantRole", role, account)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
 //
 // Solidity: function grantRole(bytes32 role, address account) returns()
-func (_Gennetsepio *GennetsepioSession) GrantRole(role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.GrantRole(&_Gennetsepio.TransactOpts, role, account)
+func (_Netsepio *NetsepioSession) GrantRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _Netsepio.Contract.GrantRole(&_Netsepio.TransactOpts, role, account)
 }
 
 // GrantRole is a paid mutator transaction binding the contract method 0x2f2ff15d.
 //
 // Solidity: function grantRole(bytes32 role, address account) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) GrantRole(role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.GrantRole(&_Gennetsepio.TransactOpts, role, account)
+func (_Netsepio *NetsepioTransactorSession) GrantRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _Netsepio.Contract.GrantRole(&_Netsepio.TransactOpts, role, account)
 }
 
 // Pause is a paid mutator transaction binding the contract method 0x8456cb59.
 //
 // Solidity: function pause() returns()
-func (_Gennetsepio *GennetsepioTransactor) Pause(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "pause")
+func (_Netsepio *NetsepioTransactor) Pause(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "pause")
 }
 
 // Pause is a paid mutator transaction binding the contract method 0x8456cb59.
 //
 // Solidity: function pause() returns()
-func (_Gennetsepio *GennetsepioSession) Pause() (*types.Transaction, error) {
-	return _Gennetsepio.Contract.Pause(&_Gennetsepio.TransactOpts)
+func (_Netsepio *NetsepioSession) Pause() (*types.Transaction, error) {
+	return _Netsepio.Contract.Pause(&_Netsepio.TransactOpts)
 }
 
 // Pause is a paid mutator transaction binding the contract method 0x8456cb59.
 //
 // Solidity: function pause() returns()
-func (_Gennetsepio *GennetsepioTransactorSession) Pause() (*types.Transaction, error) {
-	return _Gennetsepio.Contract.Pause(&_Gennetsepio.TransactOpts)
+func (_Netsepio *NetsepioTransactorSession) Pause() (*types.Transaction, error) {
+	return _Netsepio.Contract.Pause(&_Netsepio.TransactOpts)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
 //
 // Solidity: function renounceRole(bytes32 role, address account) returns()
-func (_Gennetsepio *GennetsepioTransactor) RenounceRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "renounceRole", role, account)
+func (_Netsepio *NetsepioTransactor) RenounceRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "renounceRole", role, account)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
 //
 // Solidity: function renounceRole(bytes32 role, address account) returns()
-func (_Gennetsepio *GennetsepioSession) RenounceRole(role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.RenounceRole(&_Gennetsepio.TransactOpts, role, account)
+func (_Netsepio *NetsepioSession) RenounceRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _Netsepio.Contract.RenounceRole(&_Netsepio.TransactOpts, role, account)
 }
 
 // RenounceRole is a paid mutator transaction binding the contract method 0x36568abe.
 //
 // Solidity: function renounceRole(bytes32 role, address account) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) RenounceRole(role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.RenounceRole(&_Gennetsepio.TransactOpts, role, account)
+func (_Netsepio *NetsepioTransactorSession) RenounceRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _Netsepio.Contract.RenounceRole(&_Netsepio.TransactOpts, role, account)
 }
 
 // RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
 //
 // Solidity: function revokeRole(bytes32 role, address account) returns()
-func (_Gennetsepio *GennetsepioTransactor) RevokeRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "revokeRole", role, account)
+func (_Netsepio *NetsepioTransactor) RevokeRole(opts *bind.TransactOpts, role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "revokeRole", role, account)
 }
 
 // RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
 //
 // Solidity: function revokeRole(bytes32 role, address account) returns()
-func (_Gennetsepio *GennetsepioSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.RevokeRole(&_Gennetsepio.TransactOpts, role, account)
+func (_Netsepio *NetsepioSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _Netsepio.Contract.RevokeRole(&_Netsepio.TransactOpts, role, account)
 }
 
 // RevokeRole is a paid mutator transaction binding the contract method 0xd547741f.
 //
 // Solidity: function revokeRole(bytes32 role, address account) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.RevokeRole(&_Gennetsepio.TransactOpts, role, account)
+func (_Netsepio *NetsepioTransactorSession) RevokeRole(role [32]byte, account common.Address) (*types.Transaction, error) {
+	return _Netsepio.Contract.RevokeRole(&_Netsepio.TransactOpts, role, account)
 }
 
 // SafeTransferFrom is a paid mutator transaction binding the contract method 0x42842e0e.
 //
 // Solidity: function safeTransferFrom(address from, address to, uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioTransactor) SafeTransferFrom(opts *bind.TransactOpts, from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "safeTransferFrom", from, to, tokenId)
+func (_Netsepio *NetsepioTransactor) SafeTransferFrom(opts *bind.TransactOpts, from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "safeTransferFrom", from, to, tokenId)
 }
 
 // SafeTransferFrom is a paid mutator transaction binding the contract method 0x42842e0e.
 //
 // Solidity: function safeTransferFrom(address from, address to, uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioSession) SafeTransferFrom(from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.SafeTransferFrom(&_Gennetsepio.TransactOpts, from, to, tokenId)
+func (_Netsepio *NetsepioSession) SafeTransferFrom(from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.Contract.SafeTransferFrom(&_Netsepio.TransactOpts, from, to, tokenId)
 }
 
 // SafeTransferFrom is a paid mutator transaction binding the contract method 0x42842e0e.
 //
 // Solidity: function safeTransferFrom(address from, address to, uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) SafeTransferFrom(from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.SafeTransferFrom(&_Gennetsepio.TransactOpts, from, to, tokenId)
+func (_Netsepio *NetsepioTransactorSession) SafeTransferFrom(from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.Contract.SafeTransferFrom(&_Netsepio.TransactOpts, from, to, tokenId)
 }
 
 // SafeTransferFrom0 is a paid mutator transaction binding the contract method 0xb88d4fde.
 //
-// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) returns()
-func (_Gennetsepio *GennetsepioTransactor) SafeTransferFrom0(opts *bind.TransactOpts, from common.Address, to common.Address, tokenId *big.Int, _data []byte) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "safeTransferFrom0", from, to, tokenId, _data)
+// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) returns()
+func (_Netsepio *NetsepioTransactor) SafeTransferFrom0(opts *bind.TransactOpts, from common.Address, to common.Address, tokenId *big.Int, data []byte) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "safeTransferFrom0", from, to, tokenId, data)
 }
 
 // SafeTransferFrom0 is a paid mutator transaction binding the contract method 0xb88d4fde.
 //
-// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) returns()
-func (_Gennetsepio *GennetsepioSession) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, _data []byte) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.SafeTransferFrom0(&_Gennetsepio.TransactOpts, from, to, tokenId, _data)
+// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) returns()
+func (_Netsepio *NetsepioSession) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, data []byte) (*types.Transaction, error) {
+	return _Netsepio.Contract.SafeTransferFrom0(&_Netsepio.TransactOpts, from, to, tokenId, data)
 }
 
 // SafeTransferFrom0 is a paid mutator transaction binding the contract method 0xb88d4fde.
 //
-// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, _data []byte) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.SafeTransferFrom0(&_Gennetsepio.TransactOpts, from, to, tokenId, _data)
+// Solidity: function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) returns()
+func (_Netsepio *NetsepioTransactorSession) SafeTransferFrom0(from common.Address, to common.Address, tokenId *big.Int, data []byte) (*types.Transaction, error) {
+	return _Netsepio.Contract.SafeTransferFrom0(&_Netsepio.TransactOpts, from, to, tokenId, data)
 }
 
 // SetApprovalForAll is a paid mutator transaction binding the contract method 0xa22cb465.
 //
 // Solidity: function setApprovalForAll(address operator, bool approved) returns()
-func (_Gennetsepio *GennetsepioTransactor) SetApprovalForAll(opts *bind.TransactOpts, operator common.Address, approved bool) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "setApprovalForAll", operator, approved)
+func (_Netsepio *NetsepioTransactor) SetApprovalForAll(opts *bind.TransactOpts, operator common.Address, approved bool) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "setApprovalForAll", operator, approved)
 }
 
 // SetApprovalForAll is a paid mutator transaction binding the contract method 0xa22cb465.
 //
 // Solidity: function setApprovalForAll(address operator, bool approved) returns()
-func (_Gennetsepio *GennetsepioSession) SetApprovalForAll(operator common.Address, approved bool) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.SetApprovalForAll(&_Gennetsepio.TransactOpts, operator, approved)
+func (_Netsepio *NetsepioSession) SetApprovalForAll(operator common.Address, approved bool) (*types.Transaction, error) {
+	return _Netsepio.Contract.SetApprovalForAll(&_Netsepio.TransactOpts, operator, approved)
 }
 
 // SetApprovalForAll is a paid mutator transaction binding the contract method 0xa22cb465.
 //
 // Solidity: function setApprovalForAll(address operator, bool approved) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) SetApprovalForAll(operator common.Address, approved bool) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.SetApprovalForAll(&_Gennetsepio.TransactOpts, operator, approved)
+func (_Netsepio *NetsepioTransactorSession) SetApprovalForAll(operator common.Address, approved bool) (*types.Transaction, error) {
+	return _Netsepio.Contract.SetApprovalForAll(&_Netsepio.TransactOpts, operator, approved)
 }
 
 // TransferFrom is a paid mutator transaction binding the contract method 0x23b872dd.
 //
 // Solidity: function transferFrom(address from, address to, uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioTransactor) TransferFrom(opts *bind.TransactOpts, from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "transferFrom", from, to, tokenId)
+func (_Netsepio *NetsepioTransactor) TransferFrom(opts *bind.TransactOpts, from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "transferFrom", from, to, tokenId)
 }
 
 // TransferFrom is a paid mutator transaction binding the contract method 0x23b872dd.
 //
 // Solidity: function transferFrom(address from, address to, uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioSession) TransferFrom(from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.TransferFrom(&_Gennetsepio.TransactOpts, from, to, tokenId)
+func (_Netsepio *NetsepioSession) TransferFrom(from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.Contract.TransferFrom(&_Netsepio.TransactOpts, from, to, tokenId)
 }
 
 // TransferFrom is a paid mutator transaction binding the contract method 0x23b872dd.
 //
 // Solidity: function transferFrom(address from, address to, uint256 tokenId) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) TransferFrom(from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.TransferFrom(&_Gennetsepio.TransactOpts, from, to, tokenId)
+func (_Netsepio *NetsepioTransactorSession) TransferFrom(from common.Address, to common.Address, tokenId *big.Int) (*types.Transaction, error) {
+	return _Netsepio.Contract.TransferFrom(&_Netsepio.TransactOpts, from, to, tokenId)
 }
 
 // Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
 //
 // Solidity: function unpause() returns()
-func (_Gennetsepio *GennetsepioTransactor) Unpause(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "unpause")
+func (_Netsepio *NetsepioTransactor) Unpause(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "unpause")
 }
 
 // Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
 //
 // Solidity: function unpause() returns()
-func (_Gennetsepio *GennetsepioSession) Unpause() (*types.Transaction, error) {
-	return _Gennetsepio.Contract.Unpause(&_Gennetsepio.TransactOpts)
+func (_Netsepio *NetsepioSession) Unpause() (*types.Transaction, error) {
+	return _Netsepio.Contract.Unpause(&_Netsepio.TransactOpts)
 }
 
 // Unpause is a paid mutator transaction binding the contract method 0x3f4ba83a.
 //
 // Solidity: function unpause() returns()
-func (_Gennetsepio *GennetsepioTransactorSession) Unpause() (*types.Transaction, error) {
-	return _Gennetsepio.Contract.Unpause(&_Gennetsepio.TransactOpts)
+func (_Netsepio *NetsepioTransactorSession) Unpause() (*types.Transaction, error) {
+	return _Netsepio.Contract.Unpause(&_Netsepio.TransactOpts)
 }
 
 // UpdateReview is a paid mutator transaction binding the contract method 0x66b58c03.
 //
 // Solidity: function updateReview(uint256 tokenId, string newInfoHash) returns()
-func (_Gennetsepio *GennetsepioTransactor) UpdateReview(opts *bind.TransactOpts, tokenId *big.Int, newInfoHash string) (*types.Transaction, error) {
-	return _Gennetsepio.contract.Transact(opts, "updateReview", tokenId, newInfoHash)
+func (_Netsepio *NetsepioTransactor) UpdateReview(opts *bind.TransactOpts, tokenId *big.Int, newInfoHash string) (*types.Transaction, error) {
+	return _Netsepio.contract.Transact(opts, "updateReview", tokenId, newInfoHash)
 }
 
 // UpdateReview is a paid mutator transaction binding the contract method 0x66b58c03.
 //
 // Solidity: function updateReview(uint256 tokenId, string newInfoHash) returns()
-func (_Gennetsepio *GennetsepioSession) UpdateReview(tokenId *big.Int, newInfoHash string) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.UpdateReview(&_Gennetsepio.TransactOpts, tokenId, newInfoHash)
+func (_Netsepio *NetsepioSession) UpdateReview(tokenId *big.Int, newInfoHash string) (*types.Transaction, error) {
+	return _Netsepio.Contract.UpdateReview(&_Netsepio.TransactOpts, tokenId, newInfoHash)
 }
 
 // UpdateReview is a paid mutator transaction binding the contract method 0x66b58c03.
 //
 // Solidity: function updateReview(uint256 tokenId, string newInfoHash) returns()
-func (_Gennetsepio *GennetsepioTransactorSession) UpdateReview(tokenId *big.Int, newInfoHash string) (*types.Transaction, error) {
-	return _Gennetsepio.Contract.UpdateReview(&_Gennetsepio.TransactOpts, tokenId, newInfoHash)
+func (_Netsepio *NetsepioTransactorSession) UpdateReview(tokenId *big.Int, newInfoHash string) (*types.Transaction, error) {
+	return _Netsepio.Contract.UpdateReview(&_Netsepio.TransactOpts, tokenId, newInfoHash)
 }
 
-// GennetsepioApprovalIterator is returned from FilterApproval and is used to iterate over the raw logs and unpacked data for Approval events raised by the Gennetsepio contract.
-type GennetsepioApprovalIterator struct {
-	Event *GennetsepioApproval // Event containing the contract specifics and raw log
+// NetsepioApprovalIterator is returned from FilterApproval and is used to iterate over the raw logs and unpacked data for Approval events raised by the Netsepio contract.
+type NetsepioApprovalIterator struct {
+	Event *NetsepioApproval // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1210,7 +1210,7 @@ type GennetsepioApprovalIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioApprovalIterator) Next() bool {
+func (it *NetsepioApprovalIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1219,7 +1219,7 @@ func (it *GennetsepioApprovalIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioApproval)
+			it.Event = new(NetsepioApproval)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1234,7 +1234,7 @@ func (it *GennetsepioApprovalIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioApproval)
+		it.Event = new(NetsepioApproval)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -1250,19 +1250,19 @@ func (it *GennetsepioApprovalIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioApprovalIterator) Error() error {
+func (it *NetsepioApprovalIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioApprovalIterator) Close() error {
+func (it *NetsepioApprovalIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioApproval represents a Approval event raised by the Gennetsepio contract.
-type GennetsepioApproval struct {
+// NetsepioApproval represents a Approval event raised by the Netsepio contract.
+type NetsepioApproval struct {
 	Owner    common.Address
 	Approved common.Address
 	TokenId  *big.Int
@@ -1272,7 +1272,7 @@ type GennetsepioApproval struct {
 // FilterApproval is a free log retrieval operation binding the contract event 0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925.
 //
 // Solidity: event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId)
-func (_Gennetsepio *GennetsepioFilterer) FilterApproval(opts *bind.FilterOpts, owner []common.Address, approved []common.Address, tokenId []*big.Int) (*GennetsepioApprovalIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterApproval(opts *bind.FilterOpts, owner []common.Address, approved []common.Address, tokenId []*big.Int) (*NetsepioApprovalIterator, error) {
 
 	var ownerRule []interface{}
 	for _, ownerItem := range owner {
@@ -1287,17 +1287,17 @@ func (_Gennetsepio *GennetsepioFilterer) FilterApproval(opts *bind.FilterOpts, o
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "Approval", ownerRule, approvedRule, tokenIdRule)
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "Approval", ownerRule, approvedRule, tokenIdRule)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioApprovalIterator{contract: _Gennetsepio.contract, event: "Approval", logs: logs, sub: sub}, nil
+	return &NetsepioApprovalIterator{contract: _Netsepio.contract, event: "Approval", logs: logs, sub: sub}, nil
 }
 
 // WatchApproval is a free log subscription operation binding the contract event 0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925.
 //
 // Solidity: event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId)
-func (_Gennetsepio *GennetsepioFilterer) WatchApproval(opts *bind.WatchOpts, sink chan<- *GennetsepioApproval, owner []common.Address, approved []common.Address, tokenId []*big.Int) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchApproval(opts *bind.WatchOpts, sink chan<- *NetsepioApproval, owner []common.Address, approved []common.Address, tokenId []*big.Int) (event.Subscription, error) {
 
 	var ownerRule []interface{}
 	for _, ownerItem := range owner {
@@ -1312,7 +1312,7 @@ func (_Gennetsepio *GennetsepioFilterer) WatchApproval(opts *bind.WatchOpts, sin
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "Approval", ownerRule, approvedRule, tokenIdRule)
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "Approval", ownerRule, approvedRule, tokenIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1322,8 +1322,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchApproval(opts *bind.WatchOpts, sin
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioApproval)
-				if err := _Gennetsepio.contract.UnpackLog(event, "Approval", log); err != nil {
+				event := new(NetsepioApproval)
+				if err := _Netsepio.contract.UnpackLog(event, "Approval", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1347,18 +1347,18 @@ func (_Gennetsepio *GennetsepioFilterer) WatchApproval(opts *bind.WatchOpts, sin
 // ParseApproval is a log parse operation binding the contract event 0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925.
 //
 // Solidity: event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId)
-func (_Gennetsepio *GennetsepioFilterer) ParseApproval(log types.Log) (*GennetsepioApproval, error) {
-	event := new(GennetsepioApproval)
-	if err := _Gennetsepio.contract.UnpackLog(event, "Approval", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParseApproval(log types.Log) (*NetsepioApproval, error) {
+	event := new(NetsepioApproval)
+	if err := _Netsepio.contract.UnpackLog(event, "Approval", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// GennetsepioApprovalForAllIterator is returned from FilterApprovalForAll and is used to iterate over the raw logs and unpacked data for ApprovalForAll events raised by the Gennetsepio contract.
-type GennetsepioApprovalForAllIterator struct {
-	Event *GennetsepioApprovalForAll // Event containing the contract specifics and raw log
+// NetsepioApprovalForAllIterator is returned from FilterApprovalForAll and is used to iterate over the raw logs and unpacked data for ApprovalForAll events raised by the Netsepio contract.
+type NetsepioApprovalForAllIterator struct {
+	Event *NetsepioApprovalForAll // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1372,7 +1372,7 @@ type GennetsepioApprovalForAllIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioApprovalForAllIterator) Next() bool {
+func (it *NetsepioApprovalForAllIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1381,7 +1381,7 @@ func (it *GennetsepioApprovalForAllIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioApprovalForAll)
+			it.Event = new(NetsepioApprovalForAll)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1396,7 +1396,7 @@ func (it *GennetsepioApprovalForAllIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioApprovalForAll)
+		it.Event = new(NetsepioApprovalForAll)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -1412,19 +1412,19 @@ func (it *GennetsepioApprovalForAllIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioApprovalForAllIterator) Error() error {
+func (it *NetsepioApprovalForAllIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioApprovalForAllIterator) Close() error {
+func (it *NetsepioApprovalForAllIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioApprovalForAll represents a ApprovalForAll event raised by the Gennetsepio contract.
-type GennetsepioApprovalForAll struct {
+// NetsepioApprovalForAll represents a ApprovalForAll event raised by the Netsepio contract.
+type NetsepioApprovalForAll struct {
 	Owner    common.Address
 	Operator common.Address
 	Approved bool
@@ -1434,7 +1434,7 @@ type GennetsepioApprovalForAll struct {
 // FilterApprovalForAll is a free log retrieval operation binding the contract event 0x17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31.
 //
 // Solidity: event ApprovalForAll(address indexed owner, address indexed operator, bool approved)
-func (_Gennetsepio *GennetsepioFilterer) FilterApprovalForAll(opts *bind.FilterOpts, owner []common.Address, operator []common.Address) (*GennetsepioApprovalForAllIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterApprovalForAll(opts *bind.FilterOpts, owner []common.Address, operator []common.Address) (*NetsepioApprovalForAllIterator, error) {
 
 	var ownerRule []interface{}
 	for _, ownerItem := range owner {
@@ -1445,17 +1445,17 @@ func (_Gennetsepio *GennetsepioFilterer) FilterApprovalForAll(opts *bind.FilterO
 		operatorRule = append(operatorRule, operatorItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "ApprovalForAll", ownerRule, operatorRule)
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "ApprovalForAll", ownerRule, operatorRule)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioApprovalForAllIterator{contract: _Gennetsepio.contract, event: "ApprovalForAll", logs: logs, sub: sub}, nil
+	return &NetsepioApprovalForAllIterator{contract: _Netsepio.contract, event: "ApprovalForAll", logs: logs, sub: sub}, nil
 }
 
 // WatchApprovalForAll is a free log subscription operation binding the contract event 0x17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31.
 //
 // Solidity: event ApprovalForAll(address indexed owner, address indexed operator, bool approved)
-func (_Gennetsepio *GennetsepioFilterer) WatchApprovalForAll(opts *bind.WatchOpts, sink chan<- *GennetsepioApprovalForAll, owner []common.Address, operator []common.Address) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchApprovalForAll(opts *bind.WatchOpts, sink chan<- *NetsepioApprovalForAll, owner []common.Address, operator []common.Address) (event.Subscription, error) {
 
 	var ownerRule []interface{}
 	for _, ownerItem := range owner {
@@ -1466,7 +1466,7 @@ func (_Gennetsepio *GennetsepioFilterer) WatchApprovalForAll(opts *bind.WatchOpt
 		operatorRule = append(operatorRule, operatorItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "ApprovalForAll", ownerRule, operatorRule)
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "ApprovalForAll", ownerRule, operatorRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1476,8 +1476,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchApprovalForAll(opts *bind.WatchOpt
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioApprovalForAll)
-				if err := _Gennetsepio.contract.UnpackLog(event, "ApprovalForAll", log); err != nil {
+				event := new(NetsepioApprovalForAll)
+				if err := _Netsepio.contract.UnpackLog(event, "ApprovalForAll", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1501,18 +1501,18 @@ func (_Gennetsepio *GennetsepioFilterer) WatchApprovalForAll(opts *bind.WatchOpt
 // ParseApprovalForAll is a log parse operation binding the contract event 0x17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31.
 //
 // Solidity: event ApprovalForAll(address indexed owner, address indexed operator, bool approved)
-func (_Gennetsepio *GennetsepioFilterer) ParseApprovalForAll(log types.Log) (*GennetsepioApprovalForAll, error) {
-	event := new(GennetsepioApprovalForAll)
-	if err := _Gennetsepio.contract.UnpackLog(event, "ApprovalForAll", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParseApprovalForAll(log types.Log) (*NetsepioApprovalForAll, error) {
+	event := new(NetsepioApprovalForAll)
+	if err := _Netsepio.contract.UnpackLog(event, "ApprovalForAll", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// GennetsepioPausedIterator is returned from FilterPaused and is used to iterate over the raw logs and unpacked data for Paused events raised by the Gennetsepio contract.
-type GennetsepioPausedIterator struct {
-	Event *GennetsepioPaused // Event containing the contract specifics and raw log
+// NetsepioPausedIterator is returned from FilterPaused and is used to iterate over the raw logs and unpacked data for Paused events raised by the Netsepio contract.
+type NetsepioPausedIterator struct {
+	Event *NetsepioPaused // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1526,7 +1526,7 @@ type GennetsepioPausedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioPausedIterator) Next() bool {
+func (it *NetsepioPausedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1535,7 +1535,7 @@ func (it *GennetsepioPausedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioPaused)
+			it.Event = new(NetsepioPaused)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1550,7 +1550,7 @@ func (it *GennetsepioPausedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioPaused)
+		it.Event = new(NetsepioPaused)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -1566,19 +1566,19 @@ func (it *GennetsepioPausedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioPausedIterator) Error() error {
+func (it *NetsepioPausedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioPausedIterator) Close() error {
+func (it *NetsepioPausedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioPaused represents a Paused event raised by the Gennetsepio contract.
-type GennetsepioPaused struct {
+// NetsepioPaused represents a Paused event raised by the Netsepio contract.
+type NetsepioPaused struct {
 	Account common.Address
 	Raw     types.Log // Blockchain specific contextual infos
 }
@@ -1586,21 +1586,21 @@ type GennetsepioPaused struct {
 // FilterPaused is a free log retrieval operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
 //
 // Solidity: event Paused(address account)
-func (_Gennetsepio *GennetsepioFilterer) FilterPaused(opts *bind.FilterOpts) (*GennetsepioPausedIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterPaused(opts *bind.FilterOpts) (*NetsepioPausedIterator, error) {
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "Paused")
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "Paused")
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioPausedIterator{contract: _Gennetsepio.contract, event: "Paused", logs: logs, sub: sub}, nil
+	return &NetsepioPausedIterator{contract: _Netsepio.contract, event: "Paused", logs: logs, sub: sub}, nil
 }
 
 // WatchPaused is a free log subscription operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
 //
 // Solidity: event Paused(address account)
-func (_Gennetsepio *GennetsepioFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<- *GennetsepioPaused) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchPaused(opts *bind.WatchOpts, sink chan<- *NetsepioPaused) (event.Subscription, error) {
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "Paused")
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "Paused")
 	if err != nil {
 		return nil, err
 	}
@@ -1610,8 +1610,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchPaused(opts *bind.WatchOpts, sink 
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioPaused)
-				if err := _Gennetsepio.contract.UnpackLog(event, "Paused", log); err != nil {
+				event := new(NetsepioPaused)
+				if err := _Netsepio.contract.UnpackLog(event, "Paused", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1635,18 +1635,18 @@ func (_Gennetsepio *GennetsepioFilterer) WatchPaused(opts *bind.WatchOpts, sink 
 // ParsePaused is a log parse operation binding the contract event 0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258.
 //
 // Solidity: event Paused(address account)
-func (_Gennetsepio *GennetsepioFilterer) ParsePaused(log types.Log) (*GennetsepioPaused, error) {
-	event := new(GennetsepioPaused)
-	if err := _Gennetsepio.contract.UnpackLog(event, "Paused", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParsePaused(log types.Log) (*NetsepioPaused, error) {
+	event := new(NetsepioPaused)
+	if err := _Netsepio.contract.UnpackLog(event, "Paused", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// GennetsepioReviewCreatedIterator is returned from FilterReviewCreated and is used to iterate over the raw logs and unpacked data for ReviewCreated events raised by the Gennetsepio contract.
-type GennetsepioReviewCreatedIterator struct {
-	Event *GennetsepioReviewCreated // Event containing the contract specifics and raw log
+// NetsepioReviewCreatedIterator is returned from FilterReviewCreated and is used to iterate over the raw logs and unpacked data for ReviewCreated events raised by the Netsepio contract.
+type NetsepioReviewCreatedIterator struct {
+	Event *NetsepioReviewCreated // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1660,7 +1660,7 @@ type GennetsepioReviewCreatedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioReviewCreatedIterator) Next() bool {
+func (it *NetsepioReviewCreatedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1669,7 +1669,7 @@ func (it *GennetsepioReviewCreatedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioReviewCreated)
+			it.Event = new(NetsepioReviewCreated)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1684,7 +1684,7 @@ func (it *GennetsepioReviewCreatedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioReviewCreated)
+		it.Event = new(NetsepioReviewCreated)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -1700,19 +1700,19 @@ func (it *GennetsepioReviewCreatedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioReviewCreatedIterator) Error() error {
+func (it *NetsepioReviewCreatedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioReviewCreatedIterator) Close() error {
+func (it *NetsepioReviewCreatedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioReviewCreated represents a ReviewCreated event raised by the Gennetsepio contract.
-type GennetsepioReviewCreated struct {
+// NetsepioReviewCreated represents a ReviewCreated event raised by the Netsepio contract.
+type NetsepioReviewCreated struct {
 	Receiver      common.Address
 	TokenId       *big.Int
 	Category      string
@@ -1728,7 +1728,7 @@ type GennetsepioReviewCreated struct {
 // FilterReviewCreated is a free log retrieval operation binding the contract event 0xbf3aecac43badf8f9faced29e91bd3c9e82d11c848f43cf088e7c8d006a8a9fd.
 //
 // Solidity: event ReviewCreated(address indexed receiver, uint256 indexed tokenId, string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string metadataURI)
-func (_Gennetsepio *GennetsepioFilterer) FilterReviewCreated(opts *bind.FilterOpts, receiver []common.Address, tokenId []*big.Int) (*GennetsepioReviewCreatedIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterReviewCreated(opts *bind.FilterOpts, receiver []common.Address, tokenId []*big.Int) (*NetsepioReviewCreatedIterator, error) {
 
 	var receiverRule []interface{}
 	for _, receiverItem := range receiver {
@@ -1739,17 +1739,17 @@ func (_Gennetsepio *GennetsepioFilterer) FilterReviewCreated(opts *bind.FilterOp
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "ReviewCreated", receiverRule, tokenIdRule)
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "ReviewCreated", receiverRule, tokenIdRule)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioReviewCreatedIterator{contract: _Gennetsepio.contract, event: "ReviewCreated", logs: logs, sub: sub}, nil
+	return &NetsepioReviewCreatedIterator{contract: _Netsepio.contract, event: "ReviewCreated", logs: logs, sub: sub}, nil
 }
 
 // WatchReviewCreated is a free log subscription operation binding the contract event 0xbf3aecac43badf8f9faced29e91bd3c9e82d11c848f43cf088e7c8d006a8a9fd.
 //
 // Solidity: event ReviewCreated(address indexed receiver, uint256 indexed tokenId, string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string metadataURI)
-func (_Gennetsepio *GennetsepioFilterer) WatchReviewCreated(opts *bind.WatchOpts, sink chan<- *GennetsepioReviewCreated, receiver []common.Address, tokenId []*big.Int) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchReviewCreated(opts *bind.WatchOpts, sink chan<- *NetsepioReviewCreated, receiver []common.Address, tokenId []*big.Int) (event.Subscription, error) {
 
 	var receiverRule []interface{}
 	for _, receiverItem := range receiver {
@@ -1760,7 +1760,7 @@ func (_Gennetsepio *GennetsepioFilterer) WatchReviewCreated(opts *bind.WatchOpts
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "ReviewCreated", receiverRule, tokenIdRule)
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "ReviewCreated", receiverRule, tokenIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1770,8 +1770,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchReviewCreated(opts *bind.WatchOpts
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioReviewCreated)
-				if err := _Gennetsepio.contract.UnpackLog(event, "ReviewCreated", log); err != nil {
+				event := new(NetsepioReviewCreated)
+				if err := _Netsepio.contract.UnpackLog(event, "ReviewCreated", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1795,18 +1795,18 @@ func (_Gennetsepio *GennetsepioFilterer) WatchReviewCreated(opts *bind.WatchOpts
 // ParseReviewCreated is a log parse operation binding the contract event 0xbf3aecac43badf8f9faced29e91bd3c9e82d11c848f43cf088e7c8d006a8a9fd.
 //
 // Solidity: event ReviewCreated(address indexed receiver, uint256 indexed tokenId, string category, string domainAddress, string siteURL, string siteType, string siteTag, string siteSafety, string metadataURI)
-func (_Gennetsepio *GennetsepioFilterer) ParseReviewCreated(log types.Log) (*GennetsepioReviewCreated, error) {
-	event := new(GennetsepioReviewCreated)
-	if err := _Gennetsepio.contract.UnpackLog(event, "ReviewCreated", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParseReviewCreated(log types.Log) (*NetsepioReviewCreated, error) {
+	event := new(NetsepioReviewCreated)
+	if err := _Netsepio.contract.UnpackLog(event, "ReviewCreated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// GennetsepioReviewDeletedIterator is returned from FilterReviewDeleted and is used to iterate over the raw logs and unpacked data for ReviewDeleted events raised by the Gennetsepio contract.
-type GennetsepioReviewDeletedIterator struct {
-	Event *GennetsepioReviewDeleted // Event containing the contract specifics and raw log
+// NetsepioReviewDeletedIterator is returned from FilterReviewDeleted and is used to iterate over the raw logs and unpacked data for ReviewDeleted events raised by the Netsepio contract.
+type NetsepioReviewDeletedIterator struct {
+	Event *NetsepioReviewDeleted // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1820,7 +1820,7 @@ type GennetsepioReviewDeletedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioReviewDeletedIterator) Next() bool {
+func (it *NetsepioReviewDeletedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1829,7 +1829,7 @@ func (it *GennetsepioReviewDeletedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioReviewDeleted)
+			it.Event = new(NetsepioReviewDeleted)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1844,7 +1844,7 @@ func (it *GennetsepioReviewDeletedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioReviewDeleted)
+		it.Event = new(NetsepioReviewDeleted)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -1860,19 +1860,19 @@ func (it *GennetsepioReviewDeletedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioReviewDeletedIterator) Error() error {
+func (it *NetsepioReviewDeletedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioReviewDeletedIterator) Close() error {
+func (it *NetsepioReviewDeletedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioReviewDeleted represents a ReviewDeleted event raised by the Gennetsepio contract.
-type GennetsepioReviewDeleted struct {
+// NetsepioReviewDeleted represents a ReviewDeleted event raised by the Netsepio contract.
+type NetsepioReviewDeleted struct {
 	OwnerOrApproved common.Address
 	TokenId         *big.Int
 	Raw             types.Log // Blockchain specific contextual infos
@@ -1881,7 +1881,7 @@ type GennetsepioReviewDeleted struct {
 // FilterReviewDeleted is a free log retrieval operation binding the contract event 0xdff6a326b030476d6cc240c281b441ec1be2bb84fd9c09fdeb176ba805cbd624.
 //
 // Solidity: event ReviewDeleted(address indexed ownerOrApproved, uint256 indexed tokenId)
-func (_Gennetsepio *GennetsepioFilterer) FilterReviewDeleted(opts *bind.FilterOpts, ownerOrApproved []common.Address, tokenId []*big.Int) (*GennetsepioReviewDeletedIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterReviewDeleted(opts *bind.FilterOpts, ownerOrApproved []common.Address, tokenId []*big.Int) (*NetsepioReviewDeletedIterator, error) {
 
 	var ownerOrApprovedRule []interface{}
 	for _, ownerOrApprovedItem := range ownerOrApproved {
@@ -1892,17 +1892,17 @@ func (_Gennetsepio *GennetsepioFilterer) FilterReviewDeleted(opts *bind.FilterOp
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "ReviewDeleted", ownerOrApprovedRule, tokenIdRule)
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "ReviewDeleted", ownerOrApprovedRule, tokenIdRule)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioReviewDeletedIterator{contract: _Gennetsepio.contract, event: "ReviewDeleted", logs: logs, sub: sub}, nil
+	return &NetsepioReviewDeletedIterator{contract: _Netsepio.contract, event: "ReviewDeleted", logs: logs, sub: sub}, nil
 }
 
 // WatchReviewDeleted is a free log subscription operation binding the contract event 0xdff6a326b030476d6cc240c281b441ec1be2bb84fd9c09fdeb176ba805cbd624.
 //
 // Solidity: event ReviewDeleted(address indexed ownerOrApproved, uint256 indexed tokenId)
-func (_Gennetsepio *GennetsepioFilterer) WatchReviewDeleted(opts *bind.WatchOpts, sink chan<- *GennetsepioReviewDeleted, ownerOrApproved []common.Address, tokenId []*big.Int) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchReviewDeleted(opts *bind.WatchOpts, sink chan<- *NetsepioReviewDeleted, ownerOrApproved []common.Address, tokenId []*big.Int) (event.Subscription, error) {
 
 	var ownerOrApprovedRule []interface{}
 	for _, ownerOrApprovedItem := range ownerOrApproved {
@@ -1913,7 +1913,7 @@ func (_Gennetsepio *GennetsepioFilterer) WatchReviewDeleted(opts *bind.WatchOpts
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "ReviewDeleted", ownerOrApprovedRule, tokenIdRule)
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "ReviewDeleted", ownerOrApprovedRule, tokenIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -1923,8 +1923,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchReviewDeleted(opts *bind.WatchOpts
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioReviewDeleted)
-				if err := _Gennetsepio.contract.UnpackLog(event, "ReviewDeleted", log); err != nil {
+				event := new(NetsepioReviewDeleted)
+				if err := _Netsepio.contract.UnpackLog(event, "ReviewDeleted", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -1948,18 +1948,18 @@ func (_Gennetsepio *GennetsepioFilterer) WatchReviewDeleted(opts *bind.WatchOpts
 // ParseReviewDeleted is a log parse operation binding the contract event 0xdff6a326b030476d6cc240c281b441ec1be2bb84fd9c09fdeb176ba805cbd624.
 //
 // Solidity: event ReviewDeleted(address indexed ownerOrApproved, uint256 indexed tokenId)
-func (_Gennetsepio *GennetsepioFilterer) ParseReviewDeleted(log types.Log) (*GennetsepioReviewDeleted, error) {
-	event := new(GennetsepioReviewDeleted)
-	if err := _Gennetsepio.contract.UnpackLog(event, "ReviewDeleted", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParseReviewDeleted(log types.Log) (*NetsepioReviewDeleted, error) {
+	event := new(NetsepioReviewDeleted)
+	if err := _Netsepio.contract.UnpackLog(event, "ReviewDeleted", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// GennetsepioReviewUpdatedIterator is returned from FilterReviewUpdated and is used to iterate over the raw logs and unpacked data for ReviewUpdated events raised by the Gennetsepio contract.
-type GennetsepioReviewUpdatedIterator struct {
-	Event *GennetsepioReviewUpdated // Event containing the contract specifics and raw log
+// NetsepioReviewUpdatedIterator is returned from FilterReviewUpdated and is used to iterate over the raw logs and unpacked data for ReviewUpdated events raised by the Netsepio contract.
+type NetsepioReviewUpdatedIterator struct {
+	Event *NetsepioReviewUpdated // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -1973,7 +1973,7 @@ type GennetsepioReviewUpdatedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioReviewUpdatedIterator) Next() bool {
+func (it *NetsepioReviewUpdatedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -1982,7 +1982,7 @@ func (it *GennetsepioReviewUpdatedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioReviewUpdated)
+			it.Event = new(NetsepioReviewUpdated)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -1997,7 +1997,7 @@ func (it *GennetsepioReviewUpdatedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioReviewUpdated)
+		it.Event = new(NetsepioReviewUpdated)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2013,19 +2013,19 @@ func (it *GennetsepioReviewUpdatedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioReviewUpdatedIterator) Error() error {
+func (it *NetsepioReviewUpdatedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioReviewUpdatedIterator) Close() error {
+func (it *NetsepioReviewUpdatedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioReviewUpdated represents a ReviewUpdated event raised by the Gennetsepio contract.
-type GennetsepioReviewUpdated struct {
+// NetsepioReviewUpdated represents a ReviewUpdated event raised by the Netsepio contract.
+type NetsepioReviewUpdated struct {
 	OwnerOrApproved common.Address
 	TokenId         *big.Int
 	OldInfoHash     string
@@ -2036,7 +2036,7 @@ type GennetsepioReviewUpdated struct {
 // FilterReviewUpdated is a free log retrieval operation binding the contract event 0x0bf37ab2e7f0b608d2e483599c9fa0d6b6cb52a7380f7233287cef777d4d7920.
 //
 // Solidity: event ReviewUpdated(address indexed ownerOrApproved, uint256 indexed tokenId, string oldInfoHash, string newInfoHash)
-func (_Gennetsepio *GennetsepioFilterer) FilterReviewUpdated(opts *bind.FilterOpts, ownerOrApproved []common.Address, tokenId []*big.Int) (*GennetsepioReviewUpdatedIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterReviewUpdated(opts *bind.FilterOpts, ownerOrApproved []common.Address, tokenId []*big.Int) (*NetsepioReviewUpdatedIterator, error) {
 
 	var ownerOrApprovedRule []interface{}
 	for _, ownerOrApprovedItem := range ownerOrApproved {
@@ -2047,17 +2047,17 @@ func (_Gennetsepio *GennetsepioFilterer) FilterReviewUpdated(opts *bind.FilterOp
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "ReviewUpdated", ownerOrApprovedRule, tokenIdRule)
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "ReviewUpdated", ownerOrApprovedRule, tokenIdRule)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioReviewUpdatedIterator{contract: _Gennetsepio.contract, event: "ReviewUpdated", logs: logs, sub: sub}, nil
+	return &NetsepioReviewUpdatedIterator{contract: _Netsepio.contract, event: "ReviewUpdated", logs: logs, sub: sub}, nil
 }
 
 // WatchReviewUpdated is a free log subscription operation binding the contract event 0x0bf37ab2e7f0b608d2e483599c9fa0d6b6cb52a7380f7233287cef777d4d7920.
 //
 // Solidity: event ReviewUpdated(address indexed ownerOrApproved, uint256 indexed tokenId, string oldInfoHash, string newInfoHash)
-func (_Gennetsepio *GennetsepioFilterer) WatchReviewUpdated(opts *bind.WatchOpts, sink chan<- *GennetsepioReviewUpdated, ownerOrApproved []common.Address, tokenId []*big.Int) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchReviewUpdated(opts *bind.WatchOpts, sink chan<- *NetsepioReviewUpdated, ownerOrApproved []common.Address, tokenId []*big.Int) (event.Subscription, error) {
 
 	var ownerOrApprovedRule []interface{}
 	for _, ownerOrApprovedItem := range ownerOrApproved {
@@ -2068,7 +2068,7 @@ func (_Gennetsepio *GennetsepioFilterer) WatchReviewUpdated(opts *bind.WatchOpts
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "ReviewUpdated", ownerOrApprovedRule, tokenIdRule)
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "ReviewUpdated", ownerOrApprovedRule, tokenIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2078,8 +2078,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchReviewUpdated(opts *bind.WatchOpts
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioReviewUpdated)
-				if err := _Gennetsepio.contract.UnpackLog(event, "ReviewUpdated", log); err != nil {
+				event := new(NetsepioReviewUpdated)
+				if err := _Netsepio.contract.UnpackLog(event, "ReviewUpdated", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2103,18 +2103,18 @@ func (_Gennetsepio *GennetsepioFilterer) WatchReviewUpdated(opts *bind.WatchOpts
 // ParseReviewUpdated is a log parse operation binding the contract event 0x0bf37ab2e7f0b608d2e483599c9fa0d6b6cb52a7380f7233287cef777d4d7920.
 //
 // Solidity: event ReviewUpdated(address indexed ownerOrApproved, uint256 indexed tokenId, string oldInfoHash, string newInfoHash)
-func (_Gennetsepio *GennetsepioFilterer) ParseReviewUpdated(log types.Log) (*GennetsepioReviewUpdated, error) {
-	event := new(GennetsepioReviewUpdated)
-	if err := _Gennetsepio.contract.UnpackLog(event, "ReviewUpdated", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParseReviewUpdated(log types.Log) (*NetsepioReviewUpdated, error) {
+	event := new(NetsepioReviewUpdated)
+	if err := _Netsepio.contract.UnpackLog(event, "ReviewUpdated", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// GennetsepioRoleAdminChangedIterator is returned from FilterRoleAdminChanged and is used to iterate over the raw logs and unpacked data for RoleAdminChanged events raised by the Gennetsepio contract.
-type GennetsepioRoleAdminChangedIterator struct {
-	Event *GennetsepioRoleAdminChanged // Event containing the contract specifics and raw log
+// NetsepioRoleAdminChangedIterator is returned from FilterRoleAdminChanged and is used to iterate over the raw logs and unpacked data for RoleAdminChanged events raised by the Netsepio contract.
+type NetsepioRoleAdminChangedIterator struct {
+	Event *NetsepioRoleAdminChanged // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2128,7 +2128,7 @@ type GennetsepioRoleAdminChangedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioRoleAdminChangedIterator) Next() bool {
+func (it *NetsepioRoleAdminChangedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2137,7 +2137,7 @@ func (it *GennetsepioRoleAdminChangedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioRoleAdminChanged)
+			it.Event = new(NetsepioRoleAdminChanged)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2152,7 +2152,7 @@ func (it *GennetsepioRoleAdminChangedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioRoleAdminChanged)
+		it.Event = new(NetsepioRoleAdminChanged)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2168,19 +2168,19 @@ func (it *GennetsepioRoleAdminChangedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioRoleAdminChangedIterator) Error() error {
+func (it *NetsepioRoleAdminChangedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioRoleAdminChangedIterator) Close() error {
+func (it *NetsepioRoleAdminChangedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioRoleAdminChanged represents a RoleAdminChanged event raised by the Gennetsepio contract.
-type GennetsepioRoleAdminChanged struct {
+// NetsepioRoleAdminChanged represents a RoleAdminChanged event raised by the Netsepio contract.
+type NetsepioRoleAdminChanged struct {
 	Role              [32]byte
 	PreviousAdminRole [32]byte
 	NewAdminRole      [32]byte
@@ -2190,7 +2190,7 @@ type GennetsepioRoleAdminChanged struct {
 // FilterRoleAdminChanged is a free log retrieval operation binding the contract event 0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff.
 //
 // Solidity: event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)
-func (_Gennetsepio *GennetsepioFilterer) FilterRoleAdminChanged(opts *bind.FilterOpts, role [][32]byte, previousAdminRole [][32]byte, newAdminRole [][32]byte) (*GennetsepioRoleAdminChangedIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterRoleAdminChanged(opts *bind.FilterOpts, role [][32]byte, previousAdminRole [][32]byte, newAdminRole [][32]byte) (*NetsepioRoleAdminChangedIterator, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -2205,17 +2205,17 @@ func (_Gennetsepio *GennetsepioFilterer) FilterRoleAdminChanged(opts *bind.Filte
 		newAdminRoleRule = append(newAdminRoleRule, newAdminRoleItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "RoleAdminChanged", roleRule, previousAdminRoleRule, newAdminRoleRule)
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "RoleAdminChanged", roleRule, previousAdminRoleRule, newAdminRoleRule)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioRoleAdminChangedIterator{contract: _Gennetsepio.contract, event: "RoleAdminChanged", logs: logs, sub: sub}, nil
+	return &NetsepioRoleAdminChangedIterator{contract: _Netsepio.contract, event: "RoleAdminChanged", logs: logs, sub: sub}, nil
 }
 
 // WatchRoleAdminChanged is a free log subscription operation binding the contract event 0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff.
 //
 // Solidity: event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)
-func (_Gennetsepio *GennetsepioFilterer) WatchRoleAdminChanged(opts *bind.WatchOpts, sink chan<- *GennetsepioRoleAdminChanged, role [][32]byte, previousAdminRole [][32]byte, newAdminRole [][32]byte) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchRoleAdminChanged(opts *bind.WatchOpts, sink chan<- *NetsepioRoleAdminChanged, role [][32]byte, previousAdminRole [][32]byte, newAdminRole [][32]byte) (event.Subscription, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -2230,7 +2230,7 @@ func (_Gennetsepio *GennetsepioFilterer) WatchRoleAdminChanged(opts *bind.WatchO
 		newAdminRoleRule = append(newAdminRoleRule, newAdminRoleItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "RoleAdminChanged", roleRule, previousAdminRoleRule, newAdminRoleRule)
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "RoleAdminChanged", roleRule, previousAdminRoleRule, newAdminRoleRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2240,8 +2240,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchRoleAdminChanged(opts *bind.WatchO
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioRoleAdminChanged)
-				if err := _Gennetsepio.contract.UnpackLog(event, "RoleAdminChanged", log); err != nil {
+				event := new(NetsepioRoleAdminChanged)
+				if err := _Netsepio.contract.UnpackLog(event, "RoleAdminChanged", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2265,18 +2265,18 @@ func (_Gennetsepio *GennetsepioFilterer) WatchRoleAdminChanged(opts *bind.WatchO
 // ParseRoleAdminChanged is a log parse operation binding the contract event 0xbd79b86ffe0ab8e8776151514217cd7cacd52c909f66475c3af44e129f0b00ff.
 //
 // Solidity: event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)
-func (_Gennetsepio *GennetsepioFilterer) ParseRoleAdminChanged(log types.Log) (*GennetsepioRoleAdminChanged, error) {
-	event := new(GennetsepioRoleAdminChanged)
-	if err := _Gennetsepio.contract.UnpackLog(event, "RoleAdminChanged", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParseRoleAdminChanged(log types.Log) (*NetsepioRoleAdminChanged, error) {
+	event := new(NetsepioRoleAdminChanged)
+	if err := _Netsepio.contract.UnpackLog(event, "RoleAdminChanged", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// GennetsepioRoleGrantedIterator is returned from FilterRoleGranted and is used to iterate over the raw logs and unpacked data for RoleGranted events raised by the Gennetsepio contract.
-type GennetsepioRoleGrantedIterator struct {
-	Event *GennetsepioRoleGranted // Event containing the contract specifics and raw log
+// NetsepioRoleGrantedIterator is returned from FilterRoleGranted and is used to iterate over the raw logs and unpacked data for RoleGranted events raised by the Netsepio contract.
+type NetsepioRoleGrantedIterator struct {
+	Event *NetsepioRoleGranted // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2290,7 +2290,7 @@ type GennetsepioRoleGrantedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioRoleGrantedIterator) Next() bool {
+func (it *NetsepioRoleGrantedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2299,7 +2299,7 @@ func (it *GennetsepioRoleGrantedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioRoleGranted)
+			it.Event = new(NetsepioRoleGranted)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2314,7 +2314,7 @@ func (it *GennetsepioRoleGrantedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioRoleGranted)
+		it.Event = new(NetsepioRoleGranted)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2330,19 +2330,19 @@ func (it *GennetsepioRoleGrantedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioRoleGrantedIterator) Error() error {
+func (it *NetsepioRoleGrantedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioRoleGrantedIterator) Close() error {
+func (it *NetsepioRoleGrantedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioRoleGranted represents a RoleGranted event raised by the Gennetsepio contract.
-type GennetsepioRoleGranted struct {
+// NetsepioRoleGranted represents a RoleGranted event raised by the Netsepio contract.
+type NetsepioRoleGranted struct {
 	Role    [32]byte
 	Account common.Address
 	Sender  common.Address
@@ -2352,7 +2352,7 @@ type GennetsepioRoleGranted struct {
 // FilterRoleGranted is a free log retrieval operation binding the contract event 0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d.
 //
 // Solidity: event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Gennetsepio *GennetsepioFilterer) FilterRoleGranted(opts *bind.FilterOpts, role [][32]byte, account []common.Address, sender []common.Address) (*GennetsepioRoleGrantedIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterRoleGranted(opts *bind.FilterOpts, role [][32]byte, account []common.Address, sender []common.Address) (*NetsepioRoleGrantedIterator, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -2367,17 +2367,17 @@ func (_Gennetsepio *GennetsepioFilterer) FilterRoleGranted(opts *bind.FilterOpts
 		senderRule = append(senderRule, senderItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "RoleGranted", roleRule, accountRule, senderRule)
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "RoleGranted", roleRule, accountRule, senderRule)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioRoleGrantedIterator{contract: _Gennetsepio.contract, event: "RoleGranted", logs: logs, sub: sub}, nil
+	return &NetsepioRoleGrantedIterator{contract: _Netsepio.contract, event: "RoleGranted", logs: logs, sub: sub}, nil
 }
 
 // WatchRoleGranted is a free log subscription operation binding the contract event 0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d.
 //
 // Solidity: event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Gennetsepio *GennetsepioFilterer) WatchRoleGranted(opts *bind.WatchOpts, sink chan<- *GennetsepioRoleGranted, role [][32]byte, account []common.Address, sender []common.Address) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchRoleGranted(opts *bind.WatchOpts, sink chan<- *NetsepioRoleGranted, role [][32]byte, account []common.Address, sender []common.Address) (event.Subscription, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -2392,7 +2392,7 @@ func (_Gennetsepio *GennetsepioFilterer) WatchRoleGranted(opts *bind.WatchOpts, 
 		senderRule = append(senderRule, senderItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "RoleGranted", roleRule, accountRule, senderRule)
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "RoleGranted", roleRule, accountRule, senderRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2402,8 +2402,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchRoleGranted(opts *bind.WatchOpts, 
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioRoleGranted)
-				if err := _Gennetsepio.contract.UnpackLog(event, "RoleGranted", log); err != nil {
+				event := new(NetsepioRoleGranted)
+				if err := _Netsepio.contract.UnpackLog(event, "RoleGranted", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2427,18 +2427,18 @@ func (_Gennetsepio *GennetsepioFilterer) WatchRoleGranted(opts *bind.WatchOpts, 
 // ParseRoleGranted is a log parse operation binding the contract event 0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d.
 //
 // Solidity: event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Gennetsepio *GennetsepioFilterer) ParseRoleGranted(log types.Log) (*GennetsepioRoleGranted, error) {
-	event := new(GennetsepioRoleGranted)
-	if err := _Gennetsepio.contract.UnpackLog(event, "RoleGranted", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParseRoleGranted(log types.Log) (*NetsepioRoleGranted, error) {
+	event := new(NetsepioRoleGranted)
+	if err := _Netsepio.contract.UnpackLog(event, "RoleGranted", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// GennetsepioRoleRevokedIterator is returned from FilterRoleRevoked and is used to iterate over the raw logs and unpacked data for RoleRevoked events raised by the Gennetsepio contract.
-type GennetsepioRoleRevokedIterator struct {
-	Event *GennetsepioRoleRevoked // Event containing the contract specifics and raw log
+// NetsepioRoleRevokedIterator is returned from FilterRoleRevoked and is used to iterate over the raw logs and unpacked data for RoleRevoked events raised by the Netsepio contract.
+type NetsepioRoleRevokedIterator struct {
+	Event *NetsepioRoleRevoked // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2452,7 +2452,7 @@ type GennetsepioRoleRevokedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioRoleRevokedIterator) Next() bool {
+func (it *NetsepioRoleRevokedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2461,7 +2461,7 @@ func (it *GennetsepioRoleRevokedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioRoleRevoked)
+			it.Event = new(NetsepioRoleRevoked)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2476,7 +2476,7 @@ func (it *GennetsepioRoleRevokedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioRoleRevoked)
+		it.Event = new(NetsepioRoleRevoked)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2492,19 +2492,19 @@ func (it *GennetsepioRoleRevokedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioRoleRevokedIterator) Error() error {
+func (it *NetsepioRoleRevokedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioRoleRevokedIterator) Close() error {
+func (it *NetsepioRoleRevokedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioRoleRevoked represents a RoleRevoked event raised by the Gennetsepio contract.
-type GennetsepioRoleRevoked struct {
+// NetsepioRoleRevoked represents a RoleRevoked event raised by the Netsepio contract.
+type NetsepioRoleRevoked struct {
 	Role    [32]byte
 	Account common.Address
 	Sender  common.Address
@@ -2514,7 +2514,7 @@ type GennetsepioRoleRevoked struct {
 // FilterRoleRevoked is a free log retrieval operation binding the contract event 0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b.
 //
 // Solidity: event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Gennetsepio *GennetsepioFilterer) FilterRoleRevoked(opts *bind.FilterOpts, role [][32]byte, account []common.Address, sender []common.Address) (*GennetsepioRoleRevokedIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterRoleRevoked(opts *bind.FilterOpts, role [][32]byte, account []common.Address, sender []common.Address) (*NetsepioRoleRevokedIterator, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -2529,17 +2529,17 @@ func (_Gennetsepio *GennetsepioFilterer) FilterRoleRevoked(opts *bind.FilterOpts
 		senderRule = append(senderRule, senderItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "RoleRevoked", roleRule, accountRule, senderRule)
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "RoleRevoked", roleRule, accountRule, senderRule)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioRoleRevokedIterator{contract: _Gennetsepio.contract, event: "RoleRevoked", logs: logs, sub: sub}, nil
+	return &NetsepioRoleRevokedIterator{contract: _Netsepio.contract, event: "RoleRevoked", logs: logs, sub: sub}, nil
 }
 
 // WatchRoleRevoked is a free log subscription operation binding the contract event 0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b.
 //
 // Solidity: event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Gennetsepio *GennetsepioFilterer) WatchRoleRevoked(opts *bind.WatchOpts, sink chan<- *GennetsepioRoleRevoked, role [][32]byte, account []common.Address, sender []common.Address) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchRoleRevoked(opts *bind.WatchOpts, sink chan<- *NetsepioRoleRevoked, role [][32]byte, account []common.Address, sender []common.Address) (event.Subscription, error) {
 
 	var roleRule []interface{}
 	for _, roleItem := range role {
@@ -2554,7 +2554,7 @@ func (_Gennetsepio *GennetsepioFilterer) WatchRoleRevoked(opts *bind.WatchOpts, 
 		senderRule = append(senderRule, senderItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "RoleRevoked", roleRule, accountRule, senderRule)
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "RoleRevoked", roleRule, accountRule, senderRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2564,8 +2564,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchRoleRevoked(opts *bind.WatchOpts, 
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioRoleRevoked)
-				if err := _Gennetsepio.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
+				event := new(NetsepioRoleRevoked)
+				if err := _Netsepio.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2589,18 +2589,18 @@ func (_Gennetsepio *GennetsepioFilterer) WatchRoleRevoked(opts *bind.WatchOpts, 
 // ParseRoleRevoked is a log parse operation binding the contract event 0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b.
 //
 // Solidity: event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)
-func (_Gennetsepio *GennetsepioFilterer) ParseRoleRevoked(log types.Log) (*GennetsepioRoleRevoked, error) {
-	event := new(GennetsepioRoleRevoked)
-	if err := _Gennetsepio.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParseRoleRevoked(log types.Log) (*NetsepioRoleRevoked, error) {
+	event := new(NetsepioRoleRevoked)
+	if err := _Netsepio.contract.UnpackLog(event, "RoleRevoked", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// GennetsepioTransferIterator is returned from FilterTransfer and is used to iterate over the raw logs and unpacked data for Transfer events raised by the Gennetsepio contract.
-type GennetsepioTransferIterator struct {
-	Event *GennetsepioTransfer // Event containing the contract specifics and raw log
+// NetsepioTransferIterator is returned from FilterTransfer and is used to iterate over the raw logs and unpacked data for Transfer events raised by the Netsepio contract.
+type NetsepioTransferIterator struct {
+	Event *NetsepioTransfer // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2614,7 +2614,7 @@ type GennetsepioTransferIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioTransferIterator) Next() bool {
+func (it *NetsepioTransferIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2623,7 +2623,7 @@ func (it *GennetsepioTransferIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioTransfer)
+			it.Event = new(NetsepioTransfer)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2638,7 +2638,7 @@ func (it *GennetsepioTransferIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioTransfer)
+		it.Event = new(NetsepioTransfer)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2654,19 +2654,19 @@ func (it *GennetsepioTransferIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioTransferIterator) Error() error {
+func (it *NetsepioTransferIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioTransferIterator) Close() error {
+func (it *NetsepioTransferIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioTransfer represents a Transfer event raised by the Gennetsepio contract.
-type GennetsepioTransfer struct {
+// NetsepioTransfer represents a Transfer event raised by the Netsepio contract.
+type NetsepioTransfer struct {
 	From    common.Address
 	To      common.Address
 	TokenId *big.Int
@@ -2676,7 +2676,7 @@ type GennetsepioTransfer struct {
 // FilterTransfer is a free log retrieval operation binding the contract event 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef.
 //
 // Solidity: event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)
-func (_Gennetsepio *GennetsepioFilterer) FilterTransfer(opts *bind.FilterOpts, from []common.Address, to []common.Address, tokenId []*big.Int) (*GennetsepioTransferIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterTransfer(opts *bind.FilterOpts, from []common.Address, to []common.Address, tokenId []*big.Int) (*NetsepioTransferIterator, error) {
 
 	var fromRule []interface{}
 	for _, fromItem := range from {
@@ -2691,17 +2691,17 @@ func (_Gennetsepio *GennetsepioFilterer) FilterTransfer(opts *bind.FilterOpts, f
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "Transfer", fromRule, toRule, tokenIdRule)
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "Transfer", fromRule, toRule, tokenIdRule)
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioTransferIterator{contract: _Gennetsepio.contract, event: "Transfer", logs: logs, sub: sub}, nil
+	return &NetsepioTransferIterator{contract: _Netsepio.contract, event: "Transfer", logs: logs, sub: sub}, nil
 }
 
 // WatchTransfer is a free log subscription operation binding the contract event 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef.
 //
 // Solidity: event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)
-func (_Gennetsepio *GennetsepioFilterer) WatchTransfer(opts *bind.WatchOpts, sink chan<- *GennetsepioTransfer, from []common.Address, to []common.Address, tokenId []*big.Int) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchTransfer(opts *bind.WatchOpts, sink chan<- *NetsepioTransfer, from []common.Address, to []common.Address, tokenId []*big.Int) (event.Subscription, error) {
 
 	var fromRule []interface{}
 	for _, fromItem := range from {
@@ -2716,7 +2716,7 @@ func (_Gennetsepio *GennetsepioFilterer) WatchTransfer(opts *bind.WatchOpts, sin
 		tokenIdRule = append(tokenIdRule, tokenIdItem)
 	}
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "Transfer", fromRule, toRule, tokenIdRule)
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "Transfer", fromRule, toRule, tokenIdRule)
 	if err != nil {
 		return nil, err
 	}
@@ -2726,8 +2726,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchTransfer(opts *bind.WatchOpts, sin
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioTransfer)
-				if err := _Gennetsepio.contract.UnpackLog(event, "Transfer", log); err != nil {
+				event := new(NetsepioTransfer)
+				if err := _Netsepio.contract.UnpackLog(event, "Transfer", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2751,18 +2751,18 @@ func (_Gennetsepio *GennetsepioFilterer) WatchTransfer(opts *bind.WatchOpts, sin
 // ParseTransfer is a log parse operation binding the contract event 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef.
 //
 // Solidity: event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)
-func (_Gennetsepio *GennetsepioFilterer) ParseTransfer(log types.Log) (*GennetsepioTransfer, error) {
-	event := new(GennetsepioTransfer)
-	if err := _Gennetsepio.contract.UnpackLog(event, "Transfer", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParseTransfer(log types.Log) (*NetsepioTransfer, error) {
+	event := new(NetsepioTransfer)
+	if err := _Netsepio.contract.UnpackLog(event, "Transfer", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// GennetsepioUnpausedIterator is returned from FilterUnpaused and is used to iterate over the raw logs and unpacked data for Unpaused events raised by the Gennetsepio contract.
-type GennetsepioUnpausedIterator struct {
-	Event *GennetsepioUnpaused // Event containing the contract specifics and raw log
+// NetsepioUnpausedIterator is returned from FilterUnpaused and is used to iterate over the raw logs and unpacked data for Unpaused events raised by the Netsepio contract.
+type NetsepioUnpausedIterator struct {
+	Event *NetsepioUnpaused // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -2776,7 +2776,7 @@ type GennetsepioUnpausedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *GennetsepioUnpausedIterator) Next() bool {
+func (it *NetsepioUnpausedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -2785,7 +2785,7 @@ func (it *GennetsepioUnpausedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(GennetsepioUnpaused)
+			it.Event = new(NetsepioUnpaused)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -2800,7 +2800,7 @@ func (it *GennetsepioUnpausedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(GennetsepioUnpaused)
+		it.Event = new(NetsepioUnpaused)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -2816,19 +2816,19 @@ func (it *GennetsepioUnpausedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *GennetsepioUnpausedIterator) Error() error {
+func (it *NetsepioUnpausedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *GennetsepioUnpausedIterator) Close() error {
+func (it *NetsepioUnpausedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// GennetsepioUnpaused represents a Unpaused event raised by the Gennetsepio contract.
-type GennetsepioUnpaused struct {
+// NetsepioUnpaused represents a Unpaused event raised by the Netsepio contract.
+type NetsepioUnpaused struct {
 	Account common.Address
 	Raw     types.Log // Blockchain specific contextual infos
 }
@@ -2836,21 +2836,21 @@ type GennetsepioUnpaused struct {
 // FilterUnpaused is a free log retrieval operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
 //
 // Solidity: event Unpaused(address account)
-func (_Gennetsepio *GennetsepioFilterer) FilterUnpaused(opts *bind.FilterOpts) (*GennetsepioUnpausedIterator, error) {
+func (_Netsepio *NetsepioFilterer) FilterUnpaused(opts *bind.FilterOpts) (*NetsepioUnpausedIterator, error) {
 
-	logs, sub, err := _Gennetsepio.contract.FilterLogs(opts, "Unpaused")
+	logs, sub, err := _Netsepio.contract.FilterLogs(opts, "Unpaused")
 	if err != nil {
 		return nil, err
 	}
-	return &GennetsepioUnpausedIterator{contract: _Gennetsepio.contract, event: "Unpaused", logs: logs, sub: sub}, nil
+	return &NetsepioUnpausedIterator{contract: _Netsepio.contract, event: "Unpaused", logs: logs, sub: sub}, nil
 }
 
 // WatchUnpaused is a free log subscription operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
 //
 // Solidity: event Unpaused(address account)
-func (_Gennetsepio *GennetsepioFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan<- *GennetsepioUnpaused) (event.Subscription, error) {
+func (_Netsepio *NetsepioFilterer) WatchUnpaused(opts *bind.WatchOpts, sink chan<- *NetsepioUnpaused) (event.Subscription, error) {
 
-	logs, sub, err := _Gennetsepio.contract.WatchLogs(opts, "Unpaused")
+	logs, sub, err := _Netsepio.contract.WatchLogs(opts, "Unpaused")
 	if err != nil {
 		return nil, err
 	}
@@ -2860,8 +2860,8 @@ func (_Gennetsepio *GennetsepioFilterer) WatchUnpaused(opts *bind.WatchOpts, sin
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(GennetsepioUnpaused)
-				if err := _Gennetsepio.contract.UnpackLog(event, "Unpaused", log); err != nil {
+				event := new(NetsepioUnpaused)
+				if err := _Netsepio.contract.UnpackLog(event, "Unpaused", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -2885,9 +2885,9 @@ func (_Gennetsepio *GennetsepioFilterer) WatchUnpaused(opts *bind.WatchOpts, sin
 // ParseUnpaused is a log parse operation binding the contract event 0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa.
 //
 // Solidity: event Unpaused(address account)
-func (_Gennetsepio *GennetsepioFilterer) ParseUnpaused(log types.Log) (*GennetsepioUnpaused, error) {
-	event := new(GennetsepioUnpaused)
-	if err := _Gennetsepio.contract.UnpackLog(event, "Unpaused", log); err != nil {
+func (_Netsepio *NetsepioFilterer) ParseUnpaused(log types.Log) (*NetsepioUnpaused, error) {
+	event := new(NetsepioUnpaused)
+	if err := _Netsepio.contract.UnpackLog(event, "Unpaused", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
