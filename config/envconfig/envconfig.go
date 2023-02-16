@@ -13,7 +13,7 @@ type config struct {
 	PASETO_EXPIRATION         time.Duration `env:"PASETO_EXPIRATION,required"`
 	APP_PORT                  int           `env:"APP_PORT,required"`
 	AUTH_EULA                 string        `env:"AUTH_EULA,required"`
-	VOTER_EULA                string        `env:"VOTER_EULA,required"`
+	REVIEWER_EULA             string        `env:"REVIEWER_EULA,required"`
 	APP_NAME                  string        `env:"APP_NAME,required"`
 	GIN_MODE                  string        `env:"GIN_MODE,required"`
 	DB_HOST                   string        `env:"DB_HOST,required"`

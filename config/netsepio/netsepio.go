@@ -14,7 +14,7 @@ var (
 )
 
 const (
-	VOTER_ROLE    tRole = iota
+	REVIEWER_ROLE    tRole = iota
 	ADMIN_ROLE    tRole = iota
 	OPERATOR_ROLE tRole = iota
 )
@@ -43,11 +43,11 @@ func InitRolesId() {
 	if err != nil {
 		logwrapper.Fatalf("failed to get instance for %v , error: %v", "NETSEPIO", err.Error())
 	}
-	voterRoleId, err := instance.NETSEPIOVOTERROLE(nil)
+	voterRoleId, err := instance.NETSEPIOREVIEWERROLE(nil)
 	if err != nil {
-		logwrapper.Fatalf("Failed to get %v, error: %v", "NETSEPIOVOTERROLE", err.Error())
+		logwrapper.Fatalf("Failed to get %v, error: %v", "NETSEPIOREVIEWERROLE", err.Error())
 	}
-	roles[VOTER_ROLE] = voterRoleId
+	roles[REVIEWER_ROLE] = voterRoleId
 	adminRoleId, err := instance.NETSEPIOADMINROLE(nil)
 	if err != nil {
 		logwrapper.Fatalf("Failed to get %v, error: %v", "NETSEPIOADMINROLE", err.Error())

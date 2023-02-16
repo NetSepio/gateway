@@ -64,9 +64,9 @@ func Test_PostClaimRole(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get instance for %v , error: %v", "NETSEPIO", err.Error())
 	}
-	voterRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
+	voterRole, err := netsepio.GetRole(netsepio.REVIEWER_ROLE)
 	if err != nil {
-		t.Fatalf("failed to get role id for %v , error: %v", "VOTER ROLE", err.Error())
+		t.Fatalf("failed to get role id for %v , error: %v", "REVIEWER ROLE", err.Error())
 	}
 	addr := common.HexToAddress(testWallet.WalletAddress)
 	roleGrantedChannel := make(chan *netSepioContract.NetsepioRoleGranted, 10)
@@ -108,9 +108,9 @@ func failAfter(t *testing.T, success *bool, duration time.Duration, ch chan *net
 	}
 }
 func requestRole(t *testing.T, headers string, walletAddres string) roleid.GetRoleIdPayload {
-	voterRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
+	voterRole, err := netsepio.GetRole(netsepio.REVIEWER_ROLE)
 	if err != nil {
-		t.Fatalf("failed to get role id for %v , error: %v", "VOTER ROLE", err.Error())
+		t.Fatalf("failed to get role id for %v , error: %v", "REVIEWER ROLE", err.Error())
 	}
 
 	url := "/api/v1.0/roleId/" + hexutil.Encode(voterRole[:])

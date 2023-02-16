@@ -10,7 +10,7 @@ import (
 
 func main() {
 	app.Init()
-	logwrapper.Log.Info("Starting app")
+	logwrapper.Log.Info("Starting NetSepio")
 	addr := fmt.Sprintf(":%d", envconfig.EnvVars.APP_PORT)
 	err := app.GinApp.Run(addr)
 	if err != nil {

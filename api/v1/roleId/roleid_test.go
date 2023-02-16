@@ -24,9 +24,9 @@ func Test_GetRoleId(t *testing.T) {
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	testWallet := testingcommon.GenerateWallet()
 	headers := testingcommon.PrepareAndGetAuthHeader(t, testWallet.WalletAddress)
-	voterRole, err := netsepio.GetRole(netsepio.VOTER_ROLE)
+	voterRole, err := netsepio.GetRole(netsepio.REVIEWER_ROLE)
 	if err != nil {
-		t.Fatalf("failed to get role id for %v , error: %v", "VOTER ROLE", err.Error())
+		t.Fatalf("failed to get role id for %v , error: %v", "REVIEWER ROLE", err.Error())
 	}
 
 	url := "/api/v1.0/roleId/%v"
