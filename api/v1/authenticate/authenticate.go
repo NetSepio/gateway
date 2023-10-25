@@ -1,6 +1,7 @@
 package authenticate
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -54,8 +55,9 @@ func authenticate(c *gin.Context) {
 		return
 	}
 	userAuthEULA := envconfig.EnvVars.AUTH_EULA
-	message := userAuthEULA + req.FlowId
-	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
+	message := fmt.Sprintf("APTOS\nmessage: %v\nnonce: %v", userAuthEULA, req.FlowId)
+
+	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message, req.PubKey)
 
 	if err == cryptosign.ErrFlowIdNotFound {
 		httphelper.ErrResponse(c, http.StatusNotFound, "Flow Id not found")

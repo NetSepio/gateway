@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -15,9 +14,9 @@ import (
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	testingcommmon "github.com/NetSepio/gateway/util/testingcommon"
+	"golang.org/x/crypto/nacl/sign"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
@@ -34,8 +33,9 @@ func Test_PostAuthenticate(t *testing.T) {
 	t.Run("Should return 200 with correct wallet address", func(t *testing.T) {
 		testWallet := testingcommmon.GenerateWallet()
 		eula, flowId := callFlowIdApi(testWallet.WalletAddress, t)
+		logwrapper.Infof("priv %v", testWallet.PrivateKey)
 		signature := getSignature(eula, flowId, testWallet.PrivateKey)
-		body := AuthenticateRequest{Signature: signature, FlowId: flowId}
+		body := AuthenticateRequest{Signature: signature, FlowId: flowId, PubKey: testWallet.PubKey}
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
 			t.Fatal(err)
@@ -57,9 +57,9 @@ func Test_PostAuthenticate(t *testing.T) {
 		testWallet := testingcommmon.GenerateWallet()
 		eula, flowId := callFlowIdApi(testWallet.WalletAddress, t)
 		// Different private key will result in different wallet address
-		differentPrivatekey := "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-		signature := getSignature(eula, flowId, differentPrivatekey)
-		body := AuthenticateRequest{Signature: signature, FlowId: flowId}
+		diffWallet := testingcommmon.GenerateWallet()
+		signature := getSignature(eula, flowId, diffWallet.PrivateKey)
+		body := AuthenticateRequest{Signature: signature, FlowId: flowId, PubKey: diffWallet.PubKey}
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
 			t.Fatal(err)
@@ -114,23 +114,13 @@ func callFlowIdApi(walletAddress string, t *testing.T) (eula string, flowidStrin
 }
 
 func getSignature(eula string, flowId string, hexPrivateKey string) string {
-	message := eula + flowId
-	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)
-
-	privateKey, err := crypto.HexToECDSA(hexPrivateKey)
-	if err != nil {
-		log.Fatal("HexToECDSA failed ", err)
-	}
-
+	message := fmt.Sprintf("APTOS\nmessage: %v\nnonce: %v", eula, flowId)
+	priv := hexutil.MustDecode("0x" + hexPrivateKey)
+	logwrapper.Infof("priv key len %v", len(priv))
 	// keccak256 hash of the data
-	dataBytes := []byte(newMsg)
-	hashData := crypto.Keccak256Hash(dataBytes)
-
-	signatureBytes, err := crypto.Sign(hashData.Bytes(), privateKey)
-	if err != nil {
-		log.Fatal("len", err)
-	}
-
+	dataBytes := []byte(message)
+	// sig := ed25519.Sign(ed25519.PrivateKey(priv), dataBytes)
+	signatureBytes := sign.Sign(nil, dataBytes, (*[64]byte)(priv))[:sign.Overhead]
 	signature := hexutil.Encode(signatureBytes)
 
 	return signature

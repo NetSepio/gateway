@@ -1,6 +1,7 @@
 package claimrole
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
@@ -48,8 +49,8 @@ func postClaimRole(c *gin.Context) {
 		httphelper.NewInternalServerError(c, "failed to get role by flowid, error %v", err.Error())
 		return
 	}
-	message := role.Eula + req.FlowId
-	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
+	message := fmt.Sprintf("APTOS\nmessage: %v\nnonce: %v", role.Eula, req.FlowId)
+	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message, req.PubKey)
 
 	if err == cryptosign.ErrFlowIdNotFound {
 		httphelper.ErrResponse(c, http.StatusNotFound, err.Error())

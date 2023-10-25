@@ -3,6 +3,7 @@ package testingcommon
 import (
 	"bytes"
 	"encoding/json"
+	"log"
 	"testing"
 
 	"github.com/NetSepio/gateway/api/types"
@@ -11,14 +12,11 @@ import (
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
-
-	"crypto/ecdsa"
-	"log"
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	"golang.org/x/crypto/nacl/sign"
+	"golang.org/x/crypto/sha3"
 
 	"github.com/gin-gonic/gin"
-
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/crypto"
 )
 
 func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
@@ -50,24 +48,22 @@ func CreateTestUser(t *testing.T, walletAddress string) {
 }
 
 func GenerateWallet() *TestWallet {
-	privateKey, err := crypto.GenerateKey()
+	publicKey, privateKeyBytes, err := sign.GenerateKey(nil)
 	if err != nil {
 		log.Fatal(err)
 	}
+	sha3_i := sha3.New256()
 
-	privateKeyBytes := crypto.FromECDSA(privateKey)
-
-	publicKey := privateKey.Public()
-	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
-	if !ok {
-		log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
-	}
-
-	address := crypto.PubkeyToAddress(*publicKeyECDSA).Hex()
-	privateKeyHex := hexutil.Encode(privateKeyBytes)
+	sha3_i.Write(publicKey[:])
+	sha3_i.Write([]byte{0})
+	hash := sha3_i.Sum(nil)
+	addr := hexutil.Encode(hash)
+	privateKeyHex := hexutil.Encode(privateKeyBytes[:])
+	pubKeyHex := hexutil.Encode(publicKey[:])
 	testWallet := TestWallet{
 		PrivateKey:    privateKeyHex[2:],
-		WalletAddress: address,
+		PubKey:        pubKeyHex,
+		WalletAddress: addr,
 	}
 	return &testWallet
 }

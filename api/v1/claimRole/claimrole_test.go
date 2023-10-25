@@ -19,10 +19,10 @@ import (
 	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
+	"golang.org/x/crypto/nacl/sign"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
@@ -135,24 +135,12 @@ func requestRole(t *testing.T, headers string, walletAddres string) roleid.GetRo
 	return getRoleIdPayload
 }
 func getSignature(eula string, flowId string, hexPrivateKey string) string {
-	message := eula + flowId
-
-	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)
-
-	privateKey, err := crypto.HexToECDSA(hexPrivateKey)
-	if err != nil {
-		log.Fatal("HexToECDSA failed ", err)
-	}
+	message := fmt.Sprintf("APTOS\nmessage: %v\nnonce: %v", eula, flowId)
+	priv := hexutil.MustDecode("0x" + hexPrivateKey)
 
 	// keccak256 hash of the data
-	dataBytes := []byte(newMsg)
-	hashData := crypto.Keccak256Hash(dataBytes)
-
-	signatureBytes, err := crypto.Sign(hashData.Bytes(), privateKey)
-	if err != nil {
-		log.Fatal("len", err)
-	}
-
+	dataBytes := []byte(message)
+	signatureBytes := sign.Sign(nil, dataBytes, (*[64]byte)(priv))
 	signature := hexutil.Encode(signatureBytes)
 
 	return signature

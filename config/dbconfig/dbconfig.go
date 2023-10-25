@@ -3,14 +3,11 @@ package dbconfig
 import (
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
 	"github.com/NetSepio/gateway/config/envconfig"
-	"github.com/NetSepio/gateway/config/netsepio"
 	"github.com/NetSepio/gateway/models"
-	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"gorm.io/driver/postgres"
 )
@@ -69,19 +66,19 @@ func GetDb() *gorm.DB {
     	WHEN duplicate_object THEN null;
 	END $$;`)
 
-	voterRoleId, err := netsepio.GetRole(netsepio.VOTER_ROLE)
-	if err != nil {
-		logwrapper.Fatal(err)
-	}
+	// voterRoleId, err := netsepio.GetRole(netsepio.VOTER_ROLE)
+	// if err != nil {
+	// 	logwrapper.Fatal(err)
+	// }
 
-	voterEula := envconfig.EnvVars.VOTER_EULA
+	// voterEula := envconfig.EnvVars.VOTER_EULA
 
-	rolesToBeAdded := []models.Role{
-		{Name: "Voter Role", RoleId: hexutil.Encode(voterRoleId[:]), Eula: voterEula}}
-	for _, role := range rolesToBeAdded {
-		if err := db.Model(&models.Role{}).FirstOrCreate(&role).Error; err != nil {
-			log.Fatal(err)
-		}
-	}
+	// rolesToBeAdded := []models.Role{
+	// 	{Name: "Voter Role", RoleId: hexutil.Encode(voterRoleId[:]), Eula: voterEula}}
+	// for _, role := range rolesToBeAdded {
+	// 	if err := db.Model(&models.Role{}).FirstOrCreate(&role).Error; err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// }
 	return db
 }

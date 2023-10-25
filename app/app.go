@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/NetSepio/gateway/api"
-	"github.com/NetSepio/gateway/app/routines/webreview"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -31,5 +30,5 @@ func Init() {
 	GinApp.Use(corsM)
 	api.ApplyRoutes(GinApp)
 	dbconfig.GetDb()
-	go webreview.Init()
+	// go webreview.Init()
 }
