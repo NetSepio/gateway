@@ -7,8 +7,9 @@ image:
 tasks:
   - name: golang live
     init: |
+      aptos init --private-key $APTOS_PV --network testnet
       go install gotest.tools/gotestsum@latest
-      go get && go build ./...
+      go get
 
     command: |
       docker run --name="netsepio" --rm -d -p 5432:5432 \

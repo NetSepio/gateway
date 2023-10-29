@@ -113,3 +113,7 @@ Note - Some unset data is emitted.
 | Code   | Meaning         |
 | :----- | :-------------- |
 | `4011` | `Token expired` |
+
+# Gitpod Config
+
+Set `APTOS_PV` for cli
