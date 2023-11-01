@@ -18,6 +18,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/tyler-smith/go-bip39 v1.0.1-0.20181017060643-dbb3b84ba2ef
 	github.com/vk-rv/pvx v0.0.0-20210912195928-ac00bc32f6e7
+	golang.org/x/crypto v0.14.0
 	gorm.io/driver/postgres v1.3.8
 	gorm.io/gorm v1.23.7
 )
@@ -94,7 +95,6 @@ require (
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	github.com/whyrusleeping/tar-utils v0.0.0-20180509141711-8c6c8ba81d5c // indirect
 	go.opencensus.io v0.22.4 // indirect
-	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect

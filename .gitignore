@@ -8,6 +8,9 @@
 # Test binary, built with `go test -c`
 *.test
 
+# Aptos
+.aptos
+
 # Temp storage
 storage
 
