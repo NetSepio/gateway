@@ -40,7 +40,7 @@ func deletegateReviewCreation(c *gin.Context) {
 	//TODO function id and gas from env
 	command := fmt.Sprintf("move run --function-id %s::netsepio::delegate_submit_review --max-gas %d --gas-unit-price %d --args", "0x1da41025906f10f17f74f6c6851cb3d192acdd31131123f67e800aa5358b5bc1", 3046, 100)
 	args := append(strings.Split(command, " "),
-		argA(request.Voter), argS(request.MetaDataUri), argS(request.Category), argS(request.DomainAddress), argS(request.SiteUrl), argS(request.SiteType), argS(request.SiteTag), argS(request.SiteSafety), argS(request.SiteIpfsHash))
+		argA(request.Voter), argS(request.MetaDataUri), argS(request.Category), argS(request.DomainAddress), argS(request.SiteUrl), argS(request.SiteType), argS(request.SiteTag), argS(request.SiteSafety), argS(""))
 	cmd := exec.Command("./aptos", args...)
 	fmt.Println(strings.Join(args, " "))
 	// The `Output` method executes the command and
