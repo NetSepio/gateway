@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/gin-gonic/gin"
@@ -37,8 +38,7 @@ func deletegateReviewCreation(c *gin.Context) {
 		httphelper.ErrResponse(c, http.StatusBadRequest, "payload is invalid")
 		return
 	}
-	//TODO function id and gas from env
-	command := fmt.Sprintf("move run --function-id %s::netsepio::delegate_submit_review --max-gas %d --gas-unit-price %d --args", "0x1da41025906f10f17f74f6c6851cb3d192acdd31131123f67e800aa5358b5bc1", 3046, 100)
+	command := fmt.Sprintf("move run --function-id %s::netsepio::delegate_submit_review --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
 	args := append(strings.Split(command, " "),
 		argA(request.Voter), argS(request.MetaDataUri), argS(request.Category), argS(request.DomainAddress), argS(request.SiteUrl), argS(request.SiteType), argS(request.SiteTag), argS(request.SiteSafety), argS(request.SiteIpfsHash))
 	cmd := exec.Command("./aptos", args...)
