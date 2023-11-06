@@ -20,6 +20,7 @@ tasks:
       sleep 12
       gp sync-done db
       cp .env-sample .env
+      aptos account fund-with-faucet
       air
   
   - name: postgres shell
