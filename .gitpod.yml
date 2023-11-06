@@ -21,7 +21,7 @@ tasks:
       gp sync-done db
       cp .env-sample .env
       aptos account fund-with-faucet
-      air
+      DEBUG_MODE=true air
   
   - name: postgres shell
     command: |
