@@ -31,7 +31,7 @@ func authenticate(c *gin.Context) {
 	var req AuthenticateRequest
 	err := c.BindJSON(&req)
 	if err != nil {
-		httphelper.ErrResponse(c, http.StatusForbidden, "payload is invalid")
+		httphelper.ErrResponse(c, http.StatusForbidden, fmt.Sprintf("payload is invalid: %s",err))
 		return
 	}
 
