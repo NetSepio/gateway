@@ -10,7 +10,7 @@ import (
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
-  "github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
@@ -81,13 +81,13 @@ func deletegateReviewCreation(c *gin.Context) {
 		SiteType:           request.SiteType,
 		SiteTag:            request.SiteTag,
 		SiteSafety:         request.SiteSafety,
-		SiteIpfsHash:       request.SiteIpfsHash,
+		SiteIpfsHash:       "",
 		TransactionHash:    txResult.Result.TransactionHash,
 		TransactionVersion: txResult.Result.Version,
 		CreatedAt:          time.Now(),
 	}
 	if err := db.Create(newReview).Error; err != nil {
-		httphelper.SuccessResponse(c, "transaction is successful but failed to store tx in db", payload)
+		httpo.NewSuccessResponseP(httpo.TXDbFailed, "transaction is successful but failed to store tx in db", payload).Send(c, 200)
 		return
 	}
 

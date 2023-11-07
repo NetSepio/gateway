@@ -3,6 +3,7 @@ module github.com/NetSepio/gateway
 go 1.21
 
 require (
+	github.com/TheLazarusNetwork/go-helpers/httpo v0.0.0-20231107050208-a70a1bdc57a1
 	github.com/btcsuite/btcd v0.22.0-beta
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/caarlos0/env/v6 v6.10.0
@@ -25,7 +26,6 @@ require (
 
 require (
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
-	github.com/TheLazarusNetwork/go-helpers/httpo v0.0.0-20221204180104-cfbb53a9a2cb // indirect
 	github.com/VictoriaMetrics/fastcache v1.6.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
