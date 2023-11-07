@@ -6,8 +6,8 @@ import (
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
-	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,7 +25,7 @@ func waitlist(c *gin.Context) {
 	var req WaitListRequest
 	err := c.BindJSON(&req)
 	if err != nil {
-		httphelper.ErrResponse(c, http.StatusBadRequest, fmt.Sprintf("body is invalid: %s", err))
+		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("body is invalid: %s", err)).SendD(c)
 		return
 	}
 
@@ -33,12 +33,12 @@ func waitlist(c *gin.Context) {
 
 	if err := findResult.Error; err != nil {
 		logwrapper.Errorf("failed to check if user exist in waitlist, %s", err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}
 
 	if findResult.RowsAffected > 0 {
-		httphelper.ErrResponse(c, http.StatusBadRequest, "Already exist in waitlist")
+		httpo.NewErrorResponse(http.StatusBadRequest, "Already exist in waitlist").SendD(c)
 		return
 	}
 
@@ -49,14 +49,14 @@ func waitlist(c *gin.Context) {
 	}
 	if err := db.Create(newWailListMember).Error; err != nil {
 		logwrapper.Errorf("failed to add to waitlist, %s", err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}
 
 	if err != nil {
 		logwrapper.Errorf("failed to add to waitlist, %s", err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}
-	httphelper.SuccessResponse(c, "Added in waitlist", nil)
+	httpo.NewSuccessResponse(200, "Added in waitlist").SendD(c)
 }

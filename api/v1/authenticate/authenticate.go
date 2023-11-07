@@ -10,8 +10,8 @@ import (
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/cryptosign"
-	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,13 +25,12 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func authenticate(c *gin.Context) {
-
 	db := dbconfig.GetDb()
 	//TODO remove flow id if 200
 	var req AuthenticateRequest
 	err := c.BindJSON(&req)
 	if err != nil {
-		httphelper.ErrResponse(c, http.StatusForbidden, fmt.Sprintf("payload is invalid: %s",err))
+		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
 		return
 	}
 
@@ -40,18 +39,18 @@ func authenticate(c *gin.Context) {
 	err = db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
 	if err != nil {
 		logwrapper.Errorf("failed to get flowId, error %v", err)
-		httphelper.ErrResponse(c, http.StatusNotFound, "flow id not found")
+		httpo.NewErrorResponse(http.StatusNotFound, "flow id not found").SendD(c)
 		return
 	}
 
 	if flowIdData.FlowIdType != models.AUTH {
-		httphelper.ErrResponse(c, http.StatusBadRequest, "Flow id not created for auth")
+		httpo.NewErrorResponse(http.StatusBadRequest, "flow id not created for auth").SendD(c)
 		return
 	}
 
 	if err != nil {
 		logwrapper.Error(err)
-		httphelper.ErrResponse(c, 500, "Unexpected error occured")
+		httpo.NewErrorResponse(500, "Unexpected error occured").SendD(c)
 		return
 	}
 	userAuthEULA := envconfig.EnvVars.AUTH_EULA
@@ -60,13 +59,13 @@ func authenticate(c *gin.Context) {
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message, req.PubKey)
 
 	if err == cryptosign.ErrFlowIdNotFound {
-		httphelper.ErrResponse(c, http.StatusNotFound, "Flow Id not found")
+		httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
 		return
 	}
 
 	if err != nil {
 		logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}
 	if isCorrect {
@@ -74,20 +73,22 @@ func authenticate(c *gin.Context) {
 		pasetoPrivateKey := envconfig.EnvVars.PASETO_PRIVATE_KEY
 		pasetoToken, err := auth.GenerateToken(customClaims, pasetoPrivateKey)
 		if err != nil {
-			httphelper.NewInternalServerError(c, "failed to generate token, error %v", err.Error())
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to generate token, error %v", err.Error())
 			return
 		}
 		err = db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{}).Error
 		if err != nil {
-			httphelper.NewInternalServerError(c, "failed to delete flowId, error %v", err.Error())
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to delete flowId, error %v", err.Error())
 			return
 		}
 		payload := AuthenticatePayload{
 			Token: pasetoToken,
 		}
-		httphelper.SuccessResponse(c, "Token generated successfully", payload)
+		httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 	} else {
-		httphelper.ErrResponse(c, http.StatusForbidden, "Wallet Address is not correct")
+		httpo.NewErrorResponse(http.StatusForbidden, "Wallet Address is not correct").SendD(c)
 		return
 	}
 }

@@ -6,13 +6,12 @@ import (
 	"net/http"
 
 	"github.com/NetSepio/gateway/config/envconfig"
-	customstatuscodes "github.com/NetSepio/gateway/constants/http/custom_status_codes"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/vk-rv/pvx"
 	"gorm.io/gorm"
 
-	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,7 +31,7 @@ func PASETO(c *gin.Context) {
 	}
 	if headers.Authorization == "" {
 		logValidationFailed(headers.Authorization, ErrAuthHeaderMissing)
-		httphelper.ErrResponse(c, http.StatusBadRequest, ErrAuthHeaderMissing.Error())
+		httpo.NewErrorResponse(http.StatusBadRequest, ErrAuthHeaderMissing.Error()).SendD(c)
 		c.Abort()
 		return
 	}
@@ -50,7 +49,7 @@ func PASETO(c *gin.Context) {
 			if validationErr.HasExpiredErr() {
 				err = fmt.Errorf("failed to scan claims for paseto token, %s", err)
 				logValidationFailed(headers.Authorization, err)
-				httphelper.CErrResponse(c, http.StatusUnauthorized, customstatuscodes.TokenExpired, "token expired")
+				httpo.NewErrorResponse(http.StatusUnauthorized, "token expired").Send(c, httpo.TokenExpired)
 				c.Abort()
 				return
 			}

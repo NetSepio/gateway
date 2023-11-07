@@ -6,8 +6,8 @@ import (
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
-	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,7 +26,7 @@ func createFeedback(c *gin.Context) {
 	var newFeedback models.UserFeedback
 	err := c.BindJSON(&newFeedback)
 	if err != nil {
-		httphelper.ErrResponse(c, http.StatusBadRequest, "body is invalid")
+		httpo.NewErrorResponse(http.StatusBadRequest, "body is invalid").SendD(c)
 		return
 	}
 	walletAddress := c.GetString("walletAddress")
@@ -37,14 +37,14 @@ func createFeedback(c *gin.Context) {
 
 	if err = association.Error; err != nil {
 		logwrapper.Errorf("failed to associate feedbacks with users, %s", err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}
 	err = association.Append(&newFeedback)
 	if err != nil {
 		logwrapper.Errorf("failed to add new feedback, %s", err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}
-	httphelper.SuccessResponse(c, "Feedback added", nil)
+	httpo.NewSuccessResponse(200, "Feedback added").SendD(c)
 }
