@@ -8,8 +8,8 @@ import (
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/envconfig"
-	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,7 +35,7 @@ func deletegateReviewCreation(c *gin.Context) {
 	err := c.BindJSON(&request)
 	if err != nil {
 		//TODO not override status or not set status again
-		httphelper.ErrResponse(c, http.StatusBadRequest, "payload is invalid")
+		httpo.NewErrorResponse(http.StatusBadRequest, "payload is invalid").SendD(c)
 		return
 	}
 	command := fmt.Sprintf("move run --function-id %s::netsepio::delegate_submit_review --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
@@ -48,16 +48,19 @@ func deletegateReviewCreation(c *gin.Context) {
 	o, err := cmd.Output()
 	if err != nil {
 		if err, ok := err.(*exec.ExitError); ok {
-			httphelper.NewInternalServerError(c, "failed to call %v of %v, error: %v %s %s", "delegate_submit_review", "NETSEPIO", err.Error(), err.Stderr, o)
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to call %v of %v, error: %v %s %s", "delegate_submit_review", "NETSEPIO", err.Error(), err.Stderr, o)
 			return
 		}
-		httphelper.NewInternalServerError(c, "failed to call %v of %v, error: %v %s", "delegate_submit_review", "NETSEPIO", err.Error(), o)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+		logwrapper.Errorf("failed to call %v of %v, error: %v %s", "delegate_submit_review", "NETSEPIO", err.Error(), o)
 		return
 	}
 
 	txResult, err := UnmarshalTxResult(o)
 	if err != nil {
-		httphelper.NewInternalServerError(c, "failed to get transaction result")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+		logwrapper.Errorf("failed to get transaction result")
 		return
 	}
 	payload := DelegateReviewCreationPayload{
@@ -65,5 +68,5 @@ func deletegateReviewCreation(c *gin.Context) {
 		TransactionHash:    txResult.Result.TransactionHash,
 	}
 	logwrapper.Infof("tx is %v", txResult)
-	httphelper.SuccessResponse(c, "request successfully send, review will be delegated soon", payload)
+	httpo.NewSuccessResponseP(200, "request successfully send, review will be delegated soon", payload).SendD(c)
 }

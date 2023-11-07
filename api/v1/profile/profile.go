@@ -14,8 +14,8 @@ import (
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
-	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -36,7 +36,7 @@ func patchProfile(c *gin.Context) {
 	var requestBody PatchProfileRequest
 	err := c.BindJSON(&requestBody)
 	if err != nil {
-		httphelper.ErrResponse(c, http.StatusForbidden, "payload is invalid")
+		httpo.NewErrorResponse(http.StatusForbidden, "payload is invalid").SendD(c)
 		return
 	}
 	walletAddress := c.GetString("walletAddress")
@@ -44,16 +44,16 @@ func patchProfile(c *gin.Context) {
 		Where("wallet_address = ?", walletAddress).
 		Updates(requestBody)
 	if result.Error != nil {
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 
 		return
 	}
 	if result.RowsAffected == 0 {
-		httphelper.ErrResponse(c, http.StatusNotFound, "Record not found")
+		httpo.NewErrorResponse(http.StatusNotFound, "Record not found").SendD(c)
 
 		return
 	}
-	httphelper.SuccessResponse(c, "Profile successfully updated", nil)
+	httpo.NewSuccessResponse(200, "Profile successfully updated").SendD(c)
 
 }
 
@@ -64,7 +64,7 @@ func getProfile(c *gin.Context) {
 	err := db.Model(&models.User{}).Select("name, profile_picture_url,country, wallet_address").Where("wallet_address = ?", walletAddress).First(&user).Error
 	if err != nil {
 		logrus.Error(err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}
 
@@ -76,7 +76,7 @@ func getProfile(c *gin.Context) {
 	payload := GetProfilePayload{
 		user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country, roles,
 	}
-	httphelper.SuccessResponse(c, "Profile fetched successfully", payload)
+	httpo.NewSuccessResponseP(200, "Profile fetched successfully", payload).SendD(c)
 }
 
 type rolesResponse struct {
