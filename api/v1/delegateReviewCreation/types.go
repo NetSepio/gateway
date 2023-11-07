@@ -9,7 +9,6 @@ type DelegateReviewCreationRequest struct {
 	SiteType      string `json:"siteType" binding:"required"`
 	SiteTag       string `json:"siteTag" binding:"required"`
 	SiteSafety    string `json:"siteSafety" binding:"required"`
-	SiteIpfsHash  string `json:"siteIpfsHash" binding:"required"`
 }
 
 type DelegateReviewCreationPayload struct {
