@@ -52,8 +52,12 @@ func deletegateReviewCreation(c *gin.Context) {
 	o, err := cmd.Output()
 	if err != nil {
 		if err, ok := err.(*exec.ExitError); ok {
+			if strings.Contains(string(o), "ERROR_METADATA_DUPLICATED(0x3)") {
+				httpo.NewErrorResponse(http.StatusConflict, "Metadata already exist").SendD(c)
+				return
+			}
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-			logwrapper.Errorf("failed to call %v of %v, error: %v %s %s", "delegate_submit_review", "NETSEPIO", err.Error(), err.Stderr, o)
+			logwrapper.Errorf("failed to call %v of %v, error: %v stderr: %s out: %s", "delegate_submit_review", "NETSEPIO", err.Error(), err.Stderr, o)
 			return
 		}
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
