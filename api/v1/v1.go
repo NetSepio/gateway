@@ -9,6 +9,7 @@ import (
 	"github.com/NetSepio/gateway/api/v1/healthcheck"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	roleid "github.com/NetSepio/gateway/api/v1/roleId"
+	"github.com/NetSepio/gateway/api/v1/stats"
 	"github.com/NetSepio/gateway/api/v1/waitlist"
 
 	"github.com/gin-gonic/gin"
@@ -27,5 +28,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		healthcheck.ApplyRoutes(v1)
 		feedback.ApplyRoutes(v1)
 		waitlist.ApplyRoutes(v1)
+		stats.ApplyRoutes(v1)
 	}
 }

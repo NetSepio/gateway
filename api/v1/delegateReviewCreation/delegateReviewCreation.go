@@ -5,9 +5,12 @@ import (
 	"net/http"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
+  "github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
@@ -31,6 +34,7 @@ func argA(s string) string {
 }
 
 func deletegateReviewCreation(c *gin.Context) {
+	db := dbconfig.GetDb()
 	var request DelegateReviewCreationRequest
 	err := c.BindJSON(&request)
 	if err != nil {
@@ -41,7 +45,7 @@ func deletegateReviewCreation(c *gin.Context) {
 	command := fmt.Sprintf("move run --function-id %s::netsepio::delegate_submit_review --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
 	args := append(strings.Split(command, " "),
 		argA(request.Voter), argS(request.MetaDataUri), argS(request.Category), argS(request.DomainAddress), argS(request.SiteUrl), argS(request.SiteType), argS(request.SiteTag), argS(request.SiteSafety), argS(request.SiteIpfsHash))
-	cmd := exec.Command("./aptos", args...)
+	cmd := exec.Command("aptos", args...)
 	fmt.Println(strings.Join(args, " "))
 	// The `Output` method executes the command and
 	// collects the output, returning its value
@@ -67,6 +71,25 @@ func deletegateReviewCreation(c *gin.Context) {
 		TransactionVersion: txResult.Result.Version,
 		TransactionHash:    txResult.Result.TransactionHash,
 	}
-	logwrapper.Infof("tx is %v", txResult)
+
+	newReview := &models.Review{
+		Voter:              request.Voter,
+		MetaDataUri:        request.MetaDataUri,
+		Category:           request.Category,
+		DomainAddress:      request.DomainAddress,
+		SiteUrl:            request.SiteUrl,
+		SiteType:           request.SiteType,
+		SiteTag:            request.SiteTag,
+		SiteSafety:         request.SiteSafety,
+		SiteIpfsHash:       request.SiteIpfsHash,
+		TransactionHash:    txResult.Result.TransactionHash,
+		TransactionVersion: txResult.Result.Version,
+		CreatedAt:          time.Now(),
+	}
+	if err := db.Create(newReview).Error; err != nil {
+		httphelper.SuccessResponse(c, "transaction is successful but failed to store tx in db", payload)
+		return
+	}
+
 	httpo.NewSuccessResponseP(200, "request successfully send, review will be delegated soon", payload).SendD(c)
 }
