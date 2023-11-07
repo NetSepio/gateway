@@ -6,7 +6,7 @@ import (
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/flowid"
-	"github.com/NetSepio/gateway/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/gin-gonic/gin"
@@ -25,18 +25,18 @@ func GetFlowId(c *gin.Context) {
 	walletAddress := c.Query("walletAddress")
 
 	if walletAddress == "" {
-		httphelper.ErrResponse(c, http.StatusBadRequest, "Wallet address (walletAddress) is required")
+		httpo.NewErrorResponse(http.StatusBadRequest, "Wallet address (walletAddress) is required").SendD(c)
 		return
 	}
 	_, err := hexutil.Decode(walletAddress)
 	if err != nil {
-		httphelper.ErrResponse(c, http.StatusBadRequest, "Wallet address (walletAddress) is not valid")
+		httpo.NewErrorResponse(http.StatusBadRequest, "Wallet address (walletAddress) is not valid").SendD(c)
 		return
 	}
 	flowId, err := flowid.GenerateFlowId(walletAddress, models.AUTH, "")
 	if err != nil {
 		log.Error(err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 
 		return
 	}
@@ -45,5 +45,5 @@ func GetFlowId(c *gin.Context) {
 		FlowId: flowId,
 		Eula:   userAuthEULA,
 	}
-	httphelper.SuccessResponse(c, "Flowid successfully generated", payload)
+	httpo.NewSuccessResponseP(200, "Flowid successfully generated", payload).SendD(c)
 }

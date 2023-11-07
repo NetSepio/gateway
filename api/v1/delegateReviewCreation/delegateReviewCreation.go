@@ -5,10 +5,14 @@ import (
 	"net/http"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
-	"github.com/NetSepio/gateway/util/pkg/httphelper"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/envconfig"
+  "github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,40 +34,62 @@ func argA(s string) string {
 }
 
 func deletegateReviewCreation(c *gin.Context) {
+	db := dbconfig.GetDb()
 	var request DelegateReviewCreationRequest
 	err := c.BindJSON(&request)
 	if err != nil {
 		//TODO not override status or not set status again
-		httphelper.ErrResponse(c, http.StatusBadRequest, "payload is invalid")
+		httpo.NewErrorResponse(http.StatusBadRequest, "payload is invalid").SendD(c)
 		return
 	}
-	//TODO function id and gas from env
-	command := fmt.Sprintf("move run --function-id %s::netsepio::delegate_submit_review --max-gas %d --gas-unit-price %d --args", "0x1da41025906f10f17f74f6c6851cb3d192acdd31131123f67e800aa5358b5bc1", 3046, 100)
+	command := fmt.Sprintf("move run --function-id %s::netsepio::delegate_submit_review --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
 	args := append(strings.Split(command, " "),
 		argA(request.Voter), argS(request.MetaDataUri), argS(request.Category), argS(request.DomainAddress), argS(request.SiteUrl), argS(request.SiteType), argS(request.SiteTag), argS(request.SiteSafety), argS(""))
-	cmd := exec.Command("./aptos", args...)
+	cmd := exec.Command("aptos", args...)
 	fmt.Println(strings.Join(args, " "))
 	// The `Output` method executes the command and
 	// collects the output, returning its value
 	o, err := cmd.Output()
 	if err != nil {
 		if err, ok := err.(*exec.ExitError); ok {
-			httphelper.NewInternalServerError(c, "failed to call %v of %v, error: %v %s %s", "delegate_submit_review", "NETSEPIO", err.Error(), err.Stderr, o)
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to call %v of %v, error: %v %s %s", "delegate_submit_review", "NETSEPIO", err.Error(), err.Stderr, o)
 			return
 		}
-		httphelper.NewInternalServerError(c, "failed to call %v of %v, error: %v %s", "delegate_submit_review", "NETSEPIO", err.Error(), o)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+		logwrapper.Errorf("failed to call %v of %v, error: %v %s", "delegate_submit_review", "NETSEPIO", err.Error(), o)
 		return
 	}
 
 	txResult, err := UnmarshalTxResult(o)
 	if err != nil {
-		httphelper.NewInternalServerError(c, "failed to get transaction result")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+		logwrapper.Errorf("failed to get transaction result")
 		return
 	}
 	payload := DelegateReviewCreationPayload{
 		TransactionVersion: txResult.Result.Version,
 		TransactionHash:    txResult.Result.TransactionHash,
 	}
-	logwrapper.Infof("tx is %v", txResult)
-	httphelper.SuccessResponse(c, "request successfully send, review will be delegated soon", payload)
+
+	newReview := &models.Review{
+		Voter:              request.Voter,
+		MetaDataUri:        request.MetaDataUri,
+		Category:           request.Category,
+		DomainAddress:      request.DomainAddress,
+		SiteUrl:            request.SiteUrl,
+		SiteType:           request.SiteType,
+		SiteTag:            request.SiteTag,
+		SiteSafety:         request.SiteSafety,
+		SiteIpfsHash:       request.SiteIpfsHash,
+		TransactionHash:    txResult.Result.TransactionHash,
+		TransactionVersion: txResult.Result.Version,
+		CreatedAt:          time.Now(),
+	}
+	if err := db.Create(newReview).Error; err != nil {
+		httphelper.SuccessResponse(c, "transaction is successful but failed to store tx in db", payload)
+		return
+	}
+
+	httpo.NewSuccessResponseP(200, "request successfully send, review will be delegated soon", payload).SendD(c)
 }

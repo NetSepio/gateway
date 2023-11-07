@@ -1,7 +1,7 @@
 package delegatereviewcreation
 
 type DelegateReviewCreationRequest struct {
-	Voter         string `json:"voter" binding:"required,hexadecimal"`
+	Voter         string `json:"voter" binding:"required,hexadecimal,startswith=0x"`
 	MetaDataUri   string `json:"metaDataUri" binding:"required"`
 	Category      string `json:"category" binding:"required"`
 	DomainAddress string `json:"domainAddress" binding:"required"`

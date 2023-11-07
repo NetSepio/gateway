@@ -28,6 +28,9 @@ type config struct {
 	ALLOWED_ORIGIN            []string      `env:"ALLOWED_ORIGIN,required" envSeparator:","`
 	GRAPH_API                 string        `env:"GRAPH_API,required"`
 	SIGNED_BY                 string        `env:"SIGNED_BY,required"`
+	FUNCTION_ID               string        `env:"FUNCTION_ID,required"`
+	GAS_UNITS                 int           `env:"GAS_UNITS,required"`
+	GAS_PRICE                 int           `env:"GAS_PRICE,required"`
 }
 
 var EnvVars config = config{}

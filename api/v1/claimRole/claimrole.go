@@ -10,8 +10,8 @@ import (
 	"github.com/NetSepio/gateway/generated/smartcontract/gennetsepio"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/cryptosign"
-	"github.com/NetSepio/gateway/util/pkg/httphelper"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"gorm.io/gorm"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -35,34 +35,35 @@ func postClaimRole(c *gin.Context) {
 	var req ClaimRoleRequest
 	err := c.BindJSON(&req)
 	if err != nil {
-		httphelper.ErrResponse(c, http.StatusForbidden, "payload is invalid")
+		httpo.NewErrorResponse(http.StatusForbidden, "payload is invalid").SendD(c)
 		return
 	}
 
 	//Message containing flowId
 	role, err := getRoleByFlowId(req.FlowId)
 	if err == gorm.ErrRecordNotFound {
-		httphelper.ErrResponse(c, http.StatusNotFound, "flow id not found")
+		httpo.NewErrorResponse(http.StatusNotFound, "flow id not found").SendD(c)
 		return
 	}
 	if err != nil {
-		httphelper.NewInternalServerError(c, "failed to get role by flowid, error %v", err.Error())
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+		logwrapper.Errorf("failed to get role by flowid, error %v", err.Error())
 		return
 	}
 	message := fmt.Sprintf("APTOS\nmessage: %v\nnonce: %v", role.Eula, req.FlowId)
 	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message, req.PubKey)
 
 	if err == cryptosign.ErrFlowIdNotFound {
-		httphelper.ErrResponse(c, http.StatusNotFound, err.Error())
+		httpo.NewErrorResponse(http.StatusNotFound, err.Error()).SendD(c)
 		return
 	} else if err != nil {
 		logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}
 
 	if !isCorrect || walletAddressGin != walletAddress {
-		httphelper.ErrResponse(c, http.StatusForbidden, "Wallet address is not correct")
+		httpo.NewErrorResponse(http.StatusForbidden, "Wallet address is not correct").SendD(c)
 		return
 	}
 
@@ -70,12 +71,12 @@ func postClaimRole(c *gin.Context) {
 	// instance, err := netsepio.GetInstance(client)
 	if err != nil {
 		logwrapper.Errorf("failed to get instance for %v , error: %v", "NETSEPIO", err.Error())
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 	}
 	roleIdBytesSlice, err := hexutil.Decode(role.RoleId)
 	if err != nil {
 		logwrapper.Warnf("failed to decode hex string : %v, for role for wallet address %v", role.RoleId, walletAddress)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}
 	walletAddressHex := common.HexToAddress(walletAddress)
@@ -85,7 +86,7 @@ func postClaimRole(c *gin.Context) {
 	tx, err := rawtrasaction.SendRawTrasac(gennetsepio.GennetsepioABI, "grantRole", roleIdBytes, walletAddressHex)
 
 	if err != nil {
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		logwrapper.Warnf("failed to grant role to user with walletaddress %v, error: %v", walletAddress, err.Error())
 		return
 	}
@@ -93,13 +94,14 @@ func postClaimRole(c *gin.Context) {
 	logwrapper.Infof("trasaction hash is %v", transactionHash)
 	err = db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{}).Error
 	if err != nil {
-		httphelper.NewInternalServerError(c, "failed to delete flowId, error %v", err.Error())
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+		logwrapper.Errorf("failed to delete flowId, error %v", err.Error())
 		return
 	}
 	payload := ClaimRolePayload{
 		TransactionHash: transactionHash,
 	}
-	httphelper.SuccessResponse(c, "role grant transaction has been broadcasted", payload)
+	httpo.NewSuccessResponseP(200, "role grant transaction has been broadcasted", payload).SendD(c)
 
 }
 
