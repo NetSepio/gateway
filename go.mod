@@ -3,6 +3,7 @@ module github.com/NetSepio/gateway
 go 1.21
 
 require (
+	github.com/TheLazarusNetwork/go-helpers/httpo v0.0.0-20231107050208-a70a1bdc57a1
 	github.com/btcsuite/btcd v0.22.0-beta
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/caarlos0/env/v6 v6.10.0
