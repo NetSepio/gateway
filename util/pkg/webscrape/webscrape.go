@@ -7,9 +7,6 @@ import (
 	"net/url"
 	"os"
 	"path"
-
-	"github.com/NetSepio/gateway/config/envconfig"
-	ipfsGateway "github.com/ipfs/go-ipfs-api"
 )
 
 // CheckDomain if the domain exists, write its content to a file else return error
@@ -50,46 +47,4 @@ func CheckDomain(basePath string, domain string) (err error) {
 	}
 
 	return nil
-}
-
-//AddFileToIpfs adds the specified file to IPFS and returns hash
-func AddFileToIpfs(filePath string) (string, error) {
-	ig := ipfsGateway.NewShell(envconfig.EnvVars.IPFS_NODE_URL)
-	// Create io reader from a local file
-	file, err := os.Open(filePath)
-
-	if err != nil {
-		return "", err
-	}
-
-	//Uploads file to ipfs and returns metahash
-	hash, err := ig.Add(file)
-	if err != nil {
-		return "", err
-	}
-	file.Close()
-	return hash, nil
-}
-
-func AddToIpfs(r io.Reader) (string, error) {
-	ig := ipfsGateway.NewShell(envconfig.EnvVars.IPFS_NODE_URL)
-
-	//Uploads file to ipfs and returns metahash
-	hash, err := ig.Add(r)
-	if err != nil {
-		return "", err
-	}
-	return hash, nil
-}
-
-//GetObjectFromIpfs get object from ipfs and writes to the specified file
-func GetObjectFromIpfs(Hash string, filePath string) error {
-
-	ig := ipfsGateway.NewShell(envconfig.EnvVars.IPFS_NODE_URL)
-
-	err := ig.Get(Hash, filePath)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return err
 }

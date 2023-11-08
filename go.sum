@@ -39,6 +39,8 @@ github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 h1:fLjPD/aNc3UIOA6tDi6QXUemppXK3P9BI7mr2hd6gx8=
 github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6/go.mod h1:3eOhrUMpNV+6aFIbp5/iudMxNCF27Vw2OZgy4xEx0Fg=
+github.com/TheLazarusNetwork/go-helpers v0.0.0-20221204180104-cfbb53a9a2cb h1:6AIA7+29SrYrZ+mmoVe+/ixLV+ImFiwLBWWziy5+4l4=
+github.com/TheLazarusNetwork/go-helpers v0.0.0-20221204180104-cfbb53a9a2cb/go.mod h1:kzoeWfKHcC2j9t+o4meeMJhV+z8zZWBERMChgiVFp7o=
 github.com/TheLazarusNetwork/go-helpers/httpo v0.0.0-20221204180104-cfbb53a9a2cb h1:5HbT+3oBGriPWWkfgUn0omiqA7WBMN8oL4TWTixAQSU=
 github.com/TheLazarusNetwork/go-helpers/httpo v0.0.0-20221204180104-cfbb53a9a2cb/go.mod h1:mdZW8fVhYr37eUysX2isro+rtUrhxODPh/zTN94VhcQ=
 github.com/TheLazarusNetwork/go-helpers/httpo v0.0.0-20231107050208-a70a1bdc57a1 h1:uXnmKLWFu0yiGNu7JuJJBtnCjrDcta3fVSwHJKU+hYk=
