@@ -8,7 +8,6 @@ import (
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
-	"github.com/NetSepio/gateway/config/netsepio"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +17,6 @@ var GinApp *gin.Engine
 func Init() {
 	envconfig.InitEnvVars()
 	logwrapper.Init()
-	netsepio.InitRolesId()
 
 	GinApp = gin.Default()
 

@@ -49,7 +49,7 @@ func PASETO(c *gin.Context) {
 			if validationErr.HasExpiredErr() {
 				err = fmt.Errorf("failed to scan claims for paseto token, %s", err)
 				logValidationFailed(headers.Authorization, err)
-				httpo.NewErrorResponse(http.StatusUnauthorized, "token expired").Send(c, httpo.TokenExpired)
+				httpo.NewErrorResponse(httpo.TokenExpired, "token expired").Send(c, http.StatusUnauthorized)
 				c.Abort()
 				return
 			}

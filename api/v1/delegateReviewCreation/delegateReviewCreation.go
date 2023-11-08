@@ -1,16 +1,15 @@
 package delegatereviewcreation
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
-	"os/exec"
-	"strings"
 	"time"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/app/routines/webreview"
 	"github.com/NetSepio/gateway/config/dbconfig"
-	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/pkg/aptos"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
@@ -25,14 +24,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	}
 }
 
-func argS(s string) string {
-	return "string:" + s
-}
-
-func argA(s string) string {
-	return "address:" + s
-}
-
 func deletegateReviewCreation(c *gin.Context) {
 	db := dbconfig.GetDb()
 	var request DelegateReviewCreationRequest
@@ -42,33 +33,15 @@ func deletegateReviewCreation(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, "payload is invalid").SendD(c)
 		return
 	}
-	command := fmt.Sprintf("move run --function-id %s::netsepio::delegate_submit_review --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
-	args := append(strings.Split(command, " "),
-		argA(request.Voter), argS(request.MetaDataUri), argS(request.Category), argS(request.DomainAddress), argS(request.SiteUrl), argS(request.SiteType), argS(request.SiteTag), argS(request.SiteSafety), argS(""))
-	cmd := exec.Command("aptos", args...)
-	fmt.Println(strings.Join(args, " "))
-	// The `Output` method executes the command and
-	// collects the output, returning its value
-	o, err := cmd.Output()
+
+	txResult, err := aptos.DelegateReview(aptos.DelegateReviewParams{Voter: request.Voter, MetaDataUri: request.MetaDataUri, Category: request.Category, DomainAddress: request.DomainAddress, SiteUrl: request.SiteUrl, SiteType: request.SiteType, SiteTag: request.SiteTag, SiteSafety: request.SiteSafety})
 	if err != nil {
-		if err, ok := err.(*exec.ExitError); ok {
-			if strings.Contains(string(o), "ERROR_METADATA_DUPLICATED(0x3)") {
-				httpo.NewErrorResponse(http.StatusConflict, "Metadata already exist").SendD(c)
-				return
-			}
-			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-			logwrapper.Errorf("failed to call %v of %v, error: %v stderr: %s out: %s", "delegate_submit_review", "NETSEPIO", err.Error(), err.Stderr, o)
+		if errors.Is(err, aptos.ErrMetadataDuplicated) {
+			httpo.NewErrorResponse(http.StatusConflict, "Metadata already exist").SendD(c)
 			return
 		}
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Errorf("failed to call %v of %v, error: %v %s", "delegate_submit_review", "NETSEPIO", err.Error(), o)
-		return
-	}
-
-	txResult, err := UnmarshalTxResult(o)
-	if err != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Errorf("failed to get transaction result")
+		logwrapper.Error("failed to get transaction result", err)
 		return
 	}
 	payload := DelegateReviewCreationPayload{
@@ -90,6 +63,7 @@ func deletegateReviewCreation(c *gin.Context) {
 		TransactionVersion: txResult.Result.Version,
 		CreatedAt:          time.Now(),
 	}
+	go webreview.Publish("https://" + request.SiteUrl)
 	if err := db.Create(newReview).Error; err != nil {
 		httpo.NewSuccessResponseP(httpo.TXDbFailed, "transaction is successful but failed to store tx in db", payload).Send(c, 200)
 		return

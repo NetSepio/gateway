@@ -31,6 +31,7 @@ type config struct {
 	FUNCTION_ID               string        `env:"FUNCTION_ID,required"`
 	GAS_UNITS                 int           `env:"GAS_UNITS,required"`
 	GAS_PRICE                 int           `env:"GAS_PRICE,required"`
+	NFT_STORAGE_KEY string `env:"NFT_STORAGE_KEY,required"`
 }
 
 var EnvVars config = config{}
