@@ -3,7 +3,6 @@ package delegatereviewcreation
 import (
 	"errors"
 	"net/http"
-	"time"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/app/routines/webreview"
@@ -61,7 +60,6 @@ func deletegateReviewCreation(c *gin.Context) {
 		SiteIpfsHash:       "",
 		TransactionHash:    txResult.Result.TransactionHash,
 		TransactionVersion: txResult.Result.Version,
-		CreatedAt:          time.Now(),
 	}
 	go webreview.Publish("https://" + request.SiteUrl)
 	if err := db.Create(newReview).Error; err != nil {

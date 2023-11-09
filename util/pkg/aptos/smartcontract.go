@@ -52,6 +52,29 @@ func DelegateReview(p DelegateReviewParams) (*TxResult, error) {
 	return &txResult, err
 }
 
+var ErrMetadataNotFound = errors.New("metadata not found")
+
+func DeleteReview(metaDataUri string) (*TxResult, error) {
+	command := fmt.Sprintf("move run --function-id %s::netsepio::delete_review --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
+	args := append(strings.Split(command, " "), argS(metaDataUri))
+	cmd := exec.Command("aptos", args...)
+	fmt.Println(strings.Join(args, " "))
+
+	o, err := cmd.Output()
+	if err != nil {
+		if err, ok := err.(*exec.ExitError); ok {
+			if strings.Contains(string(o), "EKEY_NOT_FOUND(0x10002)") {
+				return nil, fmt.Errorf("%w: %w", ErrMetadataNotFound, err)
+			}
+			return nil, fmt.Errorf("stderr: %s out: %s err: %w", err.Stderr, o, err)
+		}
+		return nil, fmt.Errorf("out: %s err: %w", o, err)
+	}
+
+	txResult, err := UnmarshalTxResult(o)
+	return &txResult, err
+}
+
 func UploadArchive(siteUrl string, siteIpfsHash string) (*TxResult, error) {
 	command := fmt.Sprintf("move run --function-id %s::netsepio::archive_link --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
 	args := append(strings.Split(command, " "), argS(siteUrl), argS(siteIpfsHash))
