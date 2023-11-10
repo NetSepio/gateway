@@ -32,7 +32,7 @@ func deleteReview(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, "payload is invalid").SendD(c)
 		return
 	}
-	walletAddr := c.GetString("walletAddress")
+	walletAddr := c.GetString(paseto.CTX_WALLET_ADDRES)
 	var review models.Review
 	if err = db.First(&review, models.Review{Voter: walletAddr, MetaDataUri: request.MetaDataUri}).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
