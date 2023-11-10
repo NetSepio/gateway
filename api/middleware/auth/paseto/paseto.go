@@ -16,6 +16,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var CTX_WALLET_ADDRES = "WALLET_ADDRESS"
+
 var (
 	ErrAuthHeaderMissing = errors.New("authorization header is required")
 )
@@ -70,7 +72,7 @@ func PASETO(c *gin.Context) {
 				c.AbortWithStatus(http.StatusInternalServerError)
 			}
 		} else {
-			c.Set("walletAddress", cc.WalletAddress)
+			c.Set(CTX_WALLET_ADDRES, cc.WalletAddress)
 			c.Next()
 		}
 	}
