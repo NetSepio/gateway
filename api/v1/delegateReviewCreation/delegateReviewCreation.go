@@ -34,7 +34,8 @@ func deletegateReviewCreation(c *gin.Context) {
 		return
 	}
 
-	txResult, err := aptos.DelegateReview(aptos.DelegateReviewParams{Voter: request.Voter, MetaDataUri: request.MetaDataUri, Category: request.Category, DomainAddress: request.DomainAddress, SiteUrl: request.SiteUrl, SiteType: request.SiteType, SiteTag: request.SiteTag, SiteSafety: request.SiteSafety})
+	walletAddr := c.GetString(paseto.CTX_WALLET_ADDRES)
+	txResult, err := aptos.DelegateReview(aptos.DelegateReviewParams{Voter: walletAddr, MetaDataUri: request.MetaDataUri, Category: request.Category, DomainAddress: request.DomainAddress, SiteUrl: request.SiteUrl, SiteType: request.SiteType, SiteTag: request.SiteTag, SiteSafety: request.SiteSafety})
 	if err != nil {
 		if errors.Is(err, aptos.ErrMetadataDuplicated) {
 			httpo.NewErrorResponse(http.StatusConflict, "Metadata already exist").SendD(c)
@@ -50,7 +51,7 @@ func deletegateReviewCreation(c *gin.Context) {
 	}
 
 	newReview := &models.Review{
-		Voter:              request.Voter,
+		Voter:              walletAddr,
 		MetaDataUri:        request.MetaDataUri,
 		Category:           request.Category,
 		DomainAddress:      request.DomainAddress,
