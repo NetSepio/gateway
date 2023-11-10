@@ -5,6 +5,7 @@ import (
 	delegatereviewcreation "github.com/NetSepio/gateway/api/v1/delegateReviewCreation"
 	"github.com/NetSepio/gateway/api/v1/feedback"
 	flowid "github.com/NetSepio/gateway/api/v1/flowid"
+	"github.com/NetSepio/gateway/api/v1/getreviews"
 	"github.com/NetSepio/gateway/api/v1/healthcheck"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	"github.com/NetSepio/gateway/api/v1/stats"
@@ -25,5 +26,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		feedback.ApplyRoutes(v1)
 		waitlist.ApplyRoutes(v1)
 		stats.ApplyRoutes(v1)
+		getreviews.ApplyRoutes(v1)
 	}
 }
