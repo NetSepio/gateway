@@ -8,5 +8,5 @@ type GetStatsDB struct {
 type GetStatsResponse GetStatsDB
 
 type GetStatsQuery struct {
-	SiteUrl string `form:"siteUrl" binding:"required"`
+	SiteUrl string `form:"siteUrl" binding:"required,http_url"`
 }

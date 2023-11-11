@@ -3,8 +3,8 @@ package delegatereviewcreation
 type DelegateReviewCreationRequest struct {
 	MetaDataUri   string `json:"metaDataUri" binding:"required"`
 	Category      string `json:"category" binding:"required"`
-	DomainAddress string `json:"domainAddress" binding:"required"`
-	SiteUrl       string `json:"siteUrl" binding:"required"`
+	DomainAddress string `json:"domainAddress" binding:"required,http_url"`
+	SiteUrl       string `json:"siteUrl" binding:"required,http_url"`
 	SiteType      string `json:"siteType" binding:"required"`
 	SiteTag       string `json:"siteTag" binding:"required"`
 	SiteSafety    string `json:"siteSafety" binding:"required"`
