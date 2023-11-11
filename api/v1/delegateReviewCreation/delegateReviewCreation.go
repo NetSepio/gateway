@@ -62,7 +62,7 @@ func deletegateReviewCreation(c *gin.Context) {
 		TransactionHash:    txResult.Result.TransactionHash,
 		TransactionVersion: txResult.Result.Version,
 	}
-	go webreview.Publish("https://" + request.SiteUrl)
+	go webreview.Publish(request.SiteUrl)
 	if err := db.Create(newReview).Error; err != nil {
 		httpo.NewSuccessResponseP(httpo.TXDbFailed, "transaction is successful but failed to store tx in db", payload).Send(c, 200)
 		return
