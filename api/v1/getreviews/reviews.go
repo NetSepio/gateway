@@ -33,7 +33,7 @@ func getReviews(c *gin.Context) {
 
 	var payload GetReviewsPayload = make(GetReviewsPayload, len(reviews))
 	for i := 0; i < len(reviews); i++ {
-		payload[0] = GetReviewsItem{
+		payload[i] = GetReviewsItem{
 			MetaDataUri:        reviews[i].MetaDataUri,
 			Category:           reviews[i].Category,
 			DomainAddress:      reviews[i].DomainAddress,
