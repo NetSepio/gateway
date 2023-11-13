@@ -2,6 +2,7 @@ package delegatereviewcreation
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
@@ -29,7 +30,7 @@ func deletegateReviewCreation(c *gin.Context) {
 	err := c.BindJSON(&request)
 	if err != nil {
 		//TODO not override status or not set status again
-		httpo.NewErrorResponse(http.StatusBadRequest, "payload is invalid").SendD(c)
+		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
 		return
 	}
 
