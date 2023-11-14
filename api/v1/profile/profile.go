@@ -39,7 +39,7 @@ func patchProfile(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusForbidden, "payload is invalid").SendD(c)
 		return
 	}
-	walletAddress := c.GetString("walletAddress")
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	result := db.Model(&models.User{}).
 		Where("wallet_address = ?", walletAddress).
 		Updates(requestBody)
@@ -59,7 +59,7 @@ func patchProfile(c *gin.Context) {
 
 func getProfile(c *gin.Context) {
 	db := dbconfig.GetDb()
-	walletAddress := c.GetString("walletAddress")
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	var user models.User
 	err := db.Model(&models.User{}).Select("name, profile_picture_url,country, wallet_address").Where("wallet_address = ?", walletAddress).First(&user).Error
 	if err != nil {

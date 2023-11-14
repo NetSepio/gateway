@@ -29,7 +29,7 @@ func createFeedback(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, "body is invalid").SendD(c)
 		return
 	}
-	walletAddress := c.GetString("walletAddress")
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	newFeedback.WalletAddress = walletAddress
 	association := db.Model(&models.User{
 		WalletAddress: walletAddress,
