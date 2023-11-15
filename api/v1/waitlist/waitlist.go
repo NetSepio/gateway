@@ -3,6 +3,7 @@ package waitlist
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
@@ -44,7 +45,7 @@ func waitlist(c *gin.Context) {
 
 	newWailListMember := &models.WaitList{
 		EmailId:       req.EmailId,
-		WalletAddress: req.WalletAddress,
+		WalletAddress: strings.ToLower(req.WalletAddress),
 		Twitter:       req.Twitter,
 	}
 	if err := db.Create(newWailListMember).Error; err != nil {

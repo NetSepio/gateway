@@ -1,6 +1,7 @@
 package claims
 
 import (
+	"strings"
 	"time"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -20,7 +21,7 @@ func (c CustomClaims) Valid() error {
 	if err := c.RegisteredClaims.Valid(); err != nil {
 		return err
 	}
-	err := db.Model(&models.User{}).Where("wallet_address = ?", c.WalletAddress).First(&models.User{}).Error
+	err := db.Model(&models.User{}).Where("wallet_address = ?", strings.ToLower(c.WalletAddress)).First(&models.User{}).Error
 	if err != nil {
 		return err
 	}

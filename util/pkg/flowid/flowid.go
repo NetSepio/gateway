@@ -2,6 +2,7 @@ package flowid
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
@@ -16,7 +17,7 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 	var update bool
 	update = true
 
-	findResult := db.Model(&models.User{}).Find(&models.User{}, &models.User{WalletAddress: walletAddress})
+	findResult := db.Model(&models.User{}).Find(&models.User{}, &models.User{WalletAddress: strings.ToLower(walletAddress)})
 
 	if err := findResult.Error; err != nil {
 		err = fmt.Errorf("while finding user error occured, %s", err)
@@ -32,13 +33,13 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 	if update {
 		// User exist so update
 		association := db.Model(&models.User{
-			WalletAddress: walletAddress,
+			WalletAddress: strings.ToLower(walletAddress),
 		}).Association("FlowIds")
 		if err := association.Error; err != nil {
 			logrus.Error(err)
 			return "", err
 		}
-		err := association.Append(&models.FlowId{FlowIdType: flowIdType, WalletAddress: walletAddress, FlowId: flowId, RelatedRoleId: relatedRoleId})
+		err := association.Append(&models.FlowId{FlowIdType: flowIdType, WalletAddress: strings.ToLower(walletAddress), FlowId: flowId, RelatedRoleId: relatedRoleId})
 		if err != nil {
 			return "", err
 		}
@@ -46,7 +47,7 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 		// User doesn't exist so create
 
 		newUser := &models.User{
-			WalletAddress: walletAddress,
+			WalletAddress: strings.ToLower(walletAddress),
 			FlowIds: []models.FlowId{{
 				FlowIdType: flowIdType, WalletAddress: walletAddress, FlowId: flowId, RelatedRoleId: relatedRoleId,
 			}},

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"log"
+	"strings"
 	"testing"
 
 	"github.com/NetSepio/gateway/api/types"
@@ -38,7 +39,7 @@ func CreateTestUser(t *testing.T, walletAddress string) {
 	user := models.User{
 		Name:              "Jack",
 		ProfilePictureUrl: "https://revoticengineering.com/",
-		WalletAddress:     walletAddress,
+		WalletAddress:     strings.ToLower(walletAddress),
 		Country:           "India",
 	}
 	err := db.Model(&models.User{}).Create(&user).Error
