@@ -13,7 +13,9 @@ import (
 	"path"
 	"strings"
 
+	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
+	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/aptos"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	ws "github.com/NetSepio/gateway/util/pkg/webscrape"
@@ -66,7 +68,8 @@ func UploadToIpfs(osFile io.Reader, fileName string) (*NFTStorageRes, error) {
 	return &nftRes, nil
 }
 
-func Publish(siteUrl string) {
+func Publish(metadatahash string, siteUrl string) {
+	db := dbconfig.GetDb()
 	uid_str := uuid.NewString()
 	os.Mkdir("storage", os.ModePerm)
 
@@ -153,6 +156,11 @@ func Publish(siteUrl string) {
 	if err != nil {
 		logwrapper.Errorf("failed to upload metadatahash, error: %v", err.Error())
 		return
+	}
+
+	err = db.Model(&models.Review{}).Where("meta_data_uri = ?", metadatahash).Update("site_ipfs_hash", metaDataRes.Value.Cid).Error
+	if err != nil {
+		logwrapper.Warnf("failed to update site ipfs hash, error: %v", err.Error())
 	}
 	err = os.RemoveAll(dirName)
 	if err != nil {
