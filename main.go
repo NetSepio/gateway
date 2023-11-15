@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/NetSepio/gateway/app"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -20,7 +21,7 @@ func main() {
 
 	if os.Getenv("DEBUG_MODE") == "true" {
 		newUser := &models.User{
-			WalletAddress: "0x984185d39c67c954bd058beb619faf8929bb9349ef33c15102bdb982cbf7f18f",
+			WalletAddress: strings.ToLower("0x984185d39c67c954bd058beb619faf8929bb9349ef33c15102bdb982cbf7f18f"),
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			logwrapper.Warn(err)

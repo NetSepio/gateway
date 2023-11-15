@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 
@@ -30,7 +31,7 @@ func Test_PASETO(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	testWalletAddress := testingcommon.GenerateWallet().WalletAddress
 	newUser := models.User{
-		WalletAddress: testWalletAddress,
+		WalletAddress: strings.ToLower(testWalletAddress),
 	}
 	err := db.Model(&models.User{}).Create(&newUser).Error
 	if err != nil {
@@ -63,7 +64,7 @@ func Test_PASETO(t *testing.T) {
 		expiration := time.Now().Add(time.Second * 2)
 		signedBy := envconfig.EnvVars.SIGNED_BY
 		newClaims := claims.CustomClaims{
-			WalletAddress: testWalletAddress,
+			WalletAddress: strings.ToLower(testWalletAddress),
 			SignedBy:      signedBy,
 			RegisteredClaims: pvx.RegisteredClaims{
 				Expiration: &expiration,

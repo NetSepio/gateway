@@ -2,6 +2,7 @@ package feedback
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -32,7 +33,7 @@ func createFeedback(c *gin.Context) {
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	newFeedback.WalletAddress = walletAddress
 	association := db.Model(&models.User{
-		WalletAddress: walletAddress,
+		WalletAddress: strings.ToLower(walletAddress),
 	}).Association("Feedbacks")
 
 	if err = association.Error; err != nil {

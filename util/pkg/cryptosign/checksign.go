@@ -2,6 +2,7 @@ package cryptosign
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
@@ -40,7 +41,7 @@ func CheckSign(signature string, flowId string, message string, pubKey string) (
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return "", false, ErrFlowIdNotFound
 	}
-	if addr != flowIdData.WalletAddress {
+	if !strings.EqualFold(addr, flowIdData.WalletAddress) {
 		return "", false, err
 	}
 
