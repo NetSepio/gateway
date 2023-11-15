@@ -1,9 +1,9 @@
 package getreviews
 
 import (
+	"fmt"
 	"net/http"
 
-	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
@@ -16,16 +16,24 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/getreviews")
 	{
-		g.Use(paseto.PASETO)
 		g.GET("", getReviews)
 	}
 }
 
 func getReviews(c *gin.Context) {
 	db := dbconfig.GetDb()
-	walletAddr := c.GetString(paseto.CTX_WALLET_ADDRES)
+	var queryRequest GetReviewsQuery
+	err := c.BindQuery(&queryRequest)
+	if err != nil {
+		//TODO not override status or not set status again
+		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
+		return
+	}
+	walletAddr := c.Query("walletAddress")
+	limit := 10
+	offset := (*queryRequest.Page - 1) * limit
 	var reviews []models.Review
-	if err := db.Find(&reviews, models.Review{Voter: walletAddr}).Error; err != nil {
+	if err := db.Limit(10).Offset(offset).Find(&reviews, models.Review{Voter: walletAddr}).Error; err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		logwrapper.Error("failed to get reviews", err)
 		return

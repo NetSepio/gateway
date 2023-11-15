@@ -2,6 +2,10 @@ package getreviews
 
 import "time"
 
+type GetReviewsQuery struct {
+	Voter string `form:"voter"`
+	Page  *int   `form:"page" binding:"required,min=1"`
+}
 type GetReviewsItem struct {
 	MetaDataUri        string    `json:"metaDataUri"`
 	Category           string    `json:"category"`

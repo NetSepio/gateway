@@ -1,0 +1,7 @@
+services:
+  app:
+    build:
+      dockerfile: ./Dockerfile
+    env_file: .env
+    network_mode: host
+    restart: on-failure
