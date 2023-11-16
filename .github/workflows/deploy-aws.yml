@@ -40,9 +40,9 @@ jobs:
       uses: appleboy/ssh-action@v0.1.7
       with:         
         host: ${{ secrets.PROD_REMOTE_SERVER_ADDRESS }}
-        username: ${{ secrets.PROD_REMOTE_SERVER_ADDRESS }}
-        key:  ${{ secrets.PROD_REMOTE_SERVER_ADDRESS }}
-        port: ${{ secrets.PROD_REMOTE_SERVER_ADDRESS }} 
+        username: ${{ secrets.PROD_SERVER_USERNAME }}
+        key:  ${{ secrets.PROD_REMOTE_SERVER_KEY }}
+        port: ${{ secrets.PROD_SSH_PORT }} 
         script: |
           pwd
           cd gateway
