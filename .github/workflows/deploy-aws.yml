@@ -1,48 +1,67 @@
-name: "Deploy to EKS"
+name: "Build and Push to GHCR"
+
 on:
   push:
-    branches: [main]
+    branches: 
+      - main
+      - prod
+      - thisisommore/automated-deployment-82
 
 jobs:
-  build:
-    name: Build Image and deploy to EKS
+
+  Deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
+    
+    - name: Checkout
+      uses: actions/checkout@v3
+      
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ secrets.GHCR_USERNAME }}
+        password: ${{ secrets.GHCR_TOKEN }}
+    
+    - name: Build and Push Docker Image
+      run: |
+        export CURRENT_BRANCH=${GITHUB_REF#refs/heads/}
+        export TAG=$([[ $CURRENT_BRANCH == $(basename ${{ github.ref }}) ]] && echo $CURRENT_BRANCH || echo "latest")
+        export GITHUB_REF_IMAGE=ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA
+        export GITHUB_BRANCH_IMAGE=ghcr.io/$GITHUB_REPOSITORY:$TAG
+        docker build -t $GITHUB_REF_IMAGE -t $GITHUB_BRANCH_IMAGE .
+        echo "Pushing Image to GitHub Container Registry"
+        docker push $GITHUB_REF_IMAGE
+        docker push $GITHUB_BRANCH_IMAGE
+  
+    - name: Deploy on DEV server 
+      if: github.ref == 'refs/heads/thisisommore/automated-deployment-82' 
+      uses: appleboy/ssh-action@v0.1.7
+      with:         
+        host: ${{ secrets.DEV_REMOTE_SERVER_ADDRESS }}
+        username: ${{ secrets.DEV_SERVER_USERNAME }}
+        key:  ${{ secrets.DEV_REMOTE_SERVER_KEY }}
+        port: ${{ secrets.DEV_SSH_PORT }} 
+        script: |
+          pwd
+          cd gateway
+          docker stop gateway && docker rm gateway && docker image rm gateway
+          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u secrets.GHCR_USERNAME --password-stdin
+          docker pull ghcr.io/netsepio/gateway:main
+          docker run --name="gateway" --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:main
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: netsepio-gateway
-          IMAGE_TAG: latest
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-      - name: Skaffold deploy
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        run: |
-          curl -LO "https://dl.k8s.io/release/v1.24.3/bin/linux/amd64/kubectl"
-          curl -LO "https://dl.k8s.io/v1.24.3/bin/linux/amd64/kubectl.sha256"
-          echo "$(<kubectl.sha256)  kubectl" | sha256sum --check
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-          kubectl version --client
-          mkdir -p ~/.kube
-          echo "$KUBE_CONFIG_DATA" | base64 -d > ~/.kube/config
-          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
-          sudo install skaffold /usr/local/bin/
-          skaffold run
+    - name: Deploy on PROD server 
+      if: github.ref == 'refs/heads/prod' 
+      uses: appleboy/ssh-action@v0.1.7
+      with:         
+        host: ${{ secrets.PROD_REMOTE_SERVER_ADDRESS }}
+        username: ${{ secrets.PROD_SERVER_USERNAME }}
+        key:  ${{ secrets.PROD_REMOTE_SERVER_KEY }}
+        port: ${{ secrets.PROD_SSH_PORT }} 
+        script: |
+          pwd
+          cd gateway
+          docker stop gateway && docker rm gateway && docker image rm gateway
+          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u secrets.GHCR_USERNAME --password-stdin
+          docker pull ghcr.io/netsepio/gateway:prod
+          docker run --name="gateway" --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:prod    
