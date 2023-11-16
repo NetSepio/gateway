@@ -5,7 +5,6 @@ on:
     branches: 
       - main
       - prod
-      - automated-deployment-82
 
 jobs:
 
@@ -37,7 +36,7 @@ jobs:
         docker push $GITHUB_REF_IMAGE
         docker push $GITHUB_BRANCH_IMAGE
     - name: Deploy on DEV server 
-      if: github.ref == 'refs/heads/automated-deployment-82' 
+      if: github.ref == 'refs/heads/main' 
       uses: appleboy/ssh-action@v0.1.7
       with:         
         host: ${{ secrets.DEV_REMOTE_SERVER_ADDRESS }}
@@ -49,8 +48,8 @@ jobs:
           cd gateway
           docker stop gateway || true && docker image rm gateway
           echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u secrets.GHCR_USERNAME --password-stdin
-          docker pull ghcr.io/netsepio/gateway:automated-deployment-82
-          docker run --name="gateway" --rm --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:automated-deployment-82
+          docker pull ghcr.io/netsepio/gateway:main
+          docker run --name="gateway" --rm --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:main
 
     - name: Deploy on PROD server 
       if: github.ref == 'refs/heads/prod' 
