@@ -5,7 +5,7 @@ on:
     branches: 
       - main
       - prod
-      - thisisommore/automated-deployment-82
+      - automated-deployment-82
 
 jobs:
 
@@ -27,6 +27,7 @@ jobs:
       run: |
         export CURRENT_BRANCH=${GITHUB_REF#refs/heads/}
         export TAG=$([[ $CURRENT_BRANCH == $(basename ${{ github.ref }}) ]] && echo $CURRENT_BRANCH || echo "latest")
+        echo $TAG
         export GITHUB_REF_IMAGE=ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA
         export GITHUB_BRANCH_IMAGE=ghcr.io/$GITHUB_REPOSITORY:$TAG
         export GITHUB_REF_IMAGE=$(echo $GITHUB_REF_IMAGE | tr '[:upper:]' '[:lower:]')
@@ -36,7 +37,7 @@ jobs:
         docker push $GITHUB_REF_IMAGE
         docker push $GITHUB_BRANCH_IMAGE
     - name: Deploy on DEV server 
-      if: github.ref == 'refs/heads/thisisommore/automated-deployment-82' 
+      if: github.ref == 'refs/heads/automated-deployment-82' 
       uses: appleboy/ssh-action@v0.1.7
       with:         
         host: ${{ secrets.DEV_REMOTE_SERVER_ADDRESS }}
@@ -48,8 +49,8 @@ jobs:
           cd gateway
           docker stop gateway || true && docker image rm gateway
           echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u secrets.GHCR_USERNAME --password-stdin
-          docker pull ghcr.io/netsepio/gateway:thisisommore/automated-deployment-82
-          docker run --name="gateway" --rm --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:thisisommore/automated-deployment-82
+          docker pull ghcr.io/netsepio/gateway:automated-deployment-82
+          docker run --name="gateway" --rm --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:automated-deployment-82
 
     - name: Deploy on PROD server 
       if: github.ref == 'refs/heads/prod' 
