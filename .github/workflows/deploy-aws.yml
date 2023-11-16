@@ -39,10 +39,10 @@ jobs:
       if: github.ref == 'refs/heads/main' 
       uses: appleboy/ssh-action@v0.1.7
       with:         
-        host: ${{ secrets.DEV_REMOTE_SERVER_ADDRESS }}
-        username: ${{ secrets.DEV_SERVER_USERNAME }}
-        key:  ${{ secrets.DEV_REMOTE_SERVER_KEY }}
-        port: ${{ secrets.DEV_SSH_PORT }} 
+        host: ${{ secrets.PROD_REMOTE_SERVER_ADDRESS }}
+        username: ${{ secrets.PROD_REMOTE_SERVER_ADDRESS }}
+        key:  ${{ secrets.PROD_REMOTE_SERVER_ADDRESS }}
+        port: ${{ secrets.PROD_REMOTE_SERVER_ADDRESS }} 
         script: |
           pwd
           cd gateway
