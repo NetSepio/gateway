@@ -3,6 +3,7 @@ package getreviews
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
@@ -29,11 +30,10 @@ func getReviews(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
 		return
 	}
-	walletAddr := c.Query("walletAddress")
 	limit := 10
 	offset := (*queryRequest.Page - 1) * limit
 	var reviews []models.Review
-	if err := db.Limit(10).Offset(offset).Find(&reviews, models.Review{Voter: walletAddr}).Error; err != nil {
+	if err := db.Limit(10).Offset(offset).Find(&reviews, models.Review{Voter: strings.ToLower(queryRequest.Voter), DomainAddress: queryRequest.Domain}).Error; err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		logwrapper.Error("failed to get reviews", err)
 		return
@@ -53,6 +53,7 @@ func getReviews(c *gin.Context) {
 			TransactionHash:    reviews[i].TransactionHash,
 			TransactionVersion: reviews[i].TransactionVersion,
 			CreatedAt:          reviews[i].CreatedAt,
+			Voter:              reviews[i].Voter,
 		}
 	}
 

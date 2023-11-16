@@ -3,8 +3,9 @@ package getreviews
 import "time"
 
 type GetReviewsQuery struct {
-	Voter string `form:"voter"`
-	Page  *int   `form:"page" binding:"required,min=1"`
+	Voter  string `form:"voter"`
+	Domain string `form:"domain"`
+	Page   *int   `form:"page" binding:"required,min=1"`
 }
 type GetReviewsItem struct {
 	MetaDataUri        string    `json:"metaDataUri"`
@@ -18,6 +19,7 @@ type GetReviewsItem struct {
 	TransactionHash    string    `json:"transactionHash"`
 	TransactionVersion int64     `json:"transactionVersion"`
 	CreatedAt          time.Time `json:"createdAt"`
+	Voter              string    `json:"voter"`
 }
 
 type GetReviewsPayload []GetReviewsItem
