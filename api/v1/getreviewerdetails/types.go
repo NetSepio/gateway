@@ -8,4 +8,6 @@ type GetReviewerDetailsPayload struct {
 	Name              string `json:"name,omitempty"`
 	WalletAddress     string `json:"walletAddress"`
 	ProfilePictureUrl string `json:"profilePictureUrl,omitempty"`
+	Discord string `json:"discord,omitempty"`
+	Twitter string `json:"twitter,omitempty"`
 }
