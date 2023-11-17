@@ -47,6 +47,7 @@ func waitlist(c *gin.Context) {
 		EmailId:       req.EmailId,
 		WalletAddress: strings.ToLower(req.WalletAddress),
 		Twitter:       req.Twitter,
+		Discord:       req.Discord,
 	}
 	if err := db.Create(newWailListMember).Error; err != nil {
 		logwrapper.Errorf("failed to add to waitlist, %s", err)
