@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models/claims"
@@ -31,13 +32,20 @@ func PASETO(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
+
 	if headers.Authorization == "" {
 		logValidationFailed(headers.Authorization, ErrAuthHeaderMissing)
 		httpo.NewErrorResponse(http.StatusBadRequest, ErrAuthHeaderMissing.Error()).SendD(c)
 		c.Abort()
 		return
+	} else if !strings.HasPrefix(headers.Authorization, "Bearer ") {
+		err := errors.New("authorization header must have Bearer prefix")
+		logValidationFailed(headers.Authorization, err)
+		httpo.NewErrorResponse(http.StatusBadRequest, err.Error()).SendD(c)
+		c.Abort()
+		return
 	}
-	pasetoToken := headers.Authorization
+	pasetoToken := strings.TrimPrefix(headers.Authorization, "Bearer ")
 	pv4 := pvx.NewPV4Local()
 	k := envconfig.EnvVars.PASETO_PRIVATE_KEY
 	symK := pvx.NewSymmetricKey([]byte(k), pvx.Version4)
@@ -77,7 +85,6 @@ func PASETO(c *gin.Context) {
 		}
 	}
 }
-
 func logValidationFailed(token string, err error) {
 	logwrapper.Warnf("validation failed with token %v and error: %v", token, err)
 }
