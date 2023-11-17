@@ -6,6 +6,7 @@ import (
 	"github.com/NetSepio/gateway/api/v1/deletereview"
 	"github.com/NetSepio/gateway/api/v1/feedback"
 	flowid "github.com/NetSepio/gateway/api/v1/flowid"
+	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
 	"github.com/NetSepio/gateway/api/v1/getreviews"
 	"github.com/NetSepio/gateway/api/v1/healthcheck"
 	"github.com/NetSepio/gateway/api/v1/profile"
@@ -29,5 +30,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		waitlist.ApplyRoutes(v1)
 		stats.ApplyRoutes(v1)
 		getreviews.ApplyRoutes(v1)
+		getreviewerdetails.ApplyRoutes(v1)
 	}
 }
