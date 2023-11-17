@@ -36,6 +36,8 @@ func patchProfile(c *gin.Context) {
 		Name:              requestBody.Name,
 		ProfilePictureUrl: requestBody.ProfilePictureUrl,
 		Country:           requestBody.Country,
+		Discord:           requestBody.Discord,
+		Twitter:           requestBody.Twitter,
 	}
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	result := db.Model(&models.User{}).
