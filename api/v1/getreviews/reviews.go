@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,8 +34,28 @@ func getReviews(c *gin.Context) {
 	}
 	limit := 10
 	offset := (*queryRequest.Page - 1) * limit
-	var reviews []models.Review
-	if err := db.Limit(10).Offset(offset).Find(&reviews, models.Review{Voter: strings.ToLower(queryRequest.Voter), DomainAddress: queryRequest.Domain}).Error; err != nil {
+	var reviews []struct {
+		Voter              string `json:"voter"`
+		Name               string `json:"name"`
+		MetaDataUri        string `json:"metaDataUri"`
+		Category           string `json:"category"`
+		DomainAddress      string `json:"domainAddress"`
+		SiteUrl            string `json:"siteUrl"`
+		SiteType           string `json:"siteType"`
+		SiteTag            string `json:"siteTag"`
+		SiteSafety         string `json:"siteSafety"`
+		SiteIpfsHash       string `json:"siteIpfsHash"`
+		TransactionHash    string `json:"transactionHash"`
+		TransactionVersion int64  `json:"transactionVersion"`
+		DeletedAt          gorm.DeletedAt
+		CreatedAt          time.Time `json:"createdAt"`
+	}
+
+	if err := db.Limit(10).Offset(offset).Joins("left join users ON reviews.voter = users.wallet_address").Model(&models.Review{}).
+		Where(&models.Review{Voter: strings.ToLower(queryRequest.Voter), DomainAddress: queryRequest.Domain}).
+		Select("reviews.meta_data_uri, reviews.category, reviews.domain_address, reviews.site_url, reviews.site_type, reviews.site_tag, reviews.site_safety, reviews.site_ipfs_hash, reviews.transaction_hash, reviews.transaction_version, reviews.created_at, reviews.voter, users.name").
+		Find(&reviews).
+		Error; err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		logwrapper.Error("failed to get reviews", err)
 		return
@@ -54,6 +76,7 @@ func getReviews(c *gin.Context) {
 			TransactionVersion: reviews[i].TransactionVersion,
 			CreatedAt:          reviews[i].CreatedAt,
 			Voter:              reviews[i].Voter,
+			Name:               reviews[i].Name,
 		}
 	}
 

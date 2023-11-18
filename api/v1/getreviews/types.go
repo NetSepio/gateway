@@ -20,6 +20,7 @@ type GetReviewsItem struct {
 	TransactionVersion int64     `json:"transactionVersion"`
 	CreatedAt          time.Time `json:"createdAt"`
 	Voter              string    `json:"voter"`
+	Name               string    `json:"name"`
 }
 
 type GetReviewsPayload []GetReviewsItem
