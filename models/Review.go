@@ -7,15 +7,15 @@ import (
 )
 
 type Review struct {
-	Voter              string `json:"voter" binding:"required,hexadecimal"`
-	MetaDataUri        string `json:"metaDataUri" binding:"required" gorm:"primary_key"`
-	Category           string `json:"category" binding:"required"`
-	DomainAddress      string `json:"domainAddress" binding:"required"`
-	SiteUrl            string `json:"siteUrl" binding:"required"`
-	SiteType           string `json:"siteType" binding:"required"`
-	SiteTag            string `json:"siteTag" binding:"required"`
-	SiteSafety         string `json:"siteSafety" binding:"required"`
-	SiteIpfsHash       string `json:"siteIpfsHash" binding:"required"`
+	Voter              string `json:"voter"`
+	MetaDataUri        string `json:"metaDataUri"`
+	Category           string `json:"category"`
+	DomainAddress      string `json:"domainAddress"`
+	SiteUrl            string `json:"siteUrl"`
+	SiteType           string `json:"siteType"`
+	SiteTag            string `json:"siteTag"`
+	SiteSafety         string `json:"siteSafety"`
+	SiteIpfsHash       string `json:"siteIpfsHash"`
 	TransactionHash    string `json:"transactionHash"`
 	TransactionVersion int64  `json:"transactionVersion"`
 	DeletedAt          gorm.DeletedAt
