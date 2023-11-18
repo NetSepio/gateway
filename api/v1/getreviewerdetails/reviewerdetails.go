@@ -32,7 +32,7 @@ func getProfile(c *gin.Context) {
 		return
 	}
 	var user models.User
-	err = db.Model(&models.User{}).Select("name, profile_picture_url, wallet_address").Where("wallet_address = ?", strings.ToLower(request.WalletAddress)).First(&user).Error
+	err = db.Model(&models.User{}).Select("name, profile_picture_url, wallet_address, discord, twitter").Where("wallet_address = ?", strings.ToLower(request.WalletAddress)).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			logrus.Error(err)
@@ -45,7 +45,11 @@ func getProfile(c *gin.Context) {
 	}
 
 	payload := GetReviewerDetailsPayload{
-		user.Name, user.WalletAddress, user.ProfilePictureUrl,
+		Name:              user.Name,
+		WalletAddress:     user.WalletAddress,
+		ProfilePictureUrl: user.ProfilePictureUrl,
+		Discord:           user.Discord,
+		Twitter:           user.Twitter,
 	}
 	httpo.NewSuccessResponseP(200, "Profile fetched successfully", payload).SendD(c)
 }
