@@ -5,10 +5,9 @@ import (
 )
 
 func GenerateToken(claims pvx.Claims, privateKey string) (string, error) {
-
-	symK := pvx.NewSymmetricKey([]byte(privateKey), pvx.Version4)
-	pv4 := pvx.NewPV4Local()
-	tokenString, err := pv4.Encrypt(symK, claims)
+	asymSK := pvx.NewAsymmetricSecretKey([]byte(privateKey), pvx.Version4)
+	ppv4 := pvx.NewPV4Public()
+	tokenString, err := ppv4.Sign(asymSK, claims)
 	if err != nil {
 		return "", err
 	}
