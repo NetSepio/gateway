@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/ed25519"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"strings"
@@ -28,7 +30,12 @@ func main() {
 
 		}
 		newClaims := claims.New(newUser.WalletAddress)
-		token, err := auth.GenerateToken(newClaims, envconfig.EnvVars.PASETO_PRIVATE_KEY)
+
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
+		if err != nil {
+			panic(err)
+		}
+		token, err := auth.GenerateToken(newClaims, ed25519.PrivateKey(pvKey))
 		if err != nil {
 			panic(err)
 		}

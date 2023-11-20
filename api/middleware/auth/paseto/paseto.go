@@ -1,6 +1,8 @@
 package paseto
 
 import (
+	"crypto/ed25519"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"net/http"
@@ -45,11 +47,19 @@ func PASETO(c *gin.Context) {
 		c.Abort()
 		return
 	}
+
 	pasetoToken := strings.TrimPrefix(headers.Authorization, "Bearer ")
 	ppv4 := pvx.NewPV4Public()
-	k := envconfig.EnvVars.PASETO_PRIVATE_KEY
-	asymPK := pvx.NewAsymmetricPublicKey([]byte(k), pvx.Version4)
+	k, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
+	if err != nil {
+		err = fmt.Errorf("failed to decode priv key, %s", err)
+		logValidationFailed(headers.Authorization, err)
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
 
+	pubKey := ed25519.PrivateKey(k).Public().(ed25519.PublicKey)
+	asymPK := pvx.NewAsymmetricPublicKey(pubKey, pvx.Version4)
 	var cc claims.CustomClaims
 	err = ppv4.
 		Verify(pasetoToken, asymPK).
