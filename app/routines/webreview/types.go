@@ -20,6 +20,12 @@ func (r *NFTStorageRes) Marshal() ([]byte, error) {
 type NFTStorageRes struct {
 	Ok    bool  `json:"ok"`
 	Value Value `json:"value"`
+	Error Error `json:"error"`
+}
+
+type Error struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
 }
 
 type Value struct {

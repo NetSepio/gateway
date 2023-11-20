@@ -60,6 +60,9 @@ func UploadToIpfs(osFile io.Reader, fileName string) (*NFTStorageRes, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to read body of request for nft.storage: %w", err)
 	}
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("failed to upload using nft.storage, status code: %d, response body: %s", resp.StatusCode, bodyBytes)
+	}
 	nftRes, err := UnmarshalNFTStorageRes(bodyBytes)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal json body of request for nft.storage: %w", err)
