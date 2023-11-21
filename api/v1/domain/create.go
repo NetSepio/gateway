@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 func postDomain(c *gin.Context) {
@@ -21,6 +23,8 @@ func postDomain(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
 		return
 	}
+
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 
 	domainId := uuid.NewString()
 	txtValue := fmt.Sprintf("netsepio_verification=%s", uuid.NewString())
@@ -36,15 +40,31 @@ func postDomain(c *gin.Context) {
 		CoverImageHash: request.CoverImageHash,
 	}
 
+	domainAdmin := models.DomainAdmin{
+		DomainId:           domainId,
+		AdminWalletAddress: walletAddress,
+	}
+
+	err = db.Transaction(func(tx *gorm.DB) error {
+		if err := db.Create(newDomain).Error; err != nil {
+			logwrapper.Errorf("failed to create domain: %s", err)
+			return err
+		}
+		if err := db.Create(domainAdmin).Error; err != nil {
+			logwrapper.Errorf("failed to associate admin with domain: %s", err)
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		logwrapper.Errorf("failed to create domain: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create domain")
+		return
+	}
 	payload := CreateDomainResponse{
 		TxtValue: txtValue, DomainId: domainId,
 	}
-
-	if err := db.Create(newDomain).Error; err != nil {
-		logwrapper.Errorf("failed to create domain: %s", err)
-		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create domain").SendD(c)
-		return
-	}
-
 	httpo.NewSuccessResponseP(200, "domain created", payload).SendD(c)
 }

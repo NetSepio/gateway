@@ -49,10 +49,13 @@ func verifyDomain(c *gin.Context) {
 				return
 			}
 		}
-		panic(err)
+		logwrapper.Errorf("failed to lookup domain: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+		return
 	}
 	if len(txts) == 0 {
-		fmt.Printf("no record")
+		httpo.NewErrorResponse(http.StatusNotFound, "txt records are empty").SendD(c)
+		return
 	}
 
 	ttrue := true
@@ -77,7 +80,6 @@ func verifyDomain(c *gin.Context) {
 			httpo.NewSuccessResponse(200, "domain verified").SendD(c)
 			return
 		}
-		fmt.Printf("%s == %s \n", txt, *domainData.TxtValue)
 	}
 	httpo.NewErrorResponse(400, "no valid txt record found").SendD(c)
 }
