@@ -42,7 +42,7 @@ func queryDomain(c *gin.Context) {
 			Where("domain_name like ?", fmt.Sprintf("%%%s%%", queryRequest.Domain))
 	}
 	if err := model.
-		Where(&models.Domain{Verified: queryRequest.Verified}).
+		Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).
 		Select("domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category").
 		Find(&domains).
 		Error; err != nil {
