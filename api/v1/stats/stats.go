@@ -31,7 +31,7 @@ func getStats(c *gin.Context) {
 		return
 	}
 	var review []GetStatsResponse
-	err = db.Model(&models.Review{}).Select("site_safety, count(site_safety)").Group("site_safety").Where("site_url = ?", queryReq.SiteUrl).Find(&review).Error
+	err = db.Model(&models.Review{}).Select("site_safety, count(site_safety)").Group("site_safety").Where(&models.Review{SiteUrl: queryReq.SiteUrl, DomainAddress: queryReq.Domain}).Find(&review).Error
 	if err != nil {
 		logrus.Error(err)
 		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
