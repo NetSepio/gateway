@@ -25,6 +25,7 @@ func queryDomain(c *gin.Context) {
 	limit := 10
 	offset := (*queryRequest.Page - 1) * limit
 	var domains []struct {
+		Id             string    `json:"id"`
 		DomainName     string    `json:"domainName"`
 		Verified       *bool     `json:"verified"`
 		CreatedAt      time.Time `json:"createdAt"`
@@ -43,7 +44,7 @@ func queryDomain(c *gin.Context) {
 	}
 	if err := model.
 		Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).
-		Select("domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category").
+		Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category").
 		Find(&domains).
 		Error; err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
