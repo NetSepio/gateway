@@ -2,6 +2,7 @@ package testingcommon
 
 import (
 	"bytes"
+	"encoding/hex"
 	"encoding/json"
 	"log"
 	"strings"
@@ -24,8 +25,12 @@ func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 	gin.SetMode(gin.TestMode)
 	CreateTestUser(t, testWalletAddress)
 	customClaims := claims.New(testWalletAddress)
-	pasetoPrivateKey := envconfig.EnvVars.PASETO_PRIVATE_KEY
-	token, err := auth.GenerateToken(customClaims, pasetoPrivateKey)
+
+	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY)
+	if err != nil {
+		t.Fatal(err)
+	}
+	token, err := auth.GenerateToken(customClaims, pvKey)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -24,4 +24,7 @@ RUN apt update &&\
 COPY --from=builder /app/gateway .
 COPY --from=aptos_builder /app/aptos .
 COPY ./docker-start.sh .
+
+ARG version
+ENV VERSION=$version
 CMD [ "bash", "docker-start.sh" ]

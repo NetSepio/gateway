@@ -1,14 +1,15 @@
 package auth
 
 import (
+	"crypto/ed25519"
+
 	"github.com/vk-rv/pvx"
 )
 
-func GenerateToken(claims pvx.Claims, privateKey string) (string, error) {
-
-	symK := pvx.NewSymmetricKey([]byte(privateKey), pvx.Version4)
-	pv4 := pvx.NewPV4Local()
-	tokenString, err := pv4.Encrypt(symK, claims)
+func GenerateToken(claims pvx.Claims, privateKey ed25519.PrivateKey) (string, error) {
+	asymSK := pvx.NewAsymmetricSecretKey(privateKey, pvx.Version4)
+	ppv4 := pvx.NewPV4Public()
+	tokenString, err := ppv4.Sign(asymSK, claims)
 	if err != nil {
 		return "", err
 	}

@@ -1,6 +1,7 @@
 package paseto
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -42,7 +43,11 @@ func Test_PASETO(t *testing.T) {
 	}()
 	t.Run("Should return 200 with correct PASETO", func(t *testing.T) {
 		newClaims := claims.New(testWalletAddress)
-		token, err := auth.GenerateToken(newClaims, envconfig.EnvVars.PASETO_PRIVATE_KEY)
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY)
+		if err != nil {
+			panic(err)
+		}
+		token, err := auth.GenerateToken(newClaims, pvKey)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -52,7 +57,13 @@ func Test_PASETO(t *testing.T) {
 
 	t.Run("Should return 401 with incorret PASETO", func(t *testing.T) {
 		newClaims := claims.New(testWalletAddress)
-		token, err := auth.GenerateToken(newClaims, "aaaabbaa")
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY)
+		if err != nil {
+			panic(err)
+		}
+		pvKey[0] = 'a'
+		pvKey[0] = 'f'
+		token, err := auth.GenerateToken(newClaims, pvKey)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -71,10 +82,11 @@ func Test_PASETO(t *testing.T) {
 			},
 		}
 		time.Sleep(time.Second * 2)
-		token, err := auth.GenerateToken(newClaims, envconfig.EnvVars.PASETO_PRIVATE_KEY)
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY)
 		if err != nil {
-			t.Fatal(err)
+			panic(err)
 		}
+		token, err := auth.GenerateToken(newClaims, pvKey)
 
 		rr := callApi(t, token)
 		assert.Equal(t, http.StatusUnauthorized, rr.Result().StatusCode)

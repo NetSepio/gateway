@@ -1,6 +1,7 @@
 package authenticate
 
 import (
+	"encoding/hex"
 	"fmt"
 	"net/http"
 
@@ -70,8 +71,13 @@ func authenticate(c *gin.Context) {
 	}
 	if isCorrect {
 		customClaims := claims.New(walletAddress)
-		pasetoPrivateKey := envconfig.EnvVars.PASETO_PRIVATE_KEY
-		pasetoToken, err := auth.GenerateToken(customClaims, pasetoPrivateKey)
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY)
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to generate token, error %v", err.Error())
+			return
+		}
+		pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
 		if err != nil {
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 			logwrapper.Errorf("failed to generate token, error %v", err.Error())

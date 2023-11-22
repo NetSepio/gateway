@@ -8,9 +8,9 @@ import (
 	flowid "github.com/NetSepio/gateway/api/v1/flowid"
 	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
 	"github.com/NetSepio/gateway/api/v1/getreviews"
-	"github.com/NetSepio/gateway/api/v1/healthcheck"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	"github.com/NetSepio/gateway/api/v1/stats"
+	"github.com/NetSepio/gateway/api/v1/status"
 	"github.com/NetSepio/gateway/api/v1/waitlist"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		profile.ApplyRoutes(v1)
 		delegatereviewcreation.ApplyRoutes(v1)
 		deletereview.ApplyRoutes(v1)
-		healthcheck.ApplyRoutes(v1)
+		status.ApplyRoutes(v1)
 		feedback.ApplyRoutes(v1)
 		waitlist.ApplyRoutes(v1)
 		stats.ApplyRoutes(v1)

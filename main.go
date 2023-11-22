@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/ed25519"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"strings"
@@ -18,7 +20,8 @@ func main() {
 	app.Init()
 
 	db := dbconfig.GetDb()
-
+	// pub, priv, _ := ed25519.GenerateKey(rand.Reader)
+	// fmt.Printf("priv = %s\npub = %s\n", hex.EncodeToString(priv), hex.EncodeToString(pub))
 	if os.Getenv("DEBUG_MODE") == "true" {
 		newUser := &models.User{
 			WalletAddress: strings.ToLower("0x984185d39c67c954bd058beb619faf8929bb9349ef33c15102bdb982cbf7f18f"),
@@ -28,7 +31,12 @@ func main() {
 
 		}
 		newClaims := claims.New(newUser.WalletAddress)
-		token, err := auth.GenerateToken(newClaims, envconfig.EnvVars.PASETO_PRIVATE_KEY)
+
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
+		if err != nil {
+			panic(err)
+		}
+		token, err := auth.GenerateToken(newClaims, ed25519.PrivateKey(pvKey))
 		if err != nil {
 			panic(err)
 		}
