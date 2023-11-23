@@ -38,9 +38,9 @@ func queryDomain(c *gin.Context) {
 	}
 
 	model := db.Limit(10).Offset(offset).Model(&models.Domain{})
-	if queryRequest.Domain != "" {
+	if queryRequest.DomainName != "" {
 		model = model.
-			Where("domain_name like ?", fmt.Sprintf("%%%s%%", queryRequest.Domain))
+			Where("domain_name like ?", fmt.Sprintf("%%%s%%", queryRequest.DomainName))
 	}
 	if err := model.
 		Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).
