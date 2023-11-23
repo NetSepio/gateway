@@ -7,7 +7,9 @@ import (
 	"net/http"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
+	"github.com/NetSepio/gateway/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +22,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func Deploy(c *gin.Context) {
-	//db := dbconfig.GetDb()
+	db := dbconfig.GetDb()
 	var req SotreusDeployBody
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -54,22 +56,22 @@ func Deploy(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
-	// contract := models.Contract{
-	// 	ContractName:    req.ContractName,
-	// 	ContractAddress: response.ContractAddress,
-	// 	WalletAddress:   walletAddress,
-	// 	ChainId:         response.ChainId,
-	// 	Verified:        response.Verified,
-	// 	StorefrontId:    req.StorefrontId,
-	// 	BlockNumber:     response.BlockNumber,
-	// 	CollectionName:  req.CollectionName,
-	// 	Thumbnail:       req.Thumbnail,
-	// 	CoverImage:      req.CoverImage,
-	// }
-	// result := db.Create(&contract)
-	// if result.Error != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": err})
-	// 	return
-	// }
+	contract := models.Sotreus{
+		Name:      response.Sotreus.Name,
+		Type:      response.Sotreus.Type,
+		Uuid:      response.Sotreus.Uuid,
+		Category:  response.Sotreus.Category,
+		Status:    response.Sotreus.Status,
+		CreatedAt: response.Sotreus.CreatedAt,
+		UpdatedAt: response.Sotreus.UpdatedAt,
+		DeletedAt: response.Sotreus.DeletedAt,
+		Sotreus:   (*models.SotreusContainerInfo)(response.Sotreus.Sotreus),
+		Adguard:   (*models.AdguardContainerInfo)(response.Sotreus.Adguard),
+	}
+	result := db.Create(&contract)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
 	c.JSON(http.StatusOK, response)
 }
