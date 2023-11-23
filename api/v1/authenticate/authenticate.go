@@ -71,7 +71,7 @@ func authenticate(c *gin.Context) {
 	}
 	if isCorrect {
 		customClaims := claims.New(walletAddress)
-		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY)
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 			logwrapper.Errorf("failed to generate token, error %v", err.Error())
