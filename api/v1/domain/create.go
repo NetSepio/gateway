@@ -28,7 +28,7 @@ func postDomain(c *gin.Context) {
 
 	domainId := uuid.NewString()
 	txtValue := fmt.Sprintf("netsepio_verification=%s", uuid.NewString())
-	newDomain := &models.Domain{
+	newDomain := models.Domain{
 		Id:             domainId,
 		TxtValue:       &txtValue,
 		DomainName:     request.DomainName,
@@ -46,11 +46,11 @@ func postDomain(c *gin.Context) {
 	}
 
 	err = db.Transaction(func(tx *gorm.DB) error {
-		if err := db.Create(newDomain).Error; err != nil {
+		if err := db.Create(&newDomain).Error; err != nil {
 			logwrapper.Errorf("failed to create domain: %s", err)
 			return err
 		}
-		if err := db.Create(domainAdmin).Error; err != nil {
+		if err := db.Create(&domainAdmin).Error; err != nil {
 			logwrapper.Errorf("failed to associate admin with domain: %s", err)
 			return err
 		}

@@ -10,6 +10,10 @@ type CreateDomainRequest struct {
 	Category       string `json:"category" binding:"required"`
 }
 
+type DeleteDomainQuery struct {
+	DomainId string `form:"domainId" binding:"required"`
+}
+
 type CreateDomainResponse struct {
 	TxtValue string `json:"txtValue"`
 	DomainId string `json:"domainId"`

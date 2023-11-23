@@ -12,6 +12,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.Use(paseto.PASETO)
 		g.POST("", postDomain)
 		g.GET("", queryDomain)
+		g.DELETE("", deleteDomain)
 		g.PATCH("/verify", verifyDomain)
 	}
 }
