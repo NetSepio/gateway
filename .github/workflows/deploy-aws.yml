@@ -45,7 +45,7 @@ jobs:
         script: |
           pwd
           cd gateway
-          docker stop gateway || true && docker image rm gateway
+          docker stop gateway || true && docker image rm ghcr.io/netsepio/gateway:main
           echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u secrets.GHCR_USERNAME --password-stdin
           docker pull ghcr.io/netsepio/gateway:main
           docker run --name="gateway" --rm --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:main
@@ -61,7 +61,7 @@ jobs:
         script: |
           pwd
           cd gateway
-          docker stop gateway || true && docker image rm gateway
+          docker stop gateway || true && docker image rm ghcr.io/netsepio/gateway:prod
           echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u secrets.GHCR_USERNAME --password-stdin
           docker pull ghcr.io/netsepio/gateway:prod
           docker run --name="gateway" --rm --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:prod    
