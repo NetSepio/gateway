@@ -6,6 +6,9 @@ type SotreusDeployBody struct {
 	Password string `pjson:"Password,omitempty"`
 }
 
+type SotreusRequest struct {
+	Uuid string `json:"uuid,omitempty"`
+}
 type SotreusResponse struct {
 	Status  int64               `json:"status,omitempty"`
 	Sucess  bool                `json:"sucess,omitempty"`

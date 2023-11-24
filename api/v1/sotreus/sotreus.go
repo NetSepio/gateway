@@ -18,6 +18,9 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		g.Use(paseto.PASETO)
 		g.POST("", Deploy)
+		g.POST("/stop", Stop)
+		g.DELETE("", Delete)
+		g.POST("/restart", Restart)
 	}
 }
 
@@ -74,4 +77,96 @@ func Deploy(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, response)
+}
+
+func Stop(c *gin.Context) {
+	//db := dbconfig.GetDb()
+	var req SotreusRequest
+	err := c.BindJSON(&req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	ReqBodyBytes, err := json.Marshal(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus/stop", bytes.NewReader(ReqBodyBytes))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	client := &http.Client{}
+	resp, err := client.Do(contractReq)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	defer resp.Body.Close()
+
+	c.JSON(http.StatusOK, nil)
+
+}
+
+func Delete(c *gin.Context) {
+	//db := dbconfig.GetDb()
+	var req SotreusRequest
+	err := c.BindJSON(&req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	ReqBodyBytes, err := json.Marshal(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	contractReq, err := http.NewRequest(http.MethodDelete, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus", bytes.NewReader(ReqBodyBytes))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	client := &http.Client{}
+	resp, err := client.Do(contractReq)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	defer resp.Body.Close()
+
+	c.JSON(http.StatusOK, nil)
+
+}
+
+func Restart(c *gin.Context) {
+	//db := dbconfig.GetDb()
+	var req SotreusRequest
+	err := c.BindJSON(&req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	ReqBodyBytes, err := json.Marshal(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus/restart", bytes.NewReader(ReqBodyBytes))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	client := &http.Client{}
+	resp, err := client.Do(contractReq)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	defer resp.Body.Close()
+
+	c.JSON(http.StatusOK, nil)
 }
