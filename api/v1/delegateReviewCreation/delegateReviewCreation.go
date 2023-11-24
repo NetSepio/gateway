@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
-	"github.com/NetSepio/gateway/app/routines/webreview"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/aptos"
@@ -35,7 +34,7 @@ func deletegateReviewCreation(c *gin.Context) {
 	}
 
 	walletAddr := c.GetString(paseto.CTX_WALLET_ADDRES)
-	txResult, err := aptos.DelegateReview(aptos.DelegateReviewParams{Voter: walletAddr, MetaDataUri: request.MetaDataUri, Category: request.Category, DomainAddress: request.DomainAddress, SiteUrl: request.SiteUrl, SiteType: request.SiteType, SiteTag: request.SiteTag, SiteSafety: request.SiteSafety})
+	txResult, err := aptos.DelegateReview(aptos.DelegateReviewParams{Voter: walletAddr, MetaDataUri: request.MetaDataUri, Category: request.Category, DomainAddress: request.DomainAddress, SiteUrl: request.SiteUrl, SiteType: request.SiteType, SiteTag: request.SiteTag, SiteSafety: request.SiteSafety, SiteIpfsHash: request.SiteIpfsHash})
 	if err != nil {
 		if errors.Is(err, aptos.ErrMetadataDuplicated) {
 			httpo.NewErrorResponse(http.StatusConflict, "Metadata already exist").SendD(c)
@@ -59,11 +58,11 @@ func deletegateReviewCreation(c *gin.Context) {
 		SiteType:           request.SiteType,
 		SiteTag:            request.SiteTag,
 		SiteSafety:         request.SiteSafety,
-		SiteIpfsHash:       "",
+		SiteIpfsHash:       request.SiteIpfsHash,
 		TransactionHash:    txResult.Result.TransactionHash,
 		TransactionVersion: txResult.Result.Version,
 	}
-	go webreview.Publish(request.MetaDataUri, request.SiteUrl)
+
 	if err := db.Create(newReview).Error; err != nil {
 		httpo.NewSuccessResponseP(httpo.TXDbFailed, "transaction is successful but failed to store tx in db", payload).Send(c, 200)
 		return
