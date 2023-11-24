@@ -14,7 +14,6 @@ type Domain struct {
 	CoverImageHash string    `json:"coverImageHash"`
 	LogoHash       string    `json:"logoHash"`
 	Category       string    `json:"category"`
-	//Title, Headline, Description (supports RTF), name (example: netsepio.com), coverImageHash, logoHash, Category
 }
 
 type DomainAdmin struct {
@@ -23,5 +22,3 @@ type DomainAdmin struct {
 	Admin              User   `gorm:"foreignkey:AdminWalletAddress"`
 	AdminWalletAddress string
 }
-
-// domains POST

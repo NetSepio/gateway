@@ -3,7 +3,7 @@ package domain
 type CreateDomainRequest struct {
 	DomainName     string `json:"domainName" binding:"required"`
 	Title          string `json:"title" binding:"required"`
-	Headline       string `json:"headline" binding:"required"`
+	Headline       string `json:"headline"`
 	Description    string `json:"description" binding:"required"`
 	CoverImageHash string `json:"coverImageHash" binding:"required"`
 	LogoHash       string `json:"logoHash" binding:"required"`
