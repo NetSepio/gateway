@@ -22,8 +22,8 @@ type VerifyDomainRequest struct {
 }
 
 type GetDomainsQuery struct {
-	DomainId string `form:"domainId"`
-	Domain   string `form:"domain"`
-	Verified *bool  `form:"verified"`
-	Page     *int   `form:"page" binding:"required,min=1"`
+	DomainId   string `form:"domainId"`
+	DomainName string `form:"domainName"`
+	Verified   *bool  `form:"verified"`
+	Page       *int   `form:"page" binding:"required,min=1"`
 }
