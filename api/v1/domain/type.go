@@ -12,6 +12,10 @@ type CreateDomainRequest struct {
 	AdminRole      string `json:"adminRole" binding:"required,min=1"`
 }
 
+type DeleteDomainQuery struct {
+	DomainId string `form:"domainId" binding:"required"`
+}
+
 type CreateDomainResponse struct {
 	TxtValue string `json:"txtValue"`
 	DomainId string `json:"domainId"`
