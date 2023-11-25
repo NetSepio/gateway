@@ -20,5 +20,7 @@ type DomainAdmin struct {
 	DomainId           string
 	Domain             Domain `gorm:"foreignkey:DomainId"`
 	Admin              User   `gorm:"foreignkey:AdminWalletAddress"`
+	Name               string
+	Role               string
 	AdminWalletAddress string
 }

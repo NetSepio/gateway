@@ -43,6 +43,8 @@ func postDomain(c *gin.Context) {
 	domainAdmin := models.DomainAdmin{
 		DomainId:           domainId,
 		AdminWalletAddress: walletAddress,
+		Name:               request.AdminName,
+		Role:               request.AdminRole,
 	}
 
 	err = db.Transaction(func(tx *gorm.DB) error {

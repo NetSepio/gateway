@@ -8,8 +8,8 @@ type CreateDomainRequest struct {
 	CoverImageHash string `json:"coverImageHash" binding:"required"`
 	LogoHash       string `json:"logoHash" binding:"required"`
 	Category       string `json:"category" binding:"required"`
-	AdminName string `json:"adminName" binding:"required"`
-	AdminRole string `json:"adminRole" binding:"required"`
+	AdminName      string `json:"adminName" binding:"required,min=1"`
+	AdminRole      string `json:"adminRole" binding:"required,min=1"`
 }
 
 type CreateDomainResponse struct {
