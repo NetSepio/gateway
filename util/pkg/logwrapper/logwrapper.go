@@ -3,17 +3,14 @@ package logwrapper
 import (
 	"os"
 
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/sirupsen/logrus"
 )
 
 var Log *logrus.Entry
 
 func Init() {
-	appName, ok := os.LookupEnv("APP_NAME")
-
-	if !ok {
-		appName = "web3-auth"
-	}
+	appName := envconfig.EnvVars.APP_NAME
 	hostname, err := os.Hostname()
 
 	Log = logrus.New().WithFields(logrus.Fields{
