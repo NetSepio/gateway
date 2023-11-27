@@ -1,11 +1,11 @@
 package sotreus
 
 type SotreusDeployBody struct {
-	OrgID    string `json:"OrgID,omitempty"`
-	OrgName  string `json:"OrgName,omitempty"`
-	Password string `pjson:"Password,omitempty"`
+	Name      string `json:"name"`
+	Endpoint  string `json:"endpoint"`
+	Password  string `json:"password"`
+	SotreusID string `json:"sotreusID"`
 }
-
 type SotreusRequest struct {
 	Uuid string `json:"uuid,omitempty"`
 }
