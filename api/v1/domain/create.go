@@ -3,6 +3,7 @@ package domain
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -29,21 +30,24 @@ func postDomain(c *gin.Context) {
 	domainId := uuid.NewString()
 	txtValue := fmt.Sprintf("netsepio_verification=%s", uuid.NewString())
 	newDomain := models.Domain{
-		Id:             domainId,
-		TxtValue:       &txtValue,
-		DomainName:     request.DomainName,
-		Title:          request.Title,
-		Headline:       request.Headline,
-		Description:    request.Description,
-		LogoHash:       request.LogoHash,
-		Category:       request.Category,
-		CoverImageHash: request.CoverImageHash,
-		Blockchain:     request.Blockchain,
+		Id:               domainId,
+		TxtValue:         &txtValue,
+		DomainName:       request.DomainName,
+		Title:            request.Title,
+		Headline:         request.Headline,
+		Description:      request.Description,
+		LogoHash:         request.LogoHash,
+		Category:         request.Category,
+		CoverImageHash:   request.CoverImageHash,
+		Blockchain:       request.Blockchain,
+		CreatedByAddress: strings.ToLower(walletAddress),
+		UpdatedByAddress: strings.ToLower(walletAddress),
 	}
 
 	domainAdmin := models.DomainAdmin{
 		DomainId:           domainId,
-		AdminWalletAddress: walletAddress,
+		AdminWalletAddress: strings.ToLower(walletAddress),
+		UpdatedByAddress:   strings.ToLower(walletAddress),
 		Name:               request.AdminName,
 		Role:               request.AdminRole,
 	}
@@ -63,7 +67,7 @@ func postDomain(c *gin.Context) {
 
 	if err != nil {
 		logwrapper.Errorf("failed to create domain: %s", err)
-		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create domain")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create domain").SendD(c)
 		return
 	}
 	payload := CreateDomainResponse{

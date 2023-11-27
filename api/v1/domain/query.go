@@ -36,6 +36,8 @@ func queryDomain(c *gin.Context) {
 		LogoHash       string    `json:"logoHash"`
 		Category       string    `json:"category"`
 		Blockchain     string    `json:"blockchain"`
+		CreatedBy      string    `json:"createdBy"`
+		CreatorName    string    `json:"creatorName"`
 	}
 
 	model := db.Limit(10).Offset(offset).Model(&models.Domain{})
@@ -45,7 +47,7 @@ func queryDomain(c *gin.Context) {
 	}
 	if err := model.
 		Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).
-		Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain").
+		Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_address created_by, u.name creator_name").Joins("INNER JOIN users u ON u.wallet_address = created_by_address").
 		Find(&domains).
 		Error; err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
