@@ -66,19 +66,5 @@ func GetDb() *gorm.DB {
     	WHEN duplicate_object THEN null;
 	END $$;`)
 
-	// voterRoleId, err := netsepio.GetRole(netsepio.VOTER_ROLE)
-	// if err != nil {
-	// 	logwrapper.Fatal(err)
-	// }
-
-	// voterEula := envconfig.EnvVars.VOTER_EULA
-
-	// rolesToBeAdded := []models.Role{
-	// 	{Name: "Voter Role", RoleId: hexutil.Encode(voterRoleId[:]), Eula: voterEula}}
-	// for _, role := range rolesToBeAdded {
-	// 	if err := db.Model(&models.Role{}).FirstOrCreate(&role).Error; err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// }
 	return db
 }
