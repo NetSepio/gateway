@@ -12,12 +12,12 @@ import (
 	"github.com/NetSepio/gateway/api/types"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
-	customstatuscodes "github.com/NetSepio/gateway/constants/http/custom_status_codes"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/vk-rv/pvx"
 
 	"github.com/gin-gonic/gin"
@@ -96,7 +96,7 @@ func Test_PASETO(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		assert.Equal(t, customstatuscodes.TokenExpired, response.StatusCode)
+		assert.Equal(t, httpo.TokenExpired, response.StatusCode)
 	})
 
 }
