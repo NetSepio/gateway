@@ -2,6 +2,7 @@ package domain
 
 import (
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/api/v1/domain/admin"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,5 +15,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.GET("", queryDomain)
 		g.DELETE("", deleteDomain)
 		g.PATCH("/verify", verifyDomain)
+		admin.ApplyRoutes(g)
 	}
 }

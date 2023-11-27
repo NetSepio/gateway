@@ -32,3 +32,4 @@ type GetDomainsQuery struct {
 	Verified   *bool  `form:"verified"`
 	Page       *int   `form:"page" binding:"required,min=1"`
 }
+

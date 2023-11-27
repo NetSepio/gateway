@@ -22,12 +22,12 @@ type Domain struct {
 }
 
 type DomainAdmin struct {
-	DomainId           string
-	Domain             Domain `gorm:"foreignkey:DomainId"`
-	Admin              User   `gorm:"foreignkey:AdminWalletAddress"`
-	UpdatedBy          User   `gorm:"foreignkey:UpdatedByAddress"`
-	UpdatedByAddress   string
-	Name               string
-	Role               string
-	AdminWalletAddress string
+	DomainId           string `gorm:"primary_key" json:"domainId"`
+	Domain             Domain `gorm:"foreignkey:DomainId" json:"-"`
+	Admin              User   `gorm:"foreignkey:AdminWalletAddress" json:"-"`
+	UpdatedBy          User   `gorm:"foreignkey:UpdatedByAddress" json:"-"`
+	UpdatedByAddress   string `json:"updatedBy"`
+	Name               string `json:"name"`
+	Role               string `json:"role"`
+	AdminWalletAddress string `gorm:"primary_key" json:"walletAddress"`
 }
