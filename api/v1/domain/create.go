@@ -38,6 +38,7 @@ func postDomain(c *gin.Context) {
 		LogoHash:       request.LogoHash,
 		Category:       request.Category,
 		CoverImageHash: request.CoverImageHash,
+		Chain:          request.Chain,
 	}
 
 	domainAdmin := models.DomainAdmin{

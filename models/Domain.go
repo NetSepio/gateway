@@ -14,6 +14,7 @@ type Domain struct {
 	CoverImageHash string    `json:"coverImageHash"`
 	LogoHash       string    `json:"logoHash"`
 	Category       string    `json:"category"`
+	Chain          string    `json:"chain"`
 }
 
 type DomainAdmin struct {

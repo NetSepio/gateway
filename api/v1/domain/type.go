@@ -10,6 +10,7 @@ type CreateDomainRequest struct {
 	Category       string `json:"category" binding:"required"`
 	AdminName      string `json:"adminName" binding:"required,min=1"`
 	AdminRole      string `json:"adminRole" binding:"required,min=1"`
+	Chain          string `json:"chain"`
 }
 
 type DeleteDomainQuery struct {
