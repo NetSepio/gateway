@@ -18,6 +18,14 @@ type SotreusResponse struct {
 		VpnEndpoint       string `json:"vpn_endpoint"`
 		VpnAPIPort        int    `json:"vpn_api_port"`
 		VpnExternalPort   int    `json:"vpn_external_port"`
+		FirewallEndpoint  string `json:"firewall_endpoint"`
 		DashboardPassword string `json:"dashboard_password"`
 	} `json:"message"`
+}
+
+type DeployResponse struct {
+	VpnID             string `json:"vpn_id"`
+	VpnEndpoint       string `json:"vpn_endpoint"`
+	FirewallEndpoint  string `json:"firewall_endpoint"`
+	DashboardPassword string `json:"dashboard_password"`
 }
