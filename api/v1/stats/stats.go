@@ -7,7 +7,7 @@ import (
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
-	"github.com/NetSepio/gateway/util/pkg/httphelper"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -27,16 +27,16 @@ func getStats(c *gin.Context) {
 	err := c.BindQuery(&queryReq)
 	if err != nil {
 		//TODO not override status or not set status again
-		httphelper.ErrResponse(c, http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err))
+		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
 		return
 	}
 	var review []GetStatsResponse
 	err = db.Model(&models.Review{}).Select("site_safety, count(site_safety)").Group("site_safety").Where(&models.Review{SiteUrl: queryReq.SiteUrl, DomainAddress: queryReq.Domain}).Find(&review).Error
 	if err != nil {
 		logrus.Error(err)
-		httphelper.ErrResponse(c, http.StatusInternalServerError, "Unexpected error occured")
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}
 
-	httphelper.SuccessResponse(c, "Reviews fetched successfully", review)
+	httpo.NewSuccessResponseP(200, "Reviews fetched successfully", review).SendD(c)
 }

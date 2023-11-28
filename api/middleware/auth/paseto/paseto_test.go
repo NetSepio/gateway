@@ -12,12 +12,12 @@ import (
 	"github.com/NetSepio/gateway/api/types"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
-	customstatuscodes "github.com/NetSepio/gateway/constants/http/custom_status_codes"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/NetSepio/gateway/util/testingcommon"
+	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/vk-rv/pvx"
 
 	"github.com/gin-gonic/gin"
@@ -43,7 +43,7 @@ func Test_PASETO(t *testing.T) {
 	}()
 	t.Run("Should return 200 with correct PASETO", func(t *testing.T) {
 		newClaims := claims.New(testWalletAddress)
-		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY)
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
 			panic(err)
 		}
@@ -57,7 +57,7 @@ func Test_PASETO(t *testing.T) {
 
 	t.Run("Should return 401 with incorret PASETO", func(t *testing.T) {
 		newClaims := claims.New(testWalletAddress)
-		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY)
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
 			panic(err)
 		}
@@ -82,7 +82,7 @@ func Test_PASETO(t *testing.T) {
 			},
 		}
 		time.Sleep(time.Second * 2)
-		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY)
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
 			panic(err)
 		}
@@ -96,7 +96,7 @@ func Test_PASETO(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		assert.Equal(t, customstatuscodes.TokenExpired, response.StatusCode)
+		assert.Equal(t, httpo.TokenExpired, response.StatusCode)
 	})
 
 }

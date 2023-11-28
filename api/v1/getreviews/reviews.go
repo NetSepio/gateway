@@ -81,7 +81,7 @@ func getReviews(c *gin.Context) {
 	}
 
 	if len(payload) == 0 {
-		httpo.NewSuccessResponseP(200, "No reviews found", payload).SendD(c)
+		httpo.NewErrorResponse(200, "No reviews found").SendD(c)
 		return
 	}
 

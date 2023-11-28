@@ -4,6 +4,7 @@ import (
 	authenticate "github.com/NetSepio/gateway/api/v1/authenticate"
 	delegatereviewcreation "github.com/NetSepio/gateway/api/v1/delegateReviewCreation"
 	"github.com/NetSepio/gateway/api/v1/deletereview"
+	"github.com/NetSepio/gateway/api/v1/domain"
 	"github.com/NetSepio/gateway/api/v1/feedback"
 	flowid "github.com/NetSepio/gateway/api/v1/flowid"
 	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
@@ -33,5 +34,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		getreviews.ApplyRoutes(v1)
 		getreviewerdetails.ApplyRoutes(v1)
 		sotreus.ApplyRoutes(v1)
+		domain.ApplyRoutes(v1)
 	}
 }

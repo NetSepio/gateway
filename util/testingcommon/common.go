@@ -26,7 +26,7 @@ func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 	CreateTestUser(t, testWalletAddress)
 	customClaims := claims.New(testWalletAddress)
 
-	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY)
+	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	if err != nil {
 		t.Fatal(err)
 	}
