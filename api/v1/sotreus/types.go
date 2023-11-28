@@ -2,11 +2,9 @@ package sotreus
 
 type DeployRequest struct {
 	Name   string `json:"name,omitempty"`
-	Domain string `json:"endpoint,omitempty"`
 	Region string `json:"password,omitempty"`
 }
 type DeployerCreateRequest struct {
-	Endpoint  string `json:"endpoint,omitempty"`
 	SotreusID string `json:"sotreusID,omitempty"`
 }
 type SotreusRequest struct {

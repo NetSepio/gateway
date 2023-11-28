@@ -34,7 +34,6 @@ func Deploy(c *gin.Context) {
 		return
 	}
 	var DeployerRequest DeployerCreateRequest
-	DeployerRequest.Endpoint = req.Domain
 	DeployerRequest.SotreusID = req.Name
 	ReqBodyBytes, err := json.Marshal(DeployerRequest)
 	if err != nil {
@@ -65,6 +64,7 @@ func Deploy(c *gin.Context) {
 	contract := models.Sotreus{
 		Name:          response.Message.VpnID,
 		WalletAddress: walletAddress,
+		Region:        req.Region,
 	}
 	result := db.Create(&contract)
 	if result.Error != nil {
