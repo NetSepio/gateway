@@ -32,3 +32,14 @@ type GetDomainsQuery struct {
 	Verified   *bool  `form:"verified"`
 	Page       *int   `form:"page" binding:"required,min=1"`
 }
+
+type PatchDomainRequest struct {
+	Title          string `json:"title"`
+	Headline       string `json:"headline"`
+	Description    string `json:"description"`
+	CoverImageHash string `json:"coverImageHash"`
+	LogoHash       string `json:"logoHash"`
+	Category       string `json:"category"`
+	Blockchain     string `json:"blockchain"`
+	DomainId       string `json:"domainId" binding:"required"`
+}
