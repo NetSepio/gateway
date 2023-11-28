@@ -3,6 +3,7 @@ package sotreus
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -38,15 +39,14 @@ func Deploy(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
 		return
 	}
-	var DeployerRequest DeployerCreateRequest
-	DeployerRequest.SotreusID = req.Name
-	ReqBodyBytes, err := json.Marshal(DeployerRequest)
+	deployerRequest := DeployerCreateRequest{SotreusID: req.Name}
+	reqBodyBytes, err := json.Marshal(deployerRequest)
 	if err != nil {
 		logwrapper.Errorf("failed to encode request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
-	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus", bytes.NewReader(ReqBodyBytes))
+	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus", bytes.NewReader(reqBodyBytes))
 	if err != nil {
 		logwrapper.Errorf("failed to send request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
@@ -174,7 +174,7 @@ func Start(c *gin.Context) {
 	err := c.BindJSON(&req)
 	if err != nil {
 		logwrapper.Errorf("failed to bind JSON: %s", err)
-		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
+		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
 		return
 	}
 
@@ -218,7 +218,12 @@ func MyDeployments(c *gin.Context) {
 		return
 	}
 	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		logwrapper.Errorf("failed to read response: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+		return
+	}
 	response := new(GetDeployments)
 
 	if err := json.Unmarshal(body, response); err != nil {
@@ -244,7 +249,12 @@ func AllDeployments(c *gin.Context) {
 		return
 	}
 	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		logwrapper.Errorf("failed to read response: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+		return
+	}
 	response := new(GetDeployments)
 
 	if err := json.Unmarshal(body, response); err != nil {
