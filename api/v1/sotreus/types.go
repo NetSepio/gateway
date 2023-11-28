@@ -43,6 +43,7 @@ type Instance struct {
 	VpnEndpoint       string `json:"vpn_endpoint"`
 	VpnAPIPort        int    `json:"vpn_api_port"`
 	VpnExternalPort   int    `json:"vpn_external_port"`
+	FirewallEndpoint  string `json:"firewall_endpoint"`
 	DashboardPassword string `json:"dashboard_password"`
 	Status            string `json:"status"`
 	WalletAddress     string `json:"walletAddress,omitempty"`
