@@ -23,12 +23,14 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("/stop", Stop)
 		g.DELETE("", Delete)
 		g.POST("/start", Start)
+		g.GET("/all", AllDeployments)
+		g.GET("/", MyDeployments)
 	}
 }
 
 func Deploy(c *gin.Context) {
 	db := dbconfig.GetDb()
-	walletAddress := c.GetString("walletAddress")
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	var req DeployRequest
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -193,4 +195,58 @@ func Start(c *gin.Context) {
 	defer resp.Body.Close()
 
 	httpo.NewSuccessResponse(200, "VPN deployment started").SendD(c)
+}
+
+func MyDeployments(c *gin.Context) {
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	contractReq, err := http.NewRequest(http.MethodGet, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus/"+walletAddress, nil)
+	if err != nil {
+		logwrapper.Errorf("failed to create request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+		return
+	}
+	client := &http.Client{}
+	resp, err := client.Do(contractReq)
+	if err != nil {
+		logwrapper.Errorf("failed to send request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	response := new(GetDeployments)
+
+	if err := json.Unmarshal(body, response); err != nil {
+		logwrapper.Errorf("failed to decode response: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+		return
+	}
+
+	httpo.NewSuccessResponseP(200, "VPN deployment started", response.Data).SendD(c)
+}
+func AllDeployments(c *gin.Context) {
+	contractReq, err := http.NewRequest(http.MethodGet, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus", nil)
+	if err != nil {
+		logwrapper.Errorf("failed to create request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+		return
+	}
+	client := &http.Client{}
+	resp, err := client.Do(contractReq)
+	if err != nil {
+		logwrapper.Errorf("failed to send request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	response := new(GetDeployments)
+
+	if err := json.Unmarshal(body, response); err != nil {
+		logwrapper.Errorf("failed to decode response: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+		return
+	}
+
+	httpo.NewSuccessResponseP(200, "VPN deployment started", response.Data).SendD(c)
 }

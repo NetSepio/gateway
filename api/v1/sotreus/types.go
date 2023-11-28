@@ -1,5 +1,7 @@
 package sotreus
 
+import "gorm.io/gorm"
+
 type DeployRequest struct {
 	Name   string `json:"name,omitempty"`
 	Region string `json:"region,omitempty"`
@@ -28,4 +30,20 @@ type DeployResponse struct {
 	VpnEndpoint       string `json:"vpn_endpoint"`
 	FirewallEndpoint  string `json:"firewall_endpoint"`
 	DashboardPassword string `json:"dashboard_password"`
+}
+
+type GetDeployments struct {
+	Message string     `json:"message"`
+	Data    []Instance `json:"data"`
+}
+
+type Instance struct {
+	gorm.Model
+	VpnID             string `json:"vpn_id" gorm:""`
+	VpnEndpoint       string `json:"vpn_endpoint"`
+	VpnAPIPort        int    `json:"vpn_api_port"`
+	VpnExternalPort   int    `json:"vpn_external_port"`
+	DashboardPassword string `json:"dashboard_password"`
+	Status            string `json:"status"`
+	WalletAddress     string `json:"walletAddress,omitempty"`
 }
