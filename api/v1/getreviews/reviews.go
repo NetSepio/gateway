@@ -32,7 +32,7 @@ func getReviews(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
 		return
 	}
-	limit := 10
+	limit := 12
 	offset := (*queryRequest.Page - 1) * limit
 	var reviews []struct {
 		Voter              string `json:"voter"`
