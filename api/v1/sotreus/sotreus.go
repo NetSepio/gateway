@@ -59,6 +59,11 @@ func Deploy(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
+	if resp.StatusCode != 200 {
+		logwrapper.Errorf("Error in response: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Error in response").SendD(c)
+		return
+	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
@@ -123,6 +128,11 @@ func Stop(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
+	if resp.StatusCode != 200 {
+		logwrapper.Errorf("Error in response: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Error in response").SendD(c)
+		return
+	}
 	defer resp.Body.Close()
 
 	httpo.NewSuccessResponse(200, "VPN deployment stopped").SendD(c)
@@ -155,6 +165,11 @@ func Delete(c *gin.Context) {
 	if err != nil {
 		logwrapper.Errorf("failed to send request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+		return
+	}
+	if resp.StatusCode != 200 {
+		logwrapper.Errorf("Error in response: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Error in response").SendD(c)
 		return
 	}
 	defer resp.Body.Close()
@@ -197,6 +212,11 @@ func Start(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
+	if resp.StatusCode != 200 {
+		logwrapper.Errorf("Error in response: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Error in response").SendD(c)
+		return
+	}
 	defer resp.Body.Close()
 
 	httpo.NewSuccessResponse(200, "VPN deployment started").SendD(c)
@@ -217,6 +237,11 @@ func MyDeployments(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
+	if resp.StatusCode != 200 {
+		logwrapper.Errorf("Error in response: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Error in response").SendD(c)
+		return
+	}
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -224,6 +249,7 @@ func MyDeployments(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
+
 	response := new(GetDeployments)
 
 	if err := json.Unmarshal(body, response); err != nil {
@@ -246,6 +272,11 @@ func AllDeployments(c *gin.Context) {
 	if err != nil {
 		logwrapper.Errorf("failed to send request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+		return
+	}
+	if resp.StatusCode != 200 {
+		logwrapper.Errorf("Error in response: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Error in response").SendD(c)
 		return
 	}
 	defer resp.Body.Close()
