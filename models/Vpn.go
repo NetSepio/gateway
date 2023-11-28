@@ -1,16 +1,8 @@
 package models
 
 type Sotreus struct {
-	Name      string                `json:"Name,omitempty"`
-	Type      string                `json:"Type,omitempty"`
-	Uuid      string                `json:"Uuid,omitempty"`
-	Category  string                `json:"Category,omitempty"`
-	Status    string                `json:"Status,omitempty"`
-	CreatedAt int64                 `json:"createdAt,omitempty"`
-	UpdatedAt int64                 `json:"updatedAt,omitempty"`
-	DeletedAt int64                 `json:"deletedAt,omitempty"`
-	Sotreus   *SotreusContainerInfo `json:"Sotreus,omitempty"`
-	Adguard   *AdguardContainerInfo `json:"Adguard,omitempty"`
+	Name          string `json:"name,omitempty"`
+	WalletAddress string `json:"walletAddress,omitempty"`
 }
 type AdguardContainerInfo struct {
 	ContainerID   string `json:"ContainerID,omitempty"`

@@ -1,45 +1,25 @@
 package sotreus
 
-type SotreusDeployBody struct {
-	Name      string `json:"name"`
-	Endpoint  string `json:"endpoint"`
-	Password  string `json:"password"`
-	SotreusID string `json:"sotreusID"`
+type DeployRequest struct {
+	Name   string `json:"name,omitempty"`
+	Domain string `json:"endpoint,omitempty"`
+	Region string `json:"password,omitempty"`
+}
+type DeployerCreateRequest struct {
+	Endpoint  string `json:"endpoint,omitempty"`
+	SotreusID string `json:"sotreusID,omitempty"`
 }
 type SotreusRequest struct {
-	Uuid string `json:"uuid,omitempty"`
+	VpnId string `json:"vpnId,omitempty"`
 }
 type SotreusResponse struct {
-	Status  int64               `json:"status,omitempty"`
-	Sucess  bool                `json:"sucess,omitempty"`
-	Message string              `json:"message,omitempty"`
-	Error   string              `json:"error,omitempty"`
-	Sotreus *ServiceInfoSotreus `json:"Sotreus,omitempty"`
-}
-type ServiceInfoSotreus struct {
-	Name      string                `json:"Name,omitempty"`
-	Type      string                `json:"Type,omitempty"`
-	Uuid      string                `json:"Uuid,omitempty"`
-	Category  string                `json:"Category,omitempty"`
-	Status    string                `json:"Status,omitempty"`
-	CreatedAt int64                 `json:"createdAt,omitempty"`
-	UpdatedAt int64                 `json:"updatedAt,omitempty"`
-	DeletedAt int64                 `json:"deletedAt,omitempty"`
-	Sotreus   *SotreusContainerInfo `json:"Sotreus,omitempty"`
-	Adguard   *AdguardContainerInfo `json:"Adguard,omitempty"`
-}
-type AdguardContainerInfo struct {
-	ContainerID   string `json:"ContainerID,omitempty"`
-	Image         string `json:"Image,omitempty"`
-	ContainerName string `json:"ContainerName,omitempty"`
-	UIPort        string `json:"UIPort,omitempty"`
-	DNSPOrt       string `json:"DNSPOrt,omitempty"`
-	SetupPort     string `json:"SetupPort,omitempty"`
-}
-type SotreusContainerInfo struct {
-	ContainerID   string `json:"ContainerID,omitempty"`
-	Image         string `json:"Image,omitempty"`
-	ContainerName string `json:"ContainerName,omitempty"`
-	ApiPort       string `json:"ApiPort,omitempty"`
-	VPNPort       string `sjson:"VPNPort,omitempty"`
+	Todo    string `json:"todo"`
+	Result  string `json:"result"`
+	Message struct {
+		VpnID             string `json:"vpn_id"`
+		VpnEndpoint       string `json:"vpn_endpoint"`
+		VpnAPIPort        int    `json:"vpn_api_port"`
+		VpnExternalPort   int    `json:"vpn_external_port"`
+		DashboardPassword string `json:"dashboard_password"`
+	} `json:"message"`
 }

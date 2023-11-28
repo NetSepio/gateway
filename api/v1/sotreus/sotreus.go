@@ -20,20 +20,23 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("", Deploy)
 		g.POST("/stop", Stop)
 		g.DELETE("", Delete)
-		g.POST("/restart", Restart)
+		g.POST("/start", Start)
 	}
 }
 
 func Deploy(c *gin.Context) {
 	db := dbconfig.GetDb()
-	var req SotreusDeployBody
+	walletAddress := c.GetString("walletAddress")
+	var req DeployRequest
 	err := c.BindJSON(&req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
-
-	ReqBodyBytes, err := json.Marshal(req)
+	var DeployerRequest DeployerCreateRequest
+	DeployerRequest.Endpoint = req.Domain
+	DeployerRequest.SotreusID = req.Name
+	ReqBodyBytes, err := json.Marshal(DeployerRequest)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
@@ -60,23 +63,15 @@ func Deploy(c *gin.Context) {
 		return
 	}
 	contract := models.Sotreus{
-		Name:      response.Sotreus.Name,
-		Type:      response.Sotreus.Type,
-		Uuid:      response.Sotreus.Uuid,
-		Category:  response.Sotreus.Category,
-		Status:    response.Sotreus.Status,
-		CreatedAt: response.Sotreus.CreatedAt,
-		UpdatedAt: response.Sotreus.UpdatedAt,
-		DeletedAt: response.Sotreus.DeletedAt,
-		Sotreus:   (*models.SotreusContainerInfo)(response.Sotreus.Sotreus),
-		Adguard:   (*models.AdguardContainerInfo)(response.Sotreus.Adguard),
+		Name:          response.Message.VpnID,
+		WalletAddress: walletAddress,
 	}
 	result := db.Create(&contract)
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, gin.H{"message": "VPN deployment successful"})
 }
 
 func Stop(c *gin.Context) {
@@ -111,7 +106,7 @@ func Stop(c *gin.Context) {
 }
 
 func Delete(c *gin.Context) {
-	//db := dbconfig.GetDb()
+	db := dbconfig.GetDb()
 	var req SotreusRequest
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -136,13 +131,13 @@ func Delete(c *gin.Context) {
 		return
 	}
 	defer resp.Body.Close()
-
+	if resp.StatusCode == 200 {
+		err = db.Where("name = ?", req.VpnId).Delete(&models.Sotreus{}).Error
+	}
 	c.JSON(http.StatusOK, nil)
-
 }
 
-func Restart(c *gin.Context) {
-	//db := dbconfig.GetDb()
+func Start(c *gin.Context) {
 	var req SotreusRequest
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -155,7 +150,7 @@ func Restart(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
-	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus/restart", bytes.NewReader(ReqBodyBytes))
+	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus/start", bytes.NewReader(ReqBodyBytes))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
