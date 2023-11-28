@@ -2,7 +2,7 @@ package sotreus
 
 type DeployRequest struct {
 	Name   string `json:"name,omitempty"`
-	Region string `json:"password,omitempty"`
+	Region string `json:"region,omitempty"`
 }
 type DeployerCreateRequest struct {
 	SotreusID string `json:"sotreusID,omitempty"`

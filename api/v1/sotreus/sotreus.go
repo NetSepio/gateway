@@ -92,30 +92,33 @@ func Stop(c *gin.Context) {
 	var req SotreusRequest
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to bind JSON: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 
 	ReqBodyBytes, err := json.Marshal(req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to encode request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus/stop", bytes.NewReader(ReqBodyBytes))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to create request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 	client := &http.Client{}
 	resp, err := client.Do(contractReq)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to send request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 	defer resp.Body.Close()
 
-	c.JSON(http.StatusOK, nil)
-
+	httpo.NewSuccessResponse(200, "VPN deployment stopped").SendD(c)
 }
 
 func Delete(c *gin.Context) {
@@ -123,58 +126,71 @@ func Delete(c *gin.Context) {
 	var req SotreusRequest
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to bind JSON: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 
 	ReqBodyBytes, err := json.Marshal(req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to encode request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 	contractReq, err := http.NewRequest(http.MethodDelete, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus", bytes.NewReader(ReqBodyBytes))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to create request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 	client := &http.Client{}
 	resp, err := client.Do(contractReq)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to send request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode == 200 {
 		err = db.Where("name = ?", req.VpnId).Delete(&models.Sotreus{}).Error
+		if err != nil {
+			logwrapper.Errorf("failed to create DB entry: %s", err)
+			httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
+			return
+		}
 	}
-	c.JSON(http.StatusOK, nil)
+	httpo.NewSuccessResponse(200, "VPN deployment deleted").SendD(c)
 }
 
 func Start(c *gin.Context) {
 	var req SotreusRequest
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to bind JSON: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 
 	ReqBodyBytes, err := json.Marshal(req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to encode request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus/start", bytes.NewReader(ReqBodyBytes))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to create request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 	client := &http.Client{}
 	resp, err := client.Do(contractReq)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		logwrapper.Errorf("failed to send request: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
 	defer resp.Body.Close()
 
-	c.JSON(http.StatusOK, nil)
+	httpo.NewSuccessResponse(200, "VPN deployment started").SendD(c)
 }
