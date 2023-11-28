@@ -1,7 +1,7 @@
 package models
 
 type Sotreus struct {
-	Name          string `json:"name,omitempty"`
-	WalletAddress string `json:"walletAddress,omitempty"`
-	Region        string `json:"region,omitempty"`
+	Name          string `gorm:"primary_key" json:"name"`
+	WalletAddress string `json:"walletAddress"`
+	Region        string `json:"region"`
 }

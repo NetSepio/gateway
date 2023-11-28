@@ -3,14 +3,14 @@ package sotreus
 import "gorm.io/gorm"
 
 type DeployRequest struct {
-	Name   string `json:"name,omitempty"`
-	Region string `json:"region,omitempty"`
+	Name   string `json:"name" binding:"required"`
+	Region string `json:"region" binding:"required"`
 }
 type DeployerCreateRequest struct {
-	SotreusID string `json:"sotreusID,omitempty"`
+	SotreusID string `json:"sotreusID" binding:"required"`
 }
 type SotreusRequest struct {
-	VpnId string `json:"vpnId,omitempty"`
+	VpnId string `json:"vpnId" binding:"required"`
 }
 type SotreusResponse struct {
 	Todo    string `json:"todo"`
