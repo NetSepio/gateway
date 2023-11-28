@@ -3,10 +3,10 @@ package sotreus
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
@@ -18,6 +18,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/vpn")
 	{
+		g.Use(paseto.PASETO)
 		g.POST("", Deploy)
 		g.POST("/stop", Stop)
 		g.DELETE("", Delete)
@@ -27,7 +28,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 func Deploy(c *gin.Context) {
 	db := dbconfig.GetDb()
-	walletAddress := "0x40db1958311dc6e3fa082150897770a318dfd40c04e78773c15955acf333d7ca"
+	walletAddress := c.GetString("walletAddress")
 	var req DeployRequest
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -59,7 +60,6 @@ func Deploy(c *gin.Context) {
 	defer resp.Body.Close()
 
 	body, _ := io.ReadAll(resp.Body)
-	fmt.Println(string(body))
 	response := new(SotreusResponse)
 
 	if err := json.Unmarshal(body, response); err != nil {
