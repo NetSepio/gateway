@@ -39,7 +39,7 @@ func Deploy(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
 		return
 	}
-	deployerRequest := DeployerCreateRequest{SotreusID: req.Name}
+	deployerRequest := DeployerCreateRequest{SotreusID: req.Name, WalletAddress: walletAddress}
 	reqBodyBytes, err := json.Marshal(deployerRequest)
 	if err != nil {
 		logwrapper.Errorf("failed to encode request: %s", err)
@@ -232,7 +232,7 @@ func MyDeployments(c *gin.Context) {
 		return
 	}
 
-	httpo.NewSuccessResponseP(200, "VPN deployment started", response.Data).SendD(c)
+	httpo.NewSuccessResponseP(200, "Fetched Deployments", response.Data).SendD(c)
 }
 func AllDeployments(c *gin.Context) {
 	contractReq, err := http.NewRequest(http.MethodGet, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus", nil)
@@ -263,5 +263,5 @@ func AllDeployments(c *gin.Context) {
 		return
 	}
 
-	httpo.NewSuccessResponseP(200, "VPN deployment started", response.Data).SendD(c)
+	httpo.NewSuccessResponseP(200, "Fetched all deployments", response.Data).SendD(c)
 }
