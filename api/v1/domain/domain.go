@@ -14,6 +14,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("", postDomain)
 		g.GET("", queryDomain)
 		g.DELETE("", deleteDomain)
+		g.PATCH("", patchDomain)
 		g.PATCH("/verify", verifyDomain)
 		admin.ApplyRoutes(g)
 	}

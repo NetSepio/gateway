@@ -10,6 +10,7 @@ import (
 	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
 	"github.com/NetSepio/gateway/api/v1/getreviews"
 	"github.com/NetSepio/gateway/api/v1/profile"
+	"github.com/NetSepio/gateway/api/v1/sotreus"
 	"github.com/NetSepio/gateway/api/v1/stats"
 	"github.com/NetSepio/gateway/api/v1/status"
 	"github.com/NetSepio/gateway/api/v1/waitlist"
@@ -32,6 +33,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		stats.ApplyRoutes(v1)
 		getreviews.ApplyRoutes(v1)
 		getreviewerdetails.ApplyRoutes(v1)
+		sotreus.ApplyRoutes(v1)
 		domain.ApplyRoutes(v1)
 	}
 }
