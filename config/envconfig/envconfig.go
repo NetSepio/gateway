@@ -29,7 +29,8 @@ type config struct {
 	NETWORK                   string        `env:"NETWORK,required"`
 	NFT_STORAGE_KEY           string        `env:"NFT_STORAGE_KEY,required"`
 	VERSION                   string        `env:"VERSION,notEmpty"`
-	VPN_DEPLOYER_API          string        `env:"VPN_DEPLOYER_API,notEmpty"`
+	VPN_DEPLOYER_API_US_EAST  string        `env:"VPN_DEPLOYER_API_US_EAST,notEmpty"`
+	VPN_DEPLOYER_API_SG       string        `env:"VPN_DEPLOYER_API_SG,notEmpty"`
 }
 
 var EnvVars config = config{}

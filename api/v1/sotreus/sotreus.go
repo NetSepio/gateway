@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/config/constants/regions"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
@@ -24,8 +25,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("/stop", Stop)
 		g.DELETE("", Delete)
 		g.POST("/start", Start)
-		g.GET("/all", AllDeployments)
-		g.GET("/", MyDeployments)
+		g.GET("/all/:region", AllDeployments)
+		g.GET("/:region", MyDeployments)
 	}
 }
 
@@ -39,6 +40,7 @@ func Deploy(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
 		return
 	}
+	ServerLink := regions.Regions[req.Region].ServerHttp
 	deployerRequest := DeployerCreateRequest{SotreusID: req.Name, WalletAddress: walletAddress}
 	reqBodyBytes, err := json.Marshal(deployerRequest)
 	if err != nil {
@@ -46,7 +48,7 @@ func Deploy(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
-	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus", bytes.NewReader(reqBodyBytes))
+	contractReq, err := http.NewRequest(http.MethodPost, ServerLink+"/sotreus", bytes.NewReader(reqBodyBytes))
 	if err != nil {
 		logwrapper.Errorf("failed to send request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
@@ -115,7 +117,7 @@ func Stop(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
-	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus/stop", bytes.NewReader(reqBodyBytes))
+	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API_US_EAST+"/sotreus/stop", bytes.NewReader(reqBodyBytes))
 	if err != nil {
 		logwrapper.Errorf("failed to create request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
@@ -154,7 +156,7 @@ func Delete(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
-	contractReq, err := http.NewRequest(http.MethodDelete, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus", bytes.NewReader(ReqBodyBytes))
+	contractReq, err := http.NewRequest(http.MethodDelete, envconfig.EnvVars.VPN_DEPLOYER_API_US_EAST+"/sotreus", bytes.NewReader(ReqBodyBytes))
 	if err != nil {
 		logwrapper.Errorf("failed to create request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
@@ -199,7 +201,7 @@ func Start(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
-	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus/start", bytes.NewReader(reqBodyBytes))
+	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API_US_EAST+"/sotreus/start", bytes.NewReader(reqBodyBytes))
 	if err != nil {
 		logwrapper.Errorf("failed to create request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
@@ -224,7 +226,9 @@ func Start(c *gin.Context) {
 
 func MyDeployments(c *gin.Context) {
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
-	contractReq, err := http.NewRequest(http.MethodGet, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus/"+walletAddress, nil)
+	region := c.Param("region")
+	ServerLink := regions.Regions[region].ServerHttp
+	contractReq, err := http.NewRequest(http.MethodGet, ServerLink+"/sotreus/"+walletAddress, nil)
 	if err != nil {
 		logwrapper.Errorf("failed to create request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
@@ -261,12 +265,15 @@ func MyDeployments(c *gin.Context) {
 	httpo.NewSuccessResponseP(200, "Fetched Deployments", response.Data).SendD(c)
 }
 func AllDeployments(c *gin.Context) {
-	contractReq, err := http.NewRequest(http.MethodGet, envconfig.EnvVars.VPN_DEPLOYER_API+"/sotreus", nil)
+	region := c.Param("region")
+	ServerLink := regions.Regions[region].ServerHttp
+	contractReq, err := http.NewRequest(http.MethodGet, ServerLink+"/sotreus", nil)
 	if err != nil {
 		logwrapper.Errorf("failed to create request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
+
 	client := &http.Client{}
 	resp, err := client.Do(contractReq)
 	if err != nil {
