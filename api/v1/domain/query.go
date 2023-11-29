@@ -48,7 +48,7 @@ func queryDomain(c *gin.Context) {
 			Where("domain_name like ?", fmt.Sprintf("%%%s%%", queryRequest.DomainName))
 	}
 
-	if queryRequest.OnlyAdmins {
+	if queryRequest.OnlyAdmin {
 		walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 		if walletAddress == "" {
 			if err != nil {

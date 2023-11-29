@@ -30,7 +30,7 @@ type GetDomainsQuery struct {
 	DomainId   string `form:"domainId"`
 	DomainName string `form:"domainName"`
 	Verified   *bool  `form:"verified"`
-	OnlyAdmins bool   `form:"onlyAdmins"`
+	OnlyAdmin  bool   `form:"onlyAdmin"`
 	Page       *int   `form:"page" binding:"required,min=1"`
 }
 
