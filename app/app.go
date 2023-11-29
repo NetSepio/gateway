@@ -6,6 +6,7 @@ import (
 	"github.com/NetSepio/gateway/api"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
+	"github.com/NetSepio/gateway/config/constants"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/gin-contrib/cors"
@@ -16,6 +17,7 @@ var GinApp *gin.Engine
 
 func Init() {
 	envconfig.InitEnvVars()
+	constants.InitConstants()
 	logwrapper.Init()
 
 	GinApp = gin.Default()
