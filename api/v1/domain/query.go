@@ -3,8 +3,10 @@ package domain
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
@@ -45,20 +47,43 @@ func queryDomain(c *gin.Context) {
 		model = model.
 			Where("domain_name like ?", fmt.Sprintf("%%%s%%", queryRequest.DomainName))
 	}
-	if err := model.
-		Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).
-		Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_address created_by, u.name creator_name").Joins("INNER JOIN users u ON u.wallet_address = created_by_address").
-		Find(&domains).
-		Error; err != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Error("failed to get domains", err)
-		return
+
+	if queryRequest.OnlyAdmins {
+		walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+		if walletAddress == "" {
+			if err != nil {
+				httpo.NewErrorResponse(http.StatusBadRequest, "auth token required if onlyAdmins is true").SendD(c)
+				return
+			}
+		}
+		if err := model.
+			Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).Where("da.admin_wallet_address = ?", strings.ToLower(walletAddress)).
+			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_address created_by, u.name creator_name").
+			Joins("INNER JOIN users u ON u.wallet_address = created_by_address").
+			Joins("INNER JOIN domain_admins da ON da.domain_id = domains.id").
+			Find(&domains).
+			Error; err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Error("failed to get domains", err)
+			return
+		}
+	} else {
+		if err := model.
+			Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).
+			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_address created_by, u.name creator_name").
+			Joins("INNER JOIN users u ON u.wallet_address = created_by_address").
+			Find(&domains).
+			Error; err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Error("failed to get domains", err)
+			return
+		}
 	}
 
 	if len(domains) == 0 {
-		httpo.NewErrorResponse(200, "No domains found").SendD(c)
+		httpo.NewErrorResponse(200, "no domains found").SendD(c)
 		return
 	}
 
-	httpo.NewSuccessResponseP(200, "Domains fetched successfully", domains).SendD(c)
+	httpo.NewSuccessResponseP(200, "domains fetched successfully", domains).SendD(c)
 }
