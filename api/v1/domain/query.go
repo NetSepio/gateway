@@ -81,7 +81,7 @@ func queryDomain(c *gin.Context) {
 	}
 
 	if len(domains) == 0 {
-		httpo.NewErrorResponse(200, "no domains found").SendD(c)
+		httpo.NewErrorResponse(404, "no domains found").SendD(c)
 		return
 	}
 
