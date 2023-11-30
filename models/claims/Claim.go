@@ -31,7 +31,7 @@ func (c CustomClaims) Valid() error {
 func New(walletAddress string) CustomClaims {
 	pasetoExpirationInHours := envconfig.EnvVars.PASETO_EXPIRATION
 	expiration := time.Now().Add(pasetoExpirationInHours)
-	signedBy := envconfig.EnvVars.SIGNED_BY
+	signedBy := envconfig.EnvVars.PASETO_SIGNED_BY
 	return CustomClaims{
 		walletAddress,
 		signedBy,

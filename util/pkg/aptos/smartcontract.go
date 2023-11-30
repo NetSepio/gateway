@@ -31,7 +31,7 @@ type DelegateReviewParams struct {
 var ErrMetadataDuplicated = errors.New("metadata already exist")
 
 func DelegateReview(p DelegateReviewParams) (*TxResult, error) {
-	command := fmt.Sprintf("move run --function-id %s::netsepio::delegate_submit_review --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
+	command := fmt.Sprintf("move run --function-id %s::netsepio::delegate_submit_review --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
 	args := append(strings.Split(command, " "),
 		argA(p.Voter), argS(p.MetaDataUri), argS(p.Category), argS(p.DomainAddress), argS(p.SiteUrl), argS(p.SiteType), argS(p.SiteTag), argS(p.SiteSafety), argS(""))
 	cmd := exec.Command("aptos", args...)
@@ -55,7 +55,7 @@ func DelegateReview(p DelegateReviewParams) (*TxResult, error) {
 var ErrMetadataNotFound = errors.New("metadata not found")
 
 func DeleteReview(metaDataUri string) (*TxResult, error) {
-	command := fmt.Sprintf("move run --function-id %s::netsepio::delete_review --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
+	command := fmt.Sprintf("move run --function-id %s::netsepio::delete_review --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
 	args := append(strings.Split(command, " "), argS(metaDataUri))
 	cmd := exec.Command("aptos", args...)
 	fmt.Println(strings.Join(args, " "))
@@ -76,7 +76,7 @@ func DeleteReview(metaDataUri string) (*TxResult, error) {
 }
 
 func UploadArchive(siteUrl string, siteIpfsHash string) (*TxResult, error) {
-	command := fmt.Sprintf("move run --function-id %s::netsepio::archive_link --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
+	command := fmt.Sprintf("move run --function-id %s::netsepio::archive_link --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
 	args := append(strings.Split(command, " "), argS(siteUrl), argS(siteIpfsHash))
 	cmd := exec.Command("aptos", args...)
 	fmt.Println(strings.Join(args, " "))

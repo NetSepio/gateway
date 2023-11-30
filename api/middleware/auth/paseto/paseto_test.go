@@ -73,7 +73,7 @@ func Test_PASETO(t *testing.T) {
 
 	t.Run("Should return 401 and 4011 with expired PASETO", func(t *testing.T) {
 		expiration := time.Now().Add(time.Second * 2)
-		signedBy := envconfig.EnvVars.SIGNED_BY
+		signedBy := envconfig.EnvVars.PASETO_SIGNED_BY
 		newClaims := claims.CustomClaims{
 			WalletAddress: strings.ToLower(testWalletAddress),
 			SignedBy:      signedBy,
