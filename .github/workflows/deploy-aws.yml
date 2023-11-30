@@ -47,7 +47,7 @@ jobs:
           cd gateway
           docker stop gateway && docker rm gateway && docker image rm ghcr.io/netsepio/gateway:main
           docker pull ghcr.io/netsepio/gateway:main
-          docker run --restart=on-failure --dns=1.1.1.1 --name="gateway" --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:main
+          docker run --restart=on-failure:20 --dns=1.1.1.1 --name="gateway" --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:main
 
     - name: Deploy on PROD server 
       if: github.ref == 'refs/heads/prod' 
@@ -60,6 +60,6 @@ jobs:
         script: |
           pwd
           cd gateway
-          docker stop gateway || true && docker image rm ghcr.io/netsepio/gateway:prod
+          docker stop gateway && docker rm gateway && docker image rm ghcr.io/netsepio/gateway:main
           docker pull ghcr.io/netsepio/gateway:prod
-          docker run --dns=1.1.1.1 --name="gateway" --rm --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:prod    
+          docker run --restart=on-failure:20 --dns=1.1.1.1 --name="gateway" --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:prod    
