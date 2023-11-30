@@ -3,6 +3,7 @@ package stats
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -31,7 +32,7 @@ func getStats(c *gin.Context) {
 		return
 	}
 	var review []GetStatsResponse
-	err = db.Model(&models.Review{}).Select("site_safety, count(site_safety)").Group("site_safety").Where(&models.Review{SiteUrl: queryReq.SiteUrl, DomainAddress: queryReq.Domain}).Find(&review).Error
+	err = db.Model(&models.Review{}).Select("site_safety, count(site_safety)").Group("site_safety").Where(&models.Review{SiteUrl: strings.TrimSuffix(queryReq.SiteUrl, "/"), DomainAddress: queryReq.Domain}).Find(&review).Error
 	if err != nil {
 		logrus.Error(err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
