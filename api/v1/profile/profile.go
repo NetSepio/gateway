@@ -17,7 +17,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/profile")
 	{
-		g.Use(paseto.PASETO)
+		g.Use(paseto.PASETO(false))
 		g.PATCH("", patchProfile)
 		g.GET("", getProfile)
 	}

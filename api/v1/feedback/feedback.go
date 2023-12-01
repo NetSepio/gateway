@@ -17,7 +17,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/feedback")
 	{
-		g.Use(paseto.PASETO)
+		g.Use(paseto.PASETO(false))
 		g.POST("", createFeedback)
 	}
 }

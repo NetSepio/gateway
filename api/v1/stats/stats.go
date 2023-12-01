@@ -17,7 +17,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/stats")
 	{
-		g.Use(paseto.PASETO)
+		g.Use(paseto.PASETO(false))
 		g.GET("", getStats)
 	}
 }

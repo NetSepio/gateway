@@ -18,7 +18,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/deleteReview")
 	{
-		g.Use(paseto.PASETO)
+		g.Use(paseto.PASETO(false))
 		g.DELETE("", deleteReview)
 	}
 }

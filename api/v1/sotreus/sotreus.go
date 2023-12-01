@@ -20,7 +20,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/vpn")
 	{
-		g.Use(paseto.PASETO)
+		g.Use(paseto.PASETO(false))
 		g.POST("", Deploy)
 		g.POST("/stop", Stop)
 		g.DELETE("", Delete)

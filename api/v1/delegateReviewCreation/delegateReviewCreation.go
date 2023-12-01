@@ -20,7 +20,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/delegateReviewCreation")
 	{
-		g.Use(paseto.PASETO)
+		g.Use(paseto.PASETO(false))
 		g.POST("", deletegateReviewCreation)
 	}
 }

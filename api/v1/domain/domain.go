@@ -10,9 +10,10 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/domain")
 	{
-		g.Use(paseto.PASETO)
-		g.POST("", postDomain)
+		g.Use(paseto.PASETO(true))
 		g.GET("", queryDomain)
+		g.Use(paseto.PASETO(false))
+		g.POST("", postDomain)
 		g.DELETE("", deleteDomain)
 		g.PATCH("", patchDomain)
 		g.PATCH("/verify", verifyDomain)

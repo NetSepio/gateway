@@ -50,11 +50,10 @@ func queryDomain(c *gin.Context) {
 
 	if queryRequest.OnlyAdmin {
 		walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+		fmt.Println("walletAddress", walletAddress == "")
 		if walletAddress == "" {
-			if err != nil {
-				httpo.NewErrorResponse(http.StatusBadRequest, "auth token required if onlyAdmins is true").SendD(c)
-				return
-			}
+			httpo.NewErrorResponse(http.StatusBadRequest, "auth token required if onlyAdmin is true").SendD(c)
+			return
 		}
 		if err := model.
 			Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).Where("da.admin_wallet_address = ?", strings.ToLower(walletAddress)).

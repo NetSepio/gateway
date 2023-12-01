@@ -110,7 +110,7 @@ func callApi(t *testing.T, token string) *httptest.ResponseRecorder {
 		t.Fatal(err)
 	}
 	rq.Header.Add("Authorization", token)
-	ginTestApp.Use(PASETO)
+	ginTestApp.Use(PASETO(false))
 	ginTestApp.Use(successHander)
 	ginTestApp.ServeHTTP(rr, rq)
 	return rr
