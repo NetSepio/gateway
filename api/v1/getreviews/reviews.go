@@ -51,7 +51,7 @@ func getReviews(c *gin.Context) {
 		CreatedAt          time.Time `json:"createdAt"`
 	}
 
-	if err := db.Limit(10).Offset(offset).Joins("left join users ON reviews.voter = users.wallet_address").Model(&models.Review{}).
+	if err := db.Limit(10).Offset(offset).Joins("left join users ON reviews.voter = users.wallet_address").Model(&models.Review{}).Order("reviews.created_at desc").
 		Where(&models.Review{Voter: strings.ToLower(queryRequest.Voter), DomainAddress: queryRequest.Domain}).
 		Select("reviews.meta_data_uri, reviews.category, reviews.domain_address, reviews.site_url, reviews.site_type, reviews.site_tag, reviews.site_safety, reviews.site_ipfs_hash, reviews.transaction_hash, reviews.transaction_version, reviews.created_at, reviews.voter, users.name").
 		Find(&reviews).
