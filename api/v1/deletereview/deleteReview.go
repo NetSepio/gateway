@@ -59,10 +59,7 @@ func deleteReview(c *gin.Context) {
 		TransactionHash:    txResult.Result.TransactionHash,
 	}
 
-	newReview := &models.Review{
-		MetaDataUri: request.MetaDataUri,
-	}
-	if err := db.Delete(newReview).Error; err != nil {
+	if err := db.Delete(&models.Review{},"meta_data_uri = ?",request.MetaDataUri).Error; err != nil {
 		httpo.NewSuccessResponseP(httpo.TXDbFailed, "transaction is successful but failed to delete review from db", payload).Send(c, 200)
 		return
 	}
