@@ -40,6 +40,7 @@ func queryDomain(c *gin.Context) {
 		Blockchain     string    `json:"blockchain"`
 		CreatedBy      string    `json:"createdBy"`
 		CreatorName    string    `json:"creatorName"`
+		TxtValue       string    `json:"txtValue,omitempty"`
 	}
 
 	model := db.Limit(10).Offset(offset).Model(&models.Domain{})
@@ -57,7 +58,7 @@ func queryDomain(c *gin.Context) {
 		}
 		if err := model.
 			Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).Where("da.admin_wallet_address = ?", strings.ToLower(walletAddress)).
-			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_address created_by, u.name creator_name").
+			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_address created_by, u.name creator_name, txt_value").
 			Joins("INNER JOIN users u ON u.wallet_address = created_by_address").
 			Joins("INNER JOIN domain_admins da ON da.domain_id = domains.id").
 			Find(&domains).
