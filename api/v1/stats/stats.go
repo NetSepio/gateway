@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
@@ -17,7 +16,6 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/stats")
 	{
-		g.Use(paseto.PASETO(false))
 		g.GET("", getStats)
 	}
 }
