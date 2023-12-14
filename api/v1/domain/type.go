@@ -1,7 +1,7 @@
 package domain
 
 type CreateDomainRequest struct {
-	DomainName     string `json:"domainName" binding:"required"`
+	DomainName     string `json:"domainName" binding:"required,hostname_rfc1123|hostname_port"`
 	Title          string `json:"title" binding:"required"`
 	Headline       string `json:"headline"`
 	Description    string `json:"description" binding:"required"`
