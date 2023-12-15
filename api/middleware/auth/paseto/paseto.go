@@ -8,7 +8,9 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
+	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/vk-rv/pvx"
 	"gorm.io/gorm"
@@ -20,6 +22,7 @@ import (
 )
 
 var CTX_WALLET_ADDRES = "WALLET_ADDRESS"
+var CTX_USER_ID = "USER_ID"
 
 var (
 	ErrAuthHeaderMissing = errors.New("authorization header is required")
@@ -96,7 +99,17 @@ func PASETO(authOptional bool) func(*gin.Context) {
 					c.AbortWithStatus(http.StatusInternalServerError)
 				}
 			} else {
-				c.Set(CTX_WALLET_ADDRES, cc.WalletAddress)
+				db := dbconfig.GetDb()
+				var userFetch models.User
+				err := db.Model(&models.User{}).Where("user_id = ?", strings.ToLower(cc.UserId)).First(&userFetch).Error
+				if err != nil {
+					err = fmt.Errorf("failed to get wallet address, %s", err)
+					logwrapper.Log.Error(err)
+					c.AbortWithStatus(http.StatusInternalServerError)
+					return
+				}
+				c.Set(CTX_WALLET_ADDRES, userFetch.WalletAddress)
+				c.Set(CTX_USER_ID, cc.UserId)
 				c.Next()
 			}
 		}

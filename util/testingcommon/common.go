@@ -15,6 +15,7 @@ import (
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/nacl/sign"
 	"golang.org/x/crypto/sha3"
 
@@ -23,8 +24,9 @@ import (
 
 func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 	gin.SetMode(gin.TestMode)
-	CreateTestUser(t, testWalletAddress)
-	customClaims := claims.New(testWalletAddress)
+	userId := uuid.NewString()
+	CreateTestUser(t, testWalletAddress, userId)
+	customClaims := claims.New(userId, testWalletAddress)
 
 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	if err != nil {
@@ -39,13 +41,14 @@ func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 	return header
 }
 
-func CreateTestUser(t *testing.T, walletAddress string) {
+func CreateTestUser(t *testing.T, walletAddress string, uuid string) {
 	db := dbconfig.GetDb()
 	user := models.User{
 		Name:              "Jack",
 		ProfilePictureUrl: "https://revoticengineering.com/",
 		WalletAddress:     strings.ToLower(walletAddress),
 		Country:           "India",
+		UserId:            uuid,
 	}
 	err := db.Model(&models.User{}).Create(&user).Error
 	if err != nil {

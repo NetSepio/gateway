@@ -17,19 +17,19 @@ var (
 	ErrFlowIdNotFound = errors.New("flow id not found")
 )
 
-func CheckSign(signature string, flowId string, message string, pubKey string) (string, bool, error) {
+func CheckSign(signature string, flowId string, message string, pubKey string) (string, string, bool, error) {
 
 	db := dbconfig.GetDb()
 	signatureInBytes, err := hexutil.Decode(signature)
 	if err != nil {
-		return "", false, err
+		return "", "", false, err
 	}
 
 	sha3_i := sha3.New256()
 	signatureInBytes = append(signatureInBytes, []byte(message)...)
 	pubBytes, err := hexutil.Decode(pubKey)
 	if err != nil {
-		return "", false, err
+		return "", "", false, err
 	}
 	sha3_i.Write(pubBytes)
 	sha3_i.Write([]byte{0})
@@ -39,16 +39,23 @@ func CheckSign(signature string, flowId string, message string, pubKey string) (
 	var flowIdData models.FlowId
 	err = db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return "", false, ErrFlowIdNotFound
+		return "", "", false, ErrFlowIdNotFound
 	}
-	if !strings.EqualFold(addr, flowIdData.WalletAddress) {
-		return "", false, err
+
+	var userData models.User
+
+	err = db.Model(&models.User{}).Where("user_id = ?", flowIdData.UserId).First(&userData).Error
+	if err != nil {
+		return "", "", false, err
+	}
+	if !strings.EqualFold(addr, userData.WalletAddress) {
+		return "", "", false, err
 	}
 
 	msgGot, matches := sign.Open(nil, signatureInBytes, (*[32]byte)(pubBytes))
 	if !matches || string(msgGot) != message {
-		return "", false, err
+		return "", "", false, err
 	}
-	return flowIdData.WalletAddress, true, nil
+	return userData.UserId, userData.WalletAddress, true, nil
 
 }

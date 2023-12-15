@@ -2,7 +2,6 @@ package profile
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -39,9 +38,9 @@ func patchProfile(c *gin.Context) {
 		Discord:           requestBody.Discord,
 		Twitter:           requestBody.Twitter,
 	}
-	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	userId := c.GetString(paseto.CTX_USER_ID)
 	result := db.Model(&models.User{}).
-		Where("wallet_address = ?", strings.ToLower(walletAddress)).
+		Where("userId = ?", userId).
 		Updates(&profileUpdate)
 	if result.Error != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -59,9 +58,9 @@ func patchProfile(c *gin.Context) {
 
 func getProfile(c *gin.Context) {
 	db := dbconfig.GetDb()
-	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	userId := c.GetString(paseto.CTX_USER_ID)
 	var user models.User
-	err := db.Model(&models.User{}).Select("name, profile_picture_url,country, wallet_address, discord, twitter").Where("wallet_address = ?", strings.ToLower(walletAddress)).First(&user).Error
+	err := db.Model(&models.User{}).Select("name, profile_picture_url,country, wallet_address, discord, twitter").Where("user_id = ?", userId).First(&user).Error
 	if err != nil {
 		logrus.Error(err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)

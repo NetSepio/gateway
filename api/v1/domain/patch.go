@@ -25,7 +25,7 @@ func patchDomain(c *gin.Context) {
 	}
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	err = db.Model(&models.DomainAdmin{}).
-		Where(&models.DomainAdmin{DomainId: requestBody.DomainId, AdminWalletAddress: walletAddress}).
+		Where(&models.DomainAdmin{DomainId: requestBody.DomainId, AdminId: walletAddress}).
 		First(&models.DomainAdmin{}).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -37,14 +37,14 @@ func patchDomain(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to get admins").SendD(c)
 	}
 	domainUpdate := models.Domain{
-		Title:            requestBody.Title,
-		Headline:         requestBody.Headline,
-		Description:      requestBody.Description,
-		LogoHash:         requestBody.LogoHash,
-		Category:         requestBody.Category,
-		CoverImageHash:   requestBody.CoverImageHash,
-		Blockchain:       requestBody.Blockchain,
-		UpdatedByAddress: strings.ToLower(walletAddress),
+		Title:          requestBody.Title,
+		Headline:       requestBody.Headline,
+		Description:    requestBody.Description,
+		LogoHash:       requestBody.LogoHash,
+		Category:       requestBody.Category,
+		CoverImageHash: requestBody.CoverImageHash,
+		Blockchain:     requestBody.Blockchain,
+		UpdatedById:    strings.ToLower(walletAddress),
 	}
 	result := db.Model(&models.Domain{}).
 		Where("id = ?", requestBody.DomainId).
