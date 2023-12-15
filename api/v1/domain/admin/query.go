@@ -27,7 +27,7 @@ func getAdmin(c *gin.Context) {
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 
 	err = db.Model(&models.DomainAdmin{}).
-		Where(&models.DomainAdmin{DomainId: request.DomainId, AdminWalletAddress: walletAddress}).
+		Where(&models.DomainAdmin{DomainId: request.DomainId, AdminId: walletAddress}).
 		First(&models.DomainAdmin{}).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

@@ -30,26 +30,26 @@ func postDomain(c *gin.Context) {
 	domainId := uuid.NewString()
 	txtValue := fmt.Sprintf("netsepio_verification=%s", uuid.NewString())
 	newDomain := models.Domain{
-		Id:               domainId,
-		TxtValue:         &txtValue,
-		DomainName:       request.DomainName,
-		Title:            request.Title,
-		Headline:         request.Headline,
-		Description:      request.Description,
-		LogoHash:         request.LogoHash,
-		Category:         request.Category,
-		CoverImageHash:   request.CoverImageHash,
-		Blockchain:       request.Blockchain,
-		CreatedByAddress: strings.ToLower(walletAddress),
-		UpdatedByAddress: strings.ToLower(walletAddress),
+		Id:             domainId,
+		TxtValue:       &txtValue,
+		DomainName:     request.DomainName,
+		Title:          request.Title,
+		Headline:       request.Headline,
+		Description:    request.Description,
+		LogoHash:       request.LogoHash,
+		Category:       request.Category,
+		CoverImageHash: request.CoverImageHash,
+		Blockchain:     request.Blockchain,
+		CreatedById:    strings.ToLower(walletAddress),
+		UpdatedById:    strings.ToLower(walletAddress),
 	}
 
 	domainAdmin := models.DomainAdmin{
-		DomainId:           domainId,
-		AdminWalletAddress: strings.ToLower(walletAddress),
-		UpdatedByAddress:   strings.ToLower(walletAddress),
-		Name:               request.AdminName,
-		Role:               request.AdminRole,
+		DomainId:    domainId,
+		AdminId:     strings.ToLower(walletAddress),
+		UpdatedById: strings.ToLower(walletAddress),
+		Name:        request.AdminName,
+		Role:        request.AdminRole,
 	}
 
 	err = db.Transaction(func(tx *gorm.DB) error {

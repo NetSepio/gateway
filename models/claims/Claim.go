@@ -1,7 +1,6 @@
 package claims
 
 import (
-	"strings"
 	"time"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -12,6 +11,7 @@ import (
 
 type CustomClaims struct {
 	WalletAddress string `json:"walletAddress"`
+	UserId        string `json:"userId"`
 	SignedBy      string `json:"signedBy"`
 	pvx.RegisteredClaims
 }
@@ -21,19 +21,20 @@ func (c CustomClaims) Valid() error {
 	if err := c.RegisteredClaims.Valid(); err != nil {
 		return err
 	}
-	err := db.Model(&models.User{}).Where("wallet_address = ?", strings.ToLower(c.WalletAddress)).First(&models.User{}).Error
+	err := db.Model(&models.User{}).Where("user_id = ?", c.UserId).First(&models.User{}).Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func New(walletAddress string) CustomClaims {
+func New(userId string, walletAddr string) CustomClaims {
 	pasetoExpirationInHours := envconfig.EnvVars.PASETO_EXPIRATION
 	expiration := time.Now().Add(pasetoExpirationInHours)
 	signedBy := envconfig.EnvVars.PASETO_SIGNED_BY
 	return CustomClaims{
-		walletAddress,
+		walletAddr,
+		userId,
 		signedBy,
 		pvx.RegisteredClaims{
 			Expiration: &expiration,

@@ -31,7 +31,7 @@ func createFeedback(c *gin.Context) {
 		return
 	}
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
-	newFeedback.WalletAddress = walletAddress
+	newFeedback.UserId = walletAddress
 	association := db.Model(&models.User{
 		WalletAddress: strings.ToLower(walletAddress),
 	}).Association("Feedbacks")
