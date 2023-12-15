@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -28,12 +27,12 @@ func deleteDomain(c *gin.Context) {
 		return
 	}
 
-	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	userId := c.GetString(paseto.CTX_USER_ID)
 
 	err = db.Transaction(func(tx *gorm.DB) error {
 		result := tx.Exec(`
-		delete from domain_admins where domain_id=? and admin_wallet_address=?;
-		`, request.DomainId, strings.ToLower(walletAddress))
+		delete from domain_admins where domain_id=? and admin_id=?;
+		`, request.DomainId, userId)
 
 		if err := result.Error; err != nil {
 			return err
