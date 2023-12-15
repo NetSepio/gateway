@@ -3,7 +3,6 @@ package domain
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -25,7 +24,7 @@ func postDomain(c *gin.Context) {
 		return
 	}
 
-	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	userId := c.GetString(paseto.CTX_USER_ID)
 
 	domainId := uuid.NewString()
 	txtValue := fmt.Sprintf("netsepio_verification=%s", uuid.NewString())
@@ -40,14 +39,14 @@ func postDomain(c *gin.Context) {
 		Category:       request.Category,
 		CoverImageHash: request.CoverImageHash,
 		Blockchain:     request.Blockchain,
-		CreatedById:    strings.ToLower(walletAddress),
-		UpdatedById:    strings.ToLower(walletAddress),
+		CreatedById:    userId,
+		UpdatedById:    userId,
 	}
 
 	domainAdmin := models.DomainAdmin{
 		DomainId:    domainId,
-		AdminId:     strings.ToLower(walletAddress),
-		UpdatedById: strings.ToLower(walletAddress),
+		AdminId:     userId,
+		UpdatedById: userId,
 		Name:        request.AdminName,
 		Role:        request.AdminRole,
 	}

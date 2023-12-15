@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -23,9 +22,9 @@ func patchDomain(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusForbidden, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
 		return
 	}
-	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	userId := c.GetString(paseto.CTX_USER_ID)
 	err = db.Model(&models.DomainAdmin{}).
-		Where(&models.DomainAdmin{DomainId: requestBody.DomainId, AdminId: walletAddress}).
+		Where(&models.DomainAdmin{DomainId: requestBody.DomainId, AdminId: userId}).
 		First(&models.DomainAdmin{}).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -44,7 +43,7 @@ func patchDomain(c *gin.Context) {
 		Category:       requestBody.Category,
 		CoverImageHash: requestBody.CoverImageHash,
 		Blockchain:     requestBody.Blockchain,
-		UpdatedById:    strings.ToLower(walletAddress),
+		UpdatedById:    userId,
 	}
 	result := db.Model(&models.Domain{}).
 		Where("id = ?", requestBody.DomainId).
