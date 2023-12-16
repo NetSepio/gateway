@@ -46,7 +46,7 @@ func GetDb() *gorm.DB {
 		log.Fatal("failed to ping database", err)
 	}
 
-	if err := db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserFeedback{}, &models.FlowId{}, &models.Review{}, &models.WaitList{}, &models.Domain{}, &models.DomainAdmin{}, &models.Sotreus{}); err != nil {
+	if err := db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserFeedback{}, &models.FlowId{}, &models.Review{}, &models.WaitList{}, &models.Domain{}, &models.DomainAdmin{}, &models.Sotreus{}, &models.Sotreus{}); err != nil {
 		log.Fatal(err)
 	}
 
