@@ -10,9 +10,9 @@ import (
 )
 
 type CustomClaims struct {
-	WalletAddress string `json:"walletAddress"`
-	UserId        string `json:"userId"`
-	SignedBy      string `json:"signedBy"`
+	WalletAddress *string `json:"walletAddress,omitempty"`
+	UserId        string  `json:"userId"`
+	SignedBy      string  `json:"signedBy"`
 	pvx.RegisteredClaims
 }
 
@@ -28,7 +28,7 @@ func (c CustomClaims) Valid() error {
 	return nil
 }
 
-func New(userId string, walletAddr string) CustomClaims {
+func New(userId string, walletAddr *string) CustomClaims {
 	pasetoExpirationInHours := envconfig.EnvVars.PASETO_EXPIRATION
 	expiration := time.Now().Add(pasetoExpirationInHours)
 	signedBy := envconfig.EnvVars.PASETO_SIGNED_BY
