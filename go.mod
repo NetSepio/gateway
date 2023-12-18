@@ -4,8 +4,6 @@ go 1.21
 
 require (
 	github.com/TheLazarusNetwork/go-helpers/httpo v0.0.0-20231107050208-a70a1bdc57a1
-	github.com/btcsuite/btcd v0.22.0-beta
-	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/caarlos0/env/v6 v6.10.0
 	github.com/chromedp/cdproto v0.0.0-20220131204822-e6abebe7b8cd
 	github.com/chromedp/chromedp v0.7.7
@@ -17,7 +15,6 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.8.4
-	github.com/tyler-smith/go-bip39 v1.0.1-0.20181017060643-dbb3b84ba2ef
 	github.com/vk-rv/pvx v0.0.0-20210912195928-ac00bc32f6e7
 	golang.org/x/crypto v0.16.0
 	google.golang.org/api v0.154.0
@@ -29,6 +26,7 @@ require (
 	cloud.google.com/go/compute v1.23.3 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect
+	github.com/btcsuite/btcd v0.22.0-beta // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
