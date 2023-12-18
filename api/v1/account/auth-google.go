@@ -20,7 +20,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func create(c *gin.Context) {
+func authGoogle(c *gin.Context) {
 	db := dbconfig.GetDb()
 	var request CreateAccountRequest
 	err := c.BindJSON(&request)

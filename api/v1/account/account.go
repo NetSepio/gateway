@@ -8,6 +8,6 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/account")
 	{
-		g.POST("", create)
+		g.POST("auth-google", authGoogle)
 	}
 }
