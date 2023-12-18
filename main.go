@@ -14,7 +14,6 @@ import (
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
-	"github.com/google/uuid"
 )
 
 func main() {
@@ -26,7 +25,7 @@ func main() {
 	if os.Getenv("DEBUG_MODE") == "true" {
 		newUser := &models.User{
 			WalletAddress: strings.ToLower("0x984185d39c67c954bd058beb619faf8929bb9349ef33c15102bdb982cbf7f18f"),
-			UserId:        uuid.NewString(),
+			UserId:        "fc8fe270-ce16-4df9-a17f-979bcd824e98",
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			logwrapper.Warn(err)
