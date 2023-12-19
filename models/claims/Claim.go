@@ -1,6 +1,7 @@
 package claims
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -21,6 +22,7 @@ func (c CustomClaims) Valid() error {
 	if err := c.RegisteredClaims.Valid(); err != nil {
 		return err
 	}
+	fmt.Printf("c.UserId: %s\n", c.UserId)
 	err := db.Model(&models.User{}).Where("user_id = ?", c.UserId).First(&models.User{}).Error
 	if err != nil {
 		return err
