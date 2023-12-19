@@ -9,6 +9,7 @@ type PatchProfileRequest struct {
 }
 
 type GetProfilePayload struct {
+	UserId            string `json:"userId,omitempty"`
 	Name              string `json:"name,omitempty"`
 	WalletAddress     string `json:"walletAddress"`
 	ProfilePictureUrl string `json:"profilePictureUrl,omitempty"`
