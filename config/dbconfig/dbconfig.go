@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/NetSepio/gateway/config/envconfig"
+	"github.com/NetSepio/gateway/models"
 
 	"gorm.io/driver/postgres"
 )

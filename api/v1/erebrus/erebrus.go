@@ -93,6 +93,18 @@ func RegisterClient(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
 		return
 	}
+
+	dbEntry := models.Erebrus{
+		UUID:          reqBody.Client.UUID,
+		Name:          reqBody.Client.Name,
+		WalletAddress: walletAddress,
+		Region:        region,
+	}
+	if err := db.Create(&dbEntry).Error; err != nil {
+		logwrapper.Errorf("failed to create database entry: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
+		return
+	}
 	httpo.NewSuccessResponseP(200, "VPN client created successfully", reqBody.Client).SendD(c)
 }
 
