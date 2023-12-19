@@ -40,7 +40,7 @@ func patchProfile(c *gin.Context) {
 	}
 	userId := c.GetString(paseto.CTX_USER_ID)
 	result := db.Model(&models.User{}).
-		Where("userId = ?", userId).
+		Where("user_id = ?", userId).
 		Updates(&profileUpdate)
 	if result.Error != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
