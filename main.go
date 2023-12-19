@@ -24,7 +24,7 @@ func main() {
 	// fmt.Printf("priv = %s\npub = %s\n", hex.EncodeToString(priv), hex.EncodeToString(pub))
 	if os.Getenv("DEBUG_MODE") == "true" {
 		newUser := &models.User{
-			WalletAddress: strings.ToLower("0x984185d39c67c954bd058beb619faf8929bb9349ef33c15102bdb982cbf7f18f"),
+			WalletAddress: strings.ToLower("0xdd3933022e36e9a0a15d0522e20b7b580d38b54ec9cb28ae09697ce0f7c95b6b"),
 			UserId:        "fc8fe270-ce16-4df9-a17f-979bcd824e98",
 		}
 		if err := db.Create(newUser).Error; err != nil {
