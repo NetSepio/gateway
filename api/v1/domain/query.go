@@ -3,7 +3,6 @@ package domain
 import (
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
@@ -50,16 +49,15 @@ func queryDomain(c *gin.Context) {
 	}
 
 	if queryRequest.OnlyAdmin {
-		walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
-		fmt.Println("walletAddress", walletAddress == "")
-		if walletAddress == "" {
+		userId := c.GetString(paseto.CTX_USER_ID)
+		if userId == "" {
 			httpo.NewErrorResponse(http.StatusBadRequest, "auth token required if onlyAdmin is true").SendD(c)
 			return
 		}
 		if err := model.
-			Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).Where("da.admin_wallet_address = ?", strings.ToLower(walletAddress)).
-			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_address created_by, u.name creator_name, txt_value").
-			Joins("INNER JOIN users u ON u.wallet_address = created_by_address").
+			Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).Where("da.admin_id = ?", userId).
+			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_id created_by, u.name creator_name, txt_value").
+			Joins("INNER JOIN users u ON u.user_id = created_by_id").
 			Joins("INNER JOIN domain_admins da ON da.domain_id = domains.id").
 			Find(&domains).
 			Error; err != nil {
@@ -70,8 +68,8 @@ func queryDomain(c *gin.Context) {
 	} else {
 		if err := model.
 			Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).
-			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_address created_by, u.name creator_name").
-			Joins("INNER JOIN users u ON u.wallet_address = created_by_address").
+			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_id created_by, u.name creator_name").
+			Joins("INNER JOIN users u ON u.user_id = created_by_id").
 			Find(&domains).
 			Error; err != nil {
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)

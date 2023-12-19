@@ -28,7 +28,7 @@ func deleteAdmin(c *gin.Context) {
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 
 	err = db.Model(&models.DomainAdmin{}).
-		Where(&models.DomainAdmin{DomainId: request.DomainId, AdminWalletAddress: walletAddress}).
+		Where(&models.DomainAdmin{DomainId: request.DomainId, AdminId: walletAddress}).
 		First(&models.DomainAdmin{}).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -40,7 +40,7 @@ func deleteAdmin(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to update admin").SendD(c)
 	}
 
-	res := db.Delete(&models.DomainAdmin{DomainId: request.DomainId, AdminWalletAddress: strings.ToLower(request.AdminWalletAddres)})
+	res := db.Delete(&models.DomainAdmin{DomainId: request.DomainId, AdminId: strings.ToLower(request.AdminWalletAddres)})
 	if res.Error != nil {
 		logwrapper.Errorf("failed to delete domain admin: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to remove admin").SendD(c)

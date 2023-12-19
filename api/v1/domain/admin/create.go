@@ -25,10 +25,10 @@ func createAdmin(c *gin.Context) {
 		return
 	}
 
-	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	userId := c.GetString(paseto.CTX_USER_ID)
 
 	err = db.Model(&models.DomainAdmin{}).
-		Where(&models.DomainAdmin{DomainId: request.DomainId, AdminWalletAddress: walletAddress}).
+		Where(&models.DomainAdmin{DomainId: request.DomainId, AdminId: userId}).
 		First(&models.DomainAdmin{}).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -45,8 +45,8 @@ func createAdmin(c *gin.Context) {
 	i := 0
 	for _, v := range request.Admins {
 		adminDetails[i].DomainId = request.DomainId
-		adminDetails[i].AdminWalletAddress = v.AdminWalletAddress
-		adminDetails[i].UpdatedByAddress = walletAddress
+		adminDetails[i].AdminId = v.AdminWalletAddress
+		adminDetails[i].UpdatedById = userId
 		adminDetails[i].Name = v.AdminName
 		adminDetails[i].Role = v.AdminRole
 	}

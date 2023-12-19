@@ -14,11 +14,10 @@ import (
 func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string) (string, error) {
 	db := dbconfig.GetDb()
 	flowId := uuid.NewString()
-	var update bool
-	update = true
+	var update bool = true
 
-	findResult := db.Model(&models.User{}).Find(&models.User{}, &models.User{WalletAddress: strings.ToLower(walletAddress)})
-
+	var fetchUser models.User
+	findResult := db.Model(&models.User{}).Find(&fetchUser, &models.User{WalletAddress: strings.ToLower(walletAddress)})
 	if err := findResult.Error; err != nil {
 		err = fmt.Errorf("while finding user error occured, %s", err)
 		logrus.Error(err)
@@ -33,23 +32,24 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 	if update {
 		// User exist so update
 		association := db.Model(&models.User{
-			WalletAddress: strings.ToLower(walletAddress),
+			UserId: fetchUser.UserId,
 		}).Association("FlowIds")
 		if err := association.Error; err != nil {
 			logrus.Error(err)
 			return "", err
 		}
-		err := association.Append(&models.FlowId{FlowIdType: flowIdType, WalletAddress: strings.ToLower(walletAddress), FlowId: flowId, RelatedRoleId: relatedRoleId})
+		err := association.Append(&models.FlowId{FlowIdType: flowIdType, FlowId: flowId, RelatedRoleId: relatedRoleId})
 		if err != nil {
 			return "", err
 		}
 	} else {
 		// User doesn't exist so create
-
+		userId := uuid.NewString()
 		newUser := &models.User{
 			WalletAddress: strings.ToLower(walletAddress),
+			UserId:        userId,
 			FlowIds: []models.FlowId{{
-				FlowIdType: flowIdType, WalletAddress: walletAddress, FlowId: flowId, RelatedRoleId: relatedRoleId,
+				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId,
 			}},
 		}
 		if err := db.Create(newUser).Error; err != nil {

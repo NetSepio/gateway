@@ -57,7 +57,7 @@ func authenticate(c *gin.Context) {
 	userAuthEULA := envconfig.EnvVars.AUTH_EULA
 	message := fmt.Sprintf("APTOS\nmessage: %v\nnonce: %v", userAuthEULA, req.FlowId)
 
-	walletAddress, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message, req.PubKey)
+	userId, walletAddr, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message, req.PubKey)
 
 	if err == cryptosign.ErrFlowIdNotFound {
 		httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
@@ -70,7 +70,7 @@ func authenticate(c *gin.Context) {
 		return
 	}
 	if isCorrect {
-		customClaims := claims.New(walletAddress)
+		customClaims := claims.New(userId, walletAddr)
 		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
