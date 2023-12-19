@@ -30,7 +30,7 @@ func main() {
 		if err := db.Create(newUser).Error; err != nil {
 			logwrapper.Warn(err)
 		}
-		newClaims := claims.New(newUser.UserId, newUser.WalletAddress)
+		newClaims := claims.New(newUser.UserId, &newUser.WalletAddress)
 
 		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
