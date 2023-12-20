@@ -7,5 +7,6 @@ type AuthenticateRequest struct {
 }
 
 type AuthenticatePayload struct {
-	Token string `json:"token"`
+	Token  string `json:"token"`
+	UserId string `json:"userId"`
 }

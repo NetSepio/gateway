@@ -90,7 +90,8 @@ func authenticate(c *gin.Context) {
 			return
 		}
 		payload := AuthenticatePayload{
-			Token: pasetoToken,
+			Token:  pasetoToken,
+			UserId: userId,
 		}
 		httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 	} else {

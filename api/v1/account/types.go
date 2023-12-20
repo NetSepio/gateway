@@ -5,5 +5,6 @@ type CreateAccountRequest struct {
 }
 
 type CreateAccountResponse struct {
-	Token string `json:"token"`
+	Token  string `json:"token"`
+	UserId string `json:"userId"`
 }

@@ -82,7 +82,8 @@ func authGoogle(c *gin.Context) {
 	}
 
 	payload := CreateAccountResponse{
-		Token: pasetoToken,
+		Token:  pasetoToken,
+		UserId: user.UserId,
 	}
 	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 }
