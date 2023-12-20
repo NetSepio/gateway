@@ -66,7 +66,7 @@ func authGoogle(c *gin.Context) {
 		}
 	}
 
-	customClaims := claims.New(user.UserId, &user.EmailId)
+	customClaims := claims.NewWithEmail(user.UserId, &user.EmailId)
 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	if err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)

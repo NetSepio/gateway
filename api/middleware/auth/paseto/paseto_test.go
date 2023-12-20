@@ -43,7 +43,7 @@ func Test_PASETO(t *testing.T) {
 		db.Delete(&newUser)
 	}()
 	t.Run("Should return 200 with correct PASETO", func(t *testing.T) {
-		newClaims := claims.New(uuid.NewString(), &testWalletAddress)
+		newClaims := claims.NewWithWallet(uuid.NewString(), &testWalletAddress)
 		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
 			panic(err)
@@ -57,7 +57,7 @@ func Test_PASETO(t *testing.T) {
 	})
 
 	t.Run("Should return 401 with incorret PASETO", func(t *testing.T) {
-		newClaims := claims.New(uuid.NewString(), &testWalletAddress)
+		newClaims := claims.NewWithWallet(uuid.NewString(), &testWalletAddress)
 		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
 			panic(err)

@@ -70,7 +70,7 @@ func authenticate(c *gin.Context) {
 		return
 	}
 	if isCorrect {
-		customClaims := claims.New(userId, &walletAddr)
+		customClaims := claims.NewWithWallet(userId, &walletAddr)
 		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
