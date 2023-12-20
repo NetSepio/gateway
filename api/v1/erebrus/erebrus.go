@@ -40,7 +40,7 @@ func RegisterClient(c *gin.Context) {
 
 	if count >= 3 {
 		logwrapper.Error("Can't create more clients, maximum 3 allowed")
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Can't create more clients, maximum 3 allowed").SendD(c)
+		httpo.NewErrorResponse(http.StatusBadRequest, "Can't create more clients, maximum 3 allowed").SendD(c)
 		return
 	}
 
@@ -49,7 +49,7 @@ func RegisterClient(c *gin.Context) {
 	err = c.BindJSON(&req)
 	if err != nil {
 		logwrapper.Errorf("failed to bind JSON: %s", err)
-		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
+		httpo.NewErrorResponse(http.StatusBadRequest, err.Error()).SendD(c)
 		return
 	}
 
