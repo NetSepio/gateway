@@ -38,7 +38,7 @@ type ReportWithVotes struct {
 	EndTime       time.Time `json:"endTime"`
 	Upvotes       int       `json:"upvotes"`
 	Downvotes     int       `json:"downvotes"`
-	NotSure       int       `json:"notSure"`
+	Notsure       int       `json:"notsure"`
 	Totalvotes    int       `json:"totalVotes"`
 	Status        string    `json:"status"` // Calculated status
 	UserVote      string    `json:"userVote"`

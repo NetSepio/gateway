@@ -27,7 +27,7 @@ func getReports(c *gin.Context) {
 		Select(`reports.*, 
 			(SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and report_votes.vote_type = 'upvote') as upvotes,
 			(SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and report_votes.vote_type = 'downvote') as downvotes,
-			(SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and report_votes.vote_type = 'notsure') as notSure,
+			(SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and report_votes.vote_type = 'notsure') as notsure,
 			(SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id) as totalvotes,
 			reports.end_time,
 			(SELECT vote_type FROM report_votes WHERE report_id = reports.id AND voter_id = ?) as user_vote`, userId).
