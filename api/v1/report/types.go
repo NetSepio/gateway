@@ -39,7 +39,7 @@ type ReportWithVotes struct {
 	Upvotes       int       `json:"upvotes"`
 	Downvotes     int       `json:"downvotes"`
 	NotSure       int       `json:"notSure"`
-	TotalVotes    int       `json:"totalVotes"`
+	Totalvotes    int       `json:"totalVotes"`
 	Status        string    `json:"status"` // Calculated status
 	UserVote      string    `json:"userVote"`
 }
