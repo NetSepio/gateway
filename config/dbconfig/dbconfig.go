@@ -7,7 +7,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/NetSepio/gateway/config/envconfig"
-	"github.com/NetSepio/gateway/models"
 
 	"gorm.io/driver/postgres"
 )
@@ -46,9 +45,9 @@ func GetDb() *gorm.DB {
 		log.Fatal("failed to ping database", err)
 	}
 
-	if err := db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserFeedback{}, &models.FlowId{}, &models.Review{}, &models.WaitList{}, &models.Domain{}, &models.DomainAdmin{}, &models.Sotreus{}, &models.Erebrus{}); err != nil {
-		log.Fatal(err)
-	}
+	// if err := db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserFeedback{}, &models.FlowId{}, &models.Review{}, &models.WaitList{}, &models.Domain{}, &models.DomainAdmin{}, &models.Sotreus{}, &models.Erebrus{}); err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	// db.Exec(`create table if not exists user_roles (
 	// 		wallet_address text,

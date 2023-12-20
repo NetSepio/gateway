@@ -64,6 +64,13 @@ CREATE TABLE public.sotreus (
     region text
 );
 
+CREATE TABLE public.erebrus (
+    UUID text NOT NULL,
+    name text NOT NULL,
+    wallet_address text,
+    region text
+);
+
 CREATE TABLE public.user_feedbacks (
     wallet_address text NOT NULL,
     feedback text NOT NULL,
@@ -113,6 +120,9 @@ ALTER TABLE ONLY public.roles
 
 ALTER TABLE ONLY public.sotreus
     ADD CONSTRAINT sotreus_pkey PRIMARY KEY (name);
+
+ALTER TABLE ONLY public.erebrus
+    ADD CONSTRAINT erebrus_pkey PRIMARY KEY (UUID);
 
 ALTER TABLE ONLY public.user_feedbacks
     ADD CONSTRAINT user_feedbacks_pkey PRIMARY KEY (wallet_address, feedback, rating);

@@ -113,7 +113,7 @@ func GetClient(c *gin.Context) {
 	db := dbconfig.GetDb()
 
 	var cl *models.Erebrus
-	if err := db.First(&cl, uuid).Error; err != nil {
+	if err := db.Model(&models.Erebrus{}).Where("UUID = ?", uuid).First(&cl).Error; err != nil {
 		logwrapper.Errorf("failed to fetch data from database: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
 		return
@@ -146,7 +146,7 @@ func DeleteClient(c *gin.Context) {
 	db := dbconfig.GetDb()
 
 	var cl *models.Erebrus
-	err := db.First(&cl, uuid).Error
+	err := db.Model(&models.Erebrus{}).Where("UUID = ?", uuid).First(&cl).Error
 	if err != nil {
 		logwrapper.Errorf("failed to fetch data from database: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
@@ -177,7 +177,7 @@ func GetConfig(c *gin.Context) {
 	db := dbconfig.GetDb()
 
 	var cl *models.Erebrus
-	err := db.First(&cl, uuid).Error
+	err := db.Model(&models.Erebrus{}).Where("UUID = ?", uuid).First(&cl).Error
 	if err != nil {
 		logwrapper.Errorf("failed to fetch data from database: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
