@@ -14,7 +14,6 @@ import (
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
-	"github.com/google/uuid"
 )
 
 func main() {
@@ -25,13 +24,13 @@ func main() {
 	// fmt.Printf("priv = %s\npub = %s\n", hex.EncodeToString(priv), hex.EncodeToString(pub))
 	if os.Getenv("DEBUG_MODE") == "true" {
 		newUser := &models.User{
-			WalletAddress: strings.ToLower("0x984185d39c67c954bd058beb619faf8929bb9349ef33c15102bdb982cbf7f18f"),
-			UserId:        uuid.NewString(),
+			WalletAddress: strings.ToLower("0xdd3933022e36e9a0a15d0522e20b7b580d38b54ec9cb28ae09697ce0f7c95b6b"),
+			UserId:        "fc8fe270-ce16-4df9-a17f-979bcd824e98",
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			logwrapper.Warn(err)
 		}
-		newClaims := claims.New(newUser.UserId, newUser.WalletAddress)
+		newClaims := claims.NewWithWallet(newUser.UserId, &newUser.WalletAddress)
 
 		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {

@@ -32,6 +32,7 @@ type config struct {
 	VPN_DEPLOYER_API_SG      string        `env:"VPN_DEPLOYER_API_SG,notEmpty"`
 	EREBRUS_API_US_EAST      string        `env:"EREBRUS_API_US_EAST,notEmpty"`
 	EREBRUS_API_SG           string        `env:"EREBRUS_API_SG,notEmpty"`
+	GOOGLE_AUDIENCE          string        `env:"GOOGLE_AUDIENCE,notEmpty"`
 }
 
 var EnvVars config = config{}

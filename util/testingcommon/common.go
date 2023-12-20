@@ -26,7 +26,7 @@ func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 	gin.SetMode(gin.TestMode)
 	userId := uuid.NewString()
 	CreateTestUser(t, testWalletAddress, userId)
-	customClaims := claims.New(userId, testWalletAddress)
+	customClaims := claims.NewWithWallet(userId, &testWalletAddress)
 
 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	if err != nil {

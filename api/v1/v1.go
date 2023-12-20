@@ -1,6 +1,7 @@
 package apiv1
 
 import (
+	"github.com/NetSepio/gateway/api/v1/account"
 	authenticate "github.com/NetSepio/gateway/api/v1/authenticate"
 	delegatereviewcreation "github.com/NetSepio/gateway/api/v1/delegateReviewCreation"
 	"github.com/NetSepio/gateway/api/v1/deletereview"
@@ -11,6 +12,7 @@ import (
 	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
 	"github.com/NetSepio/gateway/api/v1/getreviews"
 	"github.com/NetSepio/gateway/api/v1/profile"
+	"github.com/NetSepio/gateway/api/v1/report"
 	"github.com/NetSepio/gateway/api/v1/sotreus"
 	"github.com/NetSepio/gateway/api/v1/stats"
 	"github.com/NetSepio/gateway/api/v1/status"
@@ -37,5 +39,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		sotreus.ApplyRoutes(v1)
 		domain.ApplyRoutes(v1)
 		erebrus.ApplyRoutes(v1)
+		report.ApplyRoutes(v1)
+		account.ApplyRoutes(v1)
 	}
 }
