@@ -6,6 +6,7 @@ import (
 	delegatereviewcreation "github.com/NetSepio/gateway/api/v1/delegateReviewCreation"
 	"github.com/NetSepio/gateway/api/v1/deletereview"
 	"github.com/NetSepio/gateway/api/v1/domain"
+	"github.com/NetSepio/gateway/api/v1/erebrus"
 	"github.com/NetSepio/gateway/api/v1/feedback"
 	flowid "github.com/NetSepio/gateway/api/v1/flowid"
 	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
@@ -37,7 +38,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		getreviewerdetails.ApplyRoutes(v1)
 		sotreus.ApplyRoutes(v1)
 		domain.ApplyRoutes(v1)
-    report.ApplyRoutes(v1)
+		erebrus.ApplyRoutes(v1)
+		report.ApplyRoutes(v1)
 		account.ApplyRoutes(v1)
 	}
 }
