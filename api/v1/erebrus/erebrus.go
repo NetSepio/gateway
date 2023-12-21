@@ -199,7 +199,7 @@ func GetConfig(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	httpo.NewSuccessResponse(200, "VPN config fetched successfully").SendD(c)
+	c.Writer.WriteHeader(200)
 }
 
 func GetClients(c *gin.Context) {
