@@ -32,7 +32,7 @@ func postReport(c *gin.Context) {
 		ProjectName:   request.ProjectName,
 		ProjectDomain: request.ProjectDomain,
 		CreatedBy:     userId,
-		EndTime:       time.Now().Add(time.Second * 300),
+		EndTime:       time.Now().Add(time.Hour * 24 * 2),
 	}
 	err := db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(&newReport).Error; err != nil {
