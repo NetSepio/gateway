@@ -49,7 +49,7 @@ func authGoogle(c *gin.Context) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// User does not exist, so create a new user
 			user = models.User{
-				EmailId: email,
+				EmailId: &email,
 				UserId:  uuid.NewString(),
 			}
 			err = db.Model(&models.User{}).Create(&user).Error
@@ -66,7 +66,7 @@ func authGoogle(c *gin.Context) {
 		}
 	}
 
-	customClaims := claims.NewWithEmail(user.UserId, &user.EmailId)
+	customClaims := claims.NewWithEmail(user.UserId, user.EmailId)
 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	if err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
