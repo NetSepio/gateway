@@ -23,6 +23,7 @@ type config struct {
 	ALLOWED_ORIGIN           []string      `env:"ALLOWED_ORIGIN,required" envSeparator:","`
 	PASETO_SIGNED_BY         string        `env:"PASETO_SIGNED_BY,required"`
 	APTOS_FUNCTION_ID        string        `env:"APTOS_FUNCTION_ID,required"`
+	APTOS_REPORT_FUNCTION_ID string        `env:"APTOS_REPORT_FUNCTION_ID,required"`
 	GAS_UNITS                int           `env:"GAS_UNITS,required"`
 	GAS_PRICE                int           `env:"GAS_PRICE,required"`
 	NETWORK                  string        `env:"NETWORK,required"`

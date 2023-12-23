@@ -1,6 +1,8 @@
 package report
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -8,6 +10,8 @@ import (
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/pkg/aptos"
+	"github.com/NetSepio/gateway/util/pkg/ipfs"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
@@ -23,7 +27,8 @@ func postReport(c *gin.Context) {
 	}
 
 	db := dbconfig.GetDb()
-	userId := c.GetString(paseto.CTX_USER_ID) // Get user ID from context
+	userId := c.GetString(paseto.CTX_USER_ID)              // Get user ID from context
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES) // Get user ID from context
 	newReport := models.Report{
 		ID:            uuid.NewString(),
 		Title:         request.Title,
@@ -34,8 +39,36 @@ func postReport(c *gin.Context) {
 		CreatedBy:     userId,
 		EndTime:       time.Now().Add(time.Hour * 24 * 2),
 	}
-	err := db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Create(&newReport).Error; err != nil {
+
+	// Convert report to JSON for IPFS upload
+	reportJSON, err := json.Marshal(newReport)
+	if err != nil {
+		logwrapper.Errorf("failed to marshal report: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+		return
+	}
+
+	// Upload to IPFS
+	ipfsResponse, err := ipfs.UploadToIpfs(bytes.NewReader(reportJSON), "report.json")
+	if err != nil {
+		logwrapper.Errorf("failed to upload to IPFS: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+		return
+	}
+
+	// Store the IPFS hash in the report object
+	newReport.MetaDataHash = &ipfsResponse.Value.Cid
+
+	txResult, err := aptos.SubmitProposal(walletAddress, *newReport.MetaDataHash)
+	if err != nil {
+		logwrapper.Errorf("failed to submit proposal: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+		return
+	}
+	newReport.TransactionHash = &txResult.Result.TransactionHash
+	newReport.TransactionVersion = &txResult.Result.Version
+	err = db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Debug().Create(&newReport).Error; err != nil {
 			return fmt.Errorf("failed to insert report: %w", err)
 		}
 

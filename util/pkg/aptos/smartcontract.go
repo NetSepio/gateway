@@ -92,3 +92,57 @@ func UploadArchive(siteUrl string, siteIpfsHash string) (*TxResult, error) {
 	txResult, err := UnmarshalTxResult(o)
 	return &txResult, err
 }
+
+func SubmitProposal(proposer string, metadata string) (*TxResult, error) {
+	command := fmt.Sprintf("move run --function-id %s::report_dao::submit_proposal --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_REPORT_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
+	args := append(strings.Split(command, " "), argA(proposer), argS(metadata))
+	cmd := exec.Command("aptos", args...)
+	fmt.Println(strings.Join(args, " "))
+
+	o, err := cmd.Output()
+	if err != nil {
+		if err, ok := err.(*exec.ExitError); ok {
+			return nil, fmt.Errorf("stderr: %s out: %s err: %w", err.Stderr, o, err)
+		}
+		return nil, fmt.Errorf("out: %s err: %w", o, err)
+	}
+
+	txResult, err := UnmarshalTxResult(o)
+	return &txResult, err
+}
+
+func ResolveProposal(old_metadata string, metadata string) (*TxResult, error) {
+	command := fmt.Sprintf("move run --function-id %s::report_dao::resolve_proposal --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_REPORT_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
+	args := append(strings.Split(command, " "), argS(old_metadata), argS(metadata))
+	cmd := exec.Command("aptos", args...)
+	fmt.Println(strings.Join(args, " "))
+
+	o, err := cmd.Output()
+	if err != nil {
+		if err, ok := err.(*exec.ExitError); ok {
+			return nil, fmt.Errorf("stderr: %s out: %s err: %w", err.Stderr, o, err)
+		}
+		return nil, fmt.Errorf("out: %s err: %w", o, err)
+	}
+
+	txResult, err := UnmarshalTxResult(o)
+	return &txResult, err
+}
+
+func DeleteProposal(metadata string) (*TxResult, error) {
+	command := fmt.Sprintf("move run --function-id %s::report_dao::delete_proposal --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_REPORT_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
+	args := append(strings.Split(command, " "), argS(metadata))
+	cmd := exec.Command("aptos", args...)
+	fmt.Println(strings.Join(args, " "))
+
+	o, err := cmd.Output()
+	if err != nil {
+		if err, ok := err.(*exec.ExitError); ok {
+			return nil, fmt.Errorf("stderr: %s out: %s err: %w", err.Stderr, o, err)
+		}
+		return nil, fmt.Errorf("out: %s err: %w", o, err)
+	}
+
+	txResult, err := UnmarshalTxResult(o)
+	return &txResult, err
+}
