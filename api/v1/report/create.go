@@ -19,6 +19,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type ExtendedReport struct {
+	models.Report
+	Tags   []string `json:"tags"`
+	Images []string `json:"images"`
+}
+
 func postReport(c *gin.Context) {
 	var request ReportRequest
 	if err := c.BindJSON(&request); err != nil {
@@ -37,11 +43,20 @@ func postReport(c *gin.Context) {
 		ProjectName:   request.ProjectName,
 		ProjectDomain: request.ProjectDomain,
 		CreatedBy:     userId,
+		Category:      request.Category,
 		EndTime:       time.Now().Add(time.Hour * 24 * 2),
 	}
-
+	extendedReport := struct {
+		models.Report
+		Tags   []string `json:"tags"`
+		Images []string `json:"images"`
+	}{
+		Report: newReport,
+		Tags:   request.Tags,
+		Images: request.Images,
+	}
 	// Convert report to JSON for IPFS upload
-	reportJSON, err := json.Marshal(newReport)
+	reportJSON, err := json.Marshal(extendedReport)
 	if err != nil {
 		logwrapper.Errorf("failed to marshal report: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)

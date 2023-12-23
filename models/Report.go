@@ -20,6 +20,7 @@ type Report struct {
 	EndTransactionVersion *int64    `gorm:"type:text" json:"endTransactionVersion"`
 	MetaDataHash          *string   `gorm:"type:text" json:"metaDataHash"`
 	EndMetaDataHash       *string   `gorm:"type:text" json:"endMetaDataHash"`
+	Category              string    `gorm:"type:text" json:"category"`
 }
 
 type ReportVote struct {

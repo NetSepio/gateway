@@ -14,11 +14,13 @@ import (
 
 type ExtendedReport struct {
 	models.Report
-	UpVotes    int    `json:"upvotes"`
-	DownVotes  int    `json:"downvotes"`
-	NotSure    int    `json:"notSure"`
-	TotalVotes int    `json:"totalVotes"`
-	Status     string `json:"status"`
+	UpVotes    int      `json:"upvotes"`
+	DownVotes  int      `json:"downvotes"`
+	NotSure    int      `json:"notSure"`
+	TotalVotes int      `json:"totalVotes"`
+	Status     string   `json:"status"`
+	Tags       []string `json:"tags"`
+	Images     []string `json:"images"`
 }
 
 func ProcessAndUploadReports() {
@@ -28,11 +30,15 @@ func ProcessAndUploadReports() {
 	var extendedReports []ExtendedReport
 	if err := db.Model(&models.Report{}).
 		Select(`reports.*, 
+				array_agg(distinct report_tags.tag) filter (where report_tags.tag is not null) as tags,
+				array_agg(distinct report_images.image_url) filter (where report_images.image_url is not null) as images,
                 (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and vote_type = 'upvote') as up_votes,
                 (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and vote_type = 'downvote') as down_votes,
                 (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and vote_type = 'notsure') as not_sure,
                 (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id) as total_votes`).
 		Where("end_meta_data_hash IS NULL AND end_time < ?", now).
+		Joins("left join report_tags on report_tags.report_id = reports.id").
+		Joins("left join report_images on report_images.report_id = reports.id").
 		Find(&extendedReports).Error; err != nil {
 		fmt.Printf("Error retrieving reports: %v\n", err)
 		return
