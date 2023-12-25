@@ -4,6 +4,7 @@ package siteinsights
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -16,6 +17,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type GetSiteInsightQuery struct {
+	SiteURL string `form:"siteUrl" binding:"required,http_url"`
+}
+
 // ApplyRoutes applies router to gin Router
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/site-insight")
@@ -25,19 +30,20 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func GetSiteInsight(c *gin.Context) {
-	siteURL := c.Query("siteUrl")
-	if siteURL == "" {
-		httpo.NewErrorResponse(http.StatusBadRequest, "siteUrl is required").SendD(c)
+	var query GetSiteInsightQuery
+	err := c.BindQuery(&query)
+	if err != nil {
+		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("failed to validate request: %s", err)).SendD(c)
 		return
 	}
 
 	db := dbconfig.GetDb()
 	var insight models.SiteInsight
-	err := db.Where("site_url = ?", siteURL).First(&insight).Error
+	err = db.Where("site_url = ?", query.SiteURL).First(&insight).Error
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			go generateAndStoreInsight(siteURL)
+			go generateAndStoreInsight(query.SiteURL)
 			httpo.NewSuccessResponse(http.StatusCreated, "Insight generation in progress").SendD(c)
 			return
 		} else {
