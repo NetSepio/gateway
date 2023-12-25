@@ -13,6 +13,7 @@ import (
 	"github.com/NetSepio/gateway/api/v1/getreviews"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	"github.com/NetSepio/gateway/api/v1/report"
+	"github.com/NetSepio/gateway/api/v1/siteinsights"
 	"github.com/NetSepio/gateway/api/v1/sotreus"
 	"github.com/NetSepio/gateway/api/v1/stats"
 	"github.com/NetSepio/gateway/api/v1/status"
@@ -41,5 +42,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		erebrus.ApplyRoutes(v1)
 		report.ApplyRoutes(v1)
 		account.ApplyRoutes(v1)
+		siteinsights.ApplyRoutes(v1)
 	}
 }
