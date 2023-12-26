@@ -33,6 +33,7 @@ type config struct {
 	EREBRUS_API_US_EAST      string        `env:"EREBRUS_API_US_EAST,notEmpty"`
 	EREBRUS_API_SG           string        `env:"EREBRUS_API_SG,notEmpty"`
 	GOOGLE_AUDIENCE          string        `env:"GOOGLE_AUDIENCE,notEmpty"`
+	OPENAI_API_KEY           string        `env:"OPENAI_API_KEY,notEmpty"`
 }
 
 var EnvVars config = config{}
