@@ -11,34 +11,39 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string) (string, error) {
+func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string, userId string) (string, error) {
 	db := dbconfig.GetDb()
 	flowId := uuid.NewString()
+	fmt.Printf("userId: %s\n", userId)
 	var update bool = true
+	if userId == "" {
+		var fetchUser models.User
+		lowerWalletAddress := strings.ToLower(walletAddress)
+		findResult := db.Model(&models.User{}).Find(&fetchUser, &models.User{WalletAddress: &lowerWalletAddress})
+		if err := findResult.Error; err != nil {
+			err = fmt.Errorf("while finding user error occured, %s", err)
+			logrus.Error(err)
+			return "", err
+		}
 
-	var fetchUser models.User
-	findResult := db.Model(&models.User{}).Find(&fetchUser, &models.User{WalletAddress: strings.ToLower(walletAddress)})
-	if err := findResult.Error; err != nil {
-		err = fmt.Errorf("while finding user error occured, %s", err)
-		logrus.Error(err)
-		return "", err
-	}
-
-	rowsAffected := findResult.RowsAffected
-	if rowsAffected == 0 {
-		update = false
+		rowsAffected := findResult.RowsAffected
+		if rowsAffected == 0 {
+			update = false
+		} else {
+			userId = fetchUser.UserId
+		}
 	}
 
 	if update {
 		// User exist so update
 		association := db.Model(&models.User{
-			UserId: fetchUser.UserId,
+			UserId: userId,
 		}).Association("FlowIds")
 		if err := association.Error; err != nil {
 			logrus.Error(err)
 			return "", err
 		}
-		err := association.Append(&models.FlowId{FlowIdType: flowIdType, FlowId: flowId, RelatedRoleId: relatedRoleId})
+		err := association.Append(&models.FlowId{FlowIdType: flowIdType, FlowId: flowId, RelatedRoleId: relatedRoleId, WalletAddress: walletAddress})
 		if err != nil {
 			return "", err
 		}
@@ -46,10 +51,9 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 		// User doesn't exist so create
 		userId := uuid.NewString()
 		newUser := &models.User{
-			WalletAddress: strings.ToLower(walletAddress),
-			UserId:        userId,
+			UserId: userId,
 			FlowIds: []models.FlowId{{
-				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId,
+				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId, WalletAddress: walletAddress,
 			}},
 		}
 		if err := db.Create(newUser).Error; err != nil {

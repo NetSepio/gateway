@@ -70,6 +70,14 @@ func authenticate(c *gin.Context) {
 		return
 	}
 	if isCorrect {
+		// update wallet address for that user_id
+		err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("wallet_address", walletAddr).Error
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to update wallet address, error %v", err.Error())
+			return
+		}
+
 		customClaims := claims.NewWithWallet(userId, &walletAddr)
 		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {

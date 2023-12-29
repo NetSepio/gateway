@@ -3,7 +3,7 @@ package models
 type User struct {
 	UserId            string         `gorm:"primary_key" json:"userId,omitempty"`
 	Name              string         `json:"name,omitempty"`
-	WalletAddress     string         `gorm:"unique" json:"walletAddress"`
+	WalletAddress     *string        `json:"walletAddress,omitempty"`
 	Discord           string         `json:"discord"`
 	Twitter           string         `json:"twitter"`
 	FlowIds           []FlowId       `gorm:"foreignkey:UserId" json:"-"`

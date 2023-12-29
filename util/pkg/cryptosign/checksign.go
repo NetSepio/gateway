@@ -18,7 +18,6 @@ var (
 )
 
 func CheckSign(signature string, flowId string, message string, pubKey string) (string, string, bool, error) {
-
 	db := dbconfig.GetDb()
 	signatureInBytes, err := hexutil.Decode(signature)
 	if err != nil {
@@ -42,13 +41,7 @@ func CheckSign(signature string, flowId string, message string, pubKey string) (
 		return "", "", false, ErrFlowIdNotFound
 	}
 
-	var userData models.User
-
-	err = db.Model(&models.User{}).Where("user_id = ?", flowIdData.UserId).First(&userData).Error
-	if err != nil {
-		return "", "", false, err
-	}
-	if !strings.EqualFold(addr, userData.WalletAddress) {
+	if !strings.EqualFold(addr, flowIdData.WalletAddress) {
 		return "", "", false, err
 	}
 
@@ -56,6 +49,6 @@ func CheckSign(signature string, flowId string, message string, pubKey string) (
 	if !matches || string(msgGot) != message {
 		return "", "", false, err
 	}
-	return userData.UserId, userData.WalletAddress, true, nil
+	return flowIdData.UserId, flowIdData.WalletAddress, true, nil
 
 }

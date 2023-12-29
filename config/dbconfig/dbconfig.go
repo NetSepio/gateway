@@ -65,5 +65,5 @@ func GetDb() *gorm.DB {
 	// 	WHEN duplicate_object THEN null;
 	// END $$;`)
 
-	return db
+	return db.Debug()
 }
