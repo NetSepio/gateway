@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
@@ -20,7 +21,10 @@ import (
 	"gorm.io/gorm"
 )
 
+// For creating account or siging pass without paseto
+// For linking pass paseto
 func authGoogle(c *gin.Context) {
+	userId := c.GetString(paseto.CTX_USER_ID)
 	db := dbconfig.GetDb()
 	var request CreateAccountRequest
 	err := c.BindJSON(&request)
@@ -44,9 +48,23 @@ func authGoogle(c *gin.Context) {
 	email := tokenValidationRes.Claims["email"].(string)
 	var user models.User
 	err = db.Model(&models.User{}).Where("email_id = ?", email).First(&user).Error
-
+	if err == nil && userId != "" {
+		httpo.NewErrorResponse(http.StatusBadRequest, "another user with this email already exist").SendD(c)
+		return
+	}
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
+			if userId != "" {
+				err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email_id", email).Error
+				if err != nil {
+					logwrapper.Errorf("failed to update user email: %s", err)
+					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+					return
+				}
+				httpo.NewSuccessResponse(200, "email linked successfully").SendD(c)
+				return
+			}
+
 			// User does not exist, so create a new user
 			user = models.User{
 				EmailId: &email,
