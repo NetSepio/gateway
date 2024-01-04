@@ -10,17 +10,17 @@ import (
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/aptos"
 	"github.com/NetSepio/gateway/util/pkg/ipfs"
+	"github.com/lib/pq"
 )
 
 type ExtendedReport struct {
 	models.Report
-	UpVotes    int      `json:"upvotes"`
-	DownVotes  int      `json:"downvotes"`
-	NotSure    int      `json:"notSure"`
-	TotalVotes int      `json:"totalVotes"`
-	Status     string   `json:"status"`
-	Tags       []string `json:"tags"`
-	Images     []string `json:"images"`
+	UpVotesCal    int            `json:"upvotes"`
+	DownVotesCal  int            `json:"downvotes"`
+	NotSureCal    int            `json:"notSure"`
+	TotalVotesCal int            `json:"totalVotes"`
+	Tags          pq.StringArray `json:"tags" gorm:"type:text[]"`
+	Images        pq.StringArray `json:"images" gorm:"type:text[]"`
 }
 
 func ProcessAndUploadReports() {
@@ -30,16 +30,17 @@ func ProcessAndUploadReports() {
 	var extendedReports []ExtendedReport
 	if err := db.Model(&models.Report{}).
 		Select(`reports.*, 
-				array_agg(distinct report_tags.tag) filter (where report_tags.tag is not null) as tags,
-				array_agg(distinct report_images.image_url) filter (where report_images.image_url is not null) as images,
-                (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and vote_type = 'upvote') as up_votes,
-                (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and vote_type = 'downvote') as down_votes,
-                (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and vote_type = 'notsure') as not_sure,
-                (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id) as total_votes`).
-		Where("end_meta_data_hash IS NULL AND end_time < ?", now).
+            array_agg(distinct report_tags.tag) filter (where report_tags.tag is not null) as tags,
+            array_agg(distinct report_images.image_url) filter (where report_images.image_url is not null) as images,
+            (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and vote_type = 'upvote') as up_votes_cal,
+            (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and vote_type = 'downvote') as down_votes_cal,
+            (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and vote_type = 'notsure') as not_sure_cal,
+            (SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id) as total_votes_cal`).
 		Joins("left join report_tags on report_tags.report_id = reports.id").
 		Joins("left join report_images on report_images.report_id = reports.id").
-		Find(&extendedReports).Error; err != nil {
+		Where("end_meta_data_hash IS NULL AND end_time < ?", now).
+		Group("reports.id").
+		Scan(&extendedReports).Error; err != nil {
 		fmt.Printf("Error retrieving reports: %v\n", err)
 		return
 	}
@@ -75,21 +76,24 @@ func ProcessAndUploadReports() {
 			continue
 		}
 
-		// Update report with new end metadata hash and transaction data
-		report.EndMetaDataHash = &res.Value.Cid
-		report.EndTransactionHash = &txResultData.Result.TransactionHash
-		report.EndTransactionVersion = &txResultData.Result.Version
-		if err := db.Save(&report).Error; err != nil {
+		fmt.Printf("Transaction hash: %s\n", txResultData.Result.TransactionHash)
+
+		if err := db.Model(&models.Report{}).Where("id = ?", report.ID).Updates(models.Report{
+			UpVotes:               report.UpVotesCal,
+			DownVotes:             report.DownVotesCal,
+			NotSure:               report.NotSureCal,
+			TotalVotes:            report.TotalVotesCal,
+			Status:                report.Status,
+			EndTransactionHash:    &txResultData.Result.TransactionHash,
+			EndMetaDataHash:       &res.Value.Cid,
+			EndTransactionVersion: &txResultData.Result.Version,
+		}).Error; err != nil {
 			fmt.Printf("Error updating report in the database: %v\n", err)
 			continue
 		}
 
-		fmt.Printf("Report updated successfully with end metadata hash: %s\n", *report.EndMetaDataHash)
 	}
 
-	if len(extendedReports) == 0 {
-		fmt.Println("No unfinished reports found.")
-	}
 }
 
 func StartProcessingReportsPeriodically() {

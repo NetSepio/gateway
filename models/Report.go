@@ -21,6 +21,11 @@ type Report struct {
 	MetaDataHash          *string   `gorm:"type:text" json:"metaDataHash"`
 	EndMetaDataHash       *string   `gorm:"type:text" json:"endMetaDataHash"`
 	Category              string    `gorm:"type:text" json:"category"`
+	UpVotes               int       `json:"upvotes"`
+	DownVotes             int       `json:"downvotes"`
+	NotSure               int       `json:"notSure"`
+	TotalVotes            int       `json:"totalVotes"`
+	Status                string    `json:"status"`
 }
 
 type ReportVote struct {

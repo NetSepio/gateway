@@ -45,6 +45,7 @@ func postReport(c *gin.Context) {
 		CreatedBy:     userId,
 		Category:      request.Category,
 		EndTime:       time.Now().Add(time.Hour * 24 * 2),
+		Status:        "running",
 	}
 	extendedReport := struct {
 		models.Report
@@ -83,7 +84,7 @@ func postReport(c *gin.Context) {
 	newReport.TransactionHash = &txResult.Result.TransactionHash
 	newReport.TransactionVersion = &txResult.Result.Version
 	err = db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Debug().Create(&newReport).Error; err != nil {
+		if err := tx.Create(&newReport).Error; err != nil {
 			return fmt.Errorf("failed to insert report: %w", err)
 		}
 

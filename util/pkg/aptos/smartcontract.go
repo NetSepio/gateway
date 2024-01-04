@@ -94,7 +94,7 @@ func UploadArchive(siteUrl string, siteIpfsHash string) (*TxResult, error) {
 }
 
 func SubmitProposal(proposer string, metadata string) (*TxResult, error) {
-	command := fmt.Sprintf("move run --function-id %s::report_dao::submit_proposal --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_REPORT_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
+	command := fmt.Sprintf("move run --function-id %s::report_dao_v1::submit_proposal --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_REPORT_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
 	args := append(strings.Split(command, " "), argA(proposer), argS(metadata))
 	cmd := exec.Command("aptos", args...)
 	fmt.Println(strings.Join(args, " "))
@@ -112,7 +112,7 @@ func SubmitProposal(proposer string, metadata string) (*TxResult, error) {
 }
 
 func ResolveProposal(old_metadata string, metadata string) (*TxResult, error) {
-	command := fmt.Sprintf("move run --function-id %s::report_dao::resolve_proposal --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_REPORT_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
+	command := fmt.Sprintf("move run --function-id %s::report_dao_v1::resolve_proposal --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_REPORT_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
 	args := append(strings.Split(command, " "), argS(old_metadata), argS(metadata))
 	cmd := exec.Command("aptos", args...)
 	fmt.Println(strings.Join(args, " "))
@@ -130,7 +130,7 @@ func ResolveProposal(old_metadata string, metadata string) (*TxResult, error) {
 }
 
 func DeleteProposal(metadata string) (*TxResult, error) {
-	command := fmt.Sprintf("move run --function-id %s::report_dao::delete_proposal --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_REPORT_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
+	command := fmt.Sprintf("move run --function-id %s::report_dao_v1::delete_proposal --max-gas %d --gas-unit-price %d --args", envconfig.EnvVars.APTOS_REPORT_FUNCTION_ID, envconfig.EnvVars.GAS_UNITS, envconfig.EnvVars.GAS_PRICE)
 	args := append(strings.Split(command, " "), argS(metadata))
 	cmd := exec.Command("aptos", args...)
 	fmt.Println(strings.Join(args, " "))
