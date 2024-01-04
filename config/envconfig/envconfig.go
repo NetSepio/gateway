@@ -34,6 +34,12 @@ type config struct {
 	EREBRUS_API_SG           string        `env:"EREBRUS_API_SG,notEmpty"`
 	GOOGLE_AUDIENCE          string        `env:"GOOGLE_AUDIENCE,notEmpty"`
 	OPENAI_API_KEY           string        `env:"OPENAI_API_KEY,notEmpty"`
+	EREBRUS_US               string        `env:"EREBRUS_US,notEmpty"`
+	EREBRUS_SG               string        `env:"EREBRUS_SG,notEmpty"`
+	EREBRUS_CA               string        `env:"EREBRUS_CA,notEmpty"`
+	EREBRUS_EU               string        `env:"EREBRUS_EU,notEmpty"`
+	SOTREUS_US               string        `env:"SOTREUS_US,notEmpty"`
+	SOTREUS_SG               string        `env:"SOTREUS_SG,notEmpty"`
 }
 
 var EnvVars config = config{}
