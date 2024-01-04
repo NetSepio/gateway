@@ -16,4 +16,5 @@ type GetProfilePayload struct {
 	Country           string `json:"country,omitempty"`
 	Discord           string `json:"discord,omitempty"`
 	Twitter           string `json:"twitter,omitempty"`
+	Plan string `json:"plan,omitempty"`
 }
