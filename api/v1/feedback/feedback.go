@@ -32,8 +32,9 @@ func createFeedback(c *gin.Context) {
 	}
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	newFeedback.UserId = walletAddress
+	lowerWalletAddress := strings.ToLower(walletAddress)
 	association := db.Model(&models.User{
-		WalletAddress: strings.ToLower(walletAddress),
+		WalletAddress: &lowerWalletAddress,
 	}).Association("Feedbacks")
 
 	if err = association.Error; err != nil {

@@ -3,6 +3,7 @@ package flowid
 import (
 	"net/http"
 
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/flowid"
@@ -17,11 +18,13 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/flowid")
 	{
+		g.Use(paseto.PASETO(true))
 		g.GET("", GetFlowId)
 	}
 }
 
 func GetFlowId(c *gin.Context) {
+	userId := c.GetString(paseto.CTX_USER_ID)
 	walletAddress := c.Query("walletAddress")
 
 	if walletAddress == "" {
@@ -33,7 +36,7 @@ func GetFlowId(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, "Wallet address (walletAddress) is not valid").SendD(c)
 		return
 	}
-	flowId, err := flowid.GenerateFlowId(walletAddress, models.AUTH, "")
+	flowId, err := flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId)
 	if err != nil {
 		log.Error(err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)

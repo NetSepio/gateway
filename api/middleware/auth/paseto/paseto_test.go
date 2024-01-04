@@ -32,8 +32,9 @@ func Test_PASETO(t *testing.T) {
 	t.Cleanup(testingcommon.DeleteCreatedEntities())
 	gin.SetMode(gin.TestMode)
 	testWalletAddress := testingcommon.GenerateWallet().WalletAddress
+	lowerWalletAddress := strings.ToLower(testWalletAddress)
 	newUser := models.User{
-		WalletAddress: strings.ToLower(testWalletAddress),
+		WalletAddress: &lowerWalletAddress,
 	}
 	err := db.Model(&models.User{}).Create(&newUser).Error
 	if err != nil {

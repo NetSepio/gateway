@@ -43,10 +43,11 @@ func PrepareAndGetAuthHeader(t *testing.T, testWalletAddress string) string {
 
 func CreateTestUser(t *testing.T, walletAddress string, uuid string) {
 	db := dbconfig.GetDb()
+	lowerWalletAddress := strings.ToLower(walletAddress)
 	user := models.User{
 		Name:              "Jack",
 		ProfilePictureUrl: "https://revoticengineering.com/",
-		WalletAddress:     strings.ToLower(walletAddress),
+		WalletAddress:     &lowerWalletAddress,
 		Country:           "India",
 		UserId:            uuid,
 	}

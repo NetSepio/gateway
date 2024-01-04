@@ -32,7 +32,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 func Deploy(c *gin.Context) {
 	db := dbconfig.GetDb()
-	walletAddress := c.GetString(paseto.CTX_USER_ID)
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	var req DeployRequest
 	err := c.BindJSON(&req)
 	if err != nil {

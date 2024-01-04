@@ -26,4 +26,5 @@ type FlowId struct {
 	UserId        string
 	FlowId        string `gorm:"primary_key"`
 	RelatedRoleId string
+	WalletAddress string
 }
