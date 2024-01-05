@@ -108,8 +108,9 @@ func PASETO(authOptional bool) func(*gin.Context) {
 					c.AbortWithStatus(http.StatusInternalServerError)
 					return
 				}
-
-				c.Set(CTX_WALLET_ADDRES, userFetch.WalletAddress)
+				if userFetch.WalletAddress != nil {
+					c.Set(CTX_WALLET_ADDRES, *userFetch.WalletAddress)
+				}
 				c.Set(CTX_USER_ID, userFetch.UserId)
 				c.Next()
 			}
