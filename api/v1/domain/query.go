@@ -48,9 +48,9 @@ func queryDomain(c *gin.Context) {
 			Where("domain_name like ?", fmt.Sprintf("%%%s%%", queryRequest.DomainName)).Where(&models.Domain{Id: queryRequest.DomainId})
 	}
 
-	if queryRequest.VerifiedWithSystem {
+	if queryRequest.VerifiedWithClaimable {
 		model = model.
-			Where("verified = true or created_by_id = '00000000-0000-0000-0000-000000000000'")
+			Where("verified = true or claimable = false")
 	} else {
 		model = model.
 			Where(&models.Domain{Verified: queryRequest.Verified})

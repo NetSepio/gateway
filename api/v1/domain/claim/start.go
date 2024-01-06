@@ -30,22 +30,11 @@ func startClaimDomain(c *gin.Context) {
 		return
 	}
 
-	if domain.CreatedById != "00000000-0000-0000-0000-000000000000" {
+	if !domain.Claimable {
 		httpo.NewErrorResponse(http.StatusForbidden, "domain is not claimable").SendD(c)
 		return
 	}
 
-	var domainAdmin models.DomainAdmin
-	err = db.Where("domain_id = ?", request.DomainId).First(&domainAdmin).Error
-	if err == nil {
-		httpo.NewErrorResponse(http.StatusForbidden, "domain is already claimed").SendD(c)
-		return
-	}
-	if err != gorm.ErrRecordNotFound {
-		logwrapper.Errorf("failed to query domain admin: %s", err)
-		httpo.NewErrorResponse(http.StatusNotFound, "domain admin not found").SendD(c)
-		return
-	}
 	txtValue := fmt.Sprintf("netsepio_verification=%s", uuid.NewString())
 	userId := c.GetString(paseto.CTX_USER_ID)
 	err = db.Transaction(func(tx *gorm.DB) error {

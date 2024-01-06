@@ -4,3 +4,5 @@ CREATE TABLE domain_claims (
     txt TEXT NOT NULL UNIQUE,
     admin_id uuid REFERENCES users (user_id) NOT NULL
 );
+
+ALTER TABLE domains ADD COLUMN claimable bool NOT NULL DEFAULT false;

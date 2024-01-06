@@ -89,7 +89,7 @@ func finishClaimDomain(c *gin.Context) {
 		}
 
 		// update domain set verified to true
-		if err := tx.Model(&domainData).Where("id = ?", request.DomainId).Update("verified", true).Error; err != nil {
+		if err := tx.Model(&domainData).Where("id = ?", request.DomainId).Update("verified", true).Update("claimable", false).Error; err != nil {
 			return fmt.Errorf("failed to update domain: %s", err)
 		}
 
