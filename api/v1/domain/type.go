@@ -27,11 +27,12 @@ type VerifyDomainRequest struct {
 }
 
 type GetDomainsQuery struct {
-	DomainId   string `form:"domainId"`
-	DomainName string `form:"domainName"`
-	Verified   *bool  `form:"verified"`
-	OnlyAdmin  bool   `form:"onlyAdmin"`
-	Page       *int   `form:"page" binding:"required,min=1"`
+	DomainId              string `form:"domainId"`
+	DomainName            string `form:"domainName"`
+	VerifiedWithClaimable bool   `form:"verifiedWithClaimable"`
+	Verified              *bool  `form:"verified"`
+	OnlyAdmin             bool   `form:"onlyAdmin"`
+	Page                  *int   `form:"page" binding:"required,min=1"`
 }
 
 type PatchDomainRequest struct {
