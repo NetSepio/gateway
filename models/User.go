@@ -11,4 +11,5 @@ type User struct {
 	Country           string         `json:"country,omitempty"`
 	Feedbacks         []UserFeedback `gorm:"foreignkey:UserId" json:"userFeedbacks"`
 	EmailId           *string        `json:"emailId,omitempty"`
+	StripePiId        *string        `json:"stripePiId,omitempty"`
 }

@@ -34,6 +34,11 @@ type config struct {
 	EREBRUS_API_SG           string        `env:"EREBRUS_API_SG,notEmpty"`
 	GOOGLE_AUDIENCE          string        `env:"GOOGLE_AUDIENCE,notEmpty"`
 	OPENAI_API_KEY           string        `env:"OPENAI_API_KEY,notEmpty"`
+	STRIPE_SUCCESS_URL       string        `env:"STRIPE_SUCCESS_URL,notEmpty"`
+	STRIPE_CANCEL_URL        string        `env:"STRIPE_CANCEL_URL,notEmpty"`
+	STRIPE_PRICE_ID          string        `env:"STRIPE_PRICE_ID,notEmpty"`
+	STRIPE_WEBHOOK_SECRET    string        `env:"STRIPE_WEBHOOK_SECRET,notEmpty"`
+	STRIPE_SECRET_KEY        string        `env:"STRIPE_SECRET_KEY,notEmpty"`
 }
 
 var EnvVars config = config{}

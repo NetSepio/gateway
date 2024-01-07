@@ -1,0 +1,4 @@
+ALTER TABLE
+    USERS
+ADD
+    COLUMN stripe_pi_id TEXT UNIQUE;

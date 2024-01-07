@@ -2,6 +2,7 @@ package apiv1
 
 import (
 	"github.com/NetSepio/gateway/api/v1/account"
+	"github.com/NetSepio/gateway/api/v1/account/subscription"
 	authenticate "github.com/NetSepio/gateway/api/v1/authenticate"
 	delegatereviewcreation "github.com/NetSepio/gateway/api/v1/delegateReviewCreation"
 	"github.com/NetSepio/gateway/api/v1/deletereview"
@@ -43,5 +44,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		report.ApplyRoutes(v1)
 		account.ApplyRoutes(v1)
 		siteinsights.ApplyRoutes(v1)
+		subscription.ApplyRoutes(v1)
 	}
 }
