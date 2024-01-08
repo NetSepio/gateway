@@ -11,8 +11,9 @@ import (
 )
 
 type ChatRequest struct {
-	Model    string        `json:"model"`
-	Messages []ChatMessage `json:"messages"`
+	Model     string        `json:"model"`
+	Messages  []ChatMessage `json:"messages"`
+	MaxTokens int           `json:"max_tokens"`
 }
 
 type ChatMessage struct {
@@ -30,9 +31,10 @@ func GenerateInsight(siteURL, websiteContent string) (string, error) {
 	requestBody, err := json.Marshal(ChatRequest{
 		Model: "gpt-4-1106-preview",
 		Messages: []ChatMessage{
-			{Role: "system", Content: "Your task is to provide an summarry for site. Tell what it is about. And should user trust this site as a genuine one"},
-			{Role: "user", Content: fmt.Sprintf("Here is the content from the website '%s':\n%s\nWhat is an interesting insight about this website?", siteURL, websiteContent)},
+			{Role: "system", Content: "Your task is to provide an sumarry for site in max 350 characters. Tell what it is about. And should user trust this site as a genuine one. Note, making it max 350 characters is very very important."},
+			{Role: "user", Content: fmt.Sprintf("Here is the content from the website '%s':\n%s\n\nTell summary in max 350 characters", siteURL, websiteContent)},
 		},
+		MaxTokens: 150,
 	})
 	if err != nil {
 		return "", err
