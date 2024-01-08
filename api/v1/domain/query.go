@@ -50,7 +50,7 @@ func queryDomain(c *gin.Context) {
 
 	if queryRequest.VerifiedWithClaimable {
 		model = model.
-			Where("verified = true or claimable = false")
+			Where("verified = true or claimable = true")
 	} else {
 		model = model.
 			Where(&models.Domain{Verified: queryRequest.Verified})
