@@ -15,6 +15,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.8.4
+	github.com/stripe/stripe-go/v76 v76.10.0
 	github.com/vk-rv/pvx v0.0.0-20210912195928-ac00bc32f6e7
 	golang.org/x/crypto v0.16.0
 	google.golang.org/api v0.154.0

@@ -25,8 +25,10 @@ func main() {
 	if os.Getenv("DEBUG_MODE") == "true" {
 		walletAddrLower := strings.ToLower("0xdd3933022e36e9a0a15d0522e20b7b580d38b54ec9cb28ae09697ce0f7c95b6b")
 		newUser := &models.User{
-			WalletAddress: &walletAddrLower,
-			UserId:        "fc8fe270-ce16-4df9-a17f-979bcd824e32",
+      UserId:                   "fc8fe270-ce16-4df9-a17f-979bcd824e98",
+			SubscriptionStatus:       "basic",
+			StripeSubscriptionStatus: "unset",
+			WalletAddress:            &walletAddrLower,
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			logwrapper.Warn(err)
