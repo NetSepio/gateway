@@ -39,6 +39,7 @@ func queryDomain(c *gin.Context) {
 		Blockchain     string    `json:"blockchain"`
 		CreatedBy      string    `json:"createdBy"`
 		CreatorName    string    `json:"creatorName"`
+		Claimable      string    `json:"claimable"`
 		TxtValue       string    `json:"txtValue,omitempty"`
 	}
 
@@ -63,7 +64,7 @@ func queryDomain(c *gin.Context) {
 			return
 		}
 		if err := model.Where("da.admin_id = ?", userId).
-			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_id created_by, u.name creator_name, txt_value").
+			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_id created_by, u.name creator_name, txt_value, claimable").
 			Joins("INNER JOIN users u ON u.user_id = created_by_id").
 			Joins("INNER JOIN domain_admins da ON da.domain_id = domains.id").
 			Find(&domains).
