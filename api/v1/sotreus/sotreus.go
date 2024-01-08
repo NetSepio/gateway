@@ -33,8 +33,23 @@ func ApplyRoutes(r *gin.RouterGroup) {
 func Deploy(c *gin.Context) {
 	db := dbconfig.GetDb()
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+
+	var count int64
+	err := db.Model(&models.Sotreus{}).Where("wallet_address = ?", walletAddress).Find(&models.Sotreus{}).Count(&count).Error
+	if err != nil {
+		logwrapper.Errorf("failed to fetch data from database: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
+		return
+	}
+
+	if count >= 1 {
+		logwrapper.Error("Can't create more vpn instances, maximum 1 allowed")
+		httpo.NewErrorResponse(http.StatusBadRequest, "Can't create more vpn instances, maximum 1 allowed").SendD(c)
+		return
+	}
+
 	var req DeployRequest
-	err := c.BindJSON(&req)
+	err = c.BindJSON(&req)
 	if err != nil {
 		logwrapper.Errorf("failed to bind JSON: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
