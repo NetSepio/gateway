@@ -12,6 +12,7 @@ import (
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/aptos"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/NetSepio/gateway/util/pkg/openai"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
 )
@@ -36,6 +37,19 @@ func deletegateReviewCreation(c *gin.Context) {
 	}
 
 	walletAddr := c.GetString(paseto.CTX_WALLET_ADDRES)
+
+	isSpam, err := openai.IsReviewSpam(request.Description)
+	if err != nil {
+		logwrapper.Error("failed to check spam", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+		return
+	}
+
+	if isSpam {
+		httpo.NewErrorResponse(http.StatusForbidden, "Review is spam").SendD(c)
+		return
+	}
+
 	txResult, err := aptos.DelegateReview(aptos.DelegateReviewParams{Voter: walletAddr, MetaDataUri: request.MetaDataUri, Category: request.Category, DomainAddress: request.DomainAddress, SiteUrl: request.SiteUrl, SiteType: request.SiteType, SiteTag: request.SiteTag, SiteSafety: request.SiteSafety})
 	if err != nil {
 		if errors.Is(err, aptos.ErrMetadataDuplicated) {

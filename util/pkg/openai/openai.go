@@ -71,3 +71,48 @@ func GenerateInsight(siteURL, websiteContent string) (string, error) {
 
 	return "", fmt.Errorf("no insight generated: %s", body)
 }
+
+func IsReviewSpam(review string) (bool, error) {
+	requestBody, err := json.Marshal(ChatRequest{
+		Model: "gpt-4-1106-preview",
+		Messages: []ChatMessage{
+			{Role: "system", Content: "Your task is to tell if the review is spam or real one, like this 'Best website' looks spam because it doesn't have any detail. Just answer with YES and NO, nothing else"},
+			{Role: "user", Content: fmt.Sprintf("Review %s", review)},
+		},
+		MaxTokens: 1,
+	})
+	if err != nil {
+		return false, err
+	}
+
+	req, err := http.NewRequest("POST", "https://api.openai.com/v1/chat/completions", bytes.NewBuffer(requestBody))
+	if err != nil {
+		return false, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+envconfig.EnvVars.OPENAI_API_KEY)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return false, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return false, err
+	}
+
+	var chatResponse ChatResponse
+	err = json.Unmarshal(body, &chatResponse)
+	if err != nil {
+		return false, err
+	}
+	if len(chatResponse.Choices) > 0 && len(chatResponse.Choices[0].Message.Content) > 0 {
+		return chatResponse.Choices[0].Message.Content == "YES", nil
+	}
+
+	return false, fmt.Errorf("no insight generated: %s", body)
+}
