@@ -11,6 +11,7 @@ import (
 	flowid "github.com/NetSepio/gateway/api/v1/flowid"
 	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
 	"github.com/NetSepio/gateway/api/v1/getreviews"
+	"github.com/NetSepio/gateway/api/v1/nftstorage"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	"github.com/NetSepio/gateway/api/v1/report"
 	"github.com/NetSepio/gateway/api/v1/siteinsights"
@@ -43,5 +44,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		report.ApplyRoutes(v1)
 		account.ApplyRoutes(v1)
 		siteinsights.ApplyRoutes(v1)
+		nftstorage.ApplyRoutes(v1)
 	}
 }
