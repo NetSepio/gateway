@@ -75,6 +75,18 @@ func finishClaimDomain(c *gin.Context) {
 		return
 	}
 
+	validTxtFound := false
+	for _, txt := range txts {
+		if txt == *domainData.TxtValue {
+			validTxtFound = true
+			break
+		}
+	}
+	if !validTxtFound {
+		httpo.NewErrorResponse(400, "no valid txt record found").SendD(c)
+		return
+	}
+
 	// Add current user to admin
 	newDomainAdmin := models.DomainAdmin{
 		DomainId:    request.DomainId,
