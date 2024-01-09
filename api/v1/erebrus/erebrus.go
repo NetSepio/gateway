@@ -183,7 +183,7 @@ func GetConfig(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
 		return
 	}
-	resp, err := http.Get(regions.ErebrusRegions[cl.Region].ServerHttp + "/api/v1.0/server/config")
+	resp, err := http.Get(regions.ErebrusRegions[cl.Region].ServerHttp + "/api/v1.0/client/" + uuid + "/config")
 	if err != nil {
 		logwrapper.Errorf("failed to create	request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
@@ -204,10 +204,11 @@ func GetConfig(c *gin.Context) {
 
 func GetClients(c *gin.Context) {
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	region := c.Param("region")
 
 	db := dbconfig.GetDb()
 	var clients *[]models.Erebrus
-	db.Model(&models.Erebrus{}).Where("wallet_address = ?", walletAddress).Find(&clients)
+	db.Model(&models.Erebrus{}).Where("wallet_address = ? and region = ?", walletAddress, region).Find(&clients)
 
 	httpo.NewSuccessResponseP(200, "VPN client fetched successfully", clients).SendD(c)
 }
