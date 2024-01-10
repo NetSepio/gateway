@@ -169,6 +169,12 @@ func DeleteClient(c *gin.Context) {
 	}
 	defer resp.Body.Close()
 
+	if err := db.Delete(cl).Error; err != nil {
+		logwrapper.Errorf("failed to delete data from database: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
+		return
+	}
+
 	httpo.NewSuccessResponse(200, "VPN client deletes successfully").SendD(c)
 }
 

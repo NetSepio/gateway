@@ -39,6 +39,7 @@ type config struct {
 	EREBRUS_SG               string        `env:"EREBRUS_SG,notEmpty"`
 	EREBRUS_CA               string        `env:"EREBRUS_CA,notEmpty"`
 	EREBRUS_EU               string        `env:"EREBRUS_EU,notEmpty"`
+	EREBRUS_JP               string        `env:"EREBRUS_JP,notEmpty"`
 	SOTREUS_US               string        `env:"SOTREUS_US,notEmpty"`
 	SOTREUS_SG               string        `env:"SOTREUS_SG,notEmpty"`
 }
