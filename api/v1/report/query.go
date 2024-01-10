@@ -23,7 +23,7 @@ func getReports(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
 
 	// Query with vote counts
-	query := db.Debug().Model(&models.Report{}).
+	query := db.Model(&models.Report{}).
 		Select(`reports.*, 
 			(SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and report_votes.vote_type = 'upvote') as upvotes,
 			(SELECT COUNT(DISTINCT voter_id) FROM report_votes WHERE report_id = reports.id and report_votes.vote_type = 'downvote') as downvotes,

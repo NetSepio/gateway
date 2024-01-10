@@ -42,4 +42,5 @@ type ReportWithVotes struct {
 	Totalvotes    int       `json:"totalVotes"`
 	Status        string    `json:"status"` // Calculated status
 	UserVote      string    `json:"userVote"`
+	Category      string    `json:"category"`
 }
