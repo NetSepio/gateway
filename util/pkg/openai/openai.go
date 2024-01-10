@@ -31,8 +31,10 @@ func GenerateInsight(siteURL, websiteContent string) (string, error) {
 	requestBody, err := json.Marshal(ChatRequest{
 		Model: "gpt-4-1106-preview",
 		Messages: []ChatMessage{
-			{Role: "system", Content: "Your task is to provide an sumarry for site in max 350 characters. Tell what it is about. And should user trust this site as a genuine one. Note, making it max 350 characters is very very important."},
-			{Role: "user", Content: fmt.Sprintf("Here is the content from the website '%s':\n%s\n\nTell summary in max 350 characters", siteURL, websiteContent)},
+			{Role: "system",
+				Content: `Your task is to provide an sumarry for site in max 340 characters including things like space including things like space. Tell what it is about. And should user trust this site as a genuine one. Don't include text which decribes uncertainty in review like 
+			"Trustworthiness is unclear without user reviews or external validation." this has uncertain and you should not make user feel uncertain about it. Note, making it max 340 characters including things like space is very very important, please make this priority.`},
+			{Role: "user", Content: fmt.Sprintf("Tell summary only in max 340 characters including things like space. Here is the content from the website '%s':\n%s\n\n, IMPORTANT - please make 340 characters including things like space max priority.", siteURL, websiteContent)},
 		},
 		MaxTokens: 150,
 	})
