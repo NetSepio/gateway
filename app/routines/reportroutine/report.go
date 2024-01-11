@@ -68,7 +68,10 @@ func ProcessAndUploadReports() {
 			fmt.Printf("Error uploading report to IPFS: %v\n", err)
 			continue
 		}
-
+		if report.MetaDataHash == nil {
+			fmt.Printf("metadatahash is nil: %v\n", report)
+			continue
+		}
 		// Call ResolveProposal with the metadata hashes
 		txResultData, err := aptos.ResolveProposal(*report.MetaDataHash, res.Value.Cid)
 		if err != nil {
