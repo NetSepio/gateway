@@ -23,7 +23,7 @@ func queryDomain(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
 		return
 	}
-	limit := 10
+	limit := 12
 	offset := (*queryRequest.Page - 1) * limit
 	var domains []struct {
 		Id             string    `json:"id"`
@@ -43,7 +43,7 @@ func queryDomain(c *gin.Context) {
 		TxtValue       string    `json:"txtValue,omitempty"`
 	}
 
-	model := db.Limit(10).Offset(offset).Model(&models.Domain{})
+	model := db.Limit(limit).Offset(offset).Model(&models.Domain{})
 	if queryRequest.DomainName != "" {
 		model = model.
 			Where("domain_name like ?", fmt.Sprintf("%%%s%%", queryRequest.DomainName)).Where(&models.Domain{Id: queryRequest.DomainId})
