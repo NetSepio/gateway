@@ -20,7 +20,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		g.Use(paseto.PASETO(false))
 		g.POST("/client/:region", RegisterClient)
-		g.GET("/client/:region/:uuid", GetClient)
+		// g.GET("/client/:region/:uuid", GetClient)
 		g.GET("/client/:region", GetClients)
 		g.GET("/client/:region/:collection_id", GetClientsByCollection)
 		g.DELETE("/client/:region/:uuid", DeleteClient)
