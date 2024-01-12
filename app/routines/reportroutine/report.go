@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/aptos"
 	"github.com/NetSepio/gateway/util/pkg/ipfs"
@@ -72,27 +73,41 @@ func ProcessAndUploadReports() {
 			fmt.Printf("metadatahash is nil: %v\n", report)
 			continue
 		}
-		// Call ResolveProposal with the metadata hashes
-		txResultData, err := aptos.ResolveProposal(*report.MetaDataHash, res.Value.Cid)
-		if err != nil {
-			fmt.Printf("Error resolving proposal: %v\n", err)
-			continue
-		}
 
-		fmt.Printf("Transaction hash: %s\n", txResultData.Result.TransactionHash)
+		if envconfig.EnvVars.NETWORK == "testnet" {
+			// Call ResolveProposal with the metadata hashes
+			txResultData, err := aptos.ResolveProposal(*report.MetaDataHash, res.Value.Cid)
+			if err != nil {
+				fmt.Printf("Error resolving proposal: %v\n", err)
+				continue
+			}
 
-		if err := db.Model(&models.Report{}).Where("id = ?", report.ID).Updates(models.Report{
-			UpVotes:               report.UpVotesCal,
-			DownVotes:             report.DownVotesCal,
-			NotSure:               report.NotSureCal,
-			TotalVotes:            report.TotalVotesCal,
-			Status:                report.Status,
-			EndTransactionHash:    &txResultData.Result.TransactionHash,
-			EndMetaDataHash:       &res.Value.Cid,
-			EndTransactionVersion: &txResultData.Result.Version,
-		}).Error; err != nil {
-			fmt.Printf("Error updating report in the database: %v\n", err)
-			continue
+			fmt.Printf("Transaction hash: %s\n", txResultData.Result.TransactionHash)
+
+			if err := db.Model(&models.Report{}).Where("id = ?", report.ID).Updates(models.Report{
+				UpVotes:               report.UpVotesCal,
+				DownVotes:             report.DownVotesCal,
+				NotSure:               report.NotSureCal,
+				TotalVotes:            report.TotalVotesCal,
+				Status:                report.Status,
+				EndTransactionHash:    &txResultData.Result.TransactionHash,
+				EndMetaDataHash:       &res.Value.Cid,
+				EndTransactionVersion: &txResultData.Result.Version,
+			}).Error; err != nil {
+				fmt.Printf("Error updating report in the database: %v\n", err)
+				continue
+			}
+		} else {
+			if err := db.Model(&models.Report{}).Where("id = ?", report.ID).Updates(models.Report{
+				UpVotes:    report.UpVotesCal,
+				DownVotes:  report.DownVotesCal,
+				NotSure:    report.NotSureCal,
+				TotalVotes: report.TotalVotesCal,
+				Status:     report.Status,
+			}).Error; err != nil {
+				fmt.Printf("Error updating report in the database: %v\n", err)
+				continue
+			}
 		}
 
 	}
