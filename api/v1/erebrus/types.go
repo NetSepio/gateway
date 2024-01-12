@@ -2,7 +2,7 @@ package erebrus
 
 type Client struct {
 	UUID                      string   `json:"UUID,omitempty"`
-	Name                      string   `json:"Name,omitempty"`
+	Name                      string   `json:"Name" binding:"required"`
 	Tags                      []string `json:"Tags,omitempty"`
 	WalletAddress             string   `json:"WalletAddress,omitempty"`
 	Enable                    bool     `json:"Enable,omitempty"`
@@ -15,6 +15,7 @@ type Client struct {
 	UpdatedBy                 string   `json:"UpdatedBy,omitempty"`
 	CreatedAt                 int64    `json:"CreatedAt,omitempty"`
 	UpdatedAt                 int64    `json:"UpdatedAt,omitempty"`
+	CollectionId              string   `json:"CollectionId" binding:"required"`
 }
 
 type Response struct {

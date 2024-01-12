@@ -11,4 +11,5 @@ type Erebrus struct {
 	Name          string `json:"name"`
 	WalletAddress string `json:"walletAddress"`
 	Region        string `json:"region"`
+	CollectionId  string `json:"collectionId"`
 }

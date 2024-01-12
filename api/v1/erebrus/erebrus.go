@@ -22,6 +22,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("/client/:region", RegisterClient)
 		g.GET("/client/:region/:uuid", GetClient)
 		g.GET("/client/:region", GetClients)
+		g.GET("/client/:region/:collection_id", GetClientsByCollection)
 		g.DELETE("/client/:region/:uuid", DeleteClient)
 		g.GET("/config/:region/:uuid", GetConfig)
 	}
@@ -99,6 +100,7 @@ func RegisterClient(c *gin.Context) {
 		Name:          reqBody.Client.Name,
 		WalletAddress: walletAddress,
 		Region:        region,
+		CollectionId:  req.CollectionId,
 	}
 	if err := db.Create(&dbEntry).Error; err != nil {
 		logwrapper.Errorf("failed to create database entry: %s", err)
@@ -217,4 +219,15 @@ func GetClients(c *gin.Context) {
 	db.Model(&models.Erebrus{}).Where("wallet_address = ? and region = ?", walletAddress, region).Find(&clients)
 
 	httpo.NewSuccessResponseP(200, "VPN client fetched successfully", clients).SendD(c)
+}
+func GetClientsByCollection(c *gin.Context) {
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	region := c.Param("region")
+	collection_id := c.Param("collection_id")
+
+	db := dbconfig.GetDb()
+	var clients *[]models.Erebrus
+	db.Model(&models.Erebrus{}).Where("wallet_address = ? and region = ? and collection_id = ?", walletAddress, region, collection_id).Find(&clients)
+
+	httpo.NewSuccessResponseP(200, "VPN clients fetched successfully", clients).SendD(c)
 }
