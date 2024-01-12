@@ -4,17 +4,20 @@ import (
 	"archive/zip"
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"path/filepath"
+	"time"
 
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/gin-gonic/gin"
 )
 
-var apiKey = "YOUR_NFT_STORAGE_API_KEY"
+type response struct {
+	IpfsHash string `json:"ipfsHash"`
+}
 
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/nft")
@@ -40,6 +43,7 @@ func handleUpload(c *gin.Context) {
 	}
 
 	// Process each image file in the zip
+	var res []response
 	for _, f := range r.File {
 		rc, err := f.Open()
 		if err != nil {
@@ -56,14 +60,17 @@ func handleUpload(c *gin.Context) {
 		}
 
 		// Upload the image to NFT.Storage
+		var apiKey = envconfig.EnvVars.NFT_STORAGE_KEY
 		metadataURI, err := uploadToNFTStorage(apiKey, fileData)
 		if err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("Error uploading image to NFT.Storage: %s", f.Name))
 			return
 		}
-
-		c.String(http.StatusOK, fmt.Sprintf("Image %s uploaded with metadata URI: %s\n", f.Name, metadataURI))
+		res = append(res, response{
+			IpfsHash: metadataURI,
+		})
 	}
+	c.JSON(http.StatusOK, res)
 }
 func uploadToNFTStorage(apiKey string, fileData []byte) (string, error) {
 	buf := new(bytes.Buffer)
@@ -96,17 +103,46 @@ func uploadToNFTStorage(apiKey string, fileData []byte) (string, error) {
 		return "", err
 	}
 
-	var response map[string]interface{}
+	type resBody struct {
+		Ok    bool `json:"ok"`
+		Value struct {
+			Cid     string    `json:"cid"`
+			Size    int       `json:"size"`
+			Created time.Time `json:"created"`
+			Type    string    `json:"type"`
+			Scope   string    `json:"scope"`
+			Pin     struct {
+				Cid  string `json:"cid"`
+				Name string `json:"name"`
+				Meta struct {
+				} `json:"meta"`
+				Status  string    `json:"status"`
+				Created time.Time `json:"created"`
+				Size    int       `json:"size"`
+			} `json:"pin"`
+			Files []struct {
+				Name string `json:"name"`
+				Type string `json:"type"`
+			} `json:"files"`
+			Deals []struct {
+				BatchRootCid   string    `json:"batchRootCid"`
+				LastChange     time.Time `json:"lastChange"`
+				Miner          string    `json:"miner"`
+				Network        string    `json:"network"`
+				PieceCid       string    `json:"pieceCid"`
+				Status         string    `json:"status"`
+				StatusText     string    `json:"statusText"`
+				ChainDealID    int       `json:"chainDealID"`
+				DealActivation time.Time `json:"dealActivation"`
+				DealExpiration time.Time `json:"dealExpiration"`
+			} `json:"deals"`
+		} `json:"value"`
+	}
+
+	var response resBody
 	err = json.Unmarshal(body, &response)
 	if err != nil {
 		return "", err
 	}
-
-	// Extract the metadata URI
-	metadataURI, ok := response["metadata"].(string)
-	if !ok {
-		return "", errors.New("Metadata URI not found in response")
-	}
-
-	return metadataURI, nil
+	return response.Value.Cid, nil
 }
