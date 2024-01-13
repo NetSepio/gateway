@@ -21,8 +21,9 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.Use(paseto.PASETO(false))
 		g.POST("/client/:region", RegisterClient)
 		// g.GET("/client/:region/:uuid", GetClient)
-		g.GET("/client/:region", GetClients)
-		g.GET("/client/:region/:collection_id", GetClientsByCollection)
+		g.GET("/client/:region", GetClientsByRegion)
+		g.GET("/clients", GetAllClients)
+		g.GET("/client/:region/:collection_id", GetClientsByCollectionRegion)
 		g.DELETE("/client/:region/:uuid", DeleteClient)
 		g.GET("/config/:region/:uuid", GetConfig)
 	}
@@ -210,7 +211,7 @@ func GetConfig(c *gin.Context) {
 	c.Writer.WriteHeader(200)
 }
 
-func GetClients(c *gin.Context) {
+func GetClientsByRegion(c *gin.Context) {
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	region := c.Param("region")
 
@@ -220,7 +221,7 @@ func GetClients(c *gin.Context) {
 
 	httpo.NewSuccessResponseP(200, "VPN client fetched successfully", clients).SendD(c)
 }
-func GetClientsByCollection(c *gin.Context) {
+func GetClientsByCollectionRegion(c *gin.Context) {
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	region := c.Param("region")
 	collection_id := c.Param("collection_id")
@@ -230,4 +231,13 @@ func GetClientsByCollection(c *gin.Context) {
 	db.Model(&models.Erebrus{}).Where("wallet_address = ? and region = ? and collection_id = ?", walletAddress, region, collection_id).Find(&clients)
 
 	httpo.NewSuccessResponseP(200, "VPN clients fetched successfully", clients).SendD(c)
+}
+func GetAllClients(c *gin.Context) {
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+
+	db := dbconfig.GetDb()
+	var clients *[]models.Erebrus
+	db.Model(&models.Erebrus{}).Where("wallet_address = ?", walletAddress).Find(&clients)
+
+	httpo.NewSuccessResponseP(200, "VPN client fetched successfully", clients).SendD(c)
 }
