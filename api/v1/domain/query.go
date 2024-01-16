@@ -43,7 +43,7 @@ func queryDomain(c *gin.Context) {
 		TxtValue       string    `json:"txtValue,omitempty"`
 	}
 
-	model := db.Limit(limit).Offset(offset).Model(&models.Domain{})
+	model := db.Limit(limit).Offset(offset).Model(&models.Domain{}).Order("title ASC")
 	if queryRequest.DomainName != "" {
 		model = model.
 			Where("domain_name like ?", fmt.Sprintf("%%%s%%", queryRequest.DomainName)).Where(&models.Domain{Id: queryRequest.DomainId})
