@@ -49,9 +49,11 @@ func getReviews(c *gin.Context) {
 		TransactionVersion int64  `json:"transactionVersion"`
 		DeletedAt          gorm.DeletedAt
 		CreatedAt          time.Time `json:"createdAt"`
+		TotalReviews       int64     `json:"totalReviews"`
+		AverageRating      float64   `json:"averageRating"`
 	}
 
-	if err := db.Limit(limit).Offset(offset).Joins("left join users ON reviews.voter = users.wallet_address").Model(&models.Review{}).Order("reviews.created_at desc").
+	if err := db.Limit(limit).Offset(offset).Joins("left join users ON reviews.voter = users.wallet_address").Model(&models.Review{}).Order("reviews.created_at asc").
 		Where(&models.Review{Voter: strings.ToLower(queryRequest.Voter), DomainAddress: queryRequest.Domain}).
 		Select("reviews.meta_data_uri, reviews.category, reviews.domain_address, reviews.site_url, reviews.site_type, reviews.site_tag, reviews.site_safety, reviews.site_ipfs_hash, reviews.transaction_hash, reviews.transaction_version, reviews.created_at, reviews.voter, users.name").
 		Find(&reviews).
@@ -63,6 +65,24 @@ func getReviews(c *gin.Context) {
 
 	var payload GetReviewsPayload = make(GetReviewsPayload, len(reviews))
 	for i := 0; i < len(reviews); i++ {
+		var totalReviews int64
+		var averageRating float64
+
+		// Query to count total reviews for the site URL
+		err = db.Model(&models.Review{}).Where("site_url = ?", reviews[i].SiteUrl).Count(&totalReviews).Error
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Error("failed to get reviews", err)
+			return
+		}
+		// Query to calculate average rating for the site URL
+		err = db.Model(&models.Review{}).Where("site_url = ?", reviews[i].SiteUrl).Select("AVG(site_rating)").Row().Scan(&averageRating)
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Error("failed to get reviews", err)
+			return
+		}
+
 		payload[i] = GetReviewsItem{
 			MetaDataUri:        reviews[i].MetaDataUri,
 			Category:           reviews[i].Category,
@@ -77,6 +97,8 @@ func getReviews(c *gin.Context) {
 			CreatedAt:          reviews[i].CreatedAt,
 			Voter:              reviews[i].Voter,
 			Name:               reviews[i].Name,
+			TotalReviews:       totalReviews,
+			AverageRating:      averageRating,
 		}
 	}
 

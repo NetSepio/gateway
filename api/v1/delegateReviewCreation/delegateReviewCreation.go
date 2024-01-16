@@ -77,6 +77,7 @@ func deletegateReviewCreation(c *gin.Context) {
 		SiteIpfsHash:       "",
 		TransactionHash:    txResult.Result.TransactionHash,
 		TransactionVersion: txResult.Result.Version,
+		SiteRating:         request.SiteRating,
 	}
 	go webreview.Publish(request.MetaDataUri, strings.TrimSuffix(request.SiteUrl, "/"))
 	if err := db.Create(newReview).Error; err != nil {

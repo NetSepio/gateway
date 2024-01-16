@@ -21,6 +21,8 @@ type GetReviewsItem struct {
 	CreatedAt          time.Time `json:"createdAt"`
 	Voter              string    `json:"voter"`
 	Name               string    `json:"name"`
+	TotalReviews       int64     `json:"totalReviews"`
+	AverageRating      float64   `json:"averageRating"`
 }
 
 type GetReviewsPayload []GetReviewsItem
