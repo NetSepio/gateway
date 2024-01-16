@@ -11,6 +11,7 @@ import (
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/pkg/aptos"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/gin-gonic/gin"
 	"github.com/stripe/stripe-go/v76"
@@ -65,6 +66,11 @@ func StripeWebhookHandler(c *gin.Context) {
 			return
 		}
 
+		if _, err = aptos.DelegateMintNft(*user.WalletAddress); err != nil {
+			logwrapper.Errorf("Error minting nft: %v", err)
+			c.Status(http.StatusInternalServerError)
+			return
+		}
 		fmt.Println("minting nft -- 111NFT")
 
 	case stripe.EventTypePaymentIntentCanceled:

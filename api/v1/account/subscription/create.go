@@ -17,7 +17,12 @@ func Buy111NFT(c *gin.Context) {
 
 	db := dbconfig.GetDb()
 	userId := c.GetString(paseto.CTX_USER_ID)
-
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	if walletAddress == "" {
+		logwrapper.Errorf("user has no wallet address")
+		httpo.NewErrorResponse(http.StatusBadRequest, "user doesn't have any wallet linked").SendD(c)
+		return
+	}
 	params := &stripe.PaymentIntentParams{
 		Amount:   stripe.Int64(9.99 * 100),
 		Currency: stripe.String(string(stripe.CurrencyUSD)),
