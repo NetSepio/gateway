@@ -1,0 +1,1 @@
+ALTER TABLE ONLY public.erebrus ADD COLUMN collection_id text;
