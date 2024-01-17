@@ -10,6 +10,7 @@ import (
 	"github.com/NetSepio/gateway/config/constants/regions"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/pkg/genkeys"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
@@ -21,7 +22,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.Use(paseto.PASETO(false))
 		g.POST("/client/:region", RegisterClient)
 		// g.GET("/client/:region/:uuid", GetClient)
-		g.GET("/client/:region", GetClientsByRegion)
+		g.GET("/client/:collection_id", GetClientsByCollectionId)
 		g.GET("/clients", GetAllClients)
 		g.GET("/client/:region/:collection_id", GetClientsByCollectionRegion)
 		g.DELETE("/client/:region/:uuid", DeleteClient)
@@ -54,7 +55,12 @@ func RegisterClient(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, err.Error()).SendD(c)
 		return
 	}
-
+	pub, _, err := genkeys.GenerateWireGuardKeys()
+	if err != nil {
+		logwrapper.Errorf("failed to create keys: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
+		return
+	}
 	client := &http.Client{}
 	data := Client{
 		Name:       req.Name,
@@ -62,6 +68,7 @@ func RegisterClient(c *gin.Context) {
 		AllowedIPs: []string{"0.0.0.0/0", "::/0"},
 		Address:    []string{"10.0.0.0/24"},
 		CreatedBy:  walletAddress,
+		PublicKey:  pub,
 	}
 	dataBytes, err := json.Marshal(data)
 	if err != nil {
@@ -235,9 +242,32 @@ func GetClientsByCollectionRegion(c *gin.Context) {
 func GetAllClients(c *gin.Context) {
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 
+	region := c.Query("region")
+	collectionID := c.Query("collection_id")
+
 	db := dbconfig.GetDb()
+	query := db.Model(&models.Erebrus{}).Where("wallet_address = ?", walletAddress)
+
+	if region != "" {
+		query = query.Where("region = ?", region)
+	}
+	if collectionID != "" {
+		query = query.Where("collection_id = ?", collectionID)
+	}
+
 	var clients *[]models.Erebrus
-	db.Model(&models.Erebrus{}).Where("wallet_address = ?", walletAddress).Find(&clients)
+	query.Find(&clients)
 
 	httpo.NewSuccessResponseP(200, "VPN client fetched successfully", clients).SendD(c)
+}
+
+func GetClientsByCollectionId(c *gin.Context) {
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	collection_id := c.Param("collection_id")
+
+	db := dbconfig.GetDb()
+	var clients *[]models.Erebrus
+	db.Model(&models.Erebrus{}).Where("wallet_address = ? and collection_id = ?", walletAddress, collection_id).Find(&clients)
+
+	httpo.NewSuccessResponseP(200, "VPN clients fetched successfully", clients).SendD(c)
 }
