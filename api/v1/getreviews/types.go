@@ -27,6 +27,6 @@ type GetReviewsItem struct {
 
 type GetReviewsPayload struct {
 	Reviews       []GetReviewsItem `json:"reviews"`
-	TotalReview   int64            `json:"totalReviews"`
+	TotalReviews  int64            `json:"totalReviews"`
 	AverageRating *float64         `json:"averageRating"`
 }

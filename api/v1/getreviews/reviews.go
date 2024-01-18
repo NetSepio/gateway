@@ -111,7 +111,7 @@ func getReviews(c *gin.Context) {
 
 	payload := GetReviewsPayload{
 		Reviews:       reviewsPayload,
-		TotalReview:   totalReviews,
+		TotalReviews:  totalReviews,
 		AverageRating: averageRating,
 	}
 
