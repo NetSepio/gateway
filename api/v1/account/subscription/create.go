@@ -1,11 +1,13 @@
 package subscription
 
 import (
+	"math"
 	"net/http"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/pkg/aptos"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
@@ -23,8 +25,15 @@ func Buy111NFT(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, "user doesn't have any wallet linked").SendD(c)
 		return
 	}
+
+	coinPrice, err := aptos.GetCoinPrice()
+	if err != nil {
+		logwrapper.Errorf("failed to get coin price: %v", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+		return
+	}
 	params := &stripe.PaymentIntentParams{
-		Amount:   stripe.Int64(9.99 * 100),
+		Amount:   stripe.Int64(int64(math.Ceil(coinPrice * 11.1 * 100))),
 		Currency: stripe.String(string(stripe.CurrencyUSD)),
 		// In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
 		AutomaticPaymentMethods: &stripe.PaymentIntentAutomaticPaymentMethodsParams{
