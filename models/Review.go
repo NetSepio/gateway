@@ -20,4 +20,5 @@ type Review struct {
 	TransactionVersion int64  `json:"transactionVersion"`
 	DeletedAt          gorm.DeletedAt
 	CreatedAt          time.Time `json:"createdAt"`
+	SiteRating         int       `json:"siteRating"`
 }
