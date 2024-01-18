@@ -7,6 +7,7 @@ type GetReviewsQuery struct {
 	Domain string `form:"domain"`
 	Page   *int   `form:"page" binding:"required,min=1"`
 }
+
 type GetReviewsItem struct {
 	MetaDataUri        string    `json:"metaDataUri"`
 	Category           string    `json:"category"`
@@ -16,13 +17,16 @@ type GetReviewsItem struct {
 	SiteTag            string    `json:"siteTag"`
 	SiteSafety         string    `json:"siteSafety"`
 	SiteIpfsHash       string    `json:"siteIpfsHash"`
+	SiteRating         int       `json:"siteRating"`
 	TransactionHash    string    `json:"transactionHash"`
 	TransactionVersion int64     `json:"transactionVersion"`
 	CreatedAt          time.Time `json:"createdAt"`
 	Voter              string    `json:"voter"`
 	Name               string    `json:"name"`
-	TotalReviews       int64     `json:"totalReviews"`
-	AverageRating      float64   `json:"averageRating"`
 }
 
-type GetReviewsPayload []GetReviewsItem
+type GetReviewsPayload struct {
+	Reviews       []GetReviewsItem `json:"reviews"`
+	TotalReview   int64            `json:"totalReviews"`
+	AverageRating *float64         `json:"averageRating"`
+}
