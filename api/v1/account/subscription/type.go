@@ -1,5 +1,5 @@
 package subscription
 
-type Buy111NFTResponse struct {
+type BuyErebrusNFTResponse struct {
 	ClientSecret string `json:"clientSecret"`
 }

@@ -9,8 +9,8 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/subscription")
 	{
-		g.POST("stripe-webhook", StripeWebhookHandler)
+		g.POST("payment-webhook", StripeWebhookHandler)
 		g.Use(paseto.PASETO(false))
-		g.POST("111-nft", Buy111NFT)
+		g.POST("erebrus", Buy111NFT)
 	}
 }

@@ -16,7 +16,6 @@ import (
 )
 
 func Buy111NFT(c *gin.Context) {
-
 	db := dbconfig.GetDb()
 	userId := c.GetString(paseto.CTX_USER_ID)
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
@@ -55,5 +54,5 @@ func Buy111NFT(c *gin.Context) {
 		return
 	}
 
-	httpo.NewSuccessResponseP(http.StatusOK, "payment intent created", Buy111NFTResponse{ClientSecret: pi.ClientSecret}).SendD(c)
+	httpo.NewSuccessResponseP(http.StatusOK, "payment intent created", BuyErebrusNFTResponse{ClientSecret: pi.ClientSecret}).SendD(c)
 }
