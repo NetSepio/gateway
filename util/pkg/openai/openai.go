@@ -78,33 +78,7 @@ func IsReviewSpam(review string) (bool, error) {
 	requestBody, err := json.Marshal(ChatRequest{
 		Model: "gpt-4-1106-preview",
 		Messages: []ChatMessage{
-			{Role: "system", Content: `Your task is to tell if the review is spam or real one, like this 'Best website' looks spam because it doesn't have any detail.
-			For more examples of spam,
-			- Fadshfhdasfk
-			- 1
-			- 11112312134214543252q4332
-			- Aaaaa
-			- Good
-			- Bad
-			- It’s good
-			- .
-			- Awesome
-			- goood
-			- nice
-			- Bullish
-			- Solid
-			- Scam
-			- Airdrop
-			- Follow for airdrop
-			- N/A
-			- This is good app
-			- Easy to use
-			- Wezsdxcfgbhjnkibhytcrxeswe4srtyuinnkjh gctxreza4rdtyuhjni
-			- Good good good good good good good good good good good good good good good good good 
-			- Gm	
-			
-			Just answer with YES and NO, nothing else
-			`},
+			{Role: "system", Content: "Your task is to tell if the review is spam or real one, like this 'Best website' looks spam because it doesn't have any detail. Just answer with YES and NO, nothing else"},
 			{Role: "user", Content: fmt.Sprintf("Review %s", review)},
 		},
 		MaxTokens: 1,
