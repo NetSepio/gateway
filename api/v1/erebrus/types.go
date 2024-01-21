@@ -43,8 +43,8 @@ type ClientResponse struct {
 	UpdatedBy                 string   `json:"UpdatedBy,omitempty"`
 	CreatedAt                 int64    `json:"CreatedAt,omitempty"`
 	UpdatedAt                 int64    `json:"UpdatedAt,omitempty"`
-	ReceiveBytes              string   `json:"ReceiveBytes",omitempty`
-	TransmitBytes             string   `json:"TransmitBytes",omitempty`
+	ReceiveBytes              int64    `json:"ReceiveBytes,omitempty"`
+	TransmitBytes             int64    `json:"TransmitBytes,omitempty"`
 }
 
 type Server struct {
