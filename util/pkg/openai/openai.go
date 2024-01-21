@@ -102,6 +102,7 @@ func IsReviewSpam(review string) (bool, error) {
 			- Wezsdxcfgbhjnkibhytcrxeswe4srtyuinnkjh gctxreza4rdtyuhjni
 			- Good good good good good good good good good good good good good good good good good 
 			- Gm	
+			- noice
 			
 			Just answer with YES and NO, nothing else
 			`},
