@@ -106,7 +106,7 @@ func RegisterClient(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
 		return
 	}
-	httpo.NewSuccessResponseP(200, "VPN client created successfully", gin.H{"client": reqBody.Client, "serverAddress": reqBody.Server.Address, "serverPublicKey": reqBody.Server.PublicKey}).SendD(c)
+	httpo.NewSuccessResponseP(200, "VPN client created successfully", gin.H{"client": reqBody.Client, "serverAddress": reqBody.Server.Address, "serverPublicKey": reqBody.Server.PublicKey, "endpoint": reqBody.Server.Endpoint}).SendD(c)
 }
 
 func GetClient(c *gin.Context) {
