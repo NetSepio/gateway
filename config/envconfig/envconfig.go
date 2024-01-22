@@ -23,6 +23,7 @@ type config struct {
 	ALLOWED_ORIGIN           []string      `env:"ALLOWED_ORIGIN,required" envSeparator:","`
 	PASETO_SIGNED_BY         string        `env:"PASETO_SIGNED_BY,required"`
 	APTOS_FUNCTION_ID        string        `env:"APTOS_FUNCTION_ID,required"`
+	APTOS_REPORT_FUNCTION_ID string        `env:"APTOS_REPORT_FUNCTION_ID,required"`
 	GAS_UNITS                int           `env:"GAS_UNITS,required"`
 	GAS_PRICE                int           `env:"GAS_PRICE,required"`
 	NETWORK                  string        `env:"NETWORK,required"`
@@ -34,8 +35,16 @@ type config struct {
 	EREBRUS_API_SG           string        `env:"EREBRUS_API_SG,notEmpty"`
 	GOOGLE_AUDIENCE          string        `env:"GOOGLE_AUDIENCE,notEmpty"`
 	OPENAI_API_KEY           string        `env:"OPENAI_API_KEY,notEmpty"`
-	STRIPE_WEBHOOK_SECRET    string        `env:"STRIPE_WEBHOOK_SECRET,notEmpty"`
+	EREBRUS_US               string        `env:"EREBRUS_US,notEmpty"`
+	EREBRUS_SG               string        `env:"EREBRUS_SG,notEmpty"`
+	EREBRUS_CA               string        `env:"EREBRUS_CA,notEmpty"`
+	EREBRUS_EU               string        `env:"EREBRUS_EU,notEmpty"`
+	EREBRUS_JP               string        `env:"EREBRUS_JP,notEmpty"`
+	SOTREUS_US               string        `env:"SOTREUS_US,notEmpty"`
+	SOTREUS_SG               string        `env:"SOTREUS_SG,notEmpty"`
+  STRIPE_WEBHOOK_SECRET    string        `env:"STRIPE_WEBHOOK_SECRET,notEmpty"`
 	STRIPE_SECRET_KEY        string        `env:"STRIPE_SECRET_KEY,notEmpty"`
+
 }
 
 var EnvVars config = config{}

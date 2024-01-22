@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/NetSepio/gateway/api"
+	"github.com/NetSepio/gateway/app/routines/reportroutine"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/stripe/stripe-go/v76"
 
@@ -32,5 +33,6 @@ func Init() {
 	GinApp.Use(corsM)
 	api.ApplyRoutes(GinApp)
 	dbconfig.GetDb()
+	go reportroutine.StartProcessingReportsPeriodically()
 	// go webreview.Init()
 }

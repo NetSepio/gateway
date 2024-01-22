@@ -17,6 +17,7 @@ type Domain struct {
 	Blockchain     string    `json:"blockchain"`
 	CreatedBy      User      `gorm:"foreignkey:CreatedById"`
 	UpdatedBy      User      `gorm:"foreignkey:UpdatedById"`
+	Claimable      bool      `json:"claimable"`
 	CreatedById    string
 	UpdatedById    string
 }

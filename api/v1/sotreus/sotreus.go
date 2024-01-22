@@ -10,7 +10,6 @@ import (
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/constants/regions"
 	"github.com/NetSepio/gateway/config/dbconfig"
-	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
@@ -33,15 +32,30 @@ func ApplyRoutes(r *gin.RouterGroup) {
 func Deploy(c *gin.Context) {
 	db := dbconfig.GetDb()
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+
+	var count int64
+	err := db.Model(&models.Sotreus{}).Where("wallet_address = ?", walletAddress).Find(&models.Sotreus{}).Count(&count).Error
+	if err != nil {
+		logwrapper.Errorf("failed to fetch data from database: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
+		return
+	}
+
+	if count >= 1 {
+		logwrapper.Error("Can't create more vpn instances, maximum 1 allowed")
+		httpo.NewErrorResponse(http.StatusBadRequest, "Can't create more vpn instances, maximum 1 allowed").SendD(c)
+		return
+	}
+
 	var req DeployRequest
-	err := c.BindJSON(&req)
+	err = c.BindJSON(&req)
 	if err != nil {
 		logwrapper.Errorf("failed to bind JSON: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
 		return
 	}
 	ServerLink := regions.Regions[req.Region].ServerHttp
-	deployerRequest := DeployerCreateRequest{SotreusID: req.Name, WalletAddress: walletAddress}
+	deployerRequest := DeployerCreateRequest{SotreusID: req.Name, WalletAddress: walletAddress, Region: regions.Regions[req.Region].Code}
 	reqBodyBytes, err := json.Marshal(deployerRequest)
 	if err != nil {
 		logwrapper.Errorf("failed to encode request: %s", err)
@@ -103,6 +117,7 @@ func Deploy(c *gin.Context) {
 }
 
 func Stop(c *gin.Context) {
+	db := dbconfig.GetDb()
 	var req SotreusRequest
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -110,14 +125,21 @@ func Stop(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
 		return
 	}
-
+	var vpn models.Sotreus
+	err = db.Model(&models.Sotreus{}).Where("name = ?", req.VpnId).First(&vpn).Error
+	if err != nil {
+		logwrapper.Errorf("failed to fetch data from database: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to fetch data from database").SendD(c)
+		return
+	}
+	ServerLink := regions.Regions[vpn.Region].ServerHttp
 	reqBodyBytes, err := json.Marshal(req)
 	if err != nil {
 		logwrapper.Errorf("failed to encode request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
-	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API_US_EAST+"/sotreus/stop", bytes.NewReader(reqBodyBytes))
+	contractReq, err := http.NewRequest(http.MethodPost, ServerLink+"/sotreus/stop", bytes.NewReader(reqBodyBytes))
 	if err != nil {
 		logwrapper.Errorf("failed to create request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
@@ -149,14 +171,21 @@ func Delete(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
-
+	var vpn models.Sotreus
+	err = db.Model(&models.Sotreus{}).Where("name = ?", req.VpnId).First(&vpn).Error
+	if err != nil {
+		logwrapper.Errorf("failed to fetch data from database: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to fetch data from database").SendD(c)
+		return
+	}
+	ServerLink := regions.Regions[vpn.Region].ServerHttp
 	ReqBodyBytes, err := json.Marshal(req)
 	if err != nil {
 		logwrapper.Errorf("failed to encode request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
-	contractReq, err := http.NewRequest(http.MethodDelete, envconfig.EnvVars.VPN_DEPLOYER_API_US_EAST+"/sotreus", bytes.NewReader(ReqBodyBytes))
+	contractReq, err := http.NewRequest(http.MethodDelete, ServerLink+"/sotreus", bytes.NewReader(ReqBodyBytes))
 	if err != nil {
 		logwrapper.Errorf("failed to create request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
@@ -183,10 +212,18 @@ func Delete(c *gin.Context) {
 			return
 		}
 	}
+	err = db.Model(&models.Sotreus{}).Where("name = ?", vpn.Name).Delete(&models.Sotreus{}).Error
+	if err != nil {
+		logwrapper.Errorf("failed to delete vpn from database: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to delete vpn from database").SendD(c)
+		return
+	}
+
 	httpo.NewSuccessResponse(200, "VPN deployment deleted").SendD(c)
 }
 
 func Start(c *gin.Context) {
+	db := dbconfig.GetDb()
 	var req SotreusRequest
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -194,14 +231,21 @@ func Start(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
 		return
 	}
-
+	var vpn models.Sotreus
+	err = db.Model(&models.Sotreus{}).Where("name = ?", req.VpnId).First(&vpn).Error
+	if err != nil {
+		logwrapper.Errorf("failed to fetch data from database: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to fetch data from database").SendD(c)
+		return
+	}
+	ServerLink := regions.Regions[vpn.Region].ServerHttp
 	reqBodyBytes, err := json.Marshal(req)
 	if err != nil {
 		logwrapper.Errorf("failed to encode request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)
 		return
 	}
-	contractReq, err := http.NewRequest(http.MethodPost, envconfig.EnvVars.VPN_DEPLOYER_API_US_EAST+"/sotreus/start", bytes.NewReader(reqBodyBytes))
+	contractReq, err := http.NewRequest(http.MethodPost, ServerLink+"/sotreus/start", bytes.NewReader(reqBodyBytes))
 	if err != nil {
 		logwrapper.Errorf("failed to create request: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create VPN").SendD(c)

@@ -5,71 +5,20 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
-	"mime/multipart"
-	"net/http"
 	"net/url"
 	"os"
 	"path"
 	"strings"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
-	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/aptos"
+	"github.com/NetSepio/gateway/util/pkg/ipfs"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	ws "github.com/NetSepio/gateway/util/pkg/webscrape"
 	"github.com/chromedp/chromedp"
 	"github.com/google/uuid"
 )
-
-func UploadToIpfs(osFile io.Reader, fileName string) (*NFTStorageRes, error) {
-	// Create a buffer to store the request body
-	var buf bytes.Buffer
-
-	// Create a new multipart writer with the buffer
-	w := multipart.NewWriter(&buf)
-
-	// Create a new form field
-	fw, err := w.CreateFormFile("file", fileName)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create file %s: %w", fileName, err)
-	}
-
-	// Copy the contents of the file to the form field
-	if _, err := io.Copy(fw, osFile); err != nil {
-		return nil, fmt.Errorf("failed to copy contents to %s: %w", fileName, err)
-	}
-
-	// Close the multipart writer to finalize the request
-	w.Close()
-
-	// Send the request
-	req, err := http.NewRequest("POST", "https://api.nft.storage/upload", &buf)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create new request for nft.storage: %w", err)
-	}
-	req.Header.Set("Content-Type", w.FormDataContentType())
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", envconfig.EnvVars.NFT_STORAGE_KEY))
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to do request for nft.storage: %w", err)
-	}
-	bodyBytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read body of request for nft.storage: %w", err)
-	}
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("failed to upload using nft.storage, status code: %d, response body: %s", resp.StatusCode, bodyBytes)
-	}
-	nftRes, err := UnmarshalNFTStorageRes(bodyBytes)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal json body of request for nft.storage: %w", err)
-	}
-	defer resp.Body.Close()
-	return &nftRes, nil
-}
 
 func Publish(metadatahash string, siteUrl string) {
 	db := dbconfig.GetDb()
@@ -101,7 +50,7 @@ func Publish(metadatahash string, siteUrl string) {
 		logwrapper.Errorf("failed to add file: %v to ipfs for websiteURL : %v, error: %v", filePath, websiteURL, err.Error())
 		return
 	}
-	indexFileUploadRes, err := UploadToIpfs(indexFile, "index.html")
+	indexFileUploadRes, err := ipfs.UploadToIpfs(indexFile, "index.html")
 	if err != nil {
 		logwrapper.Errorf("failed to add file: %v to ipfs for websiteURL : %v, error: %v", filePath, websiteURL, err.Error())
 		return
@@ -128,7 +77,7 @@ func Publish(metadatahash string, siteUrl string) {
 		logwrapper.Errorf("failed to add file: %v to ipfs for websiteURL : %v, error: %v", filePath, websiteURL, err.Error())
 		return
 	}
-	screenShotFileUploadRes, err := UploadToIpfs(screenShotFile, "screenshot.png")
+	screenShotFileUploadRes, err := ipfs.UploadToIpfs(screenShotFile, "screenshot.png")
 	if err != nil {
 		logwrapper.Errorf("failed to add file: %v to ipfs for websiteURL : %v, error: %v", filePath, websiteURL, err.Error())
 		return
@@ -144,7 +93,7 @@ func Publish(metadatahash string, siteUrl string) {
 		return
 	}
 
-	metaDataRes, err := UploadToIpfs(bytes.NewReader(data), "metadata.json")
+	metaDataRes, err := ipfs.UploadToIpfs(bytes.NewReader(data), "metadata.json")
 	if err != nil {
 		logwrapper.Errorf("failed to add file to ipfs for fullScreenShot : %v", err.Error())
 		return

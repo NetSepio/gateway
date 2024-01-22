@@ -9,6 +9,7 @@ type DeployRequest struct {
 type DeployerCreateRequest struct {
 	SotreusID     string `json:"sotreusID" binding:"required"`
 	WalletAddress string `json:"walletAddress" binding:"required"`
+	Region        string `json:"region" binding:"required"`
 }
 type SotreusRequest struct {
 	VpnId string `json:"vpnId" binding:"required"`

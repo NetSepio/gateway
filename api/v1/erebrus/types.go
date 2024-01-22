@@ -2,7 +2,7 @@ package erebrus
 
 type Client struct {
 	UUID                      string   `json:"UUID,omitempty"`
-	Name                      string   `json:"Name,omitempty"`
+	Name                      string   `json:"Name" binding:"required"`
 	Tags                      []string `json:"Tags,omitempty"`
 	WalletAddress             string   `json:"WalletAddress,omitempty"`
 	Enable                    bool     `json:"Enable,omitempty"`
@@ -15,16 +15,36 @@ type Client struct {
 	UpdatedBy                 string   `json:"UpdatedBy,omitempty"`
 	CreatedAt                 int64    `json:"CreatedAt,omitempty"`
 	UpdatedAt                 int64    `json:"UpdatedAt,omitempty"`
+	CollectionId              string   `json:"CollectionId" binding:"required"`
 }
 
 type Response struct {
-	Status  int64     `json:"status,omitempty"`
-	Success bool      `json:"success,omitempty"`
-	Message string    `json:"message,omitempty"`
-	Error   string    `json:"error,omitempty"`
-	Client  *Client   `json:"client,omitempty"`
-	Server  *Server   `json:"server,omitempty"`
-	Clients []*Client `json:"clients,omitempty"`
+	Status  int64             `json:"status,omitempty"`
+	Success bool              `json:"success,omitempty"`
+	Message string            `json:"message,omitempty"`
+	Error   string            `json:"error,omitempty"`
+	Client  *ClientResponse   `json:"client,omitempty"`
+	Server  *Server           `json:"server,omitempty"`
+	Clients []*ClientResponse `json:"clients,omitempty"`
+}
+
+type ClientResponse struct {
+	UUID                      string   `json:"UUID,omitempty"`
+	Name                      string   `json:"Name" binding:"required"`
+	Tags                      []string `json:"Tags,omitempty"`
+	WalletAddress             string   `json:"WalletAddress,omitempty"`
+	Enable                    bool     `json:"Enable,omitempty"`
+	IgnorePersistentKeepalive bool     `json:"IgnorePersistentKeepalive,omitempty"`
+	PublicKey                 string   `json:"PublicKey,omitempty"`
+	PresharedKey              string   `json:"PresharedKey,omitempty"`
+	AllowedIPs                []string `json:"AllowedIPs,omitempty"`
+	Address                   []string `json:"Address,omitempty"`
+	CreatedBy                 string   `json:"CreatedBy,omitempty"`
+	UpdatedBy                 string   `json:"UpdatedBy,omitempty"`
+	CreatedAt                 int64    `json:"CreatedAt,omitempty"`
+	UpdatedAt                 int64    `json:"UpdatedAt,omitempty"`
+	ReceiveBytes              int64    `json:"ReceiveBytes,omitempty"`
+	TransmitBytes             int64    `json:"TransmitBytes,omitempty"`
 }
 
 type Server struct {

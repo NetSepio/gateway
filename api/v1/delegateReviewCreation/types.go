@@ -8,6 +8,8 @@ type DelegateReviewCreationRequest struct {
 	SiteType      string `json:"siteType" binding:"required"`
 	SiteTag       string `json:"siteTag" binding:"required"`
 	SiteSafety    string `json:"siteSafety" binding:"required"`
+	Description   string `json:"description" binding:"required"`
+	SiteRating    int    `json:"siteRating" binding:"required,gte=0,lte=10"`
 }
 
 type DelegateReviewCreationPayload struct {

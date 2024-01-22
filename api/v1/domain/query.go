@@ -23,7 +23,7 @@ func queryDomain(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
 		return
 	}
-	limit := 10
+	limit := 12
 	offset := (*queryRequest.Page - 1) * limit
 	var domains []struct {
 		Id             string    `json:"id"`
@@ -39,13 +39,22 @@ func queryDomain(c *gin.Context) {
 		Blockchain     string    `json:"blockchain"`
 		CreatedBy      string    `json:"createdBy"`
 		CreatorName    string    `json:"creatorName"`
+		Claimable      string    `json:"claimable"`
 		TxtValue       string    `json:"txtValue,omitempty"`
 	}
 
-	model := db.Limit(10).Offset(offset).Model(&models.Domain{})
+	model := db.Limit(limit).Offset(offset).Model(&models.Domain{}).Order("title ASC")
 	if queryRequest.DomainName != "" {
 		model = model.
-			Where("domain_name like ?", fmt.Sprintf("%%%s%%", queryRequest.DomainName))
+			Where("domain_name like ?", fmt.Sprintf("%%%s%%", queryRequest.DomainName)).Where(&models.Domain{Id: queryRequest.DomainId})
+	}
+
+	if queryRequest.VerifiedWithClaimable {
+		model = model.
+			Where("verified = true or claimable = true")
+	} else {
+		model = model.
+			Where(&models.Domain{Verified: queryRequest.Verified})
 	}
 
 	if queryRequest.OnlyAdmin {
@@ -54,9 +63,8 @@ func queryDomain(c *gin.Context) {
 			httpo.NewErrorResponse(http.StatusBadRequest, "auth token required if onlyAdmin is true").SendD(c)
 			return
 		}
-		if err := model.
-			Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).Where("da.admin_id = ?", userId).
-			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_id created_by, u.name creator_name, txt_value").
+		if err := model.Where("da.admin_id = ?", userId).
+			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_id created_by, u.name creator_name, txt_value, claimable").
 			Joins("INNER JOIN users u ON u.user_id = created_by_id").
 			Joins("INNER JOIN domain_admins da ON da.domain_id = domains.id").
 			Find(&domains).
@@ -67,7 +75,6 @@ func queryDomain(c *gin.Context) {
 		}
 	} else {
 		if err := model.
-			Where(&models.Domain{Verified: queryRequest.Verified, Id: queryRequest.DomainId}).
 			Select("id, domain_name, verified, created_at, title, headline, description, cover_image_hash, logo_hash, category, blockchain, created_by_id created_by, u.name creator_name").
 			Joins("INNER JOIN users u ON u.user_id = created_by_id").
 			Find(&domains).
