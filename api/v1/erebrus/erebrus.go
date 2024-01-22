@@ -10,7 +10,6 @@ import (
 	"github.com/NetSepio/gateway/config/constants/regions"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
-	"github.com/NetSepio/gateway/util/pkg/genkeys"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
@@ -52,20 +51,15 @@ func RegisterClient(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, err.Error()).SendD(c)
 		return
 	}
-	pub, _, err := genkeys.GenerateWireGuardKeys()
-	if err != nil {
-		logwrapper.Errorf("failed to create keys: %s", err)
-		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
-		return
-	}
 	client := &http.Client{}
 	data := Client{
-		Name:       req.Name,
-		Enable:     true,
-		AllowedIPs: []string{"0.0.0.0/0", "::/0"},
-		Address:    []string{"10.0.0.0/24"},
-		CreatedBy:  walletAddress,
-		PublicKey:  pub,
+		Name:         req.Name,
+		Enable:       true,
+		PresharedKey: req.PresharedKey,
+		AllowedIPs:   []string{"0.0.0.0/0", "::/0"},
+		Address:      []string{"10.0.0.0/24"},
+		CreatedBy:    walletAddress,
+		PublicKey:    req.PublicKey,
 	}
 	dataBytes, err := json.Marshal(data)
 	if err != nil {
