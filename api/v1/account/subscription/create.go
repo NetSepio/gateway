@@ -11,6 +11,7 @@ import (
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/stripe/stripe-go/v76"
 	"github.com/stripe/stripe-go/v76/paymentintent"
 )
@@ -46,10 +47,23 @@ func Buy111NFT(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 		return
 	}
-	// update the user's stripePiId
-	err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("stripe_pi_id", pi.ID).Error
+
+	// type UsersStripePi struct {
+	// 	Id           string    `gorm:"primary_key" json:"id,omitempty"`
+	// 	UserId       string `json:"userId,omitempty"`
+	// 	StripePiId   string `json:"stripePiId,omitempty"`
+	// 	StripePiType string `json:"stripePiType,omitempty"`
+	// }
+
+	// insert in above table
+	err = db.Create(&models.UserStripePi{
+		Id:           uuid.NewString(),
+		UserId:       userId,
+		StripePiId:   pi.ID,
+		StripePiType: models.Erebrus111NFT,
+	}).Error
 	if err != nil {
-		logwrapper.Errorf("failed to update stripe_pi_id: %v", err)
+		logwrapper.Errorf("failed to insert into users_stripe_pi: %v", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 		return
 	}

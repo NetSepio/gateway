@@ -48,8 +48,8 @@ func StripeWebhookHandler(c *gin.Context) {
 		}
 
 		// get user with stripe_pi_id
-		var user models.User
-		if err := db.Where("stripe_pi_id = ?", paymentIntent.ID).First(&user).Error; err != nil {
+		var userStripePi models.UserStripePi
+		if err := db.Where("stripe_pi_id = ?", paymentIntent.ID).First(&userStripePi).Error; err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				//warn and return success
 				logwrapper.Warnf("No user found with stripe_pi_id: %v", err)
@@ -60,8 +60,11 @@ func StripeWebhookHandler(c *gin.Context) {
 			c.Status(http.StatusInternalServerError)
 			return
 		}
-		if err := db.Model(&models.User{}).Where("stripe_pi_id = ?", paymentIntent.ID).Update("stripe_session_id", nil).Error; err != nil {
-			logwrapper.Errorf("Error updating stripe_pi_id: %v", err)
+
+		// get user with user_id
+		var user models.User
+		if err := db.Where("user_id = ?", userStripePi.UserId).First(&user).Error; err != nil {
+			logwrapper.Errorf("Error getting user with user_id: %v", err)
 			c.Status(http.StatusInternalServerError)
 			return
 		}
@@ -87,16 +90,10 @@ func StripeWebhookHandler(c *gin.Context) {
 }
 
 func HandleCanceledOrFailedPaymentIntent(eventDataRaw json.RawMessage) error {
-	db := dbconfig.GetDb()
 	var paymentIntent stripe.PaymentIntent
 	err := json.Unmarshal(eventDataRaw, &paymentIntent)
 	if err != nil {
 		return fmt.Errorf("error parsing webhook JSON: %w", err)
-	}
-
-	// TODO rows affected
-	if err := db.Model(&models.User{}).Where("stripe_pi_id = ?", paymentIntent.ID).Update("stripe_session_id", nil).Error; err != nil {
-		return fmt.Errorf("error updating stripe_pi_id: %w", err)
 	}
 
 	return nil

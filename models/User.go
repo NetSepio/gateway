@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type User struct {
 	UserId            string         `gorm:"primary_key" json:"userId,omitempty"`
 	Name              string         `json:"name,omitempty"`
@@ -11,5 +13,16 @@ type User struct {
 	Country           string         `json:"country,omitempty"`
 	Feedbacks         []UserFeedback `gorm:"foreignkey:UserId" json:"userFeedbacks"`
 	EmailId           *string        `json:"emailId,omitempty"`
-	StripePiId        *string        `json:"stripePiId,omitempty"`
 }
+
+type TStripePiType string
+
+type UserStripePi struct {
+	Id           string        `gorm:"primary_key" json:"id,omitempty"`
+	UserId       string        `json:"userId,omitempty"`
+	StripePiId   string        `json:"stripePiId,omitempty"`
+	StripePiType TStripePiType `json:"stripePiType,omitempty"`
+	CreatedAt    time.Time     `json:"createdAt,omitempty"`
+}
+
+var Erebrus111NFT TStripePiType = "Erebrus111NFT"
