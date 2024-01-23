@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
-	"github.com/NetSepio/gateway/app/routines/webreview"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/aptos"
@@ -79,7 +78,7 @@ func deletegateReviewCreation(c *gin.Context) {
 		TransactionVersion: txResult.Result.Version,
 		SiteRating:         request.SiteRating,
 	}
-	go webreview.Publish(request.MetaDataUri, strings.TrimSuffix(request.SiteUrl, "/"))
+	// go webreview.Publish(request.MetaDataUri, strings.TrimSuffix(request.SiteUrl, "/"))
 	if err := db.Create(newReview).Error; err != nil {
 		httpo.NewSuccessResponseP(httpo.TXDbFailed, "transaction is successful but failed to store tx in db", payload).Send(c, 200)
 		return
