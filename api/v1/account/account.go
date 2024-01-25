@@ -11,5 +11,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		g.Use(paseto.PASETO(true))
 		g.POST("auth-google", authGoogle)
+		g.Use(paseto.PASETO(false))
+		g.DELETE("remove-mail", removeMail)
 	}
 }
