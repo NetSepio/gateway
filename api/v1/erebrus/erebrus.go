@@ -22,30 +22,30 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("/client/:region", RegisterClient)
 		g.GET("/clients", GetAllClients)
 		g.DELETE("/client/:region/:uuid", DeleteClient)
-		g.GET("/config/:region/:uuid", GetConfig)
+		// g.GET("/config/:region/:uuid", GetConfig)
 	}
 }
 func RegisterClient(c *gin.Context) {
 	region := c.Param("region")
 	db := dbconfig.GetDb()
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
-	var count int64
-	err := db.Model(&models.Erebrus{}).Where("wallet_address = ?", walletAddress).Find(&models.Erebrus{}).Count(&count).Error
-	if err != nil {
-		logwrapper.Errorf("failed to fetch data from database: %s", err)
-		httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
-		return
-	}
+	// var count int64
+	// err := db.Model(&models.Erebrus{}).Where("wallet_address = ?", walletAddress).Find(&models.Erebrus{}).Count(&count).Error
+	// if err != nil {
+	// 	logwrapper.Errorf("failed to fetch data from database: %s", err)
+	// 	httpo.NewErrorResponse(http.StatusInternalServerError, err.Error()).SendD(c)
+	// 	return
+	// }
 
-	if count >= 3 {
-		logwrapper.Error("Can't create more clients, maximum 3 allowed")
-		httpo.NewErrorResponse(http.StatusBadRequest, "Can't create more clients, maximum 3 allowed").SendD(c)
-		return
-	}
+	// if count >= 3 {
+	// 	logwrapper.Error("Can't create more clients, maximum 3 allowed")
+	// 	httpo.NewErrorResponse(http.StatusBadRequest, "Can't create more clients, maximum 3 allowed").SendD(c)
+	// 	return
+	// }
 
 	var req Client
 
-	err = c.BindJSON(&req)
+	err := c.BindJSON(&req)
 	if err != nil {
 		logwrapper.Errorf("failed to bind JSON: %s", err)
 		httpo.NewErrorResponse(http.StatusBadRequest, err.Error()).SendD(c)
