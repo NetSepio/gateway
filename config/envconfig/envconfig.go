@@ -44,6 +44,7 @@ type config struct {
 	SOTREUS_SG               string        `env:"SOTREUS_SG,notEmpty"`
 	STRIPE_WEBHOOK_SECRET    string        `env:"STRIPE_WEBHOOK_SECRET,notEmpty"`
 	STRIPE_SECRET_KEY        string        `env:"STRIPE_SECRET_KEY,notEmpty"`
+	SMTP_PASSWORD            string        `env:"SMTP_PASSWORD,notEmpty"`
 }
 
 var EnvVars config = config{}
