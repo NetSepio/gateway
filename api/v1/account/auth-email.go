@@ -68,7 +68,7 @@ func GenerateAuthId(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 		return
 	}
-	smtpHost := "localhost"
+	smtpHost := "smtp.mandrillapp.com"
 	smtpPort := "465"
 	smtpFrom := "mail@netsepio.com"
 	auth := smtp.PlainAuth("NetSepio", smtpFrom, envconfig.EnvVars.SMTP_PASSWORD, smtpHost)
