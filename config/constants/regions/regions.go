@@ -71,5 +71,10 @@ func InitRegions() {
 			Code:       "jp",
 			ServerHttp: envconfig.EnvVars.EREBRUS_JP,
 		},
+		"hk": {
+			Name:       "Hong Kong",
+			Code:       "hk",
+			ServerHttp: envconfig.EnvVars.EREBRUS_JP,
+		},
 	}
 }
