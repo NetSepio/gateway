@@ -55,9 +55,9 @@ func authenticate(c *gin.Context) {
 		return
 	}
 	userAuthEULA := envconfig.EnvVars.AUTH_EULA
-	message := fmt.Sprintf("APTOS\nmessage: %v\nnonce: %v", userAuthEULA, req.FlowId)
+	message := fmt.Sprintf("%s%s", userAuthEULA, req.FlowId)
 
-	userId, walletAddr, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message, req.PubKey)
+	userId, walletAddr, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message)
 
 	if err == cryptosign.ErrFlowIdNotFound {
 		httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")

@@ -35,7 +35,7 @@ func Test_PostAuthenticate(t *testing.T) {
 		eula, flowId := callFlowIdApi(testWallet.WalletAddress, t)
 		logwrapper.Infof("priv %v", testWallet.PrivateKey)
 		signature := getSignature(eula, flowId, testWallet.PrivateKey)
-		body := AuthenticateRequest{Signature: signature, FlowId: flowId, PubKey: testWallet.PubKey}
+		body := AuthenticateRequest{Signature: signature, FlowId: flowId}
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
 			t.Fatal(err)
@@ -59,7 +59,7 @@ func Test_PostAuthenticate(t *testing.T) {
 		// Different private key will result in different wallet address
 		diffWallet := testingcommmon.GenerateWallet()
 		signature := getSignature(eula, flowId, diffWallet.PrivateKey)
-		body := AuthenticateRequest{Signature: signature, FlowId: flowId, PubKey: diffWallet.PubKey}
+		body := AuthenticateRequest{Signature: signature, FlowId: flowId}
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
 			t.Fatal(err)
