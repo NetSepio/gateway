@@ -41,6 +41,7 @@ type config struct {
 	EREBRUS_EU               string        `env:"EREBRUS_EU,notEmpty"`
 	EREBRUS_JP               string        `env:"EREBRUS_JP,notEmpty"`
 	EREBRUS_HK               string        `env:"EREBRUS_HK,notEmpty"`
+	EREBRUS_HK_02            string        `env:"EREBRUS_HK_02,notEmpty"`
 	SOTREUS_US               string        `env:"SOTREUS_US,notEmpty"`
 	SOTREUS_SG               string        `env:"SOTREUS_SG,notEmpty"`
 	STRIPE_WEBHOOK_SECRET    string        `env:"STRIPE_WEBHOOK_SECRET,notEmpty"`

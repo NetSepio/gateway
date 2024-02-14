@@ -11,6 +11,10 @@ type Region struct {
 var Regions map[string]Region
 var ErebrusRegions map[string]Region
 
+//todo
+//Store regions in persistent DB
+//
+
 func InitRegions() {
 	Regions = map[string]Region{
 		"us-east-2": {
@@ -75,6 +79,11 @@ func InitRegions() {
 			Name:       "Hong Kong",
 			Code:       "hk",
 			ServerHttp: envconfig.EnvVars.EREBRUS_HK,
+		},
+		"hk02": {
+			Name:       "Hong Kong 02",
+			Code:       "hk02",
+			ServerHttp: envconfig.EnvVars.EREBRUS_HK_02,
 		},
 	}
 }
