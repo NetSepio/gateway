@@ -30,5 +30,6 @@ var Erebrus111NFT TStripePiType = "Erebrus111NFT"
 type EmailAuth struct {
 	Id        string    `gorm:"primary_key" json:"id,omitempty"`
 	Email     string    `json:"email,omitempty"`
+	AuthCode  string    `json:"authCode,omitempty"`
 	CreatedAt time.Time `json:"createdAt,omitempty"`
 }

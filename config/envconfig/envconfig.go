@@ -11,6 +11,7 @@ import (
 type config struct {
 	PASETO_PRIVATE_KEY       string        `env:"PASETO_PRIVATE_KEY,required"`
 	PASETO_EXPIRATION        time.Duration `env:"PASETO_EXPIRATION,required"`
+	MAGIC_LINK_EXPIRATION    time.Duration `env:"MAGIC_LINK_EXPIRATION,required"`
 	APP_PORT                 int           `env:"APP_PORT,required"`
 	AUTH_EULA                string        `env:"AUTH_EULA,required"`
 	APP_NAME                 string        `env:"APP_NAME,required"`

@@ -51,17 +51,6 @@ func NewWithWallet(userId string, walletAddr *string) CustomClaims {
 	}
 }
 
-func NewAuthClaim(authId string) AuthClaim {
-	expiration := time.Now().Add(5 * time.Minute)
-
-	return AuthClaim{
-		authId,
-		pvx.RegisteredClaims{
-			Expiration: &expiration,
-		},
-	}
-}
-
 func (c AuthClaim) Valid() error {
 	// check if authId exists in db and is not expired by 5 minutes
 	db := dbconfig.GetDb()

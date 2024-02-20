@@ -1,13 +1,11 @@
 package account
 
 import (
-	"crypto/ed25519"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/smtp"
-	"os"
+	"strings"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
@@ -18,7 +16,6 @@ import (
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/vk-rv/pvx"
 )
 
 func GenerateAuthId(c *gin.Context) {
@@ -42,10 +39,14 @@ func GenerateAuthId(c *gin.Context) {
 
 	// generate auth id
 	authId := uuid.NewString()
+	authCode := uuid.NewString()
+	authCode = strings.ReplaceAll(authCode, "-", "")
+	authCode = authCode[:6]
 	// save auth id in db
 	emailAuth := models.EmailAuth{
-		Id:    authId,
-		Email: request.Email,
+		Id:       authId,
+		Email:    request.Email,
+		AuthCode: authCode,
 	}
 	if err := db.Create(&emailAuth).Error; err != nil {
 		logwrapper.Errorf("failed to save auth id in db: %s", err)
@@ -53,36 +54,30 @@ func GenerateAuthId(c *gin.Context) {
 		return
 	}
 
-	//generate paseto with authid
-	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
-	if err != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Errorf("failed to decode priv key, %s", err)
-		return
-	}
+	smtpHost := "smtp.sendgrid.net"
+	smtpPort := 587
+	smtpFrom := "support@netsepio.com"
 
-	customClaims := claims.NewAuthClaim(authId)
-	pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
-	if err != nil {
-		logwrapper.Errorf("failed to create paseto token: %s", err)
-		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
-		return
-	}
-	smtpHost := "smtp.mandrillapp.com"
-	smtpPort := "465"
-	smtpFrom := "mail@netsepio.com"
-	auth := smtp.PlainAuth("NetSepio", smtpFrom, envconfig.EnvVars.SMTP_PASSWORD, smtpHost)
+	auth := smtp.PlainAuth("", "apikey", envconfig.EnvVars.SMTP_PASSWORD, smtpHost)
 	appSubDomain := "app"
 	if envconfig.EnvVars.NETWORK == "testnet" {
 		appSubDomain = "dev"
 	}
-	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, smtpFrom, []string{request.Email}, []byte(fmt.Sprintf("Subject: Magic Link\n\nhttps://%s.netsepio.com/magiclink?token=%s", appSubDomain, pasetoToken)))
+
+	appLink := fmt.Sprintf("https://%s.netsepio.com/maginlink?token=%s", appSubDomain, authCode)
+	// Create body for sending auth token and link with auth token
+	body := fmt.Sprintf(`Dear user,<br>Login was requested for this email, click this link to login %s<br>Alternatively you can also enter this code into platform %s<br>Don’t share this code and link with anyone.`, appLink, authCode)
+	// The msg parameter should be an RFC 822-style email with headers first, a blank line, and then the message body. The lines of msg should be CRLF terminated. The msg headers should usually include fields such as "From", "To", "Subject", and "Cc".
+	// construct message as per rpc for mail including things needed like From To Subject
+	msg := fmt.Sprintf("From: %s\nTo: %s\nSubject: %s\nMIME-Version: 1.0\nContent-Type: text/html; charset=\"UTF-8\"\n\n%s", smtpFrom, request.Email, "Login to NetSepio", body)
+	err = smtp.SendMail(fmt.Sprintf("%s:%d", smtpHost, smtpPort), auth, smtpFrom, []string{request.Email}, []byte(msg))
 	// handling the errors
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		logwrapper.Errorf("failed to send email: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 		return
 	}
+
 	httpo.NewSuccessResponse(200, "Magic link send").SendD(c)
 }
 
@@ -101,88 +96,26 @@ func PasetoFromMagicLink(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
 		return
 	}
-	ppv4 := pvx.NewPV4Public()
-	pubKey := ed25519.PrivateKey(pvKey).Public().(ed25519.PublicKey)
-	asymPK := pvx.NewAsymmetricPublicKey(pubKey, pvx.Version4)
-	var cc claims.AuthClaim
-	err = ppv4.
-		Verify(request.Token, asymPK).
-		ScanClaims(&cc)
 
+	intervalMin := fmt.Sprintf("%.0f minutes", envconfig.EnvVars.MAGIC_LINK_EXPIRATION.Minutes())
+
+	// get email from db for authId
+	var emailAuth models.EmailAuth
+	// query with created at > 5 minutes
+	err = db.Model(&models.EmailAuth{}).Where("email = ? AND auth_code = ? AND created_at >= NOW() - INTERVAL ?", intervalMin, request.EmailId, request.Code).First(&emailAuth).Error
 	if err != nil {
-		var validationErr *pvx.ValidationError
-		if errors.As(err, &validationErr) {
-			if validationErr.HasExpiredErr() {
-				logwrapper.Errorf("failed to scan claims for paseto token: %s", err)
-				httpo.NewErrorResponse(httpo.TokenExpired, "token expired").Send(c, http.StatusUnauthorized)
-				c.Abort()
-				return
-			}
-			logwrapper.Errorf("failed to scan claims for paseto token: %s", err)
-			c.AbortWithStatus(http.StatusUnauthorized)
-			return
-		}
-		logwrapper.Errorf("failed to scan claims for paseto token: %s", err)
-		httpo.NewErrorResponse(http.StatusUnauthorized, "invalid token").SendD(c)
+		logwrapper.Errorf("failed to get email from db: %s", err)
+		httpo.NewErrorResponse(http.StatusUnauthorized, "invalid code").SendD(c)
 		c.Abort()
 		return
+	}
 
-	} else {
-		if err := cc.Valid(); err != nil {
-			logwrapper.Errorf("failed to validate paseto token: %s", err)
-			httpo.NewErrorResponse(http.StatusUnauthorized, "invalid token").SendD(c)
-			c.Abort()
-			return
-		}
-
-		// get email from db for authId
-		var emailAuth models.EmailAuth
-		err := db.Model(&models.EmailAuth{}).Where("id = ?", cc.AuthId).First(&emailAuth).Error
-		if err != nil {
-			logwrapper.Errorf("failed to get email from db: %s", err)
-			httpo.NewErrorResponse(http.StatusUnauthorized, "invalid token").SendD(c)
-			c.Abort()
-			return
-		}
-
-		// don't create user if paseto exist
-		var user models.User
-		err = db.Model(&models.User{}).Where("email_id = ?", emailAuth.Email).First(&models.User{}).Error
-		if err == nil {
-			// user exist, so generate paseto for that user id
-			customClaims := claims.NewWithEmail(user.UserId, user.EmailId)
-			pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
-			if err != nil {
-				logwrapper.Errorf("failed to create paseto token: %s", err)
-				httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
-				return
-			}
-			// send paseto in response
-			payload := PasetoFromMagicLinkResponse{
-				Token: pasetoToken,
-			}
-			//delete all records for that email in email auth
-			err = db.Model(&models.EmailAuth{}).Where("email = ?", emailAuth.Email).Delete(&models.EmailAuth{}).Error
-			if err != nil {
-				logwrapper.Errorf("failed to delete email auth: %s", err)
-				httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
-				return
-			}
-			httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
-			return
-		}
-		newUserId := uuid.NewString()
-
-		// create user with that email
-		if err = db.Create(&models.User{EmailId: &emailAuth.Email, UserId: newUserId}).Error; err != nil {
-			logwrapper.Errorf("failed to create user: %s", err)
-			httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
-			c.Abort()
-			return
-		}
-
-		// create paseto for that userId
-		customClaims := claims.NewWithEmail(newUserId, &emailAuth.Email)
+	// don't create user if paseto exist
+	var user models.User
+	err = db.Model(&models.User{}).Where("email_id = ?", emailAuth.Email).First(&models.User{}).Error
+	if err == nil {
+		// user exist, so generate paseto for that user id
+		customClaims := claims.NewWithEmail(user.UserId, user.EmailId)
 		pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
 		if err != nil {
 			logwrapper.Errorf("failed to create paseto token: %s", err)
@@ -203,5 +136,34 @@ func PasetoFromMagicLink(c *gin.Context) {
 		httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 		return
 	}
+	newUserId := uuid.NewString()
 
+	// create user with that email
+	if err = db.Create(&models.User{EmailId: &emailAuth.Email, UserId: newUserId}).Error; err != nil {
+		logwrapper.Errorf("failed to create user: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+		c.Abort()
+		return
+	}
+
+	// create paseto for that userId
+	customClaims := claims.NewWithEmail(newUserId, &emailAuth.Email)
+	pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
+	if err != nil {
+		logwrapper.Errorf("failed to create paseto token: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+		return
+	}
+	// send paseto in response
+	payload := PasetoFromMagicLinkResponse{
+		Token: pasetoToken,
+	}
+	//delete all records for that email in email auth
+	err = db.Model(&models.EmailAuth{}).Where("email = ?", emailAuth.Email).Delete(&models.EmailAuth{}).Error
+	if err != nil {
+		logwrapper.Errorf("failed to delete email auth: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+		return
+	}
+	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 }

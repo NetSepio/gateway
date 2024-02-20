@@ -10,7 +10,8 @@ type CreateAccountResponse struct {
 }
 
 type PasetoFromMagicLinkRequest struct {
-	Token string `json:"token" binding:"required"`
+	Code    string `json:"code" binding:"required"`
+	EmailId string `json:"emailId" binding:"required"`
 }
 
 type PasetoFromMagicLinkResponse struct {
