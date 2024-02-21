@@ -20,7 +20,6 @@ import (
 
 func GenerateAuthId(c *gin.Context) {
 	db := dbconfig.GetDb()
-
 	// parse request
 	var request GenerateAuthIdRequest
 	err := c.BindJSON(&request)
@@ -29,6 +28,15 @@ func GenerateAuthId(c *gin.Context) {
 		return
 	}
 
+	// delete all auth tokens which are expired
+	intervalMin := fmt.Sprintf("%.0f minutes", envconfig.EnvVars.MAGIC_LINK_EXPIRATION.Minutes())
+	whereQuery := fmt.Sprintf("created_at >= NOW() - INTERVAL '%s minutes'", intervalMin)
+	err = db.Model(&models.EmailAuth{}).Where(whereQuery).Delete(&models.EmailAuth{}).Error
+	if err != nil {
+		logwrapper.Errorf("failed to delete expired email auth: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+		return
+	}
 	//delete all records for that email in email auth
 	err = db.Model(&models.EmailAuth{}).Where("email = ?", request.Email).Delete(&models.EmailAuth{}).Error
 	if err != nil {
@@ -78,7 +86,7 @@ func GenerateAuthId(c *gin.Context) {
 		return
 	}
 
-	httpo.NewSuccessResponse(200, "Magic link send").SendD(c)
+	httpo.NewSuccessResponse(200, "Magiclink send").SendD(c)
 }
 
 // API controller which takes paseto from request, then validates it using claims valid
@@ -101,8 +109,12 @@ func PasetoFromMagicLink(c *gin.Context) {
 
 	// get email from db for authId
 	var emailAuth models.EmailAuth
+
+	whereQuery := fmt.Sprintf("email = ? AND auth_code = ? AND created_at >= NOW() - INTERVAL '%s minutes'", intervalMin)
 	// query with created at > 5 minutes
-	err = db.Model(&models.EmailAuth{}).Where("email = ? AND auth_code = ? AND created_at >= NOW() - INTERVAL ?", intervalMin, request.EmailId, request.Code).First(&emailAuth).Error
+	err = db.Model(&models.EmailAuth{}).
+		Where(whereQuery,
+			request.EmailId, request.Code).First(&emailAuth).Error
 	if err != nil {
 		logwrapper.Errorf("failed to get email from db: %s", err)
 		httpo.NewErrorResponse(http.StatusUnauthorized, "invalid code").SendD(c)
