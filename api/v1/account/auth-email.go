@@ -7,6 +7,7 @@ import (
 	"net/smtp"
 	"strings"
 
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
@@ -121,11 +122,17 @@ func PasetoFromMagicLink(c *gin.Context) {
 		c.Abort()
 		return
 	}
-
+	userId := c.GetString(paseto.CTX_USER_ID)
+	fmt.Printf("userId: %s\n", userId)
 	// don't create user if paseto exist
 	var user models.User
 	err = db.Model(&models.User{}).Where("email_id = ?", emailAuth.Email).First(&models.User{}).Error
 	if err == nil {
+		if userId != "" {
+			// return error stating that user with email exist so it cannot be linked
+			httpo.NewErrorResponse(http.StatusConflict, "User with email already exist").SendD(c)
+			return
+		}
 		// user exist, so generate paseto for that user id
 		customClaims := claims.NewWithEmail(user.UserId, user.EmailId)
 		pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
@@ -146,6 +153,25 @@ func PasetoFromMagicLink(c *gin.Context) {
 			return
 		}
 		httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
+		return
+	}
+
+	if userId != "" {
+		// update user with that email
+		if err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email_id", emailAuth.Email).Error; err != nil {
+			logwrapper.Errorf("failed to update user: %s", err)
+			httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+			c.Abort()
+			return
+		}
+		//delete all records for that email in email auth
+		err = db.Model(&models.EmailAuth{}).Where("email = ?", emailAuth.Email).Delete(&models.EmailAuth{}).Error
+		if err != nil {
+			logwrapper.Errorf("failed to delete email auth: %s", err)
+			httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+			return
+		}
+		httpo.NewSuccessResponse(200, "User linked successfully").SendD(c)
 		return
 	}
 	newUserId := uuid.NewString()

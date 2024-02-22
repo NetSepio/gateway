@@ -10,8 +10,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/account")
 	{
 		g.POST("generate-auth-id", GenerateAuthId)
-		g.POST("paseto-from-magic-link", PasetoFromMagicLink)
 		g.Use(paseto.PASETO(true))
+		g.POST("paseto-from-magic-link", PasetoFromMagicLink)
 		g.POST("auth-google", authGoogle)
 		g.Use(paseto.PASETO(false))
 		g.DELETE("remove-mail", removeMail)
