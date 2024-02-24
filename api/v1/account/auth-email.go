@@ -73,7 +73,7 @@ func GenerateAuthId(c *gin.Context) {
 		appSubDomain = "dev"
 	}
 
-	appLink := fmt.Sprintf("https://%s.netsepio.com/maginlink?token=%s", appSubDomain, authCode)
+	appLink := fmt.Sprintf("https://%s.netsepio.com/magiclink?token=%s", appSubDomain, authCode)
 	// Create body for sending auth token and link with auth token
 	body := fmt.Sprintf(`Dear user,<br>Login was requested for this email, click this link to login %s<br>Alternatively you can also enter this code into platform %s<br>Don’t share this code and link with anyone.`, appLink, authCode)
 	// The msg parameter should be an RFC 822-style email with headers first, a blank line, and then the message body. The lines of msg should be CRLF terminated. The msg headers should usually include fields such as "From", "To", "Subject", and "Cc".
