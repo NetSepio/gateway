@@ -126,7 +126,7 @@ func PasetoFromMagicLink(c *gin.Context) {
 	fmt.Printf("userId: %s\n", userId)
 	// don't create user if paseto exist
 	var user models.User
-	err = db.Model(&models.User{}).Where("email_id = ?", emailAuth.Email).First(&models.User{}).Error
+	err = db.Model(&models.User{}).Where("email_id = ?", emailAuth.Email).First(&user).Error
 	if err == nil {
 		if userId != "" {
 			// return error stating that user with email exist so it cannot be linked
