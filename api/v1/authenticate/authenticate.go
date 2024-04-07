@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
@@ -22,6 +23,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/authenticate")
 	{
 		g.POST("", authenticate)
+		paseto.PASETO(false)
+		g.GET("", authenticateToken)
 	}
 }
 
@@ -108,4 +111,13 @@ func authenticate(c *gin.Context) {
 	}
 }
 
-// create api handler which will take
+func authenticateToken(c *gin.Context) {
+	userId := c.GetString(paseto.CTX_USER_ID)
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+
+	payload := AuthenticateTokenPayload{
+		UserId:        userId,
+		WalletAddress: walletAddress,
+	}
+	httpo.NewSuccessResponseP(200, "Token verifies successfully", payload).SendD(c)
+}

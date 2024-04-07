@@ -10,3 +10,8 @@ type AuthenticatePayload struct {
 	Token  string `json:"token"`
 	UserId string `json:"userId"`
 }
+
+type AuthenticateTokenPayload struct {
+	UserId        string `json:"userId"`
+	WalletAddress string `json:"walletAddress"`
+}
