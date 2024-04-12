@@ -23,7 +23,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/authenticate")
 	{
 		g.POST("", authenticate)
-		paseto.PASETO(false)
+		g.Use(paseto.PASETO(false))
 		g.GET("", authenticateToken)
 	}
 }
