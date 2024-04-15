@@ -6,7 +6,8 @@ type AuthenticateRequest struct {
 	PubKey    string `json:"pubKey" binding:"required,hexadecimal,startswith=0x"`
 }
 type AuthenticateRequestNoSign struct {
-	FlowId string `json:"flowId" binding:"required"`
+	FlowId        string `json:"flowId" binding:"required"`
+	WalletAddress string `json:"walletAddress" binding:"required"`
 }
 
 type AuthenticatePayload struct {

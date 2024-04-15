@@ -146,7 +146,10 @@ func authenticateNonSignature(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, "flow id not created for auth").SendD(c)
 		return
 	}
-
+	if req.WalletAddress != flowIdData.WalletAddress {
+		httpo.NewErrorResponse(http.StatusBadRequest, "WalletAddress incorrect").SendD(c)
+		return
+	}
 	customClaims := claims.NewWithWallet(flowIdData.UserId, &flowIdData.WalletAddress)
 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	if err != nil {
