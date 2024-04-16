@@ -163,13 +163,6 @@ func authenticateNonSignature(c *gin.Context) {
 		logwrapper.Errorf("failed to generate token, error %v", err.Error())
 		return
 	}
-	err = db.Model(&models.User{}).Where("user_id = ?", flowIdData.UserId).Update("wallet_address", flowIdData.WalletAddress).Error
-	if err != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Errorf("failed to update user, error %v", err.Error())
-		return
-	}
-
 	err = db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{}).Error
 	if err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
