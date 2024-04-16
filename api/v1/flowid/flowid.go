@@ -61,7 +61,7 @@ func GetFlowIdSol(c *gin.Context) {
 		return
 	}
 
-	flowId, err := flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId)
+	flowId, err := flowid.GenerateFlowIdSol(walletAddress, models.AUTH, "", userId)
 	if err != nil {
 		log.Error(err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
