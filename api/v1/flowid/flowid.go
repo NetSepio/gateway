@@ -20,6 +20,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		g.Use(paseto.PASETO(true))
 		g.GET("", GetFlowId)
+		g.GET("/sol", GetFlowIdSol)
 	}
 }
 
@@ -36,6 +37,30 @@ func GetFlowId(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, "Wallet address (walletAddress) is not valid").SendD(c)
 		return
 	}
+	flowId, err := flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId)
+	if err != nil {
+		log.Error(err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+
+		return
+	}
+	userAuthEULA := envconfig.EnvVars.AUTH_EULA
+	payload := GetFlowIdPayload{
+		FlowId: flowId,
+		Eula:   userAuthEULA,
+	}
+	httpo.NewSuccessResponseP(200, "Flowid successfully generated", payload).SendD(c)
+}
+
+func GetFlowIdSol(c *gin.Context) {
+	userId := c.GetString(paseto.CTX_USER_ID)
+	walletAddress := c.Query("walletAddress")
+
+	if walletAddress == "" {
+		httpo.NewErrorResponse(http.StatusBadRequest, "Wallet address (walletAddress) is required").SendD(c)
+		return
+	}
+
 	flowId, err := flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId)
 	if err != nil {
 		log.Error(err)
