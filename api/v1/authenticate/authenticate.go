@@ -150,6 +150,15 @@ func authenticateNonSignature(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, "WalletAddress incorrect").SendD(c)
 		return
 	}
+
+	// update wallet address for that user_id
+	err = db.Model(&models.User{}).Where("user_id = ?", flowIdData.UserId).Update("wallet_address", flowIdData.WalletAddress).Error
+	if err != nil {
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+		logwrapper.Errorf("failed to update wallet address, error %v", err.Error())
+		return
+	}
+
 	customClaims := claims.NewWithWallet(flowIdData.UserId, &flowIdData.WalletAddress)
 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	if err != nil {
