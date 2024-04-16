@@ -12,7 +12,7 @@ require (
 	github.com/gin-gonic/gin v1.9.2-0.20230927071711-a481ee2897af
 	github.com/google/uuid v1.4.0
 	github.com/jackc/pgconn v1.12.1
-	github.com/joho/godotenv v1.4.0
+	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.8.4
