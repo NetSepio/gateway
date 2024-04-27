@@ -1,14 +1,16 @@
 package feedback
 
 import (
+	"errors"
 	"net/http"
-	"strings"
+	"time"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/TheLazarusNetwork/go-helpers/httpo"
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,6 +21,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		g.Use(paseto.PASETO(false))
 		g.POST("", createFeedback)
+		g.GET("", getFeedback)
 	}
 }
 
@@ -30,23 +33,49 @@ func createFeedback(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, "body is invalid").SendD(c)
 		return
 	}
-	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
-	newFeedback.UserId = walletAddress
-	lowerWalletAddress := strings.ToLower(walletAddress)
-	association := db.Model(&models.User{
-		WalletAddress: &lowerWalletAddress,
-	}).Association("Feedbacks")
 
-	if err = association.Error; err != nil {
-		logwrapper.Errorf("failed to associate feedbacks with users, %s", err)
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+	newFeedback.UserId = c.GetString(paseto.CTX_USER_ID)
+
+	// Check if the user's feedback already exists
+	var existingFeedback models.UserFeedback
+	result := db.Model(&models.UserFeedback{}).Where("user_id = ?", newFeedback.UserId).First(&existingFeedback)
+
+	if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		logwrapper.Errorf("failed to check existing feedback: %s", result.Error)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Failed to check existing feedback").SendD(c)
 		return
 	}
-	err = association.Append(&newFeedback)
-	if err != nil {
-		logwrapper.Errorf("failed to add new feedback, %s", err)
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+
+	// If the user's feedback exists, update it; otherwise, create a new entry
+	if result.RowsAffected > 0 {
+		existingFeedback.CreatedAt = time.Now() // Optionally update the timestamp
+		existingFeedback.Feedback = newFeedback.Feedback
+		existingFeedback.Rating = newFeedback.Rating
+		if err := db.Model(&models.UserFeedback{}).Where("user_id = ?", newFeedback.UserId).Updates(&existingFeedback).Error; err != nil {
+			logwrapper.Errorf("failed to update existing feedback: %s", err)
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Failed to update existing feedback").SendD(c)
+			return
+		}
+		httpo.NewSuccessResponse(http.StatusOK, "Feedback updated successfully").SendD(c)
+	} else {
+		if err := db.Create(&newFeedback).Error; err != nil {
+			logwrapper.Errorf("failed to add new feedback: %s", err)
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Failed to add new feedback").SendD(c)
+			return
+		}
+		httpo.NewSuccessResponse(http.StatusOK, "Feedback added successfully").SendD(c)
+	}
+}
+
+func getFeedback(c *gin.Context) {
+	userId := c.GetString(paseto.CTX_USER_ID)
+	db := dbconfig.GetDb()
+	var userFeedback models.UserFeedback
+	if err := db.Model(&models.UserFeedback{}).Where("user_id = ?", userId).First(&userFeedback).Error; err != nil {
+		logwrapper.Errorf("failed to retrieve user feedback: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Failed to retrieve user feedback").SendD(c)
 		return
 	}
-	httpo.NewSuccessResponse(200, "Feedback added").SendD(c)
+
+	httpo.NewSuccessResponseP(http.StatusOK, "User feedback retrieved successfully", userFeedback).SendD(c)
 }
