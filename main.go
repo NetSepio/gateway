@@ -4,7 +4,6 @@ import (
 	"crypto/ed25519"
 	"encoding/hex"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -15,16 +14,9 @@ import (
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err1 := godotenv.Load()
-	if err1 != nil {
-		log.Fatal("Error loading .env file : ", err1.Error())
-	}
-	fmt.Println("App PORT : ", os.Getenv("APP_PORT"))
-
 	app.Init()
 
 	db := dbconfig.GetDb()
