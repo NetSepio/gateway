@@ -32,7 +32,7 @@ func Init() {
 		AllowOrigins:     envconfig.EnvVars.ALLOWED_ORIGIN})
 	GinApp.Use(corsM)
 	api.ApplyRoutes(GinApp)
-	dbconfig.GetDb()
+	dbconfig.Init()
 	go reportroutine.StartProcessingReportsPeriodically()
 	// go webreview.Init()
 }

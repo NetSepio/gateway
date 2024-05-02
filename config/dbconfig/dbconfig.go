@@ -46,12 +46,12 @@ func GetDb() *gorm.DB {
 		log.Fatal("failed to ping database", err)
 	}
 
-	Migrate(db)
-
-	return db.Debug()
+	return db
 }
 
-func Migrate(db *gorm.DB) {
+func Init() error {
+	db := GetDb()
+
 	if err := db.AutoMigrate(
 		&models.User{},
 		&models.Role{},
@@ -76,20 +76,5 @@ func Migrate(db *gorm.DB) {
 		log.Fatal(err)
 	}
 
-	db.Exec(`create table if not exists user_roles (
-			wallet_address text,
-			role_id text,
-			unique (wallet_address,role_id)
-			)`)
-
-	//Create flow id
-	db.Exec(`
-	DO $$ BEGIN
-		CREATE TYPE flow_id_type AS ENUM (
-			'AUTH',
-			'ROLE');
-	EXCEPTION
-		WHEN duplicate_object THEN null;
-	END $$;`)
-
+	return nil
 }
