@@ -53,7 +53,7 @@ func Init() error {
 	db := GetDb()
 
 	if err := db.AutoMigrate(
-		&models.User{},
+		// &models.User{},
 		&models.Role{},
 		&models.UserFeedback{},
 		&models.FlowId{},
