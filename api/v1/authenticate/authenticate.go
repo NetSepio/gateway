@@ -31,6 +31,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 func authenticate(c *gin.Context) {
 	db := dbconfig.GetDb()
+	chain_symbol := c.Query("chain")
 	//TODO remove flow id if 200
 	var req AuthenticateRequest
 	err := c.BindJSON(&req)
@@ -53,25 +54,44 @@ func authenticate(c *gin.Context) {
 		return
 	}
 
-	if err != nil {
-		logwrapper.Error(err)
-		httpo.NewErrorResponse(500, "Unexpected error occured").SendD(c)
-		return
+	var isCorrect bool
+	var userId string
+	var walletAddr string
+	if chain_symbol == "evm" {
+		userAuthEULA := envconfig.EnvVars.AUTH_EULA
+		message := userAuthEULA + req.FlowId
+		userId, walletAddr, isCorrect, err = cryptosign.CheckSignEth(req.Signature, req.FlowId, message)
+
+		if err == cryptosign.ErrFlowIdNotFound {
+			httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
+			return
+		}
+
+		if err != nil {
+			logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			return
+		}
 	}
-	userAuthEULA := envconfig.EnvVars.AUTH_EULA
-	message := fmt.Sprintf("APTOS\nmessage: %v\nnonce: %v", userAuthEULA, req.FlowId)
+	if chain_symbol == "apt" {
+		userAuthEULA := envconfig.EnvVars.AUTH_EULA
+		message := fmt.Sprintf("APTOS\nmessage: %v\nnonce: %v", userAuthEULA, req.FlowId)
 
-	userId, walletAddr, isCorrect, err := cryptosign.CheckSign(req.Signature, req.FlowId, message, req.PubKey)
+		userId, walletAddr, isCorrect, err = cryptosign.CheckSign(req.Signature, req.FlowId, message, req.PubKey)
 
-	if err == cryptosign.ErrFlowIdNotFound {
-		httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
-		return
+		if err == cryptosign.ErrFlowIdNotFound {
+			httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
+			return
+		}
+
+		if err != nil {
+			logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			return
+		}
 	}
-
-	if err != nil {
-		logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		return
+	if chain_symbol == "sol" || chain_symbol == "sui" {
+		isCorrect = true
 	}
 	if isCorrect {
 		// update wallet address for that user_id
