@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/NetSepio/gateway/config/envconfig"
+	migrate "github.com/NetSepio/gateway/models/Migrate"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"gorm.io/driver/postgres"
 )
@@ -48,32 +50,33 @@ func GetDb() *gorm.DB {
 	return db
 }
 
-// func Init() error {
-// 	db := GetDb()
+func Init() error {
+	db := GetDb()
+	if err := db.AutoMigrate(
+		&migrate.User{},
+		&migrate.Role{},
+		&migrate.UserFeedback{},
+		&migrate.FlowId{},
+		&migrate.Report{},
+		&migrate.ReportTag{},
+		&migrate.ReportImage{},
+		&migrate.ReportVote{},
+		&migrate.Review{},
+		&migrate.WaitList{},
+		&migrate.Domain{},
+		&migrate.DomainAdmin{},
+		&migrate.DomainClaim{},
+		&migrate.EmailAuth{},
+		&migrate.SchemaMigration{},
+		&migrate.SiteInsight{},
+		&migrate.UserStripePi{},
+		&migrate.Sotreus{},
+		&migrate.Erebrus{},
+	); err != nil {
+		log.Fatal(err)
+	}
 
-// 	if err := db.AutoMigrate(
-// 		// &models.User{},
-// 		&models.Role{},
-// 		&models.UserFeedback{},
-// 		// &models.FlowId{},
-// 		&models.Report{},
-// 		&models.ReportTag{},
-// 		&models.ReportImage{},
-// 		&models.ReportVote{},
-// 		&models.Review{},
-// 		&models.WaitList{},
-// 		&models.Domain{},
-// 		&models.DomainAdmin{},
-// 		&models.DomainClaim{},
-// 		&models.EmailAuth{},
-// 		&models.SchemaMigration{},
-// 		&models.SiteInsight{},
-// 		&models.UserStripePi{},
-// 		&models.Sotreus{},
-// 		&models.Erebrus{},
-// 	); err != nil {
-// 		log.Fatal(err)
-// 	}
+	logwrapper.Log.Info("Congrats ! Automigration completed")
 
-// 	return nil
-// }
+	return nil
+}
