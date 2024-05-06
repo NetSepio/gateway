@@ -93,7 +93,7 @@ func authenticate(c *gin.Context) {
 	if chain_symbol == "sui" {
 		userAuthEULA := envconfig.EnvVars.AUTH_EULA
 		message := userAuthEULA + req.FlowId
-		userId, walletAddr, isCorrect, err = cryptosign.CheckSignSui(req.SignatureSui, req.FlowId, message, req.PubkeySui)
+		userId, walletAddr, isCorrect, err = cryptosign.CheckSignSui(req.SignatureSui, req.FlowId, message)
 
 		if err == cryptosign.ErrFlowIdNotFound {
 			httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")

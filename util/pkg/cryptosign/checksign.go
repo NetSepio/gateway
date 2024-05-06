@@ -96,7 +96,7 @@ func CheckSignEth(signature string, flowId string, message string) (string, stri
 	}
 }
 
-func CheckSignSui(signature string, flowId string, message string, pubkey []byte) (string, string, bool, error) {
+func CheckSignSui(signature string, flowId string, message string) (string, string, bool, error) {
 	db := dbconfig.GetDb()
 	// Decode signature
 	signatureBytes, err := base64.StdEncoding.DecodeString(signature)
