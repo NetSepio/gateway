@@ -106,7 +106,18 @@ func authenticate(c *gin.Context) {
 
 	}
 	if chain_symbol == "sol" {
-		isCorrect = true
+		walletAddr, userId, isCorrect, err = cryptosign.CheckSignSol(req.Signature, req.FlowId, req.Message, req.PubKey)
+
+		if err == cryptosign.ErrFlowIdNotFound {
+			httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
+			return
+		}
+
+		if err != nil {
+			logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			return
+		}
 	}
 	if isCorrect {
 		// update wallet address for that user_id

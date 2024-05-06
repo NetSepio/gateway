@@ -2,6 +2,7 @@ package cryptosign
 
 import (
 	"crypto/ecdsa"
+	"crypto/ed25519"
 	"crypto/elliptic"
 	"encoding/base64"
 	"encoding/hex"
@@ -13,6 +14,7 @@ import (
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/minio/blake2b-simd"
+	"github.com/mr-tron/base58"
 	"golang.org/x/crypto/nacl/sign"
 	"golang.org/x/crypto/sha3"
 	"gorm.io/gorm"
@@ -157,4 +159,32 @@ func CheckSignSui(signature string, flowId string) (string, string, bool, error)
 	// }
 
 	return flowIdData.UserId, flowIdData.WalletAddress, true, nil
+}
+
+func CheckSignSol(signature string, flowId string, message string, pubKey string) (string, string, bool, error) {
+
+	db := dbconfig.GetDb()
+	bytes, err := base58.Decode(pubKey)
+	if err != nil {
+		return "", "", false, err
+	}
+	messageAsBytes := []byte(message)
+
+	signedMessageAsBytes, err := hex.DecodeString(signature)
+
+	if err != nil {
+
+		return "", "", false, err
+	}
+
+	var flowIdData models.FlowId
+	err = db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return "", "", false, err
+	}
+
+	ed25519.Verify(bytes, messageAsBytes, signedMessageAsBytes)
+
+	return flowIdData.WalletAddress, flowIdData.UserId, true, nil
+
 }
