@@ -96,7 +96,7 @@ func CheckSignEth(signature string, flowId string, message string) (string, stri
 	}
 }
 
-func CheckSignSui(signature string, flowId string, message string) (string, string, bool, error) {
+func CheckSignSui(signature string, flowId string) (string, string, bool, error) {
 	db := dbconfig.GetDb()
 	// Decode signature
 	signatureBytes, err := base64.StdEncoding.DecodeString(signature)
@@ -105,11 +105,11 @@ func CheckSignSui(signature string, flowId string, message string) (string, stri
 	}
 
 	//TODO verify message
-	// Decode message
-	_, err = base64.StdEncoding.DecodeString(message)
-	if err != nil {
-		return "", "", false, err
-	}
+	// // Decode message
+	// _, err = base64.StdEncoding.DecodeString(message)
+	// if err != nil {
+	// 	return "", "", false, err
+	// }
 
 	// Assuming ED25519 signature format
 	size := 32
