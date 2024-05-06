@@ -23,7 +23,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/authenticate")
 	{
 		g.POST("", authenticate)
-		g.POST("/NonSign", authenticateNonSignature)
+		// g.POST("/NonSign", authenticateNonSignature)
 		g.Use(paseto.PASETO(false))
 		g.GET("", authenticateToken)
 	}
@@ -91,7 +91,19 @@ func authenticate(c *gin.Context) {
 		}
 	}
 	if chain_symbol == "sol" || chain_symbol == "sui" {
-		isCorrect = true
+		
+		walletAddr, userId, isCorrect, err = cryptosign.CheckSignSol(req.Signature, req.FlowId, req.Message, req.PubKey)
+
+		if err == cryptosign.ErrFlowIdNotFound {
+			httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
+			return
+		}
+
+		if err != nil {
+			logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			return
+		}
 	}
 	if isCorrect {
 		// update wallet address for that user_id
@@ -143,64 +155,64 @@ func authenticateToken(c *gin.Context) {
 	httpo.NewSuccessResponseP(200, "Token verifies successfully", payload).SendD(c)
 }
 
-func authenticateNonSignature(c *gin.Context) {
-	db := dbconfig.GetDb()
-	//TODO remove flow id if 200
-	var req AuthenticateRequestNoSign
-	err := c.BindJSON(&req)
-	if err != nil {
-		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
-		return
-	}
+// func authenticateNonSignature(c *gin.Context) {
+// 	db := dbconfig.GetDb()
+// 	//TODO remove flow id if 200
+// 	var req AuthenticateRequestNoSign
+// 	err := c.BindJSON(&req)
+// 	if err != nil {
+// 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
+// 		return
+// 	}
 
-	//Get flowid type
-	var flowIdData models.FlowId
-	err = db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
-	if err != nil {
-		logwrapper.Errorf("failed to get flowId, error %v", err)
-		httpo.NewErrorResponse(http.StatusNotFound, "flow id not found").SendD(c)
-		return
-	}
+// 	//Get flowid type
+// 	var flowIdData models.FlowId
+// 	err = db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
+// 	if err != nil {
+// 		logwrapper.Errorf("failed to get flowId, error %v", err)
+// 		httpo.NewErrorResponse(http.StatusNotFound, "flow id not found").SendD(c)
+// 		return
+// 	}
 
-	if flowIdData.FlowIdType != models.AUTH {
-		httpo.NewErrorResponse(http.StatusBadRequest, "flow id not created for auth").SendD(c)
-		return
-	}
-	if req.WalletAddress != flowIdData.WalletAddress {
-		httpo.NewErrorResponse(http.StatusBadRequest, "WalletAddress incorrect").SendD(c)
-		return
-	}
+// 	if flowIdData.FlowIdType != models.AUTH {
+// 		httpo.NewErrorResponse(http.StatusBadRequest, "flow id not created for auth").SendD(c)
+// 		return
+// 	}
+// 	if req.WalletAddress != flowIdData.WalletAddress {
+// 		httpo.NewErrorResponse(http.StatusBadRequest, "WalletAddress incorrect").SendD(c)
+// 		return
+// 	}
 
-	// update wallet address for that user_id
-	err = db.Model(&models.User{}).Where("user_id = ?", flowIdData.UserId).Update("wallet_address", flowIdData.WalletAddress).Error
-	if err != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Errorf("failed to update wallet address, error %v", err.Error())
-		return
-	}
+// 	// update wallet address for that user_id
+// 	err = db.Model(&models.User{}).Where("user_id = ?", flowIdData.UserId).Update("wallet_address", flowIdData.WalletAddress).Error
+// 	if err != nil {
+// 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+// 		logwrapper.Errorf("failed to update wallet address, error %v", err.Error())
+// 		return
+// 	}
 
-	customClaims := claims.NewWithWallet(flowIdData.UserId, &flowIdData.WalletAddress)
-	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
-	if err != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Errorf("failed to generate token, error %v", err.Error())
-		return
-	}
-	pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
-	if err != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Errorf("failed to generate token, error %v", err.Error())
-		return
-	}
-	err = db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{}).Error
-	if err != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Errorf("failed to delete flowId, error %v", err.Error())
-		return
-	}
-	payload := AuthenticatePayload{
-		Token:  pasetoToken,
-		UserId: flowIdData.UserId,
-	}
-	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
-}
+// 	customClaims := claims.NewWithWallet(flowIdData.UserId, &flowIdData.WalletAddress)
+// 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
+// 	if err != nil {
+// 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+// 		logwrapper.Errorf("failed to generate token, error %v", err.Error())
+// 		return
+// 	}
+// 	pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
+// 	if err != nil {
+// 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+// 		logwrapper.Errorf("failed to generate token, error %v", err.Error())
+// 		return
+// 	}
+// 	err = db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{}).Error
+// 	if err != nil {
+// 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+// 		logwrapper.Errorf("failed to delete flowId, error %v", err.Error())
+// 		return
+// 	}
+// 	payload := AuthenticatePayload{
+// 		Token:  pasetoToken,
+// 		UserId: flowIdData.UserId,
+// 	}
+// 	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
+// }

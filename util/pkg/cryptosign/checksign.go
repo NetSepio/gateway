@@ -13,6 +13,11 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+
+	"crypto/ed25519"
+    "encoding/hex"
+
+    "github.com/mr-tron/base58"
 )
 
 var (
@@ -89,4 +94,32 @@ func CheckSignEth(signature string, flowId string, message string) (string, stri
 	} else {
 		return "", "", false, nil
 	}
+}
+
+func CheckSignSol(signature string, flowId string, message string, pubKey string) (string,string, bool, error) {
+
+	db := dbconfig.GetDb()
+	bytes, err := base58.Decode(pubKey)
+	if err != nil {
+		return "", "", false, err
+	}
+	messageAsBytes := []byte(message)
+
+	signedMessageAsBytes, err := hex.DecodeString(signature)
+
+	if err != nil {
+
+		return "", "", false, err
+	}
+
+	var flowIdData models.FlowId
+	err = db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return "", "", false, err
+	}
+
+	ed25519.Verify(bytes, messageAsBytes, signedMessageAsBytes)
+	
+	return flowIdData.WalletAddress,flowIdData.UserId,true ,nil
+
 }
