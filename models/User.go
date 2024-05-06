@@ -28,6 +28,8 @@ type UserStripePi struct {
 }
 
 var Erebrus111NFT TStripePiType = "Erebrus111NFT"
+var ThreeMonthSubscription TStripePiType = "ThreeMonthSubscription"
+var TrialSubscription TStripePiType = "TrialSubscription"
 
 type EmailAuth struct {
 	Id        string    `gorm:"primary_key" json:"id,omitempty"`
