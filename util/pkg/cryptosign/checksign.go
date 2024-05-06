@@ -2,6 +2,7 @@ package cryptosign
 
 import (
 	"crypto/ecdsa"
+	"crypto/elliptic"
 	"encoding/base64"
 	"encoding/hex"
 	"errors"
@@ -116,7 +117,7 @@ func CheckSignSui(signature string, flowId string) (string, string, bool, error)
 
 	publicKey := signatureBytes[len(signatureBytes)-size:]
 	pubKey := &ecdsa.PublicKey{
-		Curve: nil,                                   // Curve is not used in serialization
+		Curve: elliptic.P256(),                       // Curve is not used in serialization
 		X:     new(big.Int).SetBytes(publicKey[:]),   // Set X coordinate
 		Y:     new(big.Int).SetBytes(publicKey[32:]), // Set Y coordinate
 	}
