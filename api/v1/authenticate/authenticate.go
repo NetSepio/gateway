@@ -23,9 +23,9 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/authenticate")
 	{
 		g.POST("", authenticate)
+		g.POST("/NonSign", authenticateNonSignature)
 		g.Use(paseto.PASETO(false))
 		g.GET("", authenticateToken)
-		g.GET("/nonSign", authenticateNonSignature)
 	}
 }
 
@@ -179,6 +179,7 @@ func authenticateNonSignature(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
 		return
 	}
+
 	//Get flowid type
 	var flowIdData models.FlowId
 	err = db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
@@ -187,6 +188,7 @@ func authenticateNonSignature(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusNotFound, "flow id not found").SendD(c)
 		return
 	}
+
 	if flowIdData.FlowIdType != models.AUTH {
 		httpo.NewErrorResponse(http.StatusBadRequest, "flow id not created for auth").SendD(c)
 		return
