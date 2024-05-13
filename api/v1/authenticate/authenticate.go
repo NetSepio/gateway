@@ -26,13 +26,14 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("/NonSign", authenticateNonSignature)
 		g.Use(paseto.PASETO(false))
 		g.GET("", authenticateToken)
+		g.GET("/nonSign", authenticateNonSignature)
 	}
 }
 
 func authenticate(c *gin.Context) {
 	db := dbconfig.GetDb()
 	chain_symbol := c.Query("chain")
-	//TODO remove flow id if 200
+	//TODO remove flow id if 200"
 	var req AuthenticateRequest
 
 	err := c.BindJSON(&req)
@@ -169,6 +170,7 @@ func authenticateToken(c *gin.Context) {
 	}
 	httpo.NewSuccessResponseP(200, "Token verifies successfully", payload).SendD(c)
 }
+
 func authenticateNonSignature(c *gin.Context) {
 	db := dbconfig.GetDb()
 	//TODO remove flow id if 200
