@@ -26,7 +26,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("/NonSign", authenticateNonSignature)
 		g.Use(paseto.PASETO(false))
 		g.GET("", authenticateToken)
-		g.GET("/nonSign", authenticateNonSignature)
 	}
 }
 
