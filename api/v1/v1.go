@@ -18,6 +18,7 @@ import (
 	"github.com/NetSepio/gateway/api/v1/sotreus"
 	"github.com/NetSepio/gateway/api/v1/stats"
 	"github.com/NetSepio/gateway/api/v1/status"
+	"github.com/NetSepio/gateway/api/v1/summary"
 	"github.com/NetSepio/gateway/api/v1/waitlist"
 
 	"github.com/gin-gonic/gin"
@@ -45,5 +46,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		account.ApplyRoutes(v1)
 		siteinsights.ApplyRoutes(v1)
 		subscription.ApplyRoutes(v1)
+		summary.ApplyRoutes(v1)
 	}
 }
