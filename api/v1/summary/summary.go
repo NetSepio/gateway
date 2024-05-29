@@ -2,6 +2,8 @@ package summary
 
 import (
 	"context"
+	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/NetSepio/gateway/config/envconfig"
@@ -12,11 +14,6 @@ import (
 type RequestData struct {
 	Terms   string `json:"terms" binding:"required"`
 	Privacy string `json:"privacy" binding:"required"`
-}
-
-type SummaryResponse struct {
-	TermsSummary   string `json:"terms_summary"`
-	PrivacySummary string `json:"privacy_summary"`
 }
 
 func ApplyRoutes(r *gin.RouterGroup) {
@@ -33,25 +30,23 @@ func summary(c *gin.Context) {
 		return
 	}
 
-	termsSummary, err := generateSummary(requestData.Terms)
+	writer := c.Writer
+	writer.WriteHeader(http.StatusOK)
+
+	_, err := generateAndStreamSummary(requestData.Terms, writer, "Terms Summary")
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		fmt.Fprintf(writer, "\nerror: %v\n", err)
 		return
 	}
 
-	privacySummary, err := generateSummary(requestData.Privacy)
+	_, err = generateAndStreamSummary(requestData.Privacy, writer, "Privacy Summary")
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		fmt.Fprintf(writer, "\nerror: %v\n", err)
 		return
 	}
-
-	c.JSON(http.StatusOK, SummaryResponse{
-		TermsSummary:   termsSummary,
-		PrivacySummary: privacySummary,
-	})
 }
 
-func generateSummary(content string) (string, error) {
+func generateAndStreamSummary(content string, writer io.Writer, title string) (string, error) {
 	open_ai_key := envconfig.EnvVars.OPENAI_API_KEY
 
 	client := openai.NewClient(open_ai_key)
@@ -71,5 +66,46 @@ func generateSummary(content string) (string, error) {
 		return "", nil
 	}
 
-	return resp.Choices[0].Text, nil
+	summary := resp.Choices[0].Text
+
+	_, err = writer.Write([]byte(fmt.Sprintf("\n--- %s ---\n", title)))
+	if err != nil {
+		return "", err
+	}
+
+	words := splitIntoWords(summary)
+	for _, word := range words {
+		_, err := writer.Write([]byte(word + " "))
+		if err != nil {
+			return "", err
+		}
+		writer.(http.Flusher).Flush()
+	}
+
+	return summary, nil
+}
+
+func splitIntoWords(text string) []string {
+	words := make([]string, 0)
+	currentWord := ""
+
+	for _, char := range text {
+		if char == ' ' || char == '\n' || char == '\t' {
+			if currentWord != "" {
+				words = append(words, currentWord)
+				currentWord = ""
+			}
+			if char != ' ' {
+				words = append(words, string(char))
+			}
+		} else {
+			currentWord += string(char)
+		}
+	}
+
+	if currentWord != "" {
+		words = append(words, currentWord)
+	}
+
+	return words
 }
