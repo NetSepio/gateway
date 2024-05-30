@@ -20,8 +20,8 @@ func summarizeContent(contents []string) string {
 	}
 
 	prompt := builder.String()
-	if len(prompt) > 4050 {
-		prompt = prompt[:4050]
+	if len(prompt) > 128000 {
+		prompt = prompt[:127999]
 	}
 
 	open_ai_key := envconfig.EnvVars.OPENAI_API_KEY
@@ -29,7 +29,7 @@ func summarizeContent(contents []string) string {
 	client := openai.NewClient(open_ai_key)
 
 	req := openai.CompletionRequest{
-		Model:     "gpt-3.5-turbo-instruct",
+		Model:     "gpt-4-turbo",
 		Prompt:    "Summarize the following in key points under 150 words:\n\n" + prompt,
 		MaxTokens: 150,
 	}
