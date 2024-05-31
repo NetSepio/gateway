@@ -28,17 +28,20 @@ func summarizeContent(contents []string) string {
 
 	client := openai.NewClient(open_ai_key)
 
-	req := openai.CompletionRequest{
-		Model:     "gpt-4-turbo",
-		Prompt:    "Summarize the following in key points under 150 words:\n\n" + prompt,
-		MaxTokens: 150,
-	}
+	req := openai.ChatCompletionRequest{
+		Model: openai.GPT4Turbo,
+		Messages: []openai.ChatCompletionMessage{
+			{
+				Role:    openai.ChatMessageRoleUser,
+				Content: "Summarize the following in key points under 150 words:\n\n" + prompt,
+			},
+		}}
 
-	summary, err := client.CreateCompletion(context.Background(), req)
+	summary, err := client.CreateChatCompletion(context.Background(), req)
 	if err != nil {
 		fmt.Println("error:", err)
 		return "Failed to summarize content"
 	}
 
-	return summary.Choices[0].Text
+	return summary.Choices[0].Message.Content
 }
