@@ -3,6 +3,7 @@ package summary
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/chromedp/cdproto/cdp"
@@ -25,11 +26,11 @@ func extractLinksFromURL(url string) ([]string, error) {
 
 	var links []string
 
-	if err := chromedp.Run(ctx, navigateToWebsite(url)); err != nil {
-		return nil, fmt.Errorf("failed to navigate to website: %v", err)
-	}
-
-	if err := chromedp.Run(ctx, extractLinks(&links)); err != nil {
+	if err := chromedp.Run(ctx, chromedp.Tasks{
+		chromedp.Navigate(url),
+		chromedp.WaitVisible("a", chromedp.ByQuery),
+		extractLinks(url, &links),
+	}); err != nil {
 		return nil, fmt.Errorf("failed to extract links: %v", err)
 	}
 
@@ -40,20 +41,32 @@ func navigateToWebsite(url string) chromedp.Action {
 	return chromedp.Navigate(url)
 }
 
-func extractLinks(links *[]string) chromedp.Action {
+func extractLinks(baseURL string, links *[]string) chromedp.Action {
 	return chromedp.ActionFunc(func(ctx context.Context) error {
 		var nodes []*cdp.Node
 		if err := chromedp.Run(ctx, chromedp.Nodes("a", &nodes)); err != nil {
 			return err
 		}
 
+		base, err := url.Parse(baseURL)
+		if err != nil {
+			return fmt.Errorf("invalid base URL: %v", err)
+		}
+
 		for _, node := range nodes {
 			href := node.AttributeValue("href")
 			if href != "" {
-				*links = append(*links, href)
+				link, err := url.Parse(href)
+				if err != nil {
+					continue
+				}
+				if !link.IsAbs() {
+					link = base.ResolveReference(link)
+				}
+				*links = append(*links, link.String())
 			}
 		}
-		// fmt.Println("AL: : ", links)
+		// fmt.Println("Extracted links: ", *links)
 		return nil
 	})
 }
@@ -81,7 +94,7 @@ func extractContentFromLink(link string) (string, error) {
 	if err := chromedp.Run(ctx, extractText(&content)); err != nil {
 		return "", fmt.Errorf("failed to extract text content: %v", err)
 	}
-	fmt.Println(content)
+	// fmt.Println(content)
 
 	return content, nil
 }
