@@ -20,8 +20,8 @@ func summarizeContent(contents []string) string {
 	}
 
 	prompt := builder.String()
-	if len(prompt) > 128000 {
-		prompt = prompt[:127999]
+	if len(prompt) > 10000 {
+		prompt = prompt[:9900]
 	}
 
 	open_ai_key := envconfig.EnvVars.OPENAI_API_KEY

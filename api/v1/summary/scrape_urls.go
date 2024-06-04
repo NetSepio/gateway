@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/chromedp/cdproto/cdp"
 	"github.com/chromedp/chromedp"
@@ -23,14 +22,11 @@ func extractLinksFromURL(url string) ([]string, error) {
 	defer cancel()
 	ctx, cancel := chromedp.NewContext(parentCtx)
 	defer cancel()
+
 	var links []string
 
 	if err := chromedp.Run(ctx, navigateToWebsite(url)); err != nil {
 		return nil, fmt.Errorf("failed to navigate to website: %v", err)
-	}
-
-	if err := chromedp.Run(ctx, chromedp.Sleep(3*time.Second)); err != nil {
-		return nil, fmt.Errorf("failed to wait: %v", err)
 	}
 
 	if err := chromedp.Run(ctx, extractLinks(&links)); err != nil {
@@ -57,7 +53,7 @@ func extractLinks(links *[]string) chromedp.Action {
 				*links = append(*links, href)
 			}
 		}
-
+		// fmt.Println("AL: : ", links)
 		return nil
 	})
 }
@@ -80,10 +76,6 @@ func extractContentFromLink(link string) (string, error) {
 
 	if err := chromedp.Run(ctx, navigateToWebsite(link)); err != nil {
 		return "", fmt.Errorf("failed to navigate to link: %v", err)
-	}
-
-	if err := chromedp.Run(ctx, chromedp.Sleep(3*time.Second)); err != nil {
-		return "", fmt.Errorf("failed to wait: %v", err)
 	}
 
 	if err := chromedp.Run(ctx, extractText(&content)); err != nil {
@@ -111,6 +103,7 @@ func containsTermsKeywords(link string) bool {
 	link = strings.ToLower(link)
 	for _, keyword := range termsKeywords {
 		if strings.Contains(link, keyword) {
+			// fmt.Println("imp:  ", link)
 			return true
 		}
 	}
@@ -122,6 +115,7 @@ func containsPrivacyKeywords(link string) bool {
 	link = strings.ToLower(link)
 	for _, keyword := range privacyKeywords {
 		if strings.Contains(link, keyword) {
+			// fmt.Println(link)
 			return true
 		}
 	}
@@ -136,14 +130,18 @@ func summarizeLinksContent(links []string) (termsSummary, privacySummary string)
 			content, err := extractContentFromLink(link)
 			if err == nil {
 				termsContents = append(termsContents, content)
-				fmt.Println(termsContents)
+				// fmt.Println(termsContents)
+			} else {
+				fmt.Printf("Error extracting content from terms link %s: %v\n", link, err)
 			}
 		}
 		if containsPrivacyKeywords(link) {
 			content, err := extractContentFromLink(link)
 			if err == nil {
 				privacyContents = append(privacyContents, content)
-				fmt.Println(privacyContents)
+				// fmt.Println(privacyContents)
+			} else {
+				fmt.Printf("Error extracting content from privacy link %s: %v\n", link, err)
 			}
 		}
 	}
