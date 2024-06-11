@@ -9,7 +9,7 @@ import (
 type User struct {
 	UserId            string `gorm:"primary_key;type:uuid"`
 	Name              string
-	WalletAddress     string `gorm:"unique"`
+	WalletAddress     string
 	Discord           string
 	Twitter           string
 	FlowIds           []FlowId
