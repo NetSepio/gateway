@@ -10,6 +10,7 @@ type User struct {
 	UserId            string `gorm:"primary_key;type:uuid"`
 	Name              string
 	WalletAddress     string
+	DeviceType        string // web3.0,web2.0,mobile
 	Discord           string
 	Twitter           string
 	FlowIds           []FlowId

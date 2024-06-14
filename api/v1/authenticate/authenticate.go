@@ -31,7 +31,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 func authenticate(c *gin.Context) {
 	db := dbconfig.GetDb()
-	chain_symbol := c.Query("chain")
+	chain_symbol := c.Query("chain") //google
 	//TODO remove flow id if 200"
 	var req AuthenticateRequest
 
