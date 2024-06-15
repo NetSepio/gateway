@@ -3,6 +3,9 @@ package account
 type CreateAccountRequest struct {
 	IdToken string `json:"idToken" binding:"required"`
 }
+type AppAccountRequest struct {
+	Email string `json:"email" binding:"required"`
+}
 
 type CreateAccountResponse struct {
 	Token  string `json:"token"`
