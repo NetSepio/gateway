@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/NetSepio/gateway/config/envconfig"
+	migrate "github.com/NetSepio/gateway/models/Migrate"
+	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"gorm.io/driver/postgres"
 )
@@ -45,25 +47,36 @@ func GetDb() *gorm.DB {
 		log.Fatal("failed to ping database", err)
 	}
 
-	// if err := db.AutoMigrate(&models.User{}, &models.Role{}, &models.UserFeedback{}, &models.FlowId{}, &models.Review{}, &models.WaitList{}, &models.Domain{}, &models.DomainAdmin{}, &models.Sotreus{}, &models.Erebrus{}); err != nil {
-	// 	log.Fatal(err)
-	// }
+	return db
+}
 
-	// db.Exec(`create table if not exists user_roles (
-	// 		wallet_address text,
-	// 		role_id text,
-	// 		unique (wallet_address,role_id)
-	// 		)`)
+func Init() error {
+	db := GetDb()
+	if err := db.AutoMigrate(
+		&migrate.User{},
+		&migrate.Role{},
+		&migrate.UserFeedback{},
+		&migrate.FlowId{},
+		&migrate.Report{},
+		&migrate.ReportTag{},
+		&migrate.ReportImage{},
+		&migrate.ReportVote{},
+		&migrate.Review{},
+		&migrate.WaitList{},
+		&migrate.Domain{},
+		&migrate.DomainAdmin{},
+		&migrate.DomainClaim{},
+		&migrate.EmailAuth{},
+		&migrate.SchemaMigration{},
+		&migrate.SiteInsight{},
+		&migrate.UserStripePi{},
+		&migrate.Sotreus{},
+		&migrate.Erebrus{},
+	); err != nil {
+		log.Fatal(err)
+	}
 
-	// //Create flow id
-	// db.Exec(`
-	// DO $$ BEGIN
-	// 	CREATE TYPE flow_id_type AS ENUM (
-	// 		'AUTH',
-	// 		'ROLE');
-	// EXCEPTION
-	// 	WHEN duplicate_object THEN null;
-	// END $$;`)
+	logwrapper.Log.Info("Congrats ! Automigration completed")
 
-	return db.Debug()
+	return nil
 }

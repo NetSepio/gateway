@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	UserId            string         `gorm:"primary_key" json:"userId,omitempty"`
@@ -26,10 +28,17 @@ type UserStripePi struct {
 }
 
 var Erebrus111NFT TStripePiType = "Erebrus111NFT"
+var ThreeMonthSubscription TStripePiType = "ThreeMonthSubscription"
+var TrialSubscription TStripePiType = "TrialSubscription"
 
 type EmailAuth struct {
 	Id        string    `gorm:"primary_key" json:"id,omitempty"`
 	Email     string    `json:"email,omitempty"`
 	AuthCode  string    `json:"authCode,omitempty"`
 	CreatedAt time.Time `json:"createdAt,omitempty"`
+}
+
+type SchemaMigration struct {
+	Version int64 `gorm:"column:version"`
+	Dirty   bool  `gorm:"column:dirty"`
 }

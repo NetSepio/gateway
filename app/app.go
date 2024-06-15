@@ -9,7 +9,6 @@ import (
 	"github.com/stripe/stripe-go/v76"
 
 	"github.com/NetSepio/gateway/config/constants"
-	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -32,7 +31,7 @@ func Init() {
 		AllowOrigins:     envconfig.EnvVars.ALLOWED_ORIGIN})
 	GinApp.Use(corsM)
 	api.ApplyRoutes(GinApp)
-	dbconfig.GetDb()
+	// dbconfig.Init()
 	go reportroutine.StartProcessingReportsPeriodically()
 	// go webreview.Init()
 }

@@ -11,6 +11,9 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		g.POST("payment-webhook", StripeWebhookHandler)
 		g.Use(paseto.PASETO(false))
+		g.POST("/trial", TrialSubscription)
+		g.POST("/create-payment", CreatePaymentIntent)
+		g.GET("", CheckSubscription)
 		g.POST("erebrus", Buy111NFT)
 	}
 }
