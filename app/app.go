@@ -24,6 +24,14 @@ func Init() {
 
 	GinApp = gin.Default()
 
+	if envconfig.EnvVars.STRIPE_SECRET_KEY == "debug" {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	gin.SetMode(gin.ReleaseMode)
+
 	corsM := cors.New(cors.Config{AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: false,
