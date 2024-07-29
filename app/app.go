@@ -39,6 +39,12 @@ func Init() {
 		AllowOrigins:     envconfig.EnvVars.ALLOWED_ORIGIN})
 	GinApp.Use(corsM)
 	api.ApplyRoutes(GinApp)
+
+	//adding health check
+
+	GinApp.GET("/ping",func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "pong"})
+	})
 	// dbconfig.Init()
 	go reportroutine.StartProcessingReportsPeriodically()
 	// go webreview.Init()
