@@ -9,7 +9,7 @@ import (
 type User struct {
 	UserId            string `gorm:"primary_key;type:uuid"`
 	Name              string
-	WalletAddress     string 
+	WalletAddress     string
 	DeviceType        string // web3.0,web2.0,mobile
 	Discord           string
 	Twitter           string
@@ -17,7 +17,7 @@ type User struct {
 	ProfilePictureUrl string
 	Country           string
 	Feedbacks         []UserFeedback
-	EmailId           string 
+	EmailId           string `gorm:"type:text;unique"`
 }
 
 // TODO: Make relations for field `relatedRoleId`
