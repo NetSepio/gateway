@@ -24,13 +24,13 @@ func Init() {
 
 	GinApp = gin.Default()
 
-	if envconfig.EnvVars.STRIPE_SECRET_KEY == "debug" {
+	if envconfig.EnvVars.API_SET_MODE == "debug" {
 		gin.SetMode(gin.DebugMode)
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode)
 
 	corsM := cors.New(cors.Config{AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
@@ -42,7 +42,7 @@ func Init() {
 
 	//adding health check
 
-	GinApp.GET("/ping",func(c *gin.Context) {
+	GinApp.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
 	// dbconfig.Init()

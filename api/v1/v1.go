@@ -14,6 +14,7 @@ import (
 	"github.com/NetSepio/gateway/api/v1/getreviews"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	"github.com/NetSepio/gateway/api/v1/report"
+	"github.com/NetSepio/gateway/api/v1/sdkauthentication"
 	"github.com/NetSepio/gateway/api/v1/siteinsights"
 	"github.com/NetSepio/gateway/api/v1/sotreus"
 	"github.com/NetSepio/gateway/api/v1/stats"
@@ -47,5 +48,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		siteinsights.ApplyRoutes(v1)
 		subscription.ApplyRoutes(v1)
 		summary.ApplyRoutes(v1)
+		sdkauthentication.ApplyRoutes(v1)
+
 	}
 }

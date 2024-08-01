@@ -48,6 +48,7 @@ type config struct {
 	STRIPE_WEBHOOK_SECRET    string        `env:"STRIPE_WEBHOOK_SECRET,notEmpty"`
 	STRIPE_SECRET_KEY        string        `env:"STRIPE_SECRET_KEY,notEmpty"`
 	SMTP_PASSWORD            string        `env:"SMTP_PASSWORD,notEmpty"`
+	API_SET_MODE             string        `env:"API_SET_MODE"`
 }
 
 var EnvVars config = config{}

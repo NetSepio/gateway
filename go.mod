@@ -27,6 +27,8 @@ require (
 require github.com/sashabaranov/go-openai v1.24.1
 
 require (
+	aidanwoods.dev/go-paseto v1.5.1 // indirect
+	aidanwoods.dev/go-result v0.1.0 // indirect
 	cloud.google.com/go/auth v0.5.1 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.2 // indirect
 )
