@@ -54,34 +54,13 @@ jobs:
           docker pull ghcr.io/netsepio/gateway:main
           docker run --restart=on-failure:14 --dns=1.1.1.1 --name="gateway" --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:main
 
-    - name: Deploy on PROD server 1
-      if: github.ref == 'refs/heads/prod' 
-      uses: appleboy/ssh-action@v0.1.7
-      with:         
-        host: ${{ secrets.PROD_REMOTE_SERVER_1 }}
-        username: ${{ secrets.PROD_SERVER_USERNAME }}
-        key:  ${{ secrets.PROD_REMOTE_SERVER_KEY }}
-        port: ${{ secrets.PROD_SSH_PORT }} 
-        script: |
-          pwd
-          cd gateway
-          docker stop gateway && docker rm gateway && docker image rm ghcr.io/netsepio/gateway:prod
-          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
-          docker pull ghcr.io/netsepio/gateway:prod
-          docker run --restart=on-failure:14 --dns=1.1.1.1 --name="gateway" --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:prod    
-
-    - name: Deploy on PROD server 2
-      if: github.ref == 'refs/heads/prod' 
-      uses: appleboy/ssh-action@v0.1.7
-      with:         
-        host: ${{ secrets.PROD_REMOTE_SERVER_2 }}
-        username: ${{ secrets.PROD_SERVER_USERNAME }}
-        key:  ${{ secrets.PROD_REMOTE_SERVER_KEY }}
-        port: ${{ secrets.PROD_SSH_PORT }} 
-        script: |
-          pwd
-          cd gateway
-          docker stop gateway && docker rm gateway && docker image rm ghcr.io/netsepio/gateway:prod
-          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
-          docker pull ghcr.io/netsepio/gateway:prod
-          docker run --restart=on-failure:14 --dns=1.1.1.1 --name="gateway" --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:prod    
+    - name: Deploy on PROD server
+      if: github.ref == 'refs/heads/prod'
+      run: |
+        docker pull ghcr.io/netsepio/gateway:prod
+        docker tag  ghcr.io/netsepio/gateway:prod us-west4-docker.pkg.dev/netsepio-prod/netsepio/netsepio-gateway:prod
+        gcloud auth activate-service-account --key-file=${{ secrets.SERVICE_ACCOUNT_KEY_FILE_PATH }} --project=${{ secrets.PROJECT }}
+        gcloud config set account ${{ secrets.SERVICE_ACCOUNT }}
+        gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us-west4-docker.pkg.dev
+        docker push us-west4-docker.pkg.dev/netsepio-prod/netsepio/netsepio-gateway:prod
+        gcloud run deploy netsepio-gateway --image us-west4-docker.pkg.dev/netsepio-prod/netsepio/netsepio-gateway:prod --region us-west4
