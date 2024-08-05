@@ -193,7 +193,7 @@ func authGoogleApp(c *gin.Context) {
 }
 
 func verifyIDToken(ctx context.Context, idToken string) (*idtoken.Payload, error) {
-	payload, err := idtoken.Validate(ctx, idToken, "699954671747-b4ekob999870iobj735vqofa6ka1bldi.apps.googleusercontent.com")
+	payload, err := idtoken.Validate(ctx, idToken, "699954671747-i1mqa1d7k3nh8bo9arv58pq8j4osl642.apps.googleusercontent.com")
 	if err != nil {
 		return nil, err
 	}
