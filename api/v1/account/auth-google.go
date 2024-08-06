@@ -55,7 +55,7 @@ func authGoogle(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			if userId != "" {
-				err = db.Model(&models.User{}).Where("user_id = ?", userId).Updates(models.User{EmailId: &email}).Error
+				err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email_id", email).Error
 				if err != nil {
 					logwrapper.Errorf("failed to update user email: %s", err)
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
@@ -64,6 +64,7 @@ func authGoogle(c *gin.Context) {
 				httpo.NewSuccessResponse(200, "email linked successfully").SendD(c)
 				return
 			}
+
 			// User does not exist, so create a new user
 			user = models.User{
 				EmailId: &email,
