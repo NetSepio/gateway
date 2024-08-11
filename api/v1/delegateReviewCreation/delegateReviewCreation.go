@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/api/v1/leaderboard"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/aptos"
@@ -20,7 +21,7 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/delegateReviewCreation")
 	{
-		g.Use(paseto.PASETO(false))
+		g.Use(paseto.PASETO(true))
 		g.POST("", deletegateReviewCreation)
 	}
 }
@@ -82,6 +83,9 @@ func deletegateReviewCreation(c *gin.Context) {
 	if err := db.Create(newReview).Error; err != nil {
 		httpo.NewSuccessResponseP(httpo.TXDbFailed, "transaction is successful but failed to store tx in db", payload).Send(c, 200)
 		return
+	} else {
+		userID := c.GetString(paseto.CTX_USER_ID)
+		leaderboard.DynamicLeaderBoardUpdate(userID, "reviews")
 	}
 
 	httpo.NewSuccessResponseP(200, "request successfully send, review will be delegated soon", payload).SendD(c)

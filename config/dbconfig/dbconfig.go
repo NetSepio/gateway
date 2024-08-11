@@ -72,10 +72,13 @@ func Init() error {
 		&migrate.UserStripePi{},
 		&migrate.Sotreus{},
 		&migrate.Erebrus{},
+		&migrate.Leaderboard{},
 	); err != nil {
 		log.Fatal(err)
 	}
 
+	// db.Exec(`ALTER TABLE leader_boards DROP COLUMN IF EXISTS users;
+	// CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
 	logwrapper.Log.Info("Congrats ! Automigration completed")
 
 	return nil

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/api/v1/leaderboard"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
@@ -68,6 +69,8 @@ func postDomain(c *gin.Context) {
 		logwrapper.Errorf("failed to create domain: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create domain").SendD(c)
 		return
+	} else {
+		leaderboard.DynamicLeaderBoardUpdate(userId, "domain")
 	}
 	payload := CreateDomainResponse{
 		TxtValue: txtValue, DomainId: domainId,

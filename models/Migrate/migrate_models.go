@@ -3,6 +3,7 @@ package migrate
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -176,4 +177,22 @@ type Erebrus struct {
 	WalletAddress string
 	Region        string
 	CollectionId  string
+}
+type Leaderboard struct {
+	ID        string `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`
+	Reviews   int
+	Domain    int
+	UserId    string `gorm:"type:uuid;not null"`
+	Nodes     int
+	DWifi     int
+	Discord   int
+	Twitter   int
+	Telegram  int
+	CreatedAt time.Time `gorm:"autoCreateTime"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime"`
+}
+
+func (l *Leaderboard) BeforeCreate(tx *gorm.DB) (err error) {
+	l.ID = uuid.New().String()
+	return
 }
