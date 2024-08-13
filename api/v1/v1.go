@@ -12,6 +12,7 @@ import (
 	flowid "github.com/NetSepio/gateway/api/v1/flowid"
 	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
 	"github.com/NetSepio/gateway/api/v1/getreviews"
+	"github.com/NetSepio/gateway/api/v1/leaderboard"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	"github.com/NetSepio/gateway/api/v1/report"
 	"github.com/NetSepio/gateway/api/v1/sdkauthentication"
@@ -49,6 +50,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		subscription.ApplyRoutes(v1)
 		summary.ApplyRoutes(v1)
 		sdkauthentication.ApplyRoutes(v1)
+		leaderboard.ApplyRoutes(v1)
 
 	}
 }
