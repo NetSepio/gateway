@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/NetSepio/gateway/api/v1/leaderboard"
 	"github.com/NetSepio/gateway/app"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
@@ -45,6 +46,7 @@ func main() {
 	}
 	dbconfig.Init()
 	logwrapper.Log.Info("Starting app")
+	leaderboard.StartLeaderboardUpdateScheduler()
 	addr := fmt.Sprintf(":%d", envconfig.EnvVars.APP_PORT)
 	err := app.GinApp.Run(addr)
 	if err != nil {
