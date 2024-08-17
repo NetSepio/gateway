@@ -55,7 +55,7 @@ func getnftcontractinfo(c *gin.Context) {
 
 	// Check if user has a domain
 	var domain models.Domain
-	if err := db.Where("id = ?", userId).First(&domain).Error; err != nil {
+	if err := db.Where("created_by_id = ?", userId).First(&domain).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			httpo.NewErrorResponse(403, "User has not created a domain yet").SendD(c)
 		} else {
@@ -84,7 +84,7 @@ func getnftcontractinfo(c *gin.Context) {
 	}
 
 	// Connect to Ethereum mainnet
-	client, err := ethclient.Dial("https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID")
+	client, err := ethclient.Dial("https://mainnet.infura.io/v3/03532a98837749c0b262f9c5ac5fd8f1")
 	if err != nil {
 		logwrapper.Error("Failed to connect to the Ethereum client", err)
 		httpo.NewErrorResponse(500, "Failed to connect to the Ethereum network").SendD(c)
