@@ -53,7 +53,6 @@ func patchProfile(c *gin.Context) {
 		return
 	}
 	httpo.NewSuccessResponse(200, "Profile successfully updated").SendD(c)
-
 }
 
 func getProfile(c *gin.Context) {

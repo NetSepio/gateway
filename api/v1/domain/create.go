@@ -5,7 +5,10 @@ import (
 	"net/http"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
-	"github.com/NetSepio/gateway/api/v1/leaderboard"
+	"github.com/NetSepio/gateway/api/v1/Leaderboard/OperatorEventActivities"
+	"github.com/NetSepio/gateway/api/v1/Leaderboard/scoreboard"
+
+	// OperatorEventActivities "github.com/NetSepio/gateway/api/v1/leaderboard"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
@@ -65,15 +68,21 @@ func postDomain(c *gin.Context) {
 		return nil
 	})
 
+	payload := CreateDomainResponse{
+		TxtValue: txtValue, DomainId: domainId,
+	}
+
 	if err != nil {
 		logwrapper.Errorf("failed to create domain: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "failed to create domain").SendD(c)
 		return
 	} else {
-		leaderboard.DynamicLeaderBoardUpdate(userId, "domain")
-	}
-	payload := CreateDomainResponse{
-		TxtValue: txtValue, DomainId: domainId,
+		if err := OperatorEventActivities.DynamicOperatorEventActivitiesUpdate(userId, "domain"); err != nil {
+			httpo.NewSuccessResponseP(200, "domain created but failed to update in scoreboard", payload).SendD(c)
+			return
+		} else {
+			scoreboard.DynamicScoreBoardUpdate(userId, "domain")
+		}
 	}
 	httpo.NewSuccessResponseP(200, "domain created", payload).SendD(c)
 }

@@ -21,7 +21,7 @@
 // 	httpo.NewSuccessResponseP(200, "Profile fetched successfully", payload).SendD(c)
 // }
 
-package leaderboard
+package OperatorEventActivities
 
 import (
 	"net/http"

@@ -1,6 +1,8 @@
 package apiv1
 
 import (
+	"github.com/NetSepio/gateway/api/v1/Leaderboard/OperatorEventActivities"
+	"github.com/NetSepio/gateway/api/v1/Leaderboard/scoreboard"
 	"github.com/NetSepio/gateway/api/v1/account"
 	"github.com/NetSepio/gateway/api/v1/account/subscription"
 	authenticate "github.com/NetSepio/gateway/api/v1/authenticate"
@@ -12,7 +14,6 @@ import (
 	flowid "github.com/NetSepio/gateway/api/v1/flowid"
 	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
 	"github.com/NetSepio/gateway/api/v1/getreviews"
-	"github.com/NetSepio/gateway/api/v1/leaderboard"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	"github.com/NetSepio/gateway/api/v1/report"
 	"github.com/NetSepio/gateway/api/v1/sdkauthentication"
@@ -50,7 +51,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		subscription.ApplyRoutes(v1)
 		summary.ApplyRoutes(v1)
 		sdkauthentication.ApplyRoutes(v1)
-		leaderboard.ApplyRoutes(v1)
+		OperatorEventActivities.ApplyRoutes(v1)
+		scoreboard.ApplyRoutes(v1)
 
 	}
 }

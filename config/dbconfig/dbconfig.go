@@ -73,7 +73,7 @@ func Init() error {
 		&migrate.UserStripePi{},
 		&migrate.Sotreus{},
 		&migrate.Erebrus{},
-		&migrate.Leaderboard{},
+		&migrate.OperatorEventActivities{},
 	); err != nil {
 		log.Fatal(err)
 	}

@@ -7,7 +7,9 @@ import (
 	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
-	"github.com/NetSepio/gateway/api/v1/leaderboard"
+	"github.com/NetSepio/gateway/api/v1/Leaderboard/OperatorEventActivities"
+	"github.com/NetSepio/gateway/api/v1/Leaderboard/scoreboard"
+
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/pkg/aptos"
@@ -79,13 +81,19 @@ func deletegateReviewCreation(c *gin.Context) {
 		TransactionVersion: txResult.Result.Version,
 		SiteRating:         request.SiteRating,
 	}
+
 	// go webreview.Publish(request.MetaDataUri, strings.TrimSuffix(request.SiteUrl, "/"))
 	if err := db.Create(newReview).Error; err != nil {
 		httpo.NewSuccessResponseP(httpo.TXDbFailed, "transaction is successful but failed to store tx in db", payload).Send(c, 200)
 		return
 	} else {
 		userID := c.GetString(paseto.CTX_USER_ID)
-		leaderboard.DynamicLeaderBoardUpdate(userID, "reviews")
+		if err := OperatorEventActivities.DynamicOperatorEventActivitiesUpdate(userID, "reviews"); err != nil {
+			httpo.NewSuccessResponseP(200, "request successfully send, review will be delegated soon but failed to update in leader board", payload).SendD(c)
+			return
+		} else {
+			scoreboard.DynamicScoreBoardUpdate(userID, "reviews")
+		}
 	}
 
 	httpo.NewSuccessResponseP(200, "request successfully send, review will be delegated soon", payload).SendD(c)

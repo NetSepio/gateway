@@ -1,4 +1,4 @@
-package leaderboard
+package OperatorEventActivities
 
 import (
 	"bytes"
@@ -94,13 +94,13 @@ func UpdateLeaderboardFromIndexer() error {
 
 	return db.Transaction(func(tx *gorm.DB) error {
 		for _, address := range betaTestAddresses {
-			if err := updateOrCreateLeaderboard(tx, address, true, false); err != nil {
+			if err := updateOrCreateLeaderboard(tx, address, 1, 0); err != nil {
 				return err
 			}
 		}
 
 		for _, address := range erebrusNFTAddresses {
-			if err := updateOrCreateLeaderboard(tx, address, false, true); err != nil {
+			if err := updateOrCreateLeaderboard(tx, address, 0, 1); err != nil {
 				return err
 			}
 		}
@@ -109,14 +109,14 @@ func UpdateLeaderboardFromIndexer() error {
 	})
 }
 
-func updateOrCreateLeaderboard(tx *gorm.DB, walletAddress string, betaTest, erebrusNFT bool) error {
-	var leaderboard Leaderboard
+func updateOrCreateLeaderboard(tx *gorm.DB, walletAddress string, betaTest, erebrusNFT int) error {
+	var leaderboard OperatorEventActivities
 	if err := tx.Where("wallet_address = ?", walletAddress).First(&leaderboard).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			newLeaderboard := Leaderboard{
-				WalletAddress: walletAddress,
-				BetaTest:      betaTest,
-				ErebrusNFT:    erebrusNFT,
+			newLeaderboard := OperatorEventActivities{
+				// WalletAddress: walletAddress,
+				BetaTest:   betaTest,
+				ErebrusNFT: erebrusNFT,
 			}
 			return tx.Create(&newLeaderboard).Error
 		}
