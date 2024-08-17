@@ -48,6 +48,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("", getnftcontractinfo)
 		g.PUT("", updateNFTContractInfo)
 		g.DELETE("", deleteNFTContractInfo)
+		g.GET("", getNFTContractData)
 	}
 }
 
@@ -311,4 +312,36 @@ func deleteNFTContractInfo(c *gin.Context) {
 	}
 
 	httpo.NewSuccessResponse(200, "NFT contract details deleted successfully").SendD(c)
+}
+
+func getNFTContractData(c *gin.Context) {
+	db := dbconfig.GetDb()
+	userId := c.GetString(paseto.CTX_USER_ID)
+
+	var contractData models.NftSubscription
+	if err := db.Where("user_id = ?", userId).First(&contractData).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			httpo.NewErrorResponse(404, "No NFT contract data found for this user").SendD(c)
+		} else {
+			logwrapper.Error("Failed to fetch NFT contract data", err)
+			httpo.NewErrorResponse(500, "Internal server error").SendD(c)
+		}
+		return
+	}
+
+	response := NFTContractResponse{
+		ContractAddress: contractData.ContractAddress,
+		ChainName:       contractData.ChainName,
+		Details: map[string]string{
+			"name":        contractData.Name,
+			"symbol":      contractData.Symbol,
+			"totalSupply": contractData.TotalSupply,
+			"owner":       contractData.Owner,
+			"tokenURI(1)": contractData.TokenURI,
+			"createdAt":   contractData.CreatedAt.String(),
+			"updatedAt":   contractData.UpdatedAt.String(),
+		},
+	}
+
+	httpo.NewSuccessResponseP(200, "NFT contract data retrieved successfully", response).SendD(c)
 }

@@ -207,4 +207,7 @@ type NftSubscription struct {
 	TotalSupply     string
 	Owner           string
 	TokenURI        string
+	CreatedAt       time.Time      `gorm:"autoCreateTime"`
+	UpdatedAt       time.Time      `gorm:"autoUpdateTime"`
+	DeletedAt       gorm.DeletedAt `gorm:"index"`
 }
