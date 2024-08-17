@@ -46,6 +46,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		g.Use(paseto.PASETO(true))
 		g.POST("", getnftcontractinfo)
+		g.PUT("", updateNFTContractInfo)
+		g.DELETE("", deleteNFTContractInfo)
 	}
 }
 
@@ -68,6 +70,17 @@ func getnftcontractinfo(c *gin.Context) {
 	var request NFTContractRequest
 	if err := c.BindJSON(&request); err != nil {
 		httpo.NewErrorResponse(400, "Invalid request payload").SendD(c)
+		return
+	}
+
+	// Check if user already has a contract address
+	var existingContract models.NftSubscription
+	if err := db.Where("user_id = ?", userId).First(&existingContract).Error; err == nil {
+		httpo.NewErrorResponse(400, "User already has a contract address").SendD(c)
+		return
+	} else if err != gorm.ErrRecordNotFound {
+		logwrapper.Error("Failed to check existing contract", err)
+		httpo.NewErrorResponse(500, "Internal server error").SendD(c)
 		return
 	}
 
@@ -202,4 +215,100 @@ func callContractMethod(ctx context.Context, client *ethclient.Client, address c
 	}
 
 	return fmt.Sprintf("%v", output[0]), nil
+}
+
+func updateNFTContractInfo(c *gin.Context) {
+	db := dbconfig.GetDb()
+	userId := c.GetString(paseto.CTX_USER_ID)
+
+	var request NFTContractRequest
+	if err := c.BindJSON(&request); err != nil {
+		httpo.NewErrorResponse(400, "Invalid request payload").SendD(c)
+		return
+	}
+
+	// Check if chain name is "eth"
+	if strings.ToLower(request.ChainName) != "eth" {
+		httpo.NewErrorResponse(400, "Unsupported chain name. Only 'eth' is supported").SendD(c)
+		return
+	}
+
+	// Validate contract address
+	if !common.IsHexAddress(request.ContractAddress) {
+		httpo.NewErrorResponse(400, "Invalid contract address").SendD(c)
+		return
+	}
+
+	// Connect to Ethereum mainnet
+	client, err := ethclient.Dial("https://mainnet.infura.io/v3/03532a98837749c0b262f9c5ac5fd8f1")
+	if err != nil {
+		logwrapper.Error("Failed to connect to the Ethereum client", err)
+		httpo.NewErrorResponse(500, "Failed to connect to the Ethereum network").SendD(c)
+		return
+	}
+
+	address := common.HexToAddress(request.ContractAddress)
+
+	parsedABI, err := abi.JSON(strings.NewReader(NFTContractABI))
+	if err != nil {
+		logwrapper.Error("Failed to parse ABI", err)
+		httpo.NewErrorResponse(500, "Failed to parse contract ABI").SendD(c)
+		return
+	}
+
+	details := getNFTContractDetails(client, address, parsedABI)
+
+	// Update contract details in the database
+	var existingContract models.NftSubscription
+	if err := db.Where("user_id = ?", userId).First(&existingContract).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			httpo.NewErrorResponse(404, "No existing contract found for this user").SendD(c)
+		} else {
+			logwrapper.Error("Failed to fetch existing contract", err)
+			httpo.NewErrorResponse(500, "Internal server error").SendD(c)
+		}
+		return
+	}
+
+	existingContract.ContractAddress = request.ContractAddress
+	existingContract.ChainName = request.ChainName
+	existingContract.Name = details["name"]
+	existingContract.Symbol = details["symbol"]
+	existingContract.TotalSupply = details["totalSupply"]
+	existingContract.Owner = details["owner"]
+	existingContract.TokenURI = details["tokenURI(1)"]
+
+	if err := db.Save(&existingContract).Error; err != nil {
+		logwrapper.Error("Failed to update contract details", err)
+		httpo.NewErrorResponse(500, "Failed to update contract details").SendD(c)
+		return
+	}
+
+	response := NFTContractResponse{
+		ContractAddress: request.ContractAddress,
+		ChainName:       request.ChainName,
+		Details:         details,
+	}
+
+	httpo.NewSuccessResponseP(200, "NFT contract details updated successfully", response).SendD(c)
+}
+
+func deleteNFTContractInfo(c *gin.Context) {
+	db := dbconfig.GetDb()
+	userId := c.GetString(paseto.CTX_USER_ID)
+
+	// Delete contract details from the database
+	result := db.Where("user_id = ?", userId).Delete(&models.NftSubscription{})
+	if result.Error != nil {
+		logwrapper.Error("Failed to delete contract details", result.Error)
+		httpo.NewErrorResponse(500, "Failed to delete contract details").SendD(c)
+		return
+	}
+
+	if result.RowsAffected == 0 {
+		httpo.NewErrorResponse(404, "No contract found for this user").SendD(c)
+		return
+	}
+
+	httpo.NewSuccessResponse(200, "NFT contract details deleted successfully").SendD(c)
 }
