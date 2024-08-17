@@ -196,3 +196,15 @@ func (l *Leaderboard) BeforeCreate(tx *gorm.DB) (err error) {
 	l.ID = uuid.New().String()
 	return
 }
+
+type NftSubscription struct {
+	ID              uint   `gorm:"primaryKey"`
+	UserID          string `gorm:"index"`
+	ContractAddress string
+	ChainName       string
+	Name            string
+	Symbol          string
+	TotalSupply     string
+	Owner           string
+	TokenURI        string
+}

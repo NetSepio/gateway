@@ -13,6 +13,7 @@ import (
 	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
 	"github.com/NetSepio/gateway/api/v1/getreviews"
 	"github.com/NetSepio/gateway/api/v1/leaderboard"
+	"github.com/NetSepio/gateway/api/v1/nftcontract"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	"github.com/NetSepio/gateway/api/v1/report"
 	"github.com/NetSepio/gateway/api/v1/sdkauthentication"
@@ -51,6 +52,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		summary.ApplyRoutes(v1)
 		sdkauthentication.ApplyRoutes(v1)
 		leaderboard.ApplyRoutes(v1)
+		nftcontract.ApplyRoutes(v1)
 
 	}
 }
