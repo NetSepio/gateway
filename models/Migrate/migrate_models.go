@@ -211,3 +211,10 @@ type NftSubscription struct {
 	UpdatedAt       time.Time      `gorm:"autoUpdateTime"`
 	DeletedAt       gorm.DeletedAt `gorm:"index"`
 }
+
+type DVPNNFTRecord struct {
+	ID              uint `gorm:"primaryKey;autoIncrement"`
+	WalletAddress   string
+	TransactionHash string
+	CreatedAt       time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"`
+}
