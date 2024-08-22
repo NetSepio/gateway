@@ -2,6 +2,8 @@ package dvpnnft
 
 import (
 	"crypto/ecdsa"
+	"errors"
+	"fmt"
 	"math/big"
 	"net/http"
 	"regexp"
@@ -10,11 +12,13 @@ import (
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
+	migrate "github.com/NetSepio/gateway/models/Migrate"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type RequestPayload struct {
@@ -36,6 +40,32 @@ func handleMintNFT(c *gin.Context) {
 	var payload RequestPayload
 	if err := c.BindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		return
+	}
+
+	// execute db process check the wallet address exist
+
+	db := dbconfig.GetDb()
+
+	// Check if the wallet address exists
+	result := db.Where("wallet_address = ?", payload.WalletAddress).First(&migrate.DVPNNFTRecord{})
+
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			fmt.Println("Wallet address does not exist")
+		} else {
+			fmt.Println("Error occurred:", result.Error)
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"Error": result.Error.Error(),
+			})
+			return
+		}
+	} else {
+		fmt.Println("Wallet address exists:", payload.WalletAddress)
+		c.JSON(http.StatusFound, gin.H{
+			"warning":        "this wallet address is already minted",
+			"wallet address": payload.WalletAddress,
+		})
 		return
 	}
 

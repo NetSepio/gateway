@@ -43,7 +43,7 @@ func main() {
 		}
 		fmt.Printf("========TEST TOKEN========\n%s\n========TEST TOKEN========\n", token)
 	}
-	dbconfig.Init()
+	// dbconfig.Init()
 	logwrapper.Log.Info("Starting app")
 	addr := fmt.Sprintf(":%d", envconfig.EnvVars.APP_PORT)
 	err := app.GinApp.Run(addr)
