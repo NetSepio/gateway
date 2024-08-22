@@ -4,18 +4,17 @@ import (
 	"crypto/ecdsa"
 	"math/big"
 	"net/http"
-	"os"
 	"regexp"
 
 	contract "github.com/NetSepio/gateway/api/v1/dvpnnft/contract" // Replace with the actual path to your contract bindings
 	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 type RequestPayload struct {
@@ -40,12 +39,6 @@ func handleMintNFT(c *gin.Context) {
 		return
 	}
 
-	// Load environment variables from the .env file
-	if err := godotenv.Load(); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error loading .env file"})
-		return
-	}
-
 	// Check if the wallet address is a valid Manta address
 	if !isValidMantaAddress(payload.WalletAddress) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Manta wallet address"})
@@ -59,7 +52,7 @@ func handleMintNFT(c *gin.Context) {
 	}
 
 	// Load the private key from the environment
-	privateKey, err := crypto.HexToECDSA(os.Getenv("PRIVATE_KEY"))
+	privateKey, err := crypto.HexToECDSA(envconfig.EnvVars.PRIVATE_KEY)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error loading private key"})
 		return
@@ -103,7 +96,7 @@ func handleMintNFT(c *gin.Context) {
 	auth.GasPrice = gasPrice
 
 	// Contract address
-	contractAddress := common.HexToAddress(os.Getenv("CONTRACT_ADDRESS"))
+	contractAddress := common.HexToAddress(envconfig.EnvVars.CONTRACT_ADDRESS)
 	instance, err := contract.NewContract(contractAddress, client)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating contract instance"})
