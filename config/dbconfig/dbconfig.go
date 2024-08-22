@@ -73,6 +73,8 @@ func Init() error {
 		&migrate.Sotreus{},
 		&migrate.Erebrus{},
 		&migrate.Leaderboard{},
+		&migrate.NftSubscription{},
+		&migrate.DVPNNFTRecord{},
 	); err != nil {
 		log.Fatal(err)
 	}
