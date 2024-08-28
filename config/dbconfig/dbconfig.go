@@ -74,6 +74,9 @@ func Init() error {
 		&migrate.Sotreus{},
 		&migrate.Erebrus{},
 		&migrate.OperatorEventActivities{},
+		// &migrate.Leaderboard{},
+		&migrate.NftSubscription{},
+		&migrate.DVPNNFTRecord{},
 	); err != nil {
 		log.Fatal(err)
 	}

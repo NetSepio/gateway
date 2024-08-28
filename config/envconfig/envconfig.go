@@ -49,6 +49,9 @@ type config struct {
 	STRIPE_SECRET_KEY        string        `env:"STRIPE_SECRET_KEY,notEmpty"`
 	SMTP_PASSWORD            string        `env:"SMTP_PASSWORD,notEmpty"`
 	API_SET_MODE             string        `env:"API_SET_MODE"`
+
+	CONTRACT_ADDRESS string `env:"CONTRACT_ADDRESS,notEmpty"`
+	PRIVATE_KEY      string `env:"PRIVATE_KEY,notEmpty"`
 }
 
 var EnvVars config = config{}
