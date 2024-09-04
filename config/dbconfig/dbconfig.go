@@ -52,6 +52,10 @@ func GetDb() *gorm.DB {
 
 func Init() error {
 	db := GetDb()
+
+	// db.Exec(`ALTER TABLE leader_boards DROP COLUMN IF EXISTS users;`)
+	db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
+
 	if err := db.AutoMigrate(
 		&migrate.User{},
 		&migrate.Role{},
@@ -79,8 +83,6 @@ func Init() error {
 		log.Fatal(err)
 	}
 
-	// db.Exec(`ALTER TABLE leader_boards DROP COLUMN IF EXISTS users;
-	// CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
 	logwrapper.Log.Info("Congrats ! Automigration completed")
 
 	return nil
