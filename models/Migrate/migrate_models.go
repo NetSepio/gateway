@@ -214,7 +214,7 @@ type NftSubscription struct {
 
 type DVPNNFTRecord struct {
 	ID              uint   `gorm:"primaryKey;autoIncrement"`
-	Chain           string `gorm:"not null"`
+	Chain           string 
 	WalletAddress   string `gorm:"not null"`
 	EmailID         string
 	TransactionHash string
