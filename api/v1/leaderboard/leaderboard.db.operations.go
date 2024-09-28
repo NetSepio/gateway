@@ -63,3 +63,7 @@ func DynamicLeaderBoardUpdate(user_id, column_name string) {
 
 	log.Println("Reviews count incremented successfully!")
 }
+func InsertDataInScoreBoard() {
+	
+
+}

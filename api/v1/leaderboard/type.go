@@ -17,3 +17,8 @@ type Leaderboard struct {
 	CreatedAt time.Time `gorm:"autoCreateTime"`        // 10. CreatedAt
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`        // 11. UpdatedAt
 }
+
+type ActivityUnitXp struct {
+	Activity string `gorm:"not null;unique"` // Name of the activity (e.g., Reviews, Domain, etc.)
+	XP       int    `gorm:"not null"`
+}
