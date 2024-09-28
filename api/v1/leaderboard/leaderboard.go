@@ -17,6 +17,10 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		g.GET("", getLeaderboard)
 	}
+	h := r.Group("/getScoreboard")
+	{
+		h.GET("", getScoreBoard)
+	}
 }
 
 func getLeaderboard(c *gin.Context) {
@@ -36,4 +40,22 @@ func getLeaderboard(c *gin.Context) {
 	}
 
 	httpo.NewSuccessResponseP(200, "Leaderboard fetched successfully", leaderboard).SendD(c)
+}
+func getScoreBoard(c *gin.Context) {
+	db := dbconfig.GetDb()
+
+	var scoreBoard []models.ScoreBoard
+
+	if err := db.Order("reviews desc").Find(&scoreBoard).Error; err != nil {
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+		logwrapper.Error("failed to get scoreBoard", err)
+		return
+	}
+
+	if len(scoreBoard) == 0 {
+		httpo.NewErrorResponse(404, "No ScoreBoard entries found").SendD(c)
+		return
+	}
+
+	httpo.NewSuccessResponseP(200, "ScoreBoard fetched successfully", scoreBoard).SendD(c)
 }

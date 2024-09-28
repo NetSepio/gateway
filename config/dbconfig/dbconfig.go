@@ -79,6 +79,8 @@ func Init() error {
 		&migrate.Leaderboard{},
 		&migrate.NftSubscription{},
 		&migrate.DVPNNFTRecord{},
+		&migrate.ScoreBoard{},
+		&migrate.ActivityUnitXp{},
 	); err != nil {
 		log.Fatal(err)
 	}
