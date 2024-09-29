@@ -15,6 +15,7 @@ func DynamicLeaderBoardUpdate(user_id, column_name string) {
 
 	// Check if the user_id exists in the LeaderBoard table
 	var leaderboard Leaderboard
+	leaderboard.UserId = user_id
 	err := db.Debug().Where("user_id = ?", user_id).First(&leaderboard).Error
 
 	// If user_id does not exist, insert a new record with the initial review count
@@ -82,7 +83,7 @@ func DynamicLeaderBoardUpdate(user_id, column_name string) {
 	if err != nil {
 		log.Printf("failed to get the ScoreBoard by ID: %v", err)
 	}
-	UpdateScoreBoard(leaderboard.ID, ScoreBoard{
+	err = UpdateScoreBoard(leaderboard.ID, ScoreBoard{
 		ID:        uuid.New().String(),
 		Reviews:   leaderboard.Reviews,
 		Domain:    leaderboard.Domain,
@@ -145,35 +146,69 @@ func UpdateScoreBoard(id string, updatedScore ScoreBoard, column_name string, va
 	var score ScoreBoard
 	db := dbconfig.GetDb()
 
-	result := db.First(&score, "id = ?", id)
+	result := db.First(&score, "user_id = ?", updatedScore.UserId)
 	if result.Error != nil {
-		return result.Error
+		if result.Error == gorm.ErrRecordNotFound {
+			switch column_name {
+			case "reviews":
+				score.Reviews = updatedScore.Reviews * value
+			case "domain":
+				score.Domain = updatedScore.Domain * value
+			case "nodes":
+				score.Nodes = updatedScore.Nodes * value
+			case "d_wifi":
+				score.DWifi = updatedScore.DWifi * value
+			case "discord":
+				score.Discord = updatedScore.Discord * value
+			case "twitter":
+				score.Twitter = updatedScore.Twitter * value
+			case "telegram":
+				score.Telegram = updatedScore.Telegram * value
+			default:
+				log.Printf("Invalid column name: %s", column_name)
+				// return
+			}
+
+			score.ID = uuid.New().String()
+			score.UserId = updatedScore.UserId
+			// Initialize the specific column with 1 (assuming it's an integer field)
+			err := db.Debug().Create(&score).Error
+			if err != nil {
+				log.Println("[ ERROR ] failed to insert new record:", err)
+				return err
+			}
+			return nil
+		} else {
+			return result.Error
+		}
 	}
+
+	var columnValue int
 
 	switch column_name {
 	case "reviews":
-		score.Reviews = updatedScore.Reviews * value
+		columnValue = updatedScore.Reviews * value
 	case "domain":
-		score.Domain = updatedScore.Domain * value
+		columnValue = updatedScore.Domain * value
 	case "nodes":
-		score.Nodes = updatedScore.Nodes * value
+		columnValue = updatedScore.Nodes * value
 	case "d_wifi":
-		score.DWifi = updatedScore.DWifi * value
+		columnValue = updatedScore.DWifi * value
 	case "discord":
-		score.Discord = updatedScore.Discord * value
+		columnValue = updatedScore.Discord * value
 	case "twitter":
-		score.Twitter = updatedScore.Twitter * value
+		columnValue = updatedScore.Twitter * value
 	case "telegram":
-		score.Telegram = updatedScore.Telegram * value
+		columnValue = updatedScore.Telegram * value
 	default:
 		log.Printf("Invalid column name: %s", column_name)
 		// return
 	}
 
-	// Save the changes
-	result = db.Save(&score)
-	if result.Error != nil {
-		return result.Error
+	// If user_id exists, increment the Reviews column by 1
+	err := db.Debug().Model(&score).Update(column_name, columnValue).Error
+	if err != nil {
+		log.Printf("failed to update the ScoreBoard count: %v", err)
 	}
 
 	fmt.Println("ScoreBoard updated:", score.ID)
