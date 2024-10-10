@@ -24,7 +24,10 @@ require (
 	gorm.io/gorm v1.23.7
 )
 
-require github.com/sashabaranov/go-openai v1.24.1
+require (
+	github.com/robfig/cron v1.2.0
+	github.com/sashabaranov/go-openai v1.24.1
+)
 
 require (
 	cloud.google.com/go/auth v0.5.1 // indirect

@@ -250,3 +250,26 @@ func DeleteActivityUnitXp(activity string) error {
 	}
 	return nil
 }
+
+func GetAllLeaderBoard() ([]Leaderboard, error) {
+	var leaderBoards []Leaderboard
+	db := dbconfig.GetDb()
+
+	result := db.Find(&leaderBoards)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return leaderBoards, nil
+}
+
+func GetAllUserIdFromLeaderBoard() ([]string, error) {
+	var userIds []string
+	db := dbconfig.GetDb()
+	// Select only UserId column from the Leaderboard table
+	if err := db.Model(&Leaderboard{}).Select("user_id").Find(&userIds).Error; err != nil {
+		return nil, err
+	}
+
+	return userIds, nil
+}
+
