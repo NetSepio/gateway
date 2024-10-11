@@ -1,10 +1,11 @@
 package leaderboard
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"net/http"
-	"strings"
-	"time"
+	"sort"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
@@ -22,7 +23,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		g.GET("", getLeaderboard)
 	}
-	h := r.Group("/getScoreboard")
+	h := r.Group("/getScoreboard/top10")
 	{
 		h.GET("", getScoreBoard)
 	}
@@ -96,58 +97,75 @@ func getScoreBoard(c *gin.Context) {
 
 		}
 
-		payload := models.GetProfilePayload{UserId: user.UserId, Name: user.Name, WalletAddress: user.WalletAddress, ProfilePictureUrl: user.ProfilePictureUrl, Country: user.Country, Discord: user.Discord, Twitter: user.Twitter, Email: user.EmailId}
+		payload := models.User{UserId: user.UserId, Name: user.Name, WalletAddress: user.WalletAddress, ProfilePictureUrl: user.ProfilePictureUrl, Country: user.Country, Discord: user.Discord, Twitter: user.Twitter, EmailId: user.EmailId}
 
 		UserScoreBoard.UserDetails = payload
 
 		response = append(response, UserScoreBoard)
+
+		// Sort the response by TotalScore in descending order
+		sort.SliceStable(response, func(i, j int) bool {
+			return response[i].TotalScore > response[j].TotalScore
+		})
+
+		// Take the top 10 entries
+		if len(response) > 10 {
+			response = response[:10]
+		}
 	}
-	fmt.Printf("%+v\n", response)
 
 	httpo.NewSuccessResponseP(200, "ScoreBoard fetched successfully", response).SendD(c)
 }
-func AutoCalculateScoreBoard() {
 
-	// fmt.Println("STARTING AUTO CALCULATE SCOREBOARD AT ", time.Now())
-	border := strings.Repeat("=", 50) // Creates a border line
+func getAllUsersScoreBoard(c *gin.Context) {
+	db := dbconfig.GetDb()
+	var response []models.UserScoreBoard
 
-	func() {
-		fmt.Println(border)
-		fmt.Println("🚀 STARTING AUTO CALCULATE SCOREBOARD")
-		fmt.Println("📅 Date & Time:", time.Now().Format("02-Jan-2006 15:04:05 MST"))
-		fmt.Println("🔄 Status: In Progress")
-		fmt.Println(border)
-	}()
-
-	// CronForReviewUpdate()
-
-	// var leaderboard ScoreBoard
-	leaderboards, err := GetAllLeaderBoard()
-	if err != nil {
-		logrus.Error(err)
+	var users []models.User
+	// Omit FlowIds and Feedbacks from the query
+	if err := db.Omit("FlowIds", "Feedbacks").Find(&users).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			log.Println("no rows in the user table")
+		}
 		return
 	}
 
-	fmt.Println("leaderboards len : ", len(leaderboards))
+	fmt.Println("len user_details : ", len(users))
+	// fmt.Printf("%+v\n", users)
 
-	for _, leaderboard := range leaderboards {
-		CronJobLeaderBoardUpdate("reviews", leaderboard)
-		CronJobLeaderBoardUpdate("domain", leaderboard)
-		CronJobLeaderBoardUpdate("nodes", leaderboard)
-		CronJobLeaderBoardUpdate("d_wifi", leaderboard)
-		CronJobLeaderBoardUpdate("discord", leaderboard)
-		CronJobLeaderBoardUpdate("twitter", leaderboard)
-		CronJobLeaderBoardUpdate("telegram", leaderboard)
+	for _, userDetail := range users {
+		var scoreBoard ScoreBoard
+
+		// Query to find the first ScoreBoard record by UserId
+		if err := db.Where("user_id = ?", userDetail.UserId).First(&scoreBoard).Error; err != nil {
+			// Handle error, e.g., record not found
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				// No record found for the given UserId
+				var data models.UserScoreBoard
+				data.UserDetails = userDetail
+				response = append(response, data)
+			} else {
+				logrus.Error(err)
+			}
+		} else {
+			var data = models.UserScoreBoard{
+				ID:        scoreBoard.ID,
+				Reviews:   scoreBoard.Reviews,
+				Domain:    scoreBoard.Domain,
+				UserId:    scoreBoard.UserId,
+				Nodes:     scoreBoard.Nodes,
+				DWifi:     scoreBoard.DWifi,
+				Discord:   scoreBoard.Discord,
+				Twitter:   scoreBoard.Twitter,
+				Telegram:  scoreBoard.Telegram,
+				CreatedAt: scoreBoard.CreatedAt,
+				UpdatedAt: scoreBoard.UpdatedAt,
+			}
+			data.UserDetails = userDetail
+			response = append(response, data)
+
+		}
 	}
 
-	func() {
-		// After the task completes, print the "Completed" status
-		// border := strings.Repeat("=", 50) // Creates a border line
-		fmt.Println(border)
-		fmt.Println("✅ SCOREBOARD CALCULATION COMPLETED")
-		fmt.Println("📅 Date & Time:", time.Now().Format("02-Jan-2006 15:04:05 MST"))
-		fmt.Println("✔️ Status: Completed")
-		fmt.Println(border)
-	}()
-
+	httpo.NewSuccessResponseP(200, "ScoreBoard fetched successfully", response).SendD(c)
 }

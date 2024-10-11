@@ -48,10 +48,10 @@ type UserScoreBoard struct {
 	Discord     int
 	Twitter     int
 	Telegram    int
-	CreatedAt   time.Time         `gorm:"autoCreateTime"`
-	UpdatedAt   time.Time         `gorm:"autoUpdateTime"`
-	TotalScore  int               `json:"totalScore"`
-	UserDetails GetProfilePayload `json:"getProfilePayload"`
+	CreatedAt   time.Time `gorm:"autoCreateTime"`
+	UpdatedAt   time.Time `gorm:"autoUpdateTime"`
+	TotalScore  int       `json:"totalScore"`
+	UserDetails User      `json:"userDetails"`
 }
 
 type GetProfilePayload struct {
