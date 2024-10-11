@@ -119,7 +119,7 @@ func AutoCalculateScoreBoard() {
 		fmt.Println(border)
 	}()
 
-	CronForReviewUpdate()
+	// CronForReviewUpdate()
 
 	// var leaderboard ScoreBoard
 	leaderboards, err := GetAllLeaderBoard()

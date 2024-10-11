@@ -25,7 +25,6 @@ func DynamicLeaderBoardUpdate(user_id, column_name string) {
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-
 			// Use reflection to dynamically set the specified column value
 			switch column_name {
 			case "reviews":

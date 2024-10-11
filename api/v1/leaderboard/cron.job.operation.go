@@ -75,22 +75,26 @@ func CronForReviewUpdate() {
 	var voters []string
 	db.Model(&models.Review{}).Select("voter").Find(&voters)
 
+	// fmt.Println("len voters : ", len(voters))
+	// fmt.Println("voters : ", voters)
+
 	if len(voters) > 0 {
 
 		for _, v := range voters {
 			var userIds []string
 			db := dbconfig.GetDb()
 			// Select only UserId column from the Leaderboard table
-			if err := db.Model(&Leaderboard{}).Select("user_id").Find(&userIds).Error; err != nil {
-				// return nil, err
+			if err := db.Raw("SELECT user_id FROM users WHERE wallet_address = ?", v).Scan(&userIds).Error; err != nil {
 				if err == gorm.ErrRecordNotFound {
-					fmt.Println("this user does not exist in the user table : wallet address = ", v)
+					fmt.Println("This user does not exist in the user table: wallet address =", v)
 				} else {
-					log.Printf("failed to get the Reviews : %v\n", err)
+					log.Printf("Failed to get the Reviews: %v\n", err)
 				}
 			} else {
-				for _, id := range userIds {
-					go DynamicLeaderBoardUpdate(id, "reviews")
+				if len(userIds) > 0 {
+					for _, id := range userIds {
+						go DynamicLeaderBoardUpdate(id, "reviews")
+					}
 				}
 			}
 		}
