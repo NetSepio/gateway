@@ -119,8 +119,9 @@ func AutoCalculateScoreBoard() {
 		fmt.Println(border)
 	}()
 
-	// var leaderboard ScoreBoard
+	CronForReviewUpdate()
 
+	// var leaderboard ScoreBoard
 	leaderboards, err := GetAllLeaderBoard()
 	if err != nil {
 		logrus.Error(err)

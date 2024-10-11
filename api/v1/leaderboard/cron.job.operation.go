@@ -1,9 +1,11 @@
 package leaderboard
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/models"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -66,4 +68,33 @@ func CronJobLeaderBoardUpdate(column_name string, leaderboard Leaderboard) {
 		log.Println(column_name + " count incremented successfully!")
 		return
 	}
+}
+func CronForReviewUpdate() {
+	db := dbconfig.GetDb()
+
+	var voters []string
+	db.Model(&models.Review{}).Select("voter").Find(&voters)
+
+	if len(voters) > 0 {
+
+		for _, v := range voters {
+			var userIds []string
+			db := dbconfig.GetDb()
+			// Select only UserId column from the Leaderboard table
+			if err := db.Model(&Leaderboard{}).Select("user_id").Find(&userIds).Error; err != nil {
+				// return nil, err
+				if err == gorm.ErrRecordNotFound {
+					fmt.Println("this user does not exist in the user table : wallet address = ", v)
+				} else {
+					log.Printf("failed to get the Reviews : %v\n", err)
+				}
+			} else {
+				for _, id := range userIds {
+					go DynamicLeaderBoardUpdate(id, "reviews")
+				}
+			}
+		}
+
+	}
+
 }

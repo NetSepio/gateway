@@ -96,6 +96,9 @@ func DynamicLeaderBoardUpdate(user_id, column_name string) {
 		CreatedAt: leaderboard.CreatedAt,
 		UpdatedAt: leaderboard.UpdatedAt,
 	}, column_name, data.XP)
+	if err != nil {
+		log.Println("failed to update the ScoreBoard by ID : ", err.Error())
+	}
 
 	log.Println("Reviews count incremented successfully!")
 }
@@ -272,4 +275,3 @@ func GetAllUserIdFromLeaderBoard() ([]string, error) {
 
 	return userIds, nil
 }
-
