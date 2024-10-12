@@ -19,6 +19,7 @@ type User struct {
 	Country           string
 	Feedbacks         []UserFeedback
 	EmailId           string `gorm:"type:text;unique"`
+	ChainName         string `json:"chainName,omitempty"`
 }
 
 // TODO: Make relations for field `relatedRoleId`
