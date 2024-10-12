@@ -49,7 +49,7 @@ func main() {
 	go func() {
 		c := cron.New()
 		// Schedule the function to run every day at midnight (or adjust the schedule as needed)
-		c.AddFunc("0 0 0 * * *", func() {
+		c.AddFunc("0 30 18 * * *", func() {
 			leaderboard.AutoCalculateScoreBoard()
 		})
 
