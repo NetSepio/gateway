@@ -122,10 +122,14 @@ func authenticate(c *gin.Context) {
 	}
 	if isCorrect {
 		// update wallet address for that user_id
-		err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("wallet_address", walletAddr).Error
+		err = db.Model(&models.User{}).Where("user_id = ?", userId).
+			Updates(map[string]interface{}{
+				"wallet_address": walletAddr,
+				"chain_name":     req.ChainName,
+			}).Error
 		if err != nil {
-			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-			logwrapper.Errorf("failed to update wallet address, error %v", err.Error())
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+			logwrapper.Errorf("failed to update wallet address and chain name, error %v", err.Error())
 			return
 		}
 
