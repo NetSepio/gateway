@@ -19,6 +19,7 @@ type User struct {
 	Country           string
 	Feedbacks         []UserFeedback
 	EmailId           string `gorm:"type:text;unique"`
+	ChainName         string `json:"chainName,omitempty"`
 }
 
 // TODO: Make relations for field `relatedRoleId`
@@ -192,6 +193,20 @@ type Leaderboard struct {
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 }
 
+type ScoreBoard struct {
+	ID        string `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`
+	Reviews   int
+	Domain    int
+	UserId    string `gorm:"type:uuid;not null"`
+	Nodes     int
+	DWifi     int
+	Discord   int
+	Twitter   int
+	Telegram  int
+	CreatedAt time.Time `gorm:"autoCreateTime"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime"`
+}
+
 func (l *Leaderboard) BeforeCreate(tx *gorm.DB) (err error) {
 	l.ID = uuid.New().String()
 	return
@@ -213,10 +228,17 @@ type NftSubscription struct {
 }
 
 type DVPNNFTRecord struct {
-	ID              uint   `gorm:"primaryKey;autoIncrement"`
-	Chain           string 
+	ID              uint `gorm:"primaryKey;autoIncrement"`
+	Chain           string
 	WalletAddress   string `gorm:"not null"`
 	EmailID         string
 	TransactionHash string
 	CreatedAt       time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"`
 }
+
+type ActivityUnitXp struct {
+	Activity string `gorm:"not null;unique"` // Name of the activity (e.g., Reviews, Domain, etc.)
+	XP       int    `gorm:"not null"`
+}
+
+// SCOREBOARD = LEADERBOARD * ActivityUnitXp

@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	leaderboard "github.com/NetSepio/gateway/api/v1/leaderboard"
 	"github.com/NetSepio/gateway/app"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
@@ -14,6 +15,7 @@ import (
 	"github.com/NetSepio/gateway/models/claims"
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/robfig/cron"
 )
 
 func main() {
@@ -43,7 +45,20 @@ func main() {
 		}
 		fmt.Printf("========TEST TOKEN========\n%s\n========TEST TOKEN========\n", token)
 	}
-	dbconfig.Init()
+	dbconfig.Migrate()
+	go func() {
+		c := cron.New()
+		// Schedule the function to run every day at midnight (or adjust the schedule as needed)
+		c.AddFunc("0 30 18 * * *", func() {
+			leaderboard.AutoCalculateScoreBoard()
+		})
+
+		// Start the cron scheduler in the background
+		c.Start()
+
+		// Keep the application running
+		select {}
+	}()
 	logwrapper.Log.Info("Starting app")
 	addr := fmt.Sprintf(":%d", envconfig.EnvVars.APP_PORT)
 	err := app.GinApp.Run(addr)

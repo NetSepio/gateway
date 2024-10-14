@@ -17,3 +17,21 @@ type Leaderboard struct {
 	CreatedAt time.Time `gorm:"autoCreateTime"`        // 10. CreatedAt
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`        // 11. UpdatedAt
 }
+
+type ActivityUnitXp struct {
+	Activity string `gorm:"not null;unique"` // Name of the activity (e.g., Reviews, Domain, etc.)
+	XP       int    `gorm:"not null"`
+}
+type ScoreBoard struct {
+	ID        string `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`
+	Reviews   int
+	Domain    int
+	UserId    string `gorm:"type:uuid;not null"`
+	Nodes     int
+	DWifi     int
+	Discord   int
+	Twitter   int
+	Telegram  int
+	CreatedAt time.Time `gorm:"autoCreateTime"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime"`
+}

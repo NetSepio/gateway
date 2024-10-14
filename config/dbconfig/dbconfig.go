@@ -50,7 +50,7 @@ func GetDb() *gorm.DB {
 	return db
 }
 
-func Init() error {
+func Migrate() error {
 	db := GetDb()
 
 	// db.Exec(`ALTER TABLE leader_boards DROP COLUMN IF EXISTS users;`)
@@ -79,6 +79,8 @@ func Init() error {
 		&migrate.Leaderboard{},
 		&migrate.NftSubscription{},
 		&migrate.DVPNNFTRecord{},
+		&migrate.ScoreBoard{},
+		&migrate.ActivityUnitXp{},
 	); err != nil {
 		log.Fatal(err)
 	}
