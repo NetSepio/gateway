@@ -75,6 +75,16 @@ func CronJobLeaderBoardUpdate(column_name string, leaderboard Leaderboard) {
 func ReviewUpdateforOldUsers() {
 	db := dbconfig.GetDb()
 
+	// Update Reviews to 0 for all rows
+	if err := db.Model(&Leaderboard{}).Where("1 = 1").Updates(map[string]interface{}{
+		"reviews":    0,
+		"updated_at": time.Now(),
+	}).Error; err != nil {
+		fmt.Println("Failed to update reviews:", err)
+	} else {
+		fmt.Println("Successfully updated reviews to 0 for all rows.")
+	}
+
 	var voters []string
 	db.Model(&models.Review{}).Select("voter").Find(&voters)
 

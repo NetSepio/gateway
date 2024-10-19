@@ -27,6 +27,10 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		h.GET("", getScoreBoard)
 	}
+	u := r.Group("/updateOldUsersLeaderBoard")
+	{
+		u.GET("", UpdateLeaderBoardForAllUsers)
+	}
 }
 
 func getLeaderboard(c *gin.Context) {
@@ -172,4 +176,12 @@ func getAllUsersScoreBoard(c *gin.Context) {
 	}
 
 	httpo.NewSuccessResponseP(200, "ScoreBoard fetched successfully", response).SendD(c)
+}
+
+func UpdateLeaderBoardForAllUsers(c *gin.Context) {
+	var response []interface{}
+
+	ReviewUpdateforOldUsers()
+
+	httpo.NewSuccessResponseP(200, "Leaderboard updated successfully", response).SendD(c)
 }
