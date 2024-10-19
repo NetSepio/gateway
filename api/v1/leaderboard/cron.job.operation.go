@@ -72,14 +72,11 @@ func CronJobLeaderBoardUpdate(column_name string, leaderboard Leaderboard) {
 		return
 	}
 }
-func CronForReviewUpdate() {
+func ReviewUpdateforOldUsers() {
 	db := dbconfig.GetDb()
 
 	var voters []string
 	db.Model(&models.Review{}).Select("voter").Find(&voters)
-
-	// fmt.Println("len voters : ", len(voters))
-	// fmt.Println("voters : ", voters)
 
 	if len(voters) > 0 {
 
@@ -96,15 +93,14 @@ func CronForReviewUpdate() {
 			} else {
 				if len(userIds) > 0 {
 					for _, id := range userIds {
-						go DynamicLeaderBoardUpdate(id, "reviews")
+						DynamicLeaderBoardUpdate(id, "reviews")
 					}
 				}
 			}
 		}
-
 	}
-
 }
+
 func AutoCalculateScoreBoard() {
 
 	// fmt.Println("STARTING AUTO CALCULATE SCOREBOARD AT ", time.Now())

@@ -84,7 +84,7 @@ func getScoreBoard(c *gin.Context) {
 		}
 
 		var user models.User
-		err := db.Model(&models.User{}).Select("user_id, name, profile_picture_url,country, wallet_address, discord, twitter, email_id").Where("user_id = ?", data.UserId).First(&user).Error
+		err := db.Model(&models.User{}).Select("user_id, name, profile_picture_url,country, wallet_address, discord, twitter, email_id, chain_name").Where("user_id = ?", data.UserId).First(&user).Error
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				response = append(response, UserScoreBoard)
@@ -97,7 +97,11 @@ func getScoreBoard(c *gin.Context) {
 
 		}
 
-		payload := models.User{UserId: user.UserId, Name: user.Name, WalletAddress: user.WalletAddress, ProfilePictureUrl: user.ProfilePictureUrl, Country: user.Country, Discord: user.Discord, Twitter: user.Twitter, EmailId: user.EmailId}
+		if user.ChainName == "" || user.ChainName == "null" {
+			user.ChainName = "-"
+		}
+
+		payload := models.User{UserId: user.UserId, Name: user.Name, WalletAddress: user.WalletAddress, ProfilePictureUrl: user.ProfilePictureUrl, Country: user.Country, Discord: user.Discord, Twitter: user.Twitter, EmailId: user.EmailId, ChainName: user.ChainName}
 
 		UserScoreBoard.UserDetails = payload
 
