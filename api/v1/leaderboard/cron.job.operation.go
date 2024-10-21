@@ -88,6 +88,8 @@ func ReviewUpdateforOldUsers() {
 	var voters []string
 	db.Model(&models.Review{}).Select("voter").Find(&voters)
 
+	fmt.Printf("%+v\n", voters)
+
 	if len(voters) > 0 {
 
 		for _, v := range voters {
@@ -103,6 +105,7 @@ func ReviewUpdateforOldUsers() {
 			} else {
 				if len(userIds) > 0 {
 					for _, id := range userIds {
+						fmt.Println("Wallet Users id = ", id)
 						DynamicLeaderBoardUpdate(id, "reviews")
 					}
 				}
