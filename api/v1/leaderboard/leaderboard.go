@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"sync"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
@@ -30,6 +31,14 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	u := r.Group("/updateOldUsersLeaderBoard")
 	{
 		u.GET("", UpdateLeaderBoardForAllUsers)
+	}
+	a := r.Group("/BetaGraphqlQueryForLeaderboard")
+	{
+		a.GET("", BetaGraphqlQueryForLeaderboardHandler)
+	}
+	b := r.Group("/ErebrusQueryForLeaderboardHandler")
+	{
+		b.GET("", ErebrusQueryForLeaderboardHandler)
 	}
 }
 
@@ -73,18 +82,20 @@ func getScoreBoard(c *gin.Context) {
 
 		total := data.Reviews + data.Domain + data.Nodes + data.DWifi + data.Discord + data.Twitter + data.Telegram
 		UserScoreBoard := models.UserScoreBoard{
-			ID:         data.ID,
-			Reviews:    data.Reviews,
-			Domain:     data.Domain,
-			UserId:     data.UserId,
-			Nodes:      data.Nodes,
-			DWifi:      data.DWifi,
-			Discord:    data.Discord,
-			Twitter:    data.Twitter,
-			Telegram:   data.Telegram,
-			CreatedAt:  data.CreatedAt,
-			UpdatedAt:  data.UpdatedAt,
-			TotalScore: total,
+			ID:           data.ID,
+			Reviews:      data.Reviews,
+			Domain:       data.Domain,
+			UserId:       data.UserId,
+			Nodes:        data.Nodes,
+			DWifi:        data.DWifi,
+			Discord:      data.Discord,
+			Twitter:      data.Twitter,
+			Telegram:     data.Telegram,
+			Subscription: data.Subscription,
+			BetaTester:   data.BetaTester,
+			CreatedAt:    data.CreatedAt,
+			UpdatedAt:    data.UpdatedAt,
+			TotalScore:   total,
 		}
 
 		var user models.User
@@ -157,17 +168,19 @@ func getAllUsersScoreBoard(c *gin.Context) {
 			}
 		} else {
 			var data = models.UserScoreBoard{
-				ID:        scoreBoard.ID,
-				Reviews:   scoreBoard.Reviews,
-				Domain:    scoreBoard.Domain,
-				UserId:    scoreBoard.UserId,
-				Nodes:     scoreBoard.Nodes,
-				DWifi:     scoreBoard.DWifi,
-				Discord:   scoreBoard.Discord,
-				Twitter:   scoreBoard.Twitter,
-				Telegram:  scoreBoard.Telegram,
-				CreatedAt: scoreBoard.CreatedAt,
-				UpdatedAt: scoreBoard.UpdatedAt,
+				ID:           scoreBoard.ID,
+				Reviews:      scoreBoard.Reviews,
+				Domain:       scoreBoard.Domain,
+				UserId:       scoreBoard.UserId,
+				Nodes:        scoreBoard.Nodes,
+				DWifi:        scoreBoard.DWifi,
+				Discord:      scoreBoard.Discord,
+				Twitter:      scoreBoard.Twitter,
+				Telegram:     scoreBoard.Telegram,
+				Subscription: scoreBoard.Subscription,
+				BetaTester:   scoreBoard.BetaTester,
+				CreatedAt:    scoreBoard.CreatedAt,
+				UpdatedAt:    scoreBoard.UpdatedAt,
 			}
 			data.UserDetails = userDetail
 			response = append(response, data)
@@ -184,4 +197,53 @@ func UpdateLeaderBoardForAllUsers(c *gin.Context) {
 	ReviewUpdateforOldUsers()
 
 	httpo.NewSuccessResponseP(200, "Leaderboard updated successfully", response).SendD(c)
+}
+
+func BetaGraphqlQueryForLeaderboardHandler(c *gin.Context) {
+
+	var payload interface{}
+
+	userids, err := BetaGraphqlQueryForLeaderboard()
+	if err != nil {
+		httpo.NewErrorResponse(500, err.Error()).SendD(c)
+
+	}
+
+	if len(userids) != 0 {
+		var wg sync.WaitGroup
+		wg.Add(1)
+		go func() {
+			defer wg.Wait()
+			for _, userId := range userids {
+				DynamicLeaderBoardUpdate(userId, "beta_tester")
+			}
+		}()
+		wg.Done()
+	}
+
+	httpo.NewSuccessResponseP(200, "request successfully will be done withing few min, BetaGraphqlQueryForLeaderboardHandler", payload).SendD(c)
+}
+func ErebrusQueryForLeaderboardHandler(c *gin.Context) {
+
+	var payload interface{}
+
+	userids, err := ErebrusQueryForLeaderboard()
+	if err != nil {
+		httpo.NewErrorResponse(500, err.Error()).SendD(c)
+
+	}
+
+	if len(userids) != 0 {
+		var wg sync.WaitGroup
+		wg.Add(1)
+		go func() {
+			defer wg.Wait()
+			for _, userId := range userids {
+				DynamicLeaderBoardUpdate(userId, "subscription")
+			}
+		}()
+		wg.Done()
+	}
+
+	httpo.NewSuccessResponseP(200, "request successfully will be done withing few min, ErebrusQueryForLeaderboardHandler", payload).SendD(c)
 }
