@@ -33,17 +33,19 @@ func CronJobLeaderBoardUpdate(column_name string, leaderboard Leaderboard) {
 		if err == gorm.ErrRecordNotFound {
 
 			CreateScoreBoard(ScoreBoard{
-				ID:        uuid.New().String(),
-				Reviews:   leaderboard.Reviews,
-				Domain:    leaderboard.Domain,
-				UserId:    leaderboard.UserId,
-				Nodes:     leaderboard.Nodes,
-				DWifi:     leaderboard.DWifi,
-				Discord:   leaderboard.Discord,
-				Twitter:   leaderboard.Twitter,
-				Telegram:  leaderboard.Telegram,
-				CreatedAt: leaderboard.CreatedAt,
-				UpdatedAt: leaderboard.UpdatedAt,
+				ID:           uuid.New().String(),
+				Reviews:      leaderboard.Reviews,
+				Domain:       leaderboard.Domain,
+				UserId:       leaderboard.UserId,
+				Nodes:        leaderboard.Nodes,
+				DWifi:        leaderboard.DWifi,
+				Discord:      leaderboard.Discord,
+				Twitter:      leaderboard.Twitter,
+				Telegram:     leaderboard.Telegram,
+				Subscription: leaderboard.Subscription,
+				BetaTester:   leaderboard.BetaTester,
+				CreatedAt:    leaderboard.CreatedAt,
+				UpdatedAt:    leaderboard.UpdatedAt,
 			})
 			log.Println("New record inserted and " + column_name + " count initialized successfully!")
 			return
@@ -52,17 +54,19 @@ func CronJobLeaderBoardUpdate(column_name string, leaderboard Leaderboard) {
 	} else {
 
 		err = UpdateScoreBoard(leaderboard.ID, ScoreBoard{
-			ID:        uuid.New().String(),
-			Reviews:   leaderboard.Reviews,
-			Domain:    leaderboard.Domain,
-			UserId:    leaderboard.UserId,
-			Nodes:     leaderboard.Nodes,
-			DWifi:     leaderboard.DWifi,
-			Discord:   leaderboard.Discord,
-			Twitter:   leaderboard.Twitter,
-			Telegram:  leaderboard.Telegram,
-			CreatedAt: leaderboard.CreatedAt,
-			UpdatedAt: leaderboard.UpdatedAt,
+			ID:           uuid.New().String(),
+			Reviews:      leaderboard.Reviews,
+			Domain:       leaderboard.Domain,
+			UserId:       leaderboard.UserId,
+			Nodes:        leaderboard.Nodes,
+			DWifi:        leaderboard.DWifi,
+			Discord:      leaderboard.Discord,
+			Twitter:      leaderboard.Twitter,
+			Telegram:     leaderboard.Telegram,
+			Subscription: leaderboard.Subscription,
+			BetaTester:   leaderboard.BetaTester,
+			CreatedAt:    leaderboard.CreatedAt,
+			UpdatedAt:    leaderboard.UpdatedAt,
 		}, column_name, data.XP)
 		if err != nil {
 			log.Printf("failed to update the Reviews count: %v", err)

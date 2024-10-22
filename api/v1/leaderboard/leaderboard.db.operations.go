@@ -41,6 +41,10 @@ func DynamicLeaderBoardUpdate(user_id, column_name string) {
 				newLeaderBoard.Twitter = 1
 			case "telegram":
 				newLeaderBoard.Telegram = 1
+			case "subscription":
+				newLeaderBoard.Subscription = true
+			case "beta_tester":
+				newLeaderBoard.BetaTester = 1
 			default:
 				log.Printf("Invalid column name")
 				return
@@ -53,17 +57,19 @@ func DynamicLeaderBoardUpdate(user_id, column_name string) {
 			} else {
 
 				CreateScoreBoard(ScoreBoard{
-					ID:        uuid.New().String(),
-					Reviews:   leaderboard.Reviews,
-					Domain:    leaderboard.Domain,
-					UserId:    leaderboard.UserId,
-					Nodes:     leaderboard.Nodes,
-					DWifi:     leaderboard.DWifi,
-					Discord:   leaderboard.Discord,
-					Twitter:   leaderboard.Twitter,
-					Telegram:  leaderboard.Telegram,
-					CreatedAt: leaderboard.CreatedAt,
-					UpdatedAt: leaderboard.UpdatedAt,
+					ID:           uuid.New().String(),
+					Reviews:      leaderboard.Reviews,
+					Domain:       leaderboard.Domain,
+					UserId:       leaderboard.UserId,
+					Nodes:        leaderboard.Nodes,
+					DWifi:        leaderboard.DWifi,
+					Discord:      leaderboard.Discord,
+					Twitter:      leaderboard.Twitter,
+					Telegram:     leaderboard.Telegram,
+					Subscription: leaderboard.Subscription,
+					BetaTester:   leaderboard.BetaTester,
+					CreatedAt:    leaderboard.CreatedAt,
+					UpdatedAt:    leaderboard.UpdatedAt,
 				})
 			}
 			log.Println("New record inserted and reviews count initialized successfully!")
@@ -72,28 +78,44 @@ func DynamicLeaderBoardUpdate(user_id, column_name string) {
 		log.Printf("failed to query the LeaderBoard: %v", err)
 	}
 
-	// If user_id exists, increment the Reviews column by 1
-	err = db.Debug().Model(&leaderboard).Update(column_name, gorm.Expr(column_name+" + ?", 1)).Error
-	if err != nil {
-		log.Printf("failed to update the Reviews count: %v", err)
+	if column_name == "subscription" {
+		// If user_id exists, increment the Reviews column by 1
+		err = db.Debug().Model(&leaderboard).Update(column_name, true).Error
+		if err != nil {
+			log.Printf("failed to update the Reviews count: %v", err)
+		}
+	} else {
+		// If user_id exists, increment the Reviews column by 1
+		err = db.Debug().Model(&leaderboard).Update(column_name, gorm.Expr(column_name+" + ?", 1)).Error
+		if err != nil {
+			log.Printf("failed to update the Reviews count: %v", err)
+		}
 	}
 
-	data, err := GetActivityUnitXpByActivity(column_name)
-	if err != nil {
-		log.Printf("failed to get the ScoreBoard by ID: %v", err)
+	var data *ActivityUnitXp
+
+	if column_name != "subscription" {
+		data, err = GetActivityUnitXpByActivity(column_name)
+		if err != nil {
+			log.Printf("failed to get the ScoreBoard by ID: %v", err)
+		}
+	} else {
+		data.Activity = "true"
 	}
 	err = UpdateScoreBoard(leaderboard.ID, ScoreBoard{
-		ID:        uuid.New().String(),
-		Reviews:   leaderboard.Reviews,
-		Domain:    leaderboard.Domain,
-		UserId:    leaderboard.UserId,
-		Nodes:     leaderboard.Nodes,
-		DWifi:     leaderboard.DWifi,
-		Discord:   leaderboard.Discord,
-		Twitter:   leaderboard.Twitter,
-		Telegram:  leaderboard.Telegram,
-		CreatedAt: leaderboard.CreatedAt,
-		UpdatedAt: leaderboard.UpdatedAt,
+		ID:           uuid.New().String(),
+		Reviews:      leaderboard.Reviews,
+		Domain:       leaderboard.Domain,
+		UserId:       leaderboard.UserId,
+		Nodes:        leaderboard.Nodes,
+		DWifi:        leaderboard.DWifi,
+		Discord:      leaderboard.Discord,
+		Twitter:      leaderboard.Twitter,
+		Telegram:     leaderboard.Telegram,
+		Subscription: leaderboard.Subscription,
+		BetaTester:   leaderboard.BetaTester,
+		CreatedAt:    leaderboard.CreatedAt,
+		UpdatedAt:    leaderboard.UpdatedAt,
 	}, column_name, data.XP)
 	if err != nil {
 		log.Println("failed to update the ScoreBoard by ID : ", err.Error())
@@ -166,6 +188,8 @@ func UpdateScoreBoard(id string, updatedScore ScoreBoard, column_name string, va
 				score.Twitter = updatedScore.Twitter * value
 			case "telegram":
 				score.Telegram = updatedScore.Telegram * value
+			case "subscription":
+				score.Subscription = true
 			default:
 				log.Printf("Invalid column name: %s", column_name)
 				// return
@@ -202,6 +226,8 @@ func UpdateScoreBoard(id string, updatedScore ScoreBoard, column_name string, va
 		columnValue = updatedScore.Twitter * value
 	case "telegram":
 		columnValue = updatedScore.Telegram * value
+	case "subscription":
+		score.Subscription = true
 	default:
 		log.Printf("Invalid column name: %s", column_name)
 		// return
