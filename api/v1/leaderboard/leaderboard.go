@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strconv"
 	"sync"
 
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -24,7 +25,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		g.GET("", getLeaderboard)
 	}
-	h := r.Group("/getScoreboard/top10")
+	h := r.Group("/getScoreboard/top")
 	{
 		h.GET("", getScoreBoard)
 	}
@@ -66,6 +67,14 @@ func getScoreBoard(c *gin.Context) {
 	var response []models.UserScoreBoard
 
 	var scoreBoard []models.ScoreBoard
+	
+	limitParam := c.Query("limit")
+	limit, err := strconv.Atoi(limitParam)
+	if err != nil {
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+		logwrapper.Error("failed to get scoreBoard", err)
+		return
+	}
 
 	if err := db.Order("reviews desc").Find(&scoreBoard).Error; err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
@@ -128,12 +137,12 @@ func getScoreBoard(c *gin.Context) {
 		})
 
 		// Take the top 10 entries
-		if len(response) > 10 {
-			response = response[:10]
+		if len(response) >= limit {
+			response = response[:limit]
 		}
 	}
 
-	httpo.NewSuccessResponseP(200, "ScoreBoard fetched successfully", response).SendD(c)
+	httpo.NewSuccessResponseP(200, "ScoreBoard fetched successfully length := "+strconv.Itoa(len(response)), response).SendD(c)
 }
 
 func getAllUsersScoreBoard(c *gin.Context) {
