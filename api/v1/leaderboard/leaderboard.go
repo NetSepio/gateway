@@ -67,7 +67,7 @@ func getScoreBoard(c *gin.Context) {
 	var response []models.UserScoreBoard
 
 	var scoreBoard []models.ScoreBoard
-	
+
 	limitParam := c.Query("limit")
 	limit, err := strconv.Atoi(limitParam)
 	if err != nil {

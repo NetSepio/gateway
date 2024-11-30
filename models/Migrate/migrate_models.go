@@ -20,6 +20,7 @@ type User struct {
 	Feedbacks         []UserFeedback
 	EmailId           string `gorm:"type:text;unique"`
 	ChainName         string `json:"chainName,omitempty"`
+	AppleId           string `json:"appleId,omitempty"`
 }
 
 // TODO: Make relations for field `relatedRoleId`
