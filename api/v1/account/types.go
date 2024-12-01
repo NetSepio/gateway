@@ -7,6 +7,11 @@ type AppAccountRequest struct {
 	Email string `json:"email" binding:"required"`
 }
 
+type AppAccountRegisterApple struct {
+	Email   string `json:"email" binding:"required"`
+	AppleId string `json:"appleId" binding:"required"`
+}
+
 type CreateAccountResponse struct {
 	Token  string `json:"token"`
 	UserId string `json:"userId"`
