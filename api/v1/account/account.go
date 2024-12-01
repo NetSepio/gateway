@@ -12,7 +12,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("generate-auth-id", GenerateAuthId)
 		g.POST("auth-google/app", authGoogleApp)
 		g.POST("register-apple/app", registerApple)
-		g.GET("user-details-by-email", getUserDetails)
+		g.GET("user-details-by-apple-id", getUserDetails)
 		g.Use(paseto.PASETO(true))
 		g.POST("auth-google", authGoogle)
 		g.POST("paseto-from-magic-link", PasetoFromMagicLink)
