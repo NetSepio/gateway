@@ -296,7 +296,7 @@ func verifyIDToken(ctx context.Context, idToken string) (*idtoken.Payload, error
 }
 
 type UserRequestDetails struct {
-	EmailId string `json:"email"`
+	AppleId string `json:"appleId"`
 }
 
 func getUserDetails(c *gin.Context) {
@@ -310,14 +310,14 @@ func getUserDetails(c *gin.Context) {
 	}
 
 	// Validate EmailId
-	if queryReq.EmailId == "" {
+	if queryReq.AppleId == "" {
 		httpo.NewErrorResponse(http.StatusBadRequest, "EmailId is required").SendD(c)
 		return
 	}
 
 	var user models.User
 	// Query the database to find the user by EmailId
-	if err := db.Where("email_id = ?", queryReq.EmailId).First(&user).Error; err != nil {
+	if err := db.Where("apple_id = ?", queryReq.AppleId).First(&user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			httpo.NewErrorResponse(http.StatusNotFound, "User not found").SendD(c)
 		} else {
