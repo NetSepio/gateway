@@ -6,8 +6,8 @@ import (
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/httpo"
 	"github.com/NetSepio/gateway/util/pkg/flowid"
-	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/gin-gonic/gin"

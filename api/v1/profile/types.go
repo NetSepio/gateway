@@ -18,3 +18,12 @@ type GetProfilePayload struct {
 	Twitter           string  `json:"twitter,omitempty"`
 	Email             *string `json:"email,omitempty"`
 }
+
+type UpdateUserRequest struct {
+	Discord   string  `json:"discord"`   // Required
+	X         string  `json:"x"`         // Required for X (formerly Twitter)
+	Google    *string `json:"google"`    // Required for Google
+	AppleId   *string `json:"appleId"`   // Required for Apple
+	Telegram  string  `json:"telegram"`  // Required for Telegram
+	Farcaster *string `json:"farcaster"` // Required for Farcaster
+}

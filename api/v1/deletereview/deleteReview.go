@@ -7,9 +7,9 @@ import (
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/httpo"
 	"github.com/NetSepio/gateway/util/pkg/aptos"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
-	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -59,7 +59,7 @@ func deleteReview(c *gin.Context) {
 		TransactionHash:    txResult.Result.TransactionHash,
 	}
 
-	if err := db.Delete(&models.Review{},"meta_data_uri = ?",request.MetaDataUri).Error; err != nil {
+	if err := db.Delete(&models.Review{}, "meta_data_uri = ?", request.MetaDataUri).Error; err != nil {
 		httpo.NewSuccessResponseP(httpo.TXDbFailed, "transaction is successful but failed to delete review from db", payload).Send(c, 200)
 		return
 	}

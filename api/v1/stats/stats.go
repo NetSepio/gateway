@@ -7,7 +7,7 @@ import (
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
-	"github.com/TheLazarusNetwork/go-helpers/httpo"
+	"github.com/NetSepio/gateway/util/httpo"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )

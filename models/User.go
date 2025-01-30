@@ -17,6 +17,10 @@ type User struct {
 	EmailId           *string        `json:"emailId,omitempty"`
 	ChainName         string         `json:"chainName,omitempty"`
 	AppleId           *string        `json:"appleId,omitempty"`
+	X                 string         `json:"x,omitempty"`      // for X (formerly Twitter)
+	Google            *string        `json:"google,omitempty"` // Google
+	Telegram          string         `json:"telegram,omitempty"`
+	Farcaster         *string        `json:"farcaster,omitempty"` // Farcaster ID
 }
 
 type TStripePiType string
