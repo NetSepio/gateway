@@ -10,9 +10,9 @@ import (
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
+	"github.com/NetSepio/gateway/util/httpo"
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
-	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )

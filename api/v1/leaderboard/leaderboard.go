@@ -11,8 +11,8 @@ import (
 
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/util/httpo"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
-	"github.com/TheLazarusNetwork/go-helpers/httpo"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 
