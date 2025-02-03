@@ -37,7 +37,7 @@ func patchProfile(c *gin.Context) {
 		EmailId:           &requestBody.EmailId,
 		Country:           requestBody.Country,
 		Discord:           requestBody.Discord,
-		X:                 requestBody.X,
+		Twitter:           requestBody.Twitter,
 		Google:            requestBody.Google,
 		Apple:             requestBody.Apple,
 		Telegram:          requestBody.Telegram,

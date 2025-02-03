@@ -5,7 +5,7 @@ type PatchProfileRequest struct {
 	Country           string  `json:"country,omitempty"`
 	EmailId           string  `json:"emailId,omitempty"`
 	Discord           string  `json:"discord,omitempty"`
-	X                 string  `json:"x,omitempty"`
+	Twitter           string  `json:"twitter,omitempty"`
 	Google            *string `json:"google,omitempty"`
 	Apple             *string `json:"apple,omitempty"`
 	Telegram          string  `json:"telegram,omitempty"`
@@ -26,7 +26,7 @@ type GetProfilePayload struct {
 
 type UpdateUserRequest struct {
 	Discord   string  `json:"discord"`   // Required
-	X         string  `json:"x"`         // Required for X (formerly Twitter)
+	Twitter   string  `json:"twitter"`   // Required for X (formerly Twitter)
 	Google    *string `json:"google"`    // Required for Google
 	AppleId   *string `json:"appleId"`   // Required for Apple
 	Telegram  string  `json:"telegram"`  // Required for Telegram
