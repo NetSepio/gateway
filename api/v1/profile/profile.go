@@ -34,6 +34,7 @@ func patchProfile(c *gin.Context) {
 	profileUpdate := models.User{
 		Name:              requestBody.Name,
 		ProfilePictureUrl: requestBody.ProfilePictureUrl,
+		EmailId:           &requestBody.EmailId,
 		Country:           requestBody.Country,
 		Discord:           requestBody.Discord,
 		X:                 requestBody.X,

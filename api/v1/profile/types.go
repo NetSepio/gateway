@@ -3,10 +3,11 @@ package profile
 type PatchProfileRequest struct {
 	Name              string  `json:"name,omitempty"`
 	Country           string  `json:"country,omitempty"`
+	EmailId           string  `json:"emailId,omitempty"`
 	Discord           string  `json:"discord,omitempty"`
 	X                 string  `json:"x,omitempty"`
 	Google            *string `json:"google,omitempty"`
-	Apple          *string `json:"apple,omitempty"`
+	Apple             *string `json:"apple,omitempty"`
 	Telegram          string  `json:"telegram,omitempty"`
 	Farcaster         *string `json:"farcaster,omitempty"`
 	ProfilePictureUrl string  `json:"profilePictureUrl,omitempty"`
@@ -15,7 +16,7 @@ type PatchProfileRequest struct {
 type GetProfilePayload struct {
 	UserId            string  `json:"userId,omitempty"`
 	Name              string  `json:"name,omitempty"`
-	WalletAddress     *string  `json:"walletAddress,omitempty"`
+	WalletAddress     *string `json:"walletAddress,omitempty"`
 	ProfilePictureUrl string  `json:"profilePictureUrl,omitempty"`
 	Country           string  `json:"country,omitempty"`
 	Discord           string  `json:"discord,omitempty"`
