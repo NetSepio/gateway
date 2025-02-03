@@ -2,6 +2,7 @@ package profile
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -47,23 +48,32 @@ func patchProfile(c *gin.Context) {
 	if userId == "" {
 		httpo.NewErrorResponse(http.StatusForbidden, "User not found").SendD(c)
 		return
-
 	}
+
 	result := db.Model(&models.User{}).
 		Where("user_id = ?", userId).
 		Updates(&profileUpdate)
-	if result.Error != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 
+	if result.Error != nil {
+		// Check if the error is a PostgreSQL error
+		if errMsg := result.Error.Error(); errMsg != "" {
+			// Check for duplicate key violation (unique constraint)
+			if strings.Contains(errMsg, "duplicate key value violates unique constraint") {
+				httpo.NewErrorResponse(http.StatusConflict, "Email address already in use for another account").SendD(c)
+				return
+			}
+		}
+		// Handle other errors
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
 		return
 	}
+
 	if result.RowsAffected == 0 {
 		httpo.NewErrorResponse(http.StatusNotFound, "Record not found").SendD(c)
-
 		return
 	}
-	httpo.NewSuccessResponse(200, "Profile successfully updated").SendD(c)
 
+	httpo.NewSuccessResponse(200, "Profile successfully updated").SendD(c)
 }
 
 func getProfile(c *gin.Context) {
