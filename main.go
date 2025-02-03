@@ -45,7 +45,7 @@ func main() {
 		}
 		fmt.Printf("========TEST TOKEN========\n%s\n========TEST TOKEN========\n", token)
 	}
-	dbconfig.Migrate()
+	// dbconfig.Migrate()
 	go func() {
 		c := cron.New()
 		// Schedule the function to run every day at midnight (or adjust the schedule as needed)
