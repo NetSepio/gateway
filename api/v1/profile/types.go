@@ -22,6 +22,9 @@ type GetProfilePayload struct {
 	Discord           string  `json:"discord,omitempty"`
 	Twitter           string  `json:"twitter,omitempty"`
 	Email             *string `json:"email,omitempty"`
+	Apple             *string `json:"apple,omitempty"`
+	Telegram          string  `json:"telegram,omitempty"`
+	Farcaster         *string `json:"farcaster,omitempty"`
 }
 
 type UpdateUserRequest struct {
