@@ -18,9 +18,14 @@ type User struct {
 	ProfilePictureUrl string
 	Country           string
 	Feedbacks         []UserFeedback
-	EmailId           string `gorm:"type:text;unique"`
-	ChainName         string `json:"chainName,omitempty"`
-	AppleId           string `json:"appleId,omitempty"`
+	Email             *string
+	ChainName         string
+	Apple             *string
+	Google            *string
+	Telegram          string
+	Farcaster         *string
+	CreatedAt         time.Time `gorm:"autoCreateTime"`
+	UpdatedAt         time.Time `gorm:"autoUpdateTime"`
 }
 
 // TODO: Make relations for field `relatedRoleId`

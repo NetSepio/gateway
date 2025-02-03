@@ -16,11 +16,12 @@ type User struct {
 	Feedbacks         []UserFeedback `gorm:"foreignkey:UserId" json:"userFeedbacks"`
 	EmailId           *string        `json:"emailId,omitempty"`
 	ChainName         string         `json:"chainName,omitempty"`
-	AppleId           *string        `json:"appleId,omitempty"`
-	X                 string         `json:"x,omitempty"`      // for X (formerly Twitter)
+	Apple             *string        `json:"apple,omitempty"`
 	Google            *string        `json:"google,omitempty"` // Google
 	Telegram          string         `json:"telegram,omitempty"`
 	Farcaster         *string        `json:"farcaster,omitempty"` // Farcaster ID
+	CreatedAt         time.Time      `gorm:"autoCreateTime" json:"createdAt,omitempty"`
+	UpdatedAt         time.Time      `gorm:"autoUpdateTime" json:"updatedAt,omitempty"`
 }
 
 type TStripePiType string
