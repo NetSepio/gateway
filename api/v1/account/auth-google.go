@@ -231,7 +231,7 @@ func registerApple(c *gin.Context) {
 			user = models.User{
 				EmailId: &request.Email,
 				UserId:  uuid.NewString(),
-				AppleId: &request.AppleId,
+				Apple: &request.AppleId,
 			}
 			err = db.Model(&models.User{}).Create(&user).Error
 			if err != nil {
