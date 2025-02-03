@@ -28,7 +28,7 @@ type UpdateUserRequest struct {
 	Discord   string  `json:"discord"`   // Required
 	Twitter   string  `json:"twitter"`   // Required for X (formerly Twitter)
 	Google    *string `json:"google"`    // Required for Google
-	AppleId   *string `json:"appleId"`   // Required for Apple
+	Apple     *string `json:"apple"`     // Required for Apple
 	Telegram  string  `json:"telegram"`  // Required for Telegram
 	Farcaster *string `json:"farcaster"` // Required for Farcaster
 }

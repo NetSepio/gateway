@@ -20,9 +20,7 @@ type User struct {
 	Feedbacks         []UserFeedback
 	Email             *string
 	ChainName         string
-	AppleId           string `json:"appleId,omitempty"`
 	Apple             *string
-	X                 string
 	Google            *string
 	Telegram          string
 	Farcaster         *string
