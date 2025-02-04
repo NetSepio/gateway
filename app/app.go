@@ -9,6 +9,7 @@ import (
 	"github.com/stripe/stripe-go/v76"
 
 	"github.com/NetSepio/gateway/config/constants"
+	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -40,6 +41,7 @@ func Init() {
 		AllowOrigins:     []string{"*"},
 	})
 	GinApp.Use(corsM)
+	dbconfig.Migrate()
 	api.ApplyRoutes(GinApp)
 
 	//adding health check
