@@ -56,6 +56,22 @@ func Migrate() error {
 	// db.Exec(`ALTER TABLE leader_boards DROP COLUMN IF EXISTS users;`)
 	db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
 
+	// Check if the constraint exists before dropping it
+	var constraintExists bool
+	err := db.Raw(`
+		SELECT EXISTS (
+			SELECT 1 
+			FROM pg_constraint 
+			WHERE conname = 'uni_users_email'
+		);
+	`).Scan(&constraintExists).Error
+
+	if err != nil {
+		logwrapper.Log.Error("Error checking constraint existence: ", err)
+	} else if constraintExists {
+		db.Exec(`ALTER TABLE users DROP CONSTRAINT IF EXISTS uni_users_email;`)
+	}
+
 	if err := db.AutoMigrate(
 		&migrate.User{},
 		&migrate.Role{},
