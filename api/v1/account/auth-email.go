@@ -12,8 +12,8 @@ import (
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
-	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/httpo"
+	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"github.com/gin-gonic/gin"
@@ -135,7 +135,7 @@ func PasetoFromMagicLink(c *gin.Context) {
 			return
 		}
 		// user exist, so generate paseto for that user id
-		customClaims := claims.NewWithEmail(user.UserId, user.EmailId)
+		customClaims := claims.NewWithEmail(user.UserId, user.Email)
 		pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
 		if err != nil {
 			logwrapper.Errorf("failed to create paseto token: %s", err)
@@ -178,7 +178,7 @@ func PasetoFromMagicLink(c *gin.Context) {
 	newUserId := uuid.NewString()
 
 	// create user with that email
-	if err = db.Create(&models.User{EmailId: &emailAuth.Email, UserId: newUserId}).Error; err != nil {
+	if err = db.Create(&models.User{Email: &emailAuth.Email, UserId: newUserId}).Error; err != nil {
 		logwrapper.Errorf("failed to create user: %s", err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 		c.Abort()

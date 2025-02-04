@@ -125,7 +125,7 @@ func getScoreBoard(c *gin.Context) {
 			user.ChainName = "-"
 		}
 
-		payload := models.User{UserId: user.UserId, Name: user.Name, WalletAddress: user.WalletAddress, ProfilePictureUrl: user.ProfilePictureUrl, Country: user.Country, Discord: user.Discord, Twitter: user.Twitter, EmailId: user.EmailId, ChainName: user.ChainName}
+		payload := models.User{UserId: user.UserId, Name: user.Name, WalletAddress: user.WalletAddress, ProfilePictureUrl: user.ProfilePictureUrl, Country: user.Country, Discord: user.Discord, Twitter: user.Twitter, Email: user.Email, ChainName: user.ChainName}
 
 		UserScoreBoard.UserDetails = payload
 

@@ -68,7 +68,7 @@ func authGoogle(c *gin.Context) {
 
 			// User does not exist, so create a new user
 			user = models.User{
-				EmailId: &email,
+				Email: &email,
 				UserId:  uuid.NewString(),
 			}
 			err = db.Model(&models.User{}).Create(&user).Error
@@ -85,7 +85,7 @@ func authGoogle(c *gin.Context) {
 		}
 	}
 
-	customClaims := claims.NewWithEmail(user.UserId, user.EmailId)
+	customClaims := claims.NewWithEmail(user.UserId, user.Email)
 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	if err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -154,7 +154,7 @@ func authGoogleApp(c *gin.Context) {
 
 			// User does not exist, so create a new user
 			user = models.User{
-				EmailId: &request.Email,
+				Email: &request.Email,
 				UserId:  uuid.NewString(),
 			}
 			err = db.Model(&models.User{}).Create(&user).Error
@@ -171,7 +171,7 @@ func authGoogleApp(c *gin.Context) {
 		}
 	}
 
-	customClaims := claims.NewWithEmail(user.UserId, user.EmailId)
+	customClaims := claims.NewWithEmail(user.UserId, user.Email)
 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	if err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -229,9 +229,9 @@ func registerApple(c *gin.Context) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// User does not exist, so create a new user
 			user = models.User{
-				EmailId: &request.Email,
-				UserId:  uuid.NewString(),
-				Apple: &request.AppleId,
+				Email:  &request.Email,
+				UserId: uuid.NewString(),
+				Apple:  &request.AppleId,
 			}
 			err = db.Model(&models.User{}).Create(&user).Error
 			if err != nil {
@@ -262,7 +262,7 @@ func registerApple(c *gin.Context) {
 		}
 	}
 
-	// customClaims := claims.NewWithEmail(user.UserId, user.EmailId)
+	// customClaims := claims.NewWithEmail(user.UserId, user.Email)
 	// pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	// if err != nil {
 	// 	httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -310,14 +310,14 @@ func getUserDetails(c *gin.Context) {
 		return
 	}
 
-	// Validate EmailId
+	// Validate Email
 	if queryReq.AppleId == "" {
-		httpo.NewErrorResponse(http.StatusBadRequest, "EmailId is required").SendD(c)
+		httpo.NewErrorResponse(http.StatusBadRequest, "Email is required").SendD(c)
 		return
 	}
 
 	var user models.User
-	// Query the database to find the user by EmailId
+	// Query the database to find the user by Email
 	if err := db.Where("apple_id = ?", queryReq.AppleId).First(&user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			httpo.NewErrorResponse(http.StatusNotFound, "User not found").SendD(c)

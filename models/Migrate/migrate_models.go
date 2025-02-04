@@ -19,6 +19,7 @@ type User struct {
 	Country           string
 	Feedbacks         []UserFeedback
 	Email             *string
+	EmailId           *string
 	ChainName         string
 	Apple             *string
 	Google            *string

@@ -35,7 +35,7 @@ func patchProfile(c *gin.Context) {
 	profileUpdate := models.User{
 		Name:              requestBody.Name,
 		ProfilePictureUrl: requestBody.ProfilePictureUrl,
-		EmailId:           &requestBody.EmailId,
+		Email:             &requestBody.EmailId,
 		Country:           requestBody.Country,
 		Discord:           requestBody.Discord,
 		Twitter:           requestBody.Twitter,
@@ -88,7 +88,7 @@ func getProfile(c *gin.Context) {
 	}
 
 	payload := GetProfilePayload{
-		user.UserId, user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country, user.Discord, user.Twitter, user.EmailId, user.Apple, user.Telegram, user.Farcaster,user.Google,
+		user.UserId, user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country, user.Discord, user.Twitter, user.Email, user.Apple, user.Telegram, user.Farcaster, user.Google,
 	}
 	httpo.NewSuccessResponseP(200, "Profile fetched successfully", payload).SendD(c)
 }
