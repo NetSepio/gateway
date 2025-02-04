@@ -18,7 +18,7 @@ type User struct {
 	ProfilePictureUrl string
 	Country           string
 	Feedbacks         []UserFeedback
-	Email             *string
+	Email             *string `gorm:"unique;index"`
 	ChainName         string
 	Apple             *string
 	Google            *string
