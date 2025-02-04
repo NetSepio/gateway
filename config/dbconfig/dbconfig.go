@@ -9,7 +9,6 @@ import (
 
 	"github.com/NetSepio/gateway/config/envconfig"
 	migrate "github.com/NetSepio/gateway/models/Migrate"
-	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 
 	"gorm.io/driver/postgres"
 )
@@ -57,7 +56,7 @@ func Migrate() error {
 	// db.Exec(`ALTER TABLE leader_boards DROP COLUMN IF EXISTS users;`)
 	db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
 
-	if err := db.Debug().AutoMigrate(
+	for _, model := range []interface{}{
 		&migrate.User{},
 		&migrate.Role{},
 		&migrate.UserFeedback{},
@@ -82,11 +81,15 @@ func Migrate() error {
 		&migrate.DVPNNFTRecord{},
 		&migrate.ScoreBoard{},
 		&migrate.ActivityUnitXp{},
-	); err != nil {
-		logrus.Fatalf("failed to automigrate: %v", err)
+	} {
+
+		if err := db.AutoMigrate(model); err != nil {
+			logrus.Fatalf("failed to migrate %T: %v", model, err.Error())
+			return err
+		}
 	}
 
-	logwrapper.Log.Info("Congrats ! Automigration completed")
+	logrus.Info("Migrated all models")
 
 	return nil
 }

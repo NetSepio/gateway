@@ -1,6 +1,7 @@
 package app
 
 import (
+	"strings"
 	"time"
 
 	"github.com/NetSepio/gateway/api"
@@ -26,7 +27,7 @@ func Init() {
 
 	GinApp = gin.Default()
 
-	if envconfig.EnvVars.API_SET_MODE == "debug" {
+	if strings.ToLower(envconfig.EnvVars.GIN_MODE) == "debug" {
 		gin.SetMode(gin.DebugMode)
 	} else {
 		gin.SetMode(gin.ReleaseMode)
@@ -50,7 +51,6 @@ func Init() {
 	GinApp.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
-	// dbconfig.Init()
 	go reportroutine.StartProcessingReportsPeriodically()
 	// go webreview.Init()
 }
