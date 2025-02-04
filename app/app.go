@@ -19,6 +19,7 @@ var GinApp *gin.Engine
 
 func Init() {
 	envconfig.InitEnvVars()
+	dbconfig.Migrate()
 	stripe.Key = envconfig.EnvVars.STRIPE_SECRET_KEY
 	constants.InitConstants()
 	logwrapper.Init()
@@ -41,7 +42,7 @@ func Init() {
 		AllowOrigins:     []string{"*"},
 	})
 	GinApp.Use(corsM)
-	dbconfig.Migrate()
+
 	api.ApplyRoutes(GinApp)
 
 	//adding health check
