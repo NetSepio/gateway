@@ -48,7 +48,7 @@ func authGoogle(c *gin.Context) {
 
 	email := tokenValidationRes.Claims["email"].(string)
 	var user models.User
-	err = db.Model(&models.User{}).Where("email_id = ?", email).First(&user).Error
+	err = db.Model(&models.User{}).Where("email = ?", email).First(&user).Error
 	if err == nil && userId != "" {
 		httpo.NewErrorResponse(http.StatusBadRequest, "another user with this email already exist").SendD(c)
 		return
@@ -56,7 +56,7 @@ func authGoogle(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			if userId != "" {
-				err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email_id", email).Error
+				err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email", email).Error
 				if err != nil {
 					logwrapper.Errorf("failed to update user email: %s", err)
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
@@ -68,8 +68,8 @@ func authGoogle(c *gin.Context) {
 
 			// User does not exist, so create a new user
 			user = models.User{
-				Email: &email,
-				UserId:  uuid.NewString(),
+				Email:  &email,
+				UserId: uuid.NewString(),
 			}
 			err = db.Model(&models.User{}).Create(&user).Error
 			if err != nil {
@@ -134,7 +134,7 @@ func authGoogleApp(c *gin.Context) {
 
 	// email := tokenValidationRes.Claims["email"].(string)
 	var user models.User
-	err = db.Model(&models.User{}).Where("email_id = ?", request.Email).First(&user).Error
+	err = db.Model(&models.User{}).Where("email = ?", request.Email).First(&user).Error
 	if err == nil && userId != "" {
 		httpo.NewErrorResponse(http.StatusBadRequest, "another user with this email already exist").SendD(c)
 		return
@@ -142,7 +142,7 @@ func authGoogleApp(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			if userId != "" {
-				err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email_id", request.Email).Error
+				err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email", request.Email).Error
 				if err != nil {
 					logwrapper.Errorf("failed to update user email: %s", err)
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
@@ -154,8 +154,8 @@ func authGoogleApp(c *gin.Context) {
 
 			// User does not exist, so create a new user
 			user = models.User{
-				Email: &request.Email,
-				UserId:  uuid.NewString(),
+				Email:  &request.Email,
+				UserId: uuid.NewString(),
 			}
 			err = db.Model(&models.User{}).Create(&user).Error
 			if err != nil {
@@ -220,7 +220,7 @@ func registerApple(c *gin.Context) {
 
 	// email := tokenValidationRes.Claims["email"].(string)
 	var user models.User
-	err = db.Model(&models.User{}).Where("email_id = ?", request.Email).First(&user).Error
+	err = db.Model(&models.User{}).Where("email = ?", request.Email).First(&user).Error
 	if err == nil {
 		httpo.NewErrorResponse(http.StatusBadRequest, "another user with this email already exist").SendD(c)
 		return
@@ -245,7 +245,7 @@ func registerApple(c *gin.Context) {
 			// httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 			// return
 			if user.UserId != "" {
-				err = db.Model(&models.User{}).Where("email_id = ?", request.Email).Update("email_id", request.Email).Error
+				err = db.Model(&models.User{}).Where("email = ?", request.Email).Update("email", request.Email).Error
 				if err != nil {
 					logwrapper.Errorf("failed to update user email: %s", err)
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)

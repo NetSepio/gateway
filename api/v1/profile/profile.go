@@ -80,7 +80,7 @@ func getProfile(c *gin.Context) {
 	db := dbconfig.GetDb()
 	userId := c.GetString(paseto.CTX_USER_ID)
 	var user models.User
-	err := db.Model(&models.User{}).Select("user_id, name, profile_picture_url,country, wallet_address, discord, twitter, email_id, apple, telegram, farcaster, google").Where("user_id = ?", userId).First(&user).Error
+	err := db.Model(&models.User{}).Select("user_id, name, profile_picture_url,country, wallet_address, discord, twitter, email, apple, telegram, farcaster, google").Where("user_id = ?", userId).First(&user).Error
 	if err != nil {
 		logrus.Error(err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)

@@ -31,7 +31,7 @@ type ResponsePayload struct {
 }
 type APTRequestPayload struct {
 	WalletAddress string `json:"wallet_address"`
-	EmailID       string `json:"email_id"`
+	EmailID       string `json:"email"`
 }
 
 func ApplyRoutes(r *gin.RouterGroup) {
@@ -243,7 +243,7 @@ func checkWalletAddressExists(walletAddress, chain string) (bool, error) {
 func checkEmailExists(email string) (bool, error) {
 	db := dbconfig.GetDb()
 	var count int64
-	result := db.Model(&models.DVPNNFTRecord{}).Where("email_id = ?", email).Count(&count)
+	result := db.Model(&models.DVPNNFTRecord{}).Where("email = ?", email).Count(&count)
 	return count > 0, result.Error
 }
 

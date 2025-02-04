@@ -146,7 +146,7 @@ type UserRole struct {
 }
 
 type WaitList struct {
-	EmailID       string `gorm:"column:email_id"`
+	EmailID       string `gorm:"column:email"`
 	WalletAddress string `gorm:"column:wallet_address"`
 	Twitter       string `gorm:"column:twitter"`
 	Discord       string `gorm:"column:discord"`

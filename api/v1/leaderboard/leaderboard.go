@@ -108,7 +108,7 @@ func getScoreBoard(c *gin.Context) {
 		}
 
 		var user models.User
-		err := db.Model(&models.User{}).Select("user_id, name, profile_picture_url,country, wallet_address, discord, twitter, email_id, chain_name").Where("user_id = ?", data.UserId).First(&user).Error
+		err := db.Model(&models.User{}).Select("user_id, name, profile_picture_url,country, wallet_address, discord, twitter, email, chain_name").Where("user_id = ?", data.UserId).First(&user).Error
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				response = append(response, UserScoreBoard)

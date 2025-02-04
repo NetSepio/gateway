@@ -127,7 +127,7 @@ func PasetoFromMagicLink(c *gin.Context) {
 	fmt.Printf("userId: %s\n", userId)
 	// don't create user if paseto exist
 	var user models.User
-	err = db.Model(&models.User{}).Where("email_id = ?", emailAuth.Email).First(&user).Error
+	err = db.Model(&models.User{}).Where("email = ?", emailAuth.Email).First(&user).Error
 	if err == nil {
 		if userId != "" {
 			// return error stating that user with email exist so it cannot be linked
@@ -159,7 +159,7 @@ func PasetoFromMagicLink(c *gin.Context) {
 
 	if userId != "" {
 		// update user with that email
-		if err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email_id", emailAuth.Email).Error; err != nil {
+		if err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email", emailAuth.Email).Error; err != nil {
 			logwrapper.Errorf("failed to update user: %s", err)
 			httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 			c.Abort()
