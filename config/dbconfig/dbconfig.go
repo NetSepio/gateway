@@ -57,7 +57,7 @@ func Migrate() error {
 	// db.Exec(`ALTER TABLE leader_boards DROP COLUMN IF EXISTS users;`)
 	db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
 
-	if err := db.AutoMigrate(
+	if err := db.Debug().AutoMigrate(
 		&migrate.User{},
 		&migrate.Role{},
 		&migrate.UserFeedback{},
