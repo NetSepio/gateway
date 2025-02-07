@@ -26,6 +26,7 @@ type GetProfilePayload struct {
 	Telegram          string  `json:"telegram,omitempty"`
 	Farcaster         *string `json:"farcaster,omitempty"`
 	Google            *string `json:"google,omitempty"`
+	ChainName         string `json:"chainName,omitempty"`
 }
 
 type UpdateUserRequest struct {
