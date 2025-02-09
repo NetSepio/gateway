@@ -230,7 +230,7 @@ func BetaGraphqlQueryForLeaderboardHandler(c *gin.Context) {
 		wg.Done()
 	}
 
-	httpo.NewSuccessResponseP(200, "request successfully will be done withing few min, BetaGraphqlQueryForLeaderboardHandler", payload).SendD(c)
+	httpo.NewSuccessResponseP(200, "request successfully will be done within few min, BetaGraphqlQueryForLeaderboardHandler", payload).SendD(c)
 }
 func ErebrusQueryForLeaderboardHandler(c *gin.Context) {
 
@@ -254,5 +254,5 @@ func ErebrusQueryForLeaderboardHandler(c *gin.Context) {
 		wg.Done()
 	}
 
-	httpo.NewSuccessResponseP(200, "request successfully will be done withing few min, ErebrusQueryForLeaderboardHandler", payload).SendD(c)
+	httpo.NewSuccessResponseP(200, "request successfully will be done within few min, ErebrusQueryForLeaderboardHandler", payload).SendD(c)
 }
