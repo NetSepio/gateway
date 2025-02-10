@@ -29,9 +29,11 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	}
 }
 
+var CTX_CHAIN_NAME = "CHAIN_NAME"
+
 func authenticate(c *gin.Context) {
 	db := dbconfig.GetDb()
-	chain_symbol := c.Query("chain") //google
+	chain_symbol := c.Query("chain") //google\
 	//TODO remove flow id if 200"
 	var req AuthenticateRequest
 
@@ -39,6 +41,21 @@ func authenticate(c *gin.Context) {
 	if err != nil {
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
 		return
+	}
+
+	if len(chain_symbol) == 0 && len(req.ChainName) == 0 {
+		httpo.NewErrorResponse(http.StatusBadRequest, "chain name is required").SendD(c)
+		return
+	}
+
+	if len(chain_symbol) != 0 {
+		c.Set(CTX_CHAIN_NAME, chain_symbol)
+	} else {
+		c.Set(CTX_CHAIN_NAME, req.ChainName)
+	}
+
+	if len(req.ChainName) == 0 {
+		req.ChainName = chain_symbol
 	}
 
 	//Get flowid type
