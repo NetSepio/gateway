@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/httpo"
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -44,9 +46,45 @@ func patchProfile(c *gin.Context) {
 		Telegram:          requestBody.Telegram,
 		Farcaster:         requestBody.Farcaster,
 	}
+
+	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+
 	userId := c.GetString(paseto.CTX_USER_ID)
-	if userId == "" {
+
+	if userId == "" || walletAddress == "" {
 		httpo.NewErrorResponse(http.StatusForbidden, "User not found").SendD(c)
+		return
+	}
+
+	if errr := func(google, walletAddress string) error {
+		var user models.User
+
+		// Check if the user exists with the provided email and non-null wallet address
+		err := db.Where("google = ? AND wallet_address = ? ", google, walletAddress).First(&user).Error
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				// If google is already nil, delete the user
+				if err := db.Delete(&user).Where("google = ?", google).Error; err != nil {
+					return fmt.Errorf("failed to delete user with wallet address %s: %v", *user.WalletAddress, err)
+				}
+				logrus.Info("User deleted successfully.")
+				return fmt.Errorf("no user found with google %s and %s wallet address", google, walletAddress)
+			}
+			return err
+		}
+
+		// If email exists, remove it from the user's account
+		if user.Email != nil {
+			user.Email = nil
+			if err := db.Save(&user).Error; err != nil {
+				return fmt.Errorf("failed to remove email from user with wallet address %s: %v", *user.WalletAddress, err)
+			}
+			logrus.Info("Email removed successfully.")
+		}
+
+		return nil // Success
+	}(*requestBody.Google, walletAddress); errr != nil {
+		httpo.NewErrorResponse(http.StatusInternalServerError, errr.Error()).SendD(c)
 		return
 	}
 
