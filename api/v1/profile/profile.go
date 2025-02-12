@@ -34,10 +34,17 @@ func patchProfile(c *gin.Context) {
 		return
 	}
 
+	var email *string
+	if requestBody.EmailId == "" {
+		email = nil // This will store NULL in the database
+	} else {
+		email = &requestBody.EmailId // Store the provided email
+	}
+
 	profileUpdate := models.User{
 		Name:              requestBody.Name,
 		ProfilePictureUrl: requestBody.ProfilePictureUrl,
-		Email:             &requestBody.EmailId,
+		Email:             email,
 		Country:           requestBody.Country,
 		Discord:           requestBody.Discord,
 		Twitter:           requestBody.Twitter,
@@ -92,7 +99,7 @@ func patchProfile(c *gin.Context) {
 
 	result := db.Model(&models.User{}).
 		Where("user_id = ?", userId).
-		Updates(&profileUpdate)
+		Updates(&profileUpdate).Debug()
 
 	if result.Error != nil {
 		// Check if the error is a PostgreSQL error
@@ -105,11 +112,6 @@ func patchProfile(c *gin.Context) {
 		}
 		// Handle other errors
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
-		return
-	}
-
-	if result.RowsAffected == 0 {
-		httpo.NewErrorResponse(http.StatusNotFound, "Record not found").SendD(c)
 		return
 	}
 
