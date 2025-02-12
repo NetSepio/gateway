@@ -56,11 +56,11 @@ func patchProfile(c *gin.Context) {
 		return
 	}
 
-	if errr := func(google, walletAddress string) error {
+	if errr := func(google, walletAddress, userId string) error {
 		var user models.User
 
 		// Check if the user exists with the provided email and non-null wallet address
-		err := db.Where("google = ? AND wallet_address = ? ", google, walletAddress).First(&user).Error
+		err := db.Where("google = ? AND wallet_address != ? ", google, walletAddress).First(&user).Error
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				// If google is already nil, delete the user
@@ -76,14 +76,14 @@ func patchProfile(c *gin.Context) {
 		// If email exists, remove it from the user's account
 		if user.Email != nil {
 			user.Email = nil
-			if err := db.Save(&user).Error; err != nil {
+			if err := db.Save(&user).Where("google = ? AND wallet_address != ? ", google, walletAddress).Error; err != nil {
 				return fmt.Errorf("failed to remove email from user with wallet address %s: %v", *user.WalletAddress, err)
 			}
 			logrus.Info("Email removed successfully.")
 		}
 
 		return nil // Success
-	}(*requestBody.Google, walletAddress); errr != nil {
+	}(*requestBody.Google, walletAddress, userId); errr != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, errr.Error()).SendD(c)
 		return
 	}
