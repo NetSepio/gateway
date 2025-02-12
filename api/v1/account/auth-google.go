@@ -25,7 +25,6 @@ import (
 // For creating account or siging pass without paseto
 // For linking pass paseto
 func authGoogle(c *gin.Context) {
-	userId := c.GetString(paseto.CTX_USER_ID)
 	db := dbconfig.GetDb()
 	var request CreateAccountRequest
 	err := c.BindJSON(&request)
@@ -49,23 +48,8 @@ func authGoogle(c *gin.Context) {
 	email := tokenValidationRes.Claims["email"].(string)
 	var user models.User
 	err = db.Model(&models.User{}).Where("email = ?", email).First(&user).Error
-	if err == nil && userId != "" {
-		httpo.NewErrorResponse(http.StatusBadRequest, "another user with this email already exist").SendD(c)
-		return
-	}
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			if userId != "" {
-				err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email", email).Error
-				if err != nil {
-					logwrapper.Errorf("failed to update user email: %s", err)
-					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
-					return
-				}
-				httpo.NewSuccessResponse(200, "email linked successfully").SendD(c)
-				return
-			}
-
 			// User does not exist, so create a new user
 			user = models.User{
 				Email:  &email,
@@ -107,7 +91,6 @@ func authGoogle(c *gin.Context) {
 	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 }
 func authGoogleApp(c *gin.Context) {
-	userId := c.GetString(paseto.CTX_USER_ID)
 	db := dbconfig.GetDb()
 	var request AppAccountRequest
 	err := c.BindJSON(&request)
@@ -116,45 +99,14 @@ func authGoogleApp(c *gin.Context) {
 		return
 	}
 
-	// ctx := context.Background()
-	// tokenValidationRes, err := verifyIDToken(ctx, request.IdToken)
-	// if err != nil {
-	// 	httpo.NewErrorResponse(http.StatusBadRequest, "failed to validate ").SendD(c)
-	// 	return
-	// }
-
-	// response := map[string]interface{}{
-	// 	"email": payload.Claims["email"],
-	// 	"name":  payload.Claims["name"],
-	// }
-	// if !tokenValidationRes.Claims["email_verified"].(bool) {
-	// 	httpo.NewErrorResponse(http.StatusForbidden, "email not verified").SendD(c)
-	// 	return
-	// }
-
-	// email := tokenValidationRes.Claims["email"].(string)
 	var user models.User
-	err = db.Model(&models.User{}).Where("email = ?", request.Email).First(&user).Error
-	if err == nil && userId != "" {
-		httpo.NewErrorResponse(http.StatusBadRequest, "another user with this email already exist").SendD(c)
-		return
-	}
+	err = db.Model(&models.User{}).Where("google = ?", request.Email).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			if userId != "" {
-				err = db.Model(&models.User{}).Where("user_id = ?", userId).Update("email", request.Email).Error
-				if err != nil {
-					logwrapper.Errorf("failed to update user email: %s", err)
-					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
-					return
-				}
-				httpo.NewSuccessResponse(200, "email linked successfully").SendD(c)
-				return
-			}
 
 			// User does not exist, so create a new user
 			user = models.User{
-				Email:  &request.Email,
+				Google: &request.Email,
 				UserId: uuid.NewString(),
 			}
 			err = db.Model(&models.User{}).Create(&user).Error
@@ -170,6 +122,8 @@ func authGoogleApp(c *gin.Context) {
 			return
 		}
 	}
+
+	c.Set(paseto.CTX_USER_ID, user.UserId)
 
 	customClaims := claims.NewWithEmail(user.UserId, user.Email)
 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
