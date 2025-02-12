@@ -64,7 +64,7 @@ func patchProfile(c *gin.Context) {
 		if err != nil {
 			if err == gorm.ErrRecordNotFound {
 				// If google is already nil, delete the user
-				if err := db.Delete(&user).Where("google = ?", google).Error; err != nil {
+				if err := db.Where("google = ? AND (wallet_address IS NULL OR wallet_address = '')", google).Delete(&user).Error; err != nil {
 					return fmt.Errorf("failed to delete user with wallet address %s: %v", *user.WalletAddress, err)
 				}
 				logrus.Info("User deleted successfully.")
@@ -74,8 +74,8 @@ func patchProfile(c *gin.Context) {
 		}
 
 		// If email exists, remove it from the user's account
-		if user.Email != nil {
-			user.Email = nil
+		if user.Google != nil {
+			user.Google = nil
 			if err := db.Save(&user).Where("google = ? AND wallet_address != ? ", google, walletAddress).Error; err != nil {
 				return fmt.Errorf("failed to remove email from user with wallet address %s: %v", *user.WalletAddress, err)
 			}
