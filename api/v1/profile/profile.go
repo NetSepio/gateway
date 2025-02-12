@@ -66,9 +66,11 @@ func patchProfile(c *gin.Context) {
 				// If google is already nil, delete the user
 				if err := db.Where("google = ? AND (wallet_address IS NULL OR wallet_address = '')", google).Delete(&user).Error; err != nil {
 					return fmt.Errorf("failed to delete user with wallet address %s: %v", *user.WalletAddress, err)
+				} else {
+					logrus.Info("User deleted successfully.")
+					return nil
 				}
-				logrus.Info("User deleted successfully.")
-				return fmt.Errorf("no user found with google %s and %s wallet address", google, walletAddress)
+
 			}
 			return err
 		}
