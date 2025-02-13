@@ -16,6 +16,7 @@ type User struct {
 	Feedbacks         []UserFeedback `gorm:"foreignkey:UserId" json:"userFeedbacks"`
 	Email             *string        `json:"emailId,omitempty"`
 	ChainName         string         `json:"chainName,omitempty"`
+	AppleId           *string        `json:"appleId,omitempty"`
 	Apple             *string        `json:"apple,omitempty"`
 	Google            *string        `json:"google,omitempty"` // Google
 	Telegram          string         `json:"telegram,omitempty"`

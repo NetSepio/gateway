@@ -12,7 +12,7 @@ type AppAccountRequest struct {
 	Email string `json:"email" binding:"required"`
 }
 type AuthAppAccountRequest struct {
-	AppleID  string `json:"apple_id"`
+	AppleID  string `json:"appleId"`
 	Email    string `json:"email" binding:"required"`
 	AuthType string `json:"authType" binding:"required"`
 }

@@ -197,9 +197,9 @@ func allAuthApp(c *gin.Context) {
 				}
 
 				user = models.User{
-					Email:  &request.Email,
-					UserId: uuid.NewString(),
-					Apple:  appleId,
+					Apple:   &request.Email,
+					UserId:  uuid.NewString(),
+					AppleId: appleId,
 				}
 				err = db.Model(&models.User{}).Create(&user).Error
 				if err != nil {
@@ -217,29 +217,30 @@ func allAuthApp(c *gin.Context) {
 
 			}
 		}
-		c.Set(paseto.CTX_USER_ID, user.UserId)
 
-		customClaims := claims.NewWithEmail(user.UserId, user.Email)
-		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
-		if err != nil {
-			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-			logwrapper.Errorf("failed to generate token, error %v", err.Error())
-			return
-		}
-
-		pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
-		if err != nil {
-			logwrapper.Errorf("failed to create paseto token: %s", err)
-			httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
-			return
-		}
-
-		payload := CreateAccountResponse{
-			Token:  pasetoToken,
-			UserId: user.UserId,
-		}
-		httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 	}
+	c.Set(paseto.CTX_USER_ID, user.UserId)
+
+	customClaims := claims.NewWithEmail(user.UserId, user.Email)
+	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
+	if err != nil {
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+		logwrapper.Errorf("failed to generate token, error %v", err.Error())
+		return
+	}
+
+	pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
+	if err != nil {
+		logwrapper.Errorf("failed to create paseto token: %s", err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+		return
+	}
+
+	payload := CreateAccountResponse{
+		Token:  pasetoToken,
+		UserId: user.UserId,
+	}
+	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 }
 func registerApple(c *gin.Context) {
 	// userId := c.GetString(paseto.CTX_USER_ID)
