@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -145,6 +146,100 @@ func authGoogleApp(c *gin.Context) {
 		UserId: user.UserId,
 	}
 	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
+}
+func allAuthApp(c *gin.Context) {
+	db := dbconfig.GetDb()
+	var request AuthAppAccountRequest
+	err := c.BindJSON(&request)
+	if err != nil {
+		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
+		return
+	}
+
+	var user models.User
+
+	if strings.ToLower(request.AuthType) == AUTH_GOOGLE_APP {
+
+		err = db.Model(&models.User{}).Where("google = ?", request.Email).First(&user).Error
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+
+				// User does not exist, so create a new user
+				user = models.User{
+					Google: &request.Email,
+					UserId: uuid.NewString(),
+				}
+				err = db.Model(&models.User{}).Create(&user).Error
+				if err != nil {
+					logwrapper.Errorf("failed to create user: %s", err)
+					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error : "+err.Error()).SendD(c)
+					return
+				}
+			} else {
+				// Other error occurred
+				logwrapper.Errorf("failed to retrieve user: %s", err)
+				httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error : "+err.Error()).SendD(c)
+				return
+			}
+		}
+
+	} else if strings.ToLower(request.AuthType) == AUTH_APPLLE_APP {
+		err = db.Model(&models.User{}).Where("apple = ?", request.Email).First(&user).Error
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				// User does not exist, so create a new user
+
+				var appleId *string
+				if request.AppleID == "" {
+					appleId = nil // This will store NULL in the database
+				} else {
+					appleId = &request.AppleID // Store the provided email
+				}
+
+				user = models.User{
+					Email:  &request.Email,
+					UserId: uuid.NewString(),
+					Apple:  appleId,
+				}
+				err = db.Model(&models.User{}).Create(&user).Error
+				if err != nil {
+					logwrapper.Errorf("failed to create user: %s", err)
+					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error : "+err.Error()).SendD(c)
+					return
+				} else {
+					logwrapper.Infof("user created successfully")
+				}
+			} else {
+				// Other error occurred
+				logwrapper.Errorf("failed to retrieve user: %s", err)
+				httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error : "+err.Error()).SendD(c)
+				return
+
+			}
+		}
+		c.Set(paseto.CTX_USER_ID, user.UserId)
+
+		customClaims := claims.NewWithEmail(user.UserId, user.Email)
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to generate token, error %v", err.Error())
+			return
+		}
+
+		pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
+		if err != nil {
+			logwrapper.Errorf("failed to create paseto token: %s", err)
+			httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
+			return
+		}
+
+		payload := CreateAccountResponse{
+			Token:  pasetoToken,
+			UserId: user.UserId,
+		}
+		httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
+	}
 }
 func registerApple(c *gin.Context) {
 	// userId := c.GetString(paseto.CTX_USER_ID)

@@ -1,10 +1,20 @@
 package account
 
+const (
+	AUTH_GOOGLE_APP = "google"
+	AUTH_APPLLE_APP = "apple"
+)
+
 type CreateAccountRequest struct {
 	IdToken string `json:"idToken" binding:"required"`
 }
 type AppAccountRequest struct {
 	Email string `json:"email" binding:"required"`
+}
+type AuthAppAccountRequest struct {
+	AppleID  string `json:"apple_id"`
+	Email    string `json:"email" binding:"required"`
+	AuthType string `json:"authType" binding:"required"`
 }
 
 type AppAccountRegisterApple struct {
