@@ -156,6 +156,14 @@ func allAuthApp(c *gin.Context) {
 		return
 	}
 
+	if conditions := request.AuthType == AUTH_GOOGLE_APP && request.Email == ""; conditions {
+		httpo.NewErrorResponse(http.StatusBadRequest, "Email is required for google authentication").SendD(c)
+		return
+	} else if conditions := request.AuthType == AUTH_APPLE_APP && request.AppleID == ""; conditions {
+		httpo.NewErrorResponse(http.StatusBadRequest, "AppleId is required for apple authentication").SendD(c)
+		return
+	}
+
 	var user models.User
 
 	if strings.ToLower(request.AuthType) == AUTH_GOOGLE_APP {
@@ -183,14 +191,14 @@ func allAuthApp(c *gin.Context) {
 			}
 		}
 
-	} else if strings.ToLower(request.AuthType) == AUTH_APPLLE_APP {
-		err = db.Model(&models.User{}).Where("apple = ?", request.Email).First(&user).Error
+	} else if strings.ToLower(request.AuthType) == AUTH_APPLE_APP {
+		err = db.Model(&models.User{}).Where("apple_id = ?", request.AppleID).First(&user).Error
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				// User does not exist, so create a new user
 
 				var appleId *string
-				if request.AppleID == "" {
+				if request.Email == "" {
 					appleId = nil // This will store NULL in the database
 				} else {
 					appleId = &request.AppleID // Store the provided email

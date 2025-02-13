@@ -2,7 +2,7 @@ package account
 
 const (
 	AUTH_GOOGLE_APP = "google"
-	AUTH_APPLLE_APP = "apple"
+	AUTH_APPLE_APP = "apple"
 )
 
 type CreateAccountRequest struct {
@@ -13,7 +13,7 @@ type AppAccountRequest struct {
 }
 type AuthAppAccountRequest struct {
 	AppleID  string `json:"appleId"`
-	Email    string `json:"email" binding:"required"`
+	Email    string `json:"email"`
 	AuthType string `json:"authType" binding:"required"`
 }
 
