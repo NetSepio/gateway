@@ -157,10 +157,15 @@ func allAuthApp(c *gin.Context) {
 	}
 
 	if conditions := request.AuthType == AUTH_GOOGLE_APP && request.Email == ""; conditions {
-		httpo.NewErrorResponse(http.StatusBadRequest, "Email is required for google authentication").SendD(c)
-		return
-	} else if conditions := request.AuthType == AUTH_APPLE_APP && request.AppleID == ""; conditions {
-		httpo.NewErrorResponse(http.StatusBadRequest, "AppleId is required for apple authentication").SendD(c)
+		if request.AppleID != "" {
+			httpo.NewErrorResponse(http.StatusBadRequest, "Apple ID is not required for Google App Auth").SendD(c)
+			return
+		} else {
+			httpo.NewErrorResponse(http.StatusBadRequest, "Email is required for Google App Auth").SendD(c)
+			return
+		}
+	} else if conditions := request.AuthType == AUTH_APPLE_APP && request.AppleID == "" && request.Email == ""; conditions {
+		httpo.NewErrorResponse(http.StatusBadRequest, "Apple Id and Apple Email is required for apple authentication").SendD(c)
 		return
 	}
 
