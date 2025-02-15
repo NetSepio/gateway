@@ -195,7 +195,7 @@ func authenticateNonSignature(c *gin.Context) {
 	db := dbconfig.GetDb()
 	//TODO remove flow id if 200
 	var req AuthenticateRequestNoSign
-	err := c.BindJSON(&req)
+	err := c.ShouldBind(&req)
 	if err != nil {
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
 		return
