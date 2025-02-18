@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
@@ -75,7 +76,7 @@ func authenticate(c *gin.Context) {
 	var isCorrect bool
 	var userId string
 	var walletAddr string
-	if chain_symbol == "evm" {
+	if chain_symbol == "evm" || strings.ToLower(chain_symbol) == "nomad" {
 		userAuthEULA := envconfig.EnvVars.AUTH_EULA
 		message := userAuthEULA + req.FlowId
 		userId, walletAddr, isCorrect, err = cryptosign.CheckSignEth(req.Signature, req.FlowId, message)
@@ -150,6 +151,9 @@ func authenticate(c *gin.Context) {
 			return
 		}
 
+		// c.Set(paseto.CTX_USER_ID, userId)
+		// c.Set(paseto.CTX_WALLET_ADDRES, walletAddr)
+
 		customClaims := claims.NewWithWallet(userId, &walletAddr)
 		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
@@ -169,6 +173,7 @@ func authenticate(c *gin.Context) {
 			logwrapper.Errorf("failed to delete flowId, error %v", err.Error())
 			return
 		}
+
 		payload := AuthenticatePayload{
 			Token:  pasetoToken,
 			UserId: userId,
