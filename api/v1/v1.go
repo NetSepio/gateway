@@ -3,6 +3,7 @@ package apiv1
 import (
 	"github.com/NetSepio/gateway/api/v1/account"
 	"github.com/NetSepio/gateway/api/v1/account/subscription"
+	"github.com/NetSepio/gateway/api/v1/agents"
 	authenticate "github.com/NetSepio/gateway/api/v1/authenticate"
 	delegatereviewcreation "github.com/NetSepio/gateway/api/v1/delegateReviewCreation"
 	"github.com/NetSepio/gateway/api/v1/deletereview"
@@ -15,6 +16,7 @@ import (
 	"github.com/NetSepio/gateway/api/v1/getreviews"
 	"github.com/NetSepio/gateway/api/v1/leaderboard"
 	"github.com/NetSepio/gateway/api/v1/nftcontract"
+	"github.com/NetSepio/gateway/api/v1/nodes"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	"github.com/NetSepio/gateway/api/v1/report"
 	"github.com/NetSepio/gateway/api/v1/sdkauthentication"
@@ -55,6 +57,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		leaderboard.ApplyRoutes(v1)
 		nftcontract.ApplyRoutes(v1)
 		dvpnnft.ApplyRoutes(v1)
+		nodes.ApplyRoutes(v1)
+		agents.ApplyRoutes(v1)
 
 	}
 }
