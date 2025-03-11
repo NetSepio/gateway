@@ -81,6 +81,7 @@ func Migrate() error {
 		&migrate.DVPNNFTRecord{},
 		&migrate.ScoreBoard{},
 		&migrate.ActivityUnitXp{},
+		&migrate.Subscription{},
 	} {
 
 		if err := db.AutoMigrate(model); err != nil {
