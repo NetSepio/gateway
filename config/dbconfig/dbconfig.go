@@ -56,7 +56,7 @@ func Migrate() error {
 	// db.Exec(`ALTER TABLE leader_boards DROP COLUMN IF EXISTS users;`)
 	db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
 
-	for _, model := range []interface{}{
+	for _, model := range []any{
 		&migrate.User{},
 		&migrate.Role{},
 		&migrate.UserFeedback{},
@@ -84,7 +84,7 @@ func Migrate() error {
 		&migrate.Subscription{},
 	} {
 
-		if err := db.AutoMigrate(model); err != nil {
+		if err := db.Debug().AutoMigrate(model); err != nil {
 			logrus.Fatalf("failed to migrate %T: %v", model, err.Error())
 			return err
 		}
