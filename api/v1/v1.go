@@ -17,6 +17,7 @@ import (
 	"github.com/NetSepio/gateway/api/v1/nftcontract"
 	"github.com/NetSepio/gateway/api/v1/profile"
 	"github.com/NetSepio/gateway/api/v1/report"
+	resendemail "github.com/NetSepio/gateway/api/v1/resendEmail"
 	"github.com/NetSepio/gateway/api/v1/sdkauthentication"
 	"github.com/NetSepio/gateway/api/v1/siteinsights"
 	"github.com/NetSepio/gateway/api/v1/sotreus"
@@ -55,6 +56,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		leaderboard.ApplyRoutes(v1)
 		nftcontract.ApplyRoutes(v1)
 		dvpnnft.ApplyRoutes(v1)
+		resendemail.ApplyRoutes(v1)
 
 	}
 }

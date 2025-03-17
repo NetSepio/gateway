@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/NetSepio/gateway/api"
+	resendemail "github.com/NetSepio/gateway/api/v1/resendEmail"
 	"github.com/NetSepio/gateway/app/routines/reportroutine"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/stripe/stripe-go/v76"
@@ -20,6 +21,7 @@ var GinApp *gin.Engine
 
 func Init() {
 	envconfig.InitEnvVars()
+	resendemail.InitRedis()
 	dbconfig.Migrate()
 	stripe.Key = envconfig.EnvVars.STRIPE_SECRET_KEY
 	constants.InitConstants()

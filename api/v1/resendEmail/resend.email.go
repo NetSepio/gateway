@@ -1,0 +1,129 @@
+package resendemail
+
+import (
+	"context"
+	"crypto/rand"
+	"fmt"
+	"math/big"
+	"net/http"
+	"time"
+
+	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/config/dbconfig"
+	"github.com/NetSepio/gateway/config/envconfig"
+	"github.com/NetSepio/gateway/models"
+	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
+	"github.com/resend/resend-go/v2"
+	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
+)
+
+var (
+	rdb *redis.Client
+	ctx = context.Background() // context.Background() is a function that returns a new context
+)
+
+func InitRedis() {
+	address := envconfig.EnvVars.REDIS_HOST + ":" + "6379"
+	password := envconfig.EnvVars.REDIS_PASSWORD
+
+	rdb = redis.NewClient(&redis.Options{
+		Addr:     address,
+		Password: password, // No password set
+		DB:       0,        // Use default DB
+		Protocol: 2,        // Connection protocol
+	})
+	if rdb.Ping(ctx).Err() != nil {
+		logrus.Fatal(rdb.Ping(ctx).Err())
+	}
+}
+
+func generateOTP() string {
+	max := big.NewInt(999999)
+	n, err := rand.Int(rand.Reader, max)
+	if err != nil {
+		panic(err)
+	}
+	return fmt.Sprintf("%06s", n.String())
+}
+
+func sendOTP(c *gin.Context) {
+	var req struct {
+		Email string `json:"email"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	otp := generateOTP()
+	expiration := 15 * time.Minute
+
+	rdb.Set(ctx, otp, req.Email, expiration)
+
+	client := resend.NewClient(envconfig.EnvVars.RESEND_API_KEY)
+	params := &resend.SendEmailRequest{
+		To:      []string{req.Email},
+		From:    "Acme <noreply@info.erebrus.io>",
+		Text:    fmt.Sprintf("Your OTP is: %s", otp),
+		Subject: "Your OTP Code",
+	}
+
+	_, err := client.Emails.Send(params)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send OTP"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "OTP sent successfully"})
+}
+
+func verifyOTP(c *gin.Context) {
+	var req struct {
+		OTP string `json:"otp"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	storedEmail, err := rdb.Get(ctx, req.OTP).Result()
+	if err == redis.Nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired OTP"})
+		return
+	} else {
+
+		db := dbconfig.GetDb()
+
+		userId := c.GetString(paseto.CTX_USER_ID)
+
+		userId = "939dfdfa-0495-4196-a9ca-09acd60a508b"
+
+		// print the value of the key
+		fmt.Println("Stored storedEmail: ", storedEmail)
+
+		// update user's email in the database
+		err := db.Model(&models.User{}).Where("user_id = ?", userId).Update("email", storedEmail).Error
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				c.JSON(http.StatusNotFound, gin.H{"error": "User not found", "message": "failed to update the details please try again"})
+				return
+
+			}
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update email"})
+			return
+		}
+	}
+
+	rdb.Del(ctx, req.OTP) // OTP is one-time use
+
+	c.JSON(http.StatusOK, gin.H{"message": "OTP verified successfully"})
+}
+
+func ApplyRoutes(r *gin.RouterGroup) {
+	// add paseto middleware
+	r.Use(paseto.PASETO(true))
+	r.POST("/send-otp", sendOTP)
+	r.POST("/verify-otp", verifyOTP)
+}
