@@ -1,4 +1,4 @@
-package resendemail
+package profileEmail
 
 import (
 	"context"
@@ -11,6 +11,7 @@ import (
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
+	"github.com/NetSepio/gateway/config/redisconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
@@ -20,7 +21,7 @@ import (
 )
 
 var (
-	rdb *redis.Client
+	rdb = redisconfig.Rdb
 	ctx = context.Background() // context.Background() is a function that returns a new context
 )
 
@@ -98,8 +99,6 @@ func VerifyOTP(c *gin.Context) {
 
 		userId := c.GetString(paseto.CTX_USER_ID)
 
-		userId = "939dfdfa-0495-4196-a9ca-09acd60a508b"
-
 		// print the value of the key
 		fmt.Println("Stored storedEmail: ", storedEmail)
 
@@ -120,5 +119,3 @@ func VerifyOTP(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "OTP verified successfully"})
 }
-
-
