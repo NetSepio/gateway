@@ -52,6 +52,13 @@ type config struct {
 
 	CONTRACT_ADDRESS string `env:"CONTRACT_ADDRESS,notEmpty"`
 	PRIVATE_KEY      string `env:"PRIVATE_KEY,notEmpty"`
+
+	// REDIS
+	REDIS_HOST     string `env:"REDIS_HOST,notEmpty"`
+	REDIS_PASSWORD string `env:"REDIS_PASSWORD,notEmpty"`
+
+	// RESEND API KEY
+	RESEND_API_KEY string `env:"RESEND_API_KEY,notEmpty"`
 }
 
 var EnvVars config = config{}

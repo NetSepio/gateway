@@ -5,13 +5,14 @@ import (
 	"time"
 
 	"github.com/NetSepio/gateway/api"
+
 	"github.com/NetSepio/gateway/app/routines/reportroutine"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/stripe/stripe-go/v76"
 
-	"github.com/NetSepio/gateway/config/constants"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
+	"github.com/NetSepio/gateway/config/redisconfig"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -20,9 +21,9 @@ var GinApp *gin.Engine
 
 func Init() {
 	envconfig.InitEnvVars()
+	redisconfig.InitRedis()
 	dbconfig.Migrate()
 	stripe.Key = envconfig.EnvVars.STRIPE_SECRET_KEY
-	constants.InitConstants()
 	logwrapper.Init()
 
 	GinApp = gin.Default()
