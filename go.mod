@@ -5,7 +5,6 @@ go 1.23
 toolchain go1.23.4
 
 require (
-	github.com/TheLazarusNetwork/go-helpers/httpo v0.0.0-20231109144013-1ac3070f2b48
 	github.com/caarlos0/env/v6 v6.10.1
 	github.com/chromedp/cdproto v0.0.0-20250126231910-1730200a0f74
 	github.com/chromedp/chromedp v0.12.1

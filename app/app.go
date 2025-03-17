@@ -10,7 +10,6 @@ import (
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/stripe/stripe-go/v76"
 
-	"github.com/NetSepio/gateway/config/constants"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/config/redisconfig"
@@ -25,7 +24,6 @@ func Init() {
 	redisconfig.InitRedis()
 	dbconfig.Migrate()
 	stripe.Key = envconfig.EnvVars.STRIPE_SECRET_KEY
-	constants.InitConstants()
 	logwrapper.Init()
 
 	GinApp = gin.Default()
