@@ -23,8 +23,12 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.Use(paseto.PASETO(false))
 		g.PATCH("", patchProfile)
 		g.GET("", getProfile)
-		g.POST("/email", profileEmail.SendOTP)
-		g.POST("/email/verify", profileEmail.VerifyOTP)
+		g.Group("/email")
+		{
+			g.POST("", profileEmail.SendOTP)
+			g.POST("/verify", profileEmail.VerifyOTP)
+		}
+
 	}
 }
 

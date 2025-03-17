@@ -25,21 +25,6 @@ var (
 	ctx = context.Background() // context.Background() is a function that returns a new context
 )
 
-func InitRedis() {
-	address := envconfig.EnvVars.REDIS_HOST + ":" + "6379"
-	password := envconfig.EnvVars.REDIS_PASSWORD
-
-	rdb = redis.NewClient(&redis.Options{
-		Addr:     address,
-		Password: password, // No password set
-		DB:       0,        // Use default DB
-		Protocol: 2,        // Connection protocol
-	})
-	if rdb.Ping(ctx).Err() != nil {
-		logrus.Fatal(rdb.Ping(ctx).Err())
-	}
-}
-
 func generateOTP() string {
 	max := big.NewInt(999999)
 	n, err := rand.Int(rand.Reader, max)
@@ -66,8 +51,8 @@ func SendOTP(c *gin.Context) {
 	client := resend.NewClient(envconfig.EnvVars.RESEND_API_KEY)
 	params := &resend.SendEmailRequest{
 		To:      []string{req.Email},
-		From:    "Erebrus info <noreply@info.erebrus.io>",
-		Text:    fmt.Sprintf("Your OTP is: %s", otp),
+		From:    "Erebrus Info <noreply@info.erebrus.io>",
+		Text:    fmt.Sprintf("Your OTP for verifying this email is: %s", otp),
 		Subject: "Your OTP Code",
 	}
 
@@ -100,7 +85,7 @@ func VerifyOTP(c *gin.Context) {
 		userId := c.GetString(paseto.CTX_USER_ID)
 
 		// print the value of the key
-		fmt.Println("Stored storedEmail: ", storedEmail)
+		logrus.Infoln("storedEmail : ", storedEmail)
 
 		// update user's email in the database
 		err := db.Model(&models.User{}).Where("user_id = ?", userId).Update("email", storedEmail).Error
@@ -117,5 +102,5 @@ func VerifyOTP(c *gin.Context) {
 
 	rdb.Del(ctx, req.OTP) // OTP is one-time use
 
-	c.JSON(http.StatusOK, gin.H{"message": "OTP verified successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "Email verified successfully"})
 }

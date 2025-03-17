@@ -14,7 +14,7 @@ var (
 )
 
 func InitRedis() {
-	address := envconfig.EnvVars.REDIS_HOST + ":" + "6379"
+	address := envconfig.EnvVars.REDIS_HOST
 	password := envconfig.EnvVars.REDIS_PASSWORD
 
 	Rdb = redis.NewClient(&redis.Options{
