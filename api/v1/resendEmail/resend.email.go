@@ -48,7 +48,7 @@ func generateOTP() string {
 	return fmt.Sprintf("%06s", n.String())
 }
 
-func sendOTP(c *gin.Context) {
+func SendOTP(c *gin.Context) {
 	var req struct {
 		Email string `json:"email"`
 	}
@@ -65,7 +65,7 @@ func sendOTP(c *gin.Context) {
 	client := resend.NewClient(envconfig.EnvVars.RESEND_API_KEY)
 	params := &resend.SendEmailRequest{
 		To:      []string{req.Email},
-		From:    "Acme <noreply@info.erebrus.io>",
+		From:    "Erebrus info <noreply@info.erebrus.io>",
 		Text:    fmt.Sprintf("Your OTP is: %s", otp),
 		Subject: "Your OTP Code",
 	}
@@ -79,7 +79,7 @@ func sendOTP(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "OTP sent successfully"})
 }
 
-func verifyOTP(c *gin.Context) {
+func VerifyOTP(c *gin.Context) {
 	var req struct {
 		OTP string `json:"otp"`
 	}
@@ -121,9 +121,4 @@ func verifyOTP(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "OTP verified successfully"})
 }
 
-func ApplyRoutes(r *gin.RouterGroup) {
-	// add paseto middleware
-	r.Use(paseto.PASETO(true))
-	r.POST("/send-otp", sendOTP)
-	r.POST("/verify-otp", verifyOTP)
-}
+

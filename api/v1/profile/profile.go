@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	resendemail "github.com/NetSepio/gateway/api/v1/resendEmail"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/util/httpo"
@@ -22,6 +23,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.Use(paseto.PASETO(false))
 		g.PATCH("", patchProfile)
 		g.GET("", getProfile)
+		g.POST("/send/email/otp", resendemail.SendOTP)
+		g.POST("/verify/email", resendemail.VerifyOTP)
 	}
 }
 
