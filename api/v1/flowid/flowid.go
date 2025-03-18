@@ -35,7 +35,7 @@ func GetFlowId(c *gin.Context) {
 	if chain_symbol != "sol" {
 		_, err := hexutil.Decode(walletAddress)
 		if err != nil {
-			httpo.NewErrorResponse(http.StatusBadRequest, "Wallet address (walletAddress) is not valid").SendD(c)
+			httpo.NewErrorResponse(http.StatusBadRequest, "Please pass the valid chain name").SendD(c)
 			return
 		}
 	}

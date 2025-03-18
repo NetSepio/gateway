@@ -7,8 +7,6 @@ import (
 	delegatereviewcreation "github.com/NetSepio/gateway/api/v1/delegateReviewCreation"
 	"github.com/NetSepio/gateway/api/v1/deletereview"
 	"github.com/NetSepio/gateway/api/v1/domain"
-	"github.com/NetSepio/gateway/api/v1/dvpnnft"
-	"github.com/NetSepio/gateway/api/v1/erebrus"
 	"github.com/NetSepio/gateway/api/v1/feedback"
 	flowid "github.com/NetSepio/gateway/api/v1/flowid"
 	"github.com/NetSepio/gateway/api/v1/getreviewerdetails"
@@ -19,7 +17,6 @@ import (
 	"github.com/NetSepio/gateway/api/v1/report"
 	"github.com/NetSepio/gateway/api/v1/sdkauthentication"
 	"github.com/NetSepio/gateway/api/v1/siteinsights"
-	"github.com/NetSepio/gateway/api/v1/sotreus"
 	"github.com/NetSepio/gateway/api/v1/stats"
 	"github.com/NetSepio/gateway/api/v1/status"
 	"github.com/NetSepio/gateway/api/v1/summary"
@@ -43,9 +40,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		stats.ApplyRoutes(v1)
 		getreviews.ApplyRoutes(v1)
 		getreviewerdetails.ApplyRoutes(v1)
-		sotreus.ApplyRoutes(v1)
 		domain.ApplyRoutes(v1)
-		erebrus.ApplyRoutes(v1)
 		report.ApplyRoutes(v1)
 		account.ApplyRoutes(v1)
 		siteinsights.ApplyRoutes(v1)
@@ -54,7 +49,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		sdkauthentication.ApplyRoutes(v1)
 		leaderboard.ApplyRoutes(v1)
 		nftcontract.ApplyRoutes(v1)
-		dvpnnft.ApplyRoutes(v1)
 
 	}
 }
