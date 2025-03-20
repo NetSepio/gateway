@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/api/v1/referral"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
@@ -188,6 +189,9 @@ func allAuthApp(c *gin.Context) {
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error : "+err.Error()).SendD(c)
 					return
 				}
+				if user.ReferralCode == "" {
+					referral.GenerateReferralCodeForUser(user)
+				}
 			} else {
 				// Other error occurred
 				logwrapper.Errorf("failed to retrieve user: %s", err)
@@ -210,9 +214,10 @@ func allAuthApp(c *gin.Context) {
 				}
 
 				user = models.User{
-					Apple:   email,
-					UserId:  uuid.NewString(),
-					AppleId: &request.AppleID,
+					Apple:        email,
+					UserId:       uuid.NewString(),
+					AppleId:      &request.AppleID,
+					ReferralCode: referral.GetReferalCode(),
 				}
 				err = db.Model(&models.User{}).Create(&user).Error
 				if err != nil {
@@ -234,6 +239,10 @@ func allAuthApp(c *gin.Context) {
 	}
 	c.Set(paseto.CTX_USER_ID, user.UserId)
 
+	if user.ReferralCode=="" {
+		referral.GenerateReferralCodeForUser(user)
+	}
+
 	customClaims := claims.NewWithEmail(user.UserId, user.Email)
 	pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
 	if err != nil {
@@ -248,7 +257,6 @@ func allAuthApp(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 		return
 	}
-
 	payload := CreateAccountResponse{
 		Token:  pasetoToken,
 		UserId: user.UserId,
@@ -347,6 +355,10 @@ func registerApple(c *gin.Context) {
 	response := map[string]string{
 		"data":   "user created scuccessfully",
 		"userId": user.UserId,
+	}
+
+	if user.ReferralCode == "" {
+		referral.GenerateReferralCodeForUser(user)
 	}
 	httpo.NewSuccessResponseP(200, "Token generated successfully", response).SendD(c)
 }

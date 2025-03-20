@@ -174,6 +174,10 @@ func authenticate(c *gin.Context) {
 			return
 		}
 
+		{
+			
+		}
+
 		payload := AuthenticatePayload{
 			Token:  pasetoToken,
 			UserId: userId,

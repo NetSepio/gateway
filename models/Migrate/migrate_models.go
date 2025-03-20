@@ -24,6 +24,7 @@ type User struct {
 	Google            *string
 	Telegram          string
 	Farcaster         *string
+	ReferralCode      string    `gorm:"unique" json:"referalCode"`
 	CreatedAt         time.Time `gorm:"autoCreateTime"`
 	UpdatedAt         time.Time `gorm:"autoUpdateTime"`
 }
@@ -260,3 +261,36 @@ type Subscription struct {
 }
 
 // SCOREBOARD = LEADERBOARD * ActivityUnitXp
+
+type ReferralAccount struct {
+	Id           string    `json:"id" gorm:"type:uuid;primaryKey"`
+	ReferrerId   string    `json:"referrerId" gorm:"type:uuid;not null"` // User who referred
+	RefereeId    string    `json:"refereeId" gorm:"type:uuid;not null"`  // User who was referred
+	ReferralCode string    `json:"referralCode" gorm:"type:varchar(255);unique;not null"`
+	CreatedAt    time.Time `json:"createdAt"`
+}
+
+type ReferralSubscription struct {
+	Id           string    `json:"id" gorm:"type:uuid;primaryKey"`
+	ReferrerId   string    `json:"referrerId" gorm:"type:uuid;not null"` // User who referred
+	RefereeId    string    `json:"refereeId" gorm:"type:uuid;not null"`  // User who was referred
+	ReferralCode string    `json:"referralCode" gorm:"type:varchar(255);unique;not null"`
+	CreatedAt    time.Time `json:"createdAt"`
+}
+
+type ReferralEarnings struct {
+	Id           string    `json:"id" gorm:"type:uuid;primaryKey"`
+	ReferrerId   string    `json:"referrerId" gorm:"type:uuid;not null"`
+	RefereeId    string    `json:"refereeId" gorm:"type:uuid;"`
+	AmountEarned float64   `json:"amountEarned" gorm:"not null"`
+	CreatedAt    time.Time `json:"createdAt"`
+}
+
+type ReferralDiscount struct {
+	Id           string    `json:"id" gorm:"type:uuid;primaryKey;default:gen_random_uuid()"`
+	UserId       string    `json:"userId" gorm:"type:uuid;not null"` // The user receiving the discount
+	ReferralCode string    `json:"referralCode" gorm:"type:varchar(255);unique;not null"`
+	Discount     float64   `json:"discount" gorm:"type:decimal(10,2);not null"` // Discount amount or percentage
+	Validity     time.Time `json:"validity" gorm:"not null"`                    // Expiration date of the discount
+	CreatedAt    time.Time `json:"createdAt" gorm:"autoCreateTime"`
+}
