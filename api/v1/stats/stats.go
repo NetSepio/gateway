@@ -17,6 +17,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/stats")
 	{
 		g.GET("", getStats)
+		g.GET("/referral", getStats) // get the user list who reffered from high to low
 	}
 }
 

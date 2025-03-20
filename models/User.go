@@ -21,6 +21,7 @@ type User struct {
 	Google            *string        `json:"google,omitempty"` // Google
 	Telegram          string         `json:"telegram,omitempty"`
 	Farcaster         *string        `json:"farcaster,omitempty"` // Farcaster ID
+	ReferralCode      string         `gorm:"unique" json:"referralCode"`
 	CreatedAt         time.Time      `gorm:"autoCreateTime" json:"createdAt,omitempty"`
 	UpdatedAt         time.Time      `gorm:"autoUpdateTime" json:"updatedAt,omitempty"`
 }

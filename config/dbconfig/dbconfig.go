@@ -81,7 +81,10 @@ func Migrate() error {
 		&migrate.DVPNNFTRecord{},
 		&migrate.ScoreBoard{},
 		&migrate.ActivityUnitXp{},
-		&migrate.Subscription{},
+		&migrate.ReferralDiscount{},
+		&migrate.ReferralAccount{},
+		&migrate.ReferralSubscription{},
+		&migrate.ReferralEarnings{},
 	} {
 
 		if err := db.Debug().AutoMigrate(model); err != nil {

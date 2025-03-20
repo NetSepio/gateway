@@ -5,8 +5,6 @@ import (
 	"time"
 
 	"github.com/NetSepio/gateway/api"
-
-	"github.com/NetSepio/gateway/app/routines/reportroutine"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/stripe/stripe-go/v76"
 
@@ -52,6 +50,6 @@ func Init() {
 	GinApp.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
-	go reportroutine.StartProcessingReportsPeriodically()
+	// go reportroutine.StartProcessingReportsPeriodically()
 	// go webreview.Init()
 }
