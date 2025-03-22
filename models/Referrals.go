@@ -11,7 +11,7 @@ type ReferralSubscription struct {
 	Id           string    `json:"id" gorm:"type:uuid;primaryKey"`
 	ReferrerId   string    `json:"referrerId" gorm:"type:uuid;not null"` // User who referred
 	ReferredId   string    `json:"referredId" gorm:"type:uuid;not null"` // User who was referred
-	ReferralCode string    `json:"referralCode" gorm:"type:varchar(255);unique;not null"`
+	ReferralCode string    `json:"referralCode" gorm:"type:varchar(255);not null"`
 	CreatedAt    time.Time `json:"createdAt"`
 }
 
@@ -19,7 +19,7 @@ type ReferralAccount struct {
 	Id           string    `json:"id" gorm:"type:uuid;primaryKey"`
 	ReferrerId   string    `json:"referrerId" gorm:"type:uuid;not null"` // User who referred
 	ReferredId   string    `json:"referredId" gorm:"type:uuid;not null"` // User who was referred
-	ReferralCode string    `json:"referralCode" gorm:"type:varchar(255);unique;not null"`
+	ReferralCode string    `json:"referralCode" gorm:"type:varchar(255);not null"`
 	CreatedAt    time.Time `json:"createdAt"`
 }
 

@@ -182,6 +182,7 @@ func allAuthApp(c *gin.Context) {
 				user = models.User{
 					Google: &request.Email,
 					UserId: uuid.NewString(),
+					ReferralCode: referral.GetReferalCode(),
 				}
 				err = db.Model(&models.User{}).Create(&user).Error
 				if err != nil {
@@ -189,9 +190,9 @@ func allAuthApp(c *gin.Context) {
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error : "+err.Error()).SendD(c)
 					return
 				}
-				if user.ReferralCode == "" {
-					referral.GenerateReferralCodeForUser(user)
-				}
+				// if user.ReferralCode == "" {
+				// 	referral.GenerateReferralCodeForUser(user)
+				// }
 			} else {
 				// Other error occurred
 				logwrapper.Errorf("failed to retrieve user: %s", err)
