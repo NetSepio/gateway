@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/NetSepio/gateway/api/v1/referral"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 
@@ -108,6 +109,9 @@ func GenerateFlowIdSol(walletAddress string, flowIdType models.FlowIdType, relat
 			FlowIds: []models.FlowId{{
 				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId, WalletAddress: walletAddress,
 			}},
+			WalletAddress: &walletAddress,
+			ReferralCode:  referral.GetReferalCode(),
+			ChainName:     "SOLANA",
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			return "", err
