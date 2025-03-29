@@ -169,7 +169,7 @@ func ApplyReferralCodeForAccount(c *gin.Context) {
 // List All Referrals
 func GetReferrals(c *gin.Context) {
 	db := dbconfig.GetDb()
-	referrerId := c.GetString("user_id")
+	referrerId := c.GetString(paseto.CTX_USER_ID)
 
 	var referrals []models.ReferralAccount
 	err := db.Where("referrer_id = ?", referrerId).Find(&referrals).Error
