@@ -4,8 +4,8 @@ on:
   push:
     branches-ignore: 
       - main
-      - prod
-      - aws_prod     
+      # - prod
+      # - aws_prod     
 
 jobs:
   build_push:
