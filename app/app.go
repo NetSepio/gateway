@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/NetSepio/gateway/api"
+	"github.com/NetSepio/gateway/app/routines/reportroutine"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/stripe/stripe-go/v76"
 
-	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/config/redisconfig"
 	"github.com/gin-contrib/cors"
@@ -20,7 +20,7 @@ var GinApp *gin.Engine
 func Init() {
 	envconfig.InitEnvVars()
 	redisconfig.InitRedis()
-	dbconfig.Migrate()
+	// dbconfig.Migrate()
 	stripe.Key = envconfig.EnvVars.STRIPE_SECRET_KEY
 	logwrapper.Init()
 
@@ -50,6 +50,6 @@ func Init() {
 	GinApp.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
-	// go reportroutine.StartProcessingReportsPeriodically()
+	go reportroutine.StartProcessingReportsPeriodically()
 	// go webreview.Init()
 }
