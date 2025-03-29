@@ -96,6 +96,36 @@ func TrialSubscription(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "subscription created"})
 }
 
+func PatchTrialSubscription(c *gin.Context) {
+	userId := c.GetString(paseto.CTX_USER_ID)
+
+	// Check if there is already an active trial subscription for the user
+	var existingSubscription models.Subscription
+	db := dbconfig.GetDb()
+	if err := db.Where("user_id = ? AND type = ? AND end_time > ?", userId, "trial", time.Now()).First(&existingSubscription).Error; err == nil {
+		// There is already an active trial subscription for the user
+		c.JSON(http.StatusBadRequest, gin.H{"error": "You already have an active trial subscription"})
+		return
+	}
+
+	// Create a new trial subscription
+	subscription := models.Subscription{
+		UserId:    userId,
+		StartTime: time.Now(),
+		EndTime:   time.Now().AddDate(0, 0, 7),
+		Type:      "TrialSubscription",
+	}
+
+	// Save the new trial subscription to the database
+	if err := db.Model(models.Subscription{}).Create(&subscription).Error; err != nil {
+		logwrapper.Errorf("Error creating subscription: %v", err)
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "subscription created"})
+}
+
 func CheckSubscription(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
 
