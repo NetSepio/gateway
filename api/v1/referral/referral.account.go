@@ -113,7 +113,7 @@ func ApplyReferralCodeForAccount(c *gin.Context) {
 	var user models.User
 	err := db.Where("referral_code = ?", request.ReferralCode).First(&user).Error
 	if err != nil {
-		if err != gorm.ErrRecordNotFound {
+		if err == gorm.ErrRecordNotFound {
 			logrus.Errorln("Functional Error -> ApplyReferralCodeForAccount: No Record Found For This Refferral Code")
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Invalid Referral Code").SendD(c)
 			return
@@ -128,18 +128,16 @@ func ApplyReferralCodeForAccount(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
 
 	// Check if the user already used a referral code
-	var existingReferral models.ReferralAccount
-
-	err = db.Where("refereed_id = ? AND referral_code = ?", userId, request.ReferralCode).First(&existingReferral).Error
-	if err == nil {
-		httpo.NewErrorResponse(http.StatusConflict, "User has already used this referral code").SendD(c)
+	var count int64
+	if err := db.Model(&models.ReferralAccount{}).
+		Where("referrer_id = ? AND referred_id = ? AND referral_code = ?", user.UserId, userId, request.ReferralCode).
+		Count(&count).Error; err != nil {
+		httpo.NewErrorResponse(http.StatusConflict, "Error fetching refferal account details").SendD(c)
 		return
 	}
 
-	// check if the user can use the referral code to whome he has referred
-	err = db.Where("refereer_id = ? AND refereed_id = ?", user.UserId, userId).First(&existingReferral).Error
-	if err == nil {
-		httpo.NewErrorResponse(http.StatusConflict, "You cannot use the referral code of a user you have already referred.").SendD(c)
+	if count > 0 {
+		httpo.NewErrorResponse(http.StatusConflict, "User has already used this referral code").SendD(c)
 		return
 	}
 
