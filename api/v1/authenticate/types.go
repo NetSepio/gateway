@@ -8,7 +8,7 @@ type AuthenticateRequest struct {
 	Message      string `json:"message" binding:"omitempty"`
 	AccessToken  string `json:"accessToken" binding:"omitempty"`
 	IdToken      string `json:"idToken" binding:"omitempty"` // to be pass in bearer token [ AUTHORIZATION KEY ]
-	ChainName    string `json:"chainName" binding:"required"`
+	ChainName    string `json:"chainName" binding:"omitempty"`
 }
 type AuthenticateRequestNoSign struct {
 	FlowId        string `json:"flowId" binding:"required"`

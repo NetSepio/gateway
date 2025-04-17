@@ -78,7 +78,7 @@ func authenticate(c *gin.Context) {
 	var walletAddr string
 	if chain_symbol == "evm" || strings.ToLower(chain_symbol) == "monad" || strings.ToLower(chain_symbol) == "peaq" {
 		userAuthEULA := envconfig.EnvVars.AUTH_EULA
-		message := userAuthEULA + req.FlowId
+		message := userAuthEULA 
 		userId, walletAddr, isCorrect, err = cryptosign.CheckSignEth(req.Signature, req.FlowId, message)
 
 		if err == cryptosign.ErrFlowIdNotFound {
@@ -175,7 +175,7 @@ func authenticate(c *gin.Context) {
 		}
 
 		{
-			
+
 		}
 
 		payload := AuthenticatePayload{

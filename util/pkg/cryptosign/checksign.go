@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log"
 	"math/big"
 	"strings"
 
@@ -63,40 +64,89 @@ func CheckSign(signature string, flowId string, message string, pubKey string) (
 
 }
 
+// func CheckSignEth(signature string, flowId string, message string) (string, string, bool, error) {
+
+// 	db := dbconfig.GetDb()
+// 	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)
+// 	newMsgHash := crypto.Keccak256Hash([]byte(newMsg))
+// 	signatureInBytes, err := hexutil.Decode(signature)
+// 	if err != nil {
+// 		return "", "", false, err
+// 	}
+// 	if signatureInBytes[64] == 27 || signatureInBytes[64] == 28 {
+// 		signatureInBytes[64] -= 27
+// 	}
+// 	pubKey, err := crypto.SigToPub(newMsgHash.Bytes(), signatureInBytes)
+
+// 	if err != nil {
+// 		return "", "", false, err
+// 	}
+
+// 	//Get address from public key
+// 	walletAddress := crypto.PubkeyToAddress(*pubKey)
+// 	var flowIdData models.FlowId
+// 	err = db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData).Error
+
+// 	if errors.Is(err, gorm.ErrRecordNotFound) {
+// 		return "", "", false, ErrFlowIdNotFound
+// 	}
+// 	if err != nil {
+// 		return "", "", false, err
+// 	}
+// 	log.Println("walletAddress", walletAddress.String())
+// 	log.Println("flowIdData.WalletAddress", flowIdData.WalletAddress)
+// 	if strings.EqualFold(flowIdData.WalletAddress, walletAddress.String()) {
+// 		return flowIdData.UserId, flowIdData.WalletAddress, true, nil
+// 	} else {
+// 		return "", "", false, nil
+// 	}
+// }
+
 func CheckSignEth(signature string, flowId string, message string) (string, string, bool, error) {
-
-	db := dbconfig.GetDb()
 	newMsg := fmt.Sprintf("\x19Ethereum Signed Message:\n%v%v", len(message), message)
-	newMsgHash := crypto.Keccak256Hash([]byte(newMsg))
-	signatureInBytes, err := hexutil.Decode(signature)
-	if err != nil {
-		return "", "", false, err
-	}
-	if signatureInBytes[64] == 27 || signatureInBytes[64] == 28 {
-		signatureInBytes[64] -= 27
-	}
-	pubKey, err := crypto.SigToPub(newMsgHash.Bytes(), signatureInBytes)
-
-	if err != nil {
-		return "", "", false, err
-	}
-
-	//Get address from public key
-	walletAddress := crypto.PubkeyToAddress(*pubKey)
+	db := dbconfig.GetDb()
 	var flowIdData models.FlowId
-	err = db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData).Error
-
+	err := db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return "", "", false, ErrFlowIdNotFound
 	}
 	if err != nil {
 		return "", "", false, err
 	}
-	if strings.EqualFold(flowIdData.WalletAddress, walletAddress.String()) {
-		return flowIdData.UserId, flowIdData.WalletAddress, true, nil
-	} else {
-		return "", "", false, nil
+
+	log.Println("flowIdData.WalletAddress:", flowIdData.WalletAddress)
+
+	// Hash the message using Keccak256
+	hash := crypto.Keccak256Hash([]byte(newMsg))
+
+	// Decode the signature
+	sigBytes, err := hexutil.Decode(signature)
+	if err != nil {
+		return "", "", false, fmt.Errorf("invalid signature: %w", err)
 	}
+
+	if sigBytes[64] != 27 && sigBytes[64] != 28 {
+		return "", "", false, fmt.Errorf("invalid Ethereum signature recovery id")
+	}
+	sigBytes[64] -= 27
+
+	// Recover public key from signature
+	pubKey, err := crypto.SigToPub(hash.Bytes(), sigBytes)
+	if err != nil {
+		return "", "", false, fmt.Errorf("failed to recover public key: %w", err)
+	}
+
+	// Derive the address from public key
+	recoveredAddr := crypto.PubkeyToAddress(*pubKey).Hex()
+
+	log.Println("Recovered Address:", recoveredAddr)
+
+	// Compare recovered address with stored address (case insensitive)
+	if strings.EqualFold(recoveredAddr, flowIdData.WalletAddress) {
+		return flowIdData.UserId, flowIdData.WalletAddress, true, nil
+	}
+
+	return flowIdData.UserId, flowIdData.WalletAddress, false, fmt.Errorf("signature does not match wallet address")
 }
 
 func CheckSignSui(signature string, flowId string) (string, string, bool, error) {
