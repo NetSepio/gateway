@@ -15,6 +15,11 @@ type AuthenticateRequestNoSign struct {
 	WalletAddress string `json:"walletAddress" binding:"required"`
 }
 
+type AuthenticateRequestByWallet struct {
+	ChainName     string `json:"chain" binding:"required"`
+	WalletAddress string `json:"wallet_address" binding:"required"`
+}
+
 type AuthenticatePayload struct {
 	Token  string `json:"token"`
 	UserId string `json:"userId"`
