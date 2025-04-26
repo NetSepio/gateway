@@ -15,6 +15,7 @@ import (
 	"github.com/NetSepio/gateway/util/pkg/auth"
 	"github.com/NetSepio/gateway/util/pkg/cryptosign"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
@@ -218,15 +219,27 @@ func authenticateByWalletAddress(c *gin.Context) {
 			err = db.Model(&models.User{}).Where("wallet_address = ?", req.WalletAddress).First(&user).Error
 			if err != nil {
 				if err == gorm.ErrRecordNotFound {
-					httpo.NewErrorResponse(http.StatusNotFound, "User not found").SendD(c)
+					// if wallet address not found, then create a new user
+					userId = uuid.NewString()
+					newUser := &models.User{
+						WalletAddress: &walletAddr,
+						UserId:        userId,
+					}
+					if err := db.Create(newUser).Error; err != nil {
+						logwrapper.Warn(err)
+						httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+						return
+					}
 				} else {
 					logwrapper.Errorf("failed to fetch user details, error %v", err.Error())
 					httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+					return
 				}
-				return
-			}
 
-			userId = user.UserId
+			} else {
+				// if wallet address found, then get the user id
+				userId = user.UserId
+			}
 
 		} else {
 			logwrapper.Errorf("invalid wallet address %v", req.WalletAddress)
@@ -244,15 +257,27 @@ func authenticateByWalletAddress(c *gin.Context) {
 			err = db.Model(&models.User{}).Where("wallet_address = ?", req.WalletAddress).First(&user).Error
 			if err != nil {
 				if err == gorm.ErrRecordNotFound {
-					httpo.NewErrorResponse(http.StatusNotFound, "User not found").SendD(c)
+					// if wallet address not found, then create a new user
+					userId = uuid.NewString()
+					newUser := &models.User{
+						WalletAddress: &walletAddr,
+						UserId:        userId,
+					}
+					if err := db.Create(newUser).Error; err != nil {
+						logwrapper.Warn(err)
+						httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+						return
+					}
 				} else {
 					logwrapper.Errorf("failed to fetch user details, error %v", err.Error())
 					httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+					return
 				}
-				return
-			}
 
-			userId = user.UserId
+			} else {
+				// if wallet address found, then get the user id
+				userId = user.UserId
+			}
 
 		} else {
 			logwrapper.Errorf("invalid wallet address %v", req.WalletAddress)
@@ -270,15 +295,27 @@ func authenticateByWalletAddress(c *gin.Context) {
 			err = db.Model(&models.User{}).Where("wallet_address = ?", req.WalletAddress).First(&user).Error
 			if err != nil {
 				if err == gorm.ErrRecordNotFound {
-					httpo.NewErrorResponse(http.StatusNotFound, "User not found").SendD(c)
+					// if wallet address not found, then create a new user
+					userId = uuid.NewString()
+					newUser := &models.User{
+						WalletAddress: &walletAddr,
+						UserId:        userId,
+					}
+					if err := db.Create(newUser).Error; err != nil {
+						logwrapper.Warn(err)
+						httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+						return
+					}
 				} else {
 					logwrapper.Errorf("failed to fetch user details, error %v", err.Error())
 					httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+					return
 				}
-				return
-			}
 
-			userId = user.UserId
+			} else {
+				// if wallet address found, then get the user id
+				userId = user.UserId
+			}
 
 		} else {
 			logwrapper.Errorf("invalid wallet address %v", req.WalletAddress)
@@ -287,22 +324,34 @@ func authenticateByWalletAddress(c *gin.Context) {
 		}
 	}
 	if strings.ToLower(req.ChainName) == "peaq" {
-
-		if cryptosign.IsValidPeaqAddress(req.WalletAddress) {
+		isCorrect = cryptosign.IsValidPeaqAddress(req.WalletAddress)
+		if isCorrect {
 			// select user details from models.userd by wallet_address
 			var user models.User
 			err = db.Model(&models.User{}).Where("wallet_address = ?", req.WalletAddress).First(&user).Error
 			if err != nil {
 				if err == gorm.ErrRecordNotFound {
-					httpo.NewErrorResponse(http.StatusNotFound, "User not found").SendD(c)
+					// if wallet address not found, then create a new user
+					userId = uuid.NewString()
+					newUser := &models.User{
+						WalletAddress: &walletAddr,
+						UserId:        userId,
+					}
+					if err := db.Create(newUser).Error; err != nil {
+						logwrapper.Warn(err)
+						httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+						return
+					}
 				} else {
 					logwrapper.Errorf("failed to fetch user details, error %v", err.Error())
 					httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+					return
 				}
-				return
+
+			} else {
+				// if wallet address found, then get the user id
+				userId = user.UserId
 			}
-			userId = user.UserId
-			isCorrect = cryptosign.IsValidPeaqAddress(req.WalletAddress)
 		} else {
 			logwrapper.Errorf("invalid wallet address %v", req.WalletAddress)
 			httpo.NewErrorResponse(http.StatusBadRequest, "Invalid wallet address").SendD(c)
