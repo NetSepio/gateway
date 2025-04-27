@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/api/v1/referral"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
@@ -224,6 +225,7 @@ func authenticateByWalletAddress(c *gin.Context) {
 					newUser := &models.User{
 						WalletAddress: &walletAddr,
 						UserId:        userId,
+						ReferralCode:  referral.GetReferalCode(),
 					}
 					if err := db.Create(newUser).Error; err != nil {
 						logwrapper.Warn(err)
@@ -262,6 +264,7 @@ func authenticateByWalletAddress(c *gin.Context) {
 					newUser := &models.User{
 						WalletAddress: &walletAddr,
 						UserId:        userId,
+						ReferralCode:  referral.GetReferalCode(),
 					}
 					if err := db.Create(newUser).Error; err != nil {
 						logwrapper.Warn(err)
@@ -300,6 +303,7 @@ func authenticateByWalletAddress(c *gin.Context) {
 					newUser := &models.User{
 						WalletAddress: &walletAddr,
 						UserId:        userId,
+						ReferralCode:  referral.GetReferalCode(),
 					}
 					if err := db.Create(newUser).Error; err != nil {
 						logwrapper.Warn(err)
@@ -336,6 +340,7 @@ func authenticateByWalletAddress(c *gin.Context) {
 					newUser := &models.User{
 						WalletAddress: &walletAddr,
 						UserId:        userId,
+						ReferralCode:  referral.GetReferalCode(),
 					}
 					if err := db.Create(newUser).Error; err != nil {
 						logwrapper.Warn(err)
