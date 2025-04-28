@@ -5,6 +5,7 @@ go 1.23
 toolchain go1.23.4
 
 require (
+	github.com/btcsuite/btcutil v1.0.2
 	github.com/caarlos0/env/v6 v6.10.1
 	github.com/chromedp/cdproto v0.0.0-20250126231910-1730200a0f74
 	github.com/chromedp/chromedp v0.12.1
@@ -20,6 +21,7 @@ require (
 	github.com/redis/go-redis/v9 v9.7.1
 	github.com/resend/resend-go/v2 v2.15.0
 	github.com/robfig/cron v1.2.0
+	github.com/rs/zerolog v1.34.0
 	github.com/sashabaranov/go-openai v1.36.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0
@@ -87,6 +89,7 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mmcloughlin/addchain v0.4.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
