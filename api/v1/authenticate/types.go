@@ -1,14 +1,15 @@
 package authenticate
 
 type AuthenticateRequest struct {
-	FlowId       string `json:"flowId"`
-	Signature    string `json:"signature" binding:"omitempty,hexadecimal"`
-	PubKey       string `json:"pubKey" binding:"omitempty"`
-	SignatureSui string `json:"signatureSui" binding:"omitempty"`
-	Message      string `json:"message" binding:"omitempty"`
-	AccessToken  string `json:"accessToken" binding:"omitempty"`
-	IdToken      string `json:"idToken" binding:"omitempty"` // to be pass in bearer token [ AUTHORIZATION KEY ]
-	ChainName    string `json:"chainName"`
+	WalletAddress string `json:"walletAddress"`
+	FlowId        string `json:"flowId"`
+	Signature     string `json:"signature"`
+	PubKey        string `json:"pubKey"`
+	SignatureSui  string `json:"signatureSui"`
+	Message       string `json:"message"`
+	AccessToken   string `json:"accessToken"`
+	IdToken       string `json:"idToken"` // to be pass in bearer token [ AUTHORIZATION KEY ]
+	ChainName     string `json:"chainName" binding:"required"`
 }
 type AuthenticateRequestNoSign struct {
 	FlowId        string `json:"flowId" binding:"required"`

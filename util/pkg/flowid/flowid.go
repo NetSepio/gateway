@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/NetSepio/gateway/api/v1/referral"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
 
@@ -48,20 +49,21 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 			return "", err
 		}
 	} else {
+		lowerWalletAddress := strings.ToLower(walletAddress)
 		// User doesn't exist so create
 		userId := uuid.NewString()
 		newUser := &models.User{
-			UserId: userId,
+			UserId:        userId,
+			WalletAddress: &lowerWalletAddress,
 			FlowIds: []models.FlowId{{
 				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId, WalletAddress: walletAddress,
 			}},
+			ReferralCode: referral.GetReferalCode(),
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			return "", err
 		}
-
 	}
-
 	return flowId, nil
 }
 
@@ -108,6 +110,7 @@ func GenerateFlowIdSol(walletAddress string, flowIdType models.FlowIdType, relat
 			FlowIds: []models.FlowId{{
 				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId, WalletAddress: walletAddress,
 			}},
+			ReferralCode: referral.GetReferalCode(),
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			return "", err

@@ -37,8 +37,7 @@ var CTX_CHAIN_NAME = "CHAIN_NAME"
 func authenticate(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
 	db := dbconfig.GetDb()
-	chain_symbol := c.Query("chain") //google\
-	walletAddress := c.Query("walletAddress")
+	// chain_symbol := c.Query("chain") //google\
 
 	var req AuthenticateRequest
 	err := c.BindJSON(&req)
@@ -49,12 +48,12 @@ func authenticate(c *gin.Context) {
 	}
 
 	if len(req.Signature) == 0 {
-		if walletAddress == "" {
+		if req.WalletAddress == "" {
 			httpo.NewErrorResponse(http.StatusBadRequest, "Wallet address (walletAddress) is required").SendD(c)
 			return
 		}
-		if chain_symbol != "sol" {
-			_, err := hexutil.Decode(walletAddress)
+		if req.ChainName != "sol" {
+			_, err := hexutil.Decode(req.WalletAddress)
 			if err != nil {
 				httpo.NewErrorResponse(http.StatusBadRequest, "Please pass the valid chain name").SendD(c)
 				return
@@ -62,9 +61,9 @@ func authenticate(c *gin.Context) {
 		}
 
 		var flowId string
-		if chain_symbol == "sol" {
+		if req.ChainName == "sol" {
 			var err error
-			flowId, err = flowid.GenerateFlowIdSol(walletAddress, models.AUTH, "", userId)
+			flowId, err = flowid.GenerateFlowIdSol(req.WalletAddress, models.AUTH, "", userId)
 			if err != nil {
 				log.Error(err)
 				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -72,7 +71,7 @@ func authenticate(c *gin.Context) {
 			}
 		} else {
 			var err error
-			flowId, err = flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId)
+			flowId, err = flowid.GenerateFlowId(req.WalletAddress, models.AUTH, "", userId)
 			if err != nil {
 				log.Error(err)
 				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -93,21 +92,16 @@ func authenticate(c *gin.Context) {
 		httpo.NewSuccessResponseP(200, "Flowid successfully generated", payload).SendD(c)
 		return
 	} else {
-		if len(chain_symbol) == 0 && len(req.ChainName) == 0 {
+		if condition := strings.Contains(req.Signature, "0x") && req.ChainName != "sui"; condition {
+			httpo.NewErrorResponse(http.StatusBadRequest, "Signature should start with 0x").SendD(c)
+			return
+		}
+		if len(req.ChainName) == 0 {
 			httpo.NewErrorResponse(http.StatusBadRequest, "chain name is required").SendD(c)
 			return
 		}
 
-		if len(chain_symbol) != 0 {
-			c.Set(CTX_CHAIN_NAME, chain_symbol)
-		} else {
-			c.Set(CTX_CHAIN_NAME, req.ChainName)
-		}
-
-		if len(req.ChainName) == 0 {
-			req.ChainName = chain_symbol
-		}
-
+		c.Set(CTX_CHAIN_NAME, req.ChainName)
 		//Get flowid type
 		var flowIdData models.FlowId
 		err = db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
@@ -124,7 +118,7 @@ func authenticate(c *gin.Context) {
 
 		var isCorrect bool
 		var walletAddr string
-		if chain_symbol == "evm" || strings.ToLower(chain_symbol) == "monad" || strings.ToLower(chain_symbol) == "peaq" {
+		if req.ChainName == "evm" || strings.ToLower(req.ChainName) == "monad" || strings.ToLower(req.ChainName) == "peaq" {
 			userAuthEULA := envconfig.EnvVars.AUTH_EULA
 			message := userAuthEULA + req.FlowId
 			userId, walletAddr, isCorrect, err = cryptosign.CheckSignEth(req.Signature, req.FlowId, message)
@@ -140,7 +134,7 @@ func authenticate(c *gin.Context) {
 				return
 			}
 		}
-		if chain_symbol == "apt" {
+		if req.ChainName == "apt" {
 			userAuthEULA := envconfig.EnvVars.AUTH_EULA
 			message := fmt.Sprintf("APTOS\nmessage: %v\nnonce: %v", userAuthEULA, req.FlowId)
 
@@ -157,7 +151,7 @@ func authenticate(c *gin.Context) {
 				return
 			}
 		}
-		if chain_symbol == "sui" {
+		if req.ChainName == "sui" {
 			userId, walletAddr, isCorrect, err = cryptosign.CheckSignSui(req.SignatureSui, req.FlowId)
 
 			if err == cryptosign.ErrFlowIdNotFound {
@@ -172,7 +166,7 @@ func authenticate(c *gin.Context) {
 			}
 
 		}
-		if chain_symbol == "sol" {
+		if req.ChainName == "sol" {
 			walletAddr, userId, isCorrect, err = cryptosign.CheckSignSol(req.Signature, req.FlowId, req.Message, req.PubKey)
 
 			if err == cryptosign.ErrFlowIdNotFound {
