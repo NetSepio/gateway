@@ -1,56 +1,29 @@
 package app
 
 import (
-	"strings"
-	"time"
-
-	"github.com/NetSepio/gateway/api"
-	"github.com/NetSepio/gateway/app/routines/reportroutine"
-	"github.com/NetSepio/gateway/util/pkg/logwrapper"
-	"github.com/stripe/stripe-go/v76"
-
-	"github.com/NetSepio/gateway/config/dbconfig"
-	"github.com/NetSepio/gateway/config/envconfig"
-	"github.com/NetSepio/gateway/config/redisconfig"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
+	"netsepio-gateway-v1.1/internal/caching"
+	"netsepio-gateway-v1.1/internal/database"
+	"netsepio-gateway-v1.1/internal/server"
+	"netsepio-gateway-v1.1/utils/load"
+	"netsepio-gateway-v1.1/utils/logwrapper"
 )
 
-var GinApp *gin.Engine
-
+// Initialize the app
 func Init() {
-	envconfig.InitEnvVars()
-	redisconfig.InitRedis()
-	dbconfig.Migrate()
-	stripe.Key = envconfig.EnvVars.STRIPE_SECRET_KEY
+
+	load.Logger.Sugar().Infoln("Initializing the app...")
+	// Initialize the logger
 	logwrapper.Init()
+	// test db connection
+	database.GetDb()
+	// Migrate the database
+	// database.Migrate()
+	// Initialize Redis
+	caching.InitRedis()
 
-	GinApp = gin.Default()
+	// Initialize the server
+	server.Init()
 
-	if strings.ToLower(envconfig.EnvVars.GIN_MODE) == "debug" {
-		gin.SetMode(gin.DebugMode)
-	} else {
-		gin.SetMode(gin.ReleaseMode)
-	}
+	load.Logger.Sugar().Infoln("App initialized successfully.")
 
-	// gin.SetMode(gin.ReleaseMode)
-
-	corsM := cors.New(cors.Config{
-		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
-		AllowCredentials: false,
-		MaxAge:           12 * time.Hour,
-		AllowOrigins:     []string{"*"},
-	})
-	GinApp.Use(corsM)
-
-	api.ApplyRoutes(GinApp)
-
-	//adding health check
-
-	GinApp.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "pong"})
-	})
-	go reportroutine.StartProcessingReportsPeriodically()
-	// go webreview.Init()
 }

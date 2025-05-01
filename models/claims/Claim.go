@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/NetSepio/gateway/config/dbconfig"
-	"github.com/NetSepio/gateway/config/envconfig"
-	"github.com/NetSepio/gateway/models"
 	"github.com/vk-rv/pvx"
+	"netsepio-gateway-v1.1/internal/database"
+	"netsepio-gateway-v1.1/models"
+	"netsepio-gateway-v1.1/utils/load"
 )
 
 type CustomClaims struct {
@@ -24,7 +24,7 @@ type AuthClaim struct {
 }
 
 func (c CustomClaims) Valid() error {
-	db := dbconfig.GetDb()
+	db := database.GetDb()
 	if err := c.RegisteredClaims.Valid(); err != nil {
 		return err
 	}
@@ -37,9 +37,9 @@ func (c CustomClaims) Valid() error {
 }
 
 func NewWithWallet(userId string, walletAddr *string) CustomClaims {
-	pasetoExpirationInHours := envconfig.EnvVars.PASETO_EXPIRATION
+	pasetoExpirationInHours := load.Cfg.PASETO_EXPIRATION
 	expiration := time.Now().Add(pasetoExpirationInHours)
-	signedBy := envconfig.EnvVars.PASETO_SIGNED_BY
+	signedBy := load.Cfg.PASETO_SIGNED_BY
 	return CustomClaims{
 		walletAddr,
 		userId,
@@ -53,7 +53,7 @@ func NewWithWallet(userId string, walletAddr *string) CustomClaims {
 
 func (c AuthClaim) Valid() error {
 	// check if authId exists in db and is not expired by 5 minutes
-	db := dbconfig.GetDb()
+	db := database.GetDb()
 	var emailAuth models.EmailAuth
 	err := db.Model(&models.EmailAuth{}).Where("id = ?", c.AuthId).First(&emailAuth).Error
 	if err != nil {
@@ -67,9 +67,9 @@ func (c AuthClaim) Valid() error {
 }
 
 func NewWithEmail(userId string, email *string) CustomClaims {
-	pasetoExpirationInHours := envconfig.EnvVars.PASETO_EXPIRATION
+	pasetoExpirationInHours := load.Cfg.PASETO_EXPIRATION
 	expiration := time.Now().Add(pasetoExpirationInHours)
-	signedBy := envconfig.EnvVars.PASETO_SIGNED_BY
+	signedBy := load.Cfg.PASETO_SIGNED_BY
 	return CustomClaims{
 		nil,
 		userId,
