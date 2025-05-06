@@ -30,8 +30,8 @@ jobs:
           export GITHUB_BRANCH_IMAGE=ghcr.io/$GITHUB_REPOSITORY:$TAG
           export GITHUB_REF_IMAGE=$(echo $GITHUB_REF_IMAGE | tr '[:upper:]' '[:lower:]')
           export GITHUB_BRANCH_IMAGE=$(echo $GITHUB_BRANCH_IMAGE | tr '[:upper:]' '[:lower:]')
-          echo $GITHUB_REF_IMAGE
-          echo $GITHUB_BRANCH_IMAGE
+          echo GITHUB_REF_IMAGE
+          echo GITHUB_BRANCH_IMAGE
           echo "Building Docker Image"
           docker build --build-arg version=$GITHUB_SHA -t $GITHUB_REF_IMAGE -t $GITHUB_BRANCH_IMAGE .
           echo "Pushing Image to GitHub Container Registry"
