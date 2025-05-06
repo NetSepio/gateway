@@ -2,6 +2,8 @@ module netsepio-gateway-v1.1
 
 go 1.23.0
 
+toolchain go1.23.4
+
 require (
 	github.com/btcsuite/btcutil v1.0.2
 	github.com/caarlos0/env/v6 v6.10.1
