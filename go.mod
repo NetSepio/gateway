@@ -1,21 +1,28 @@
 module netsepio-gateway-v1.1
 
-go 1.23.4
+go 1.23.0
 
 require (
+	github.com/btcsuite/btcutil v1.0.2
 	github.com/caarlos0/env/v6 v6.10.1
+	github.com/chromedp/cdproto v0.0.0-20250429231605-6ed5b53462d4
+	github.com/chromedp/chromedp v0.13.6
 	github.com/ethereum/go-ethereum v1.15.10
 	github.com/gin-contrib/cors v1.7.5
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgconn v1.14.3
 	github.com/joho/godotenv v1.5.1
+	github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1
+	github.com/mr-tron/base58 v1.2.0
 	github.com/redis/go-redis/v9 v9.7.3
 	github.com/resend/resend-go/v2 v2.18.0
+	github.com/sashabaranov/go-openai v1.39.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stripe/stripe-go/v76 v76.25.0
 	github.com/vk-rv/pvx v0.0.0-20210912195928-ac00bc32f6e7
 	go.uber.org/zap v1.27.0
+	golang.org/x/crypto v0.37.0
 	google.golang.org/api v0.231.0
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
@@ -28,12 +35,9 @@ require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/bits-and-blooms/bitset v1.17.0 // indirect
-	github.com/btcsuite/btcutil v1.0.2 // indirect
 	github.com/bytedance/sonic v1.13.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/chromedp/cdproto v0.0.0-20250429231605-6ed5b53462d4 // indirect
-	github.com/chromedp/chromedp v0.13.6 // indirect
 	github.com/chromedp/sysutil v1.1.0 // indirect
 	github.com/cloudwego/base64x v0.1.5 // indirect
 	github.com/consensys/bavard v0.1.22 // indirect
@@ -77,14 +81,11 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1 // indirect
 	github.com/mmcloughlin/addchain v0.4.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/mr-tron/base58 v1.2.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
-	github.com/sashabaranov/go-openai v1.39.0 // indirect
 	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
 	github.com/supranational/blst v0.3.14 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
@@ -98,7 +99,6 @@ require (
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/arch v0.15.0 // indirect
-	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/net v0.39.0 // indirect
 	golang.org/x/oauth2 v0.29.0 // indirect
 	golang.org/x/sync v0.13.0 // indirect

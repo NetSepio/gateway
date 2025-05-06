@@ -1,5 +1,5 @@
-# Stage 1: Build the Go application
-FROM golang:bookworm as builder
+# Stage 1: Prepare the Go environment
+FROM golang:bookworm AS builder
 WORKDIR /app
 
 # Copy Go module files and download dependencies
@@ -9,11 +9,8 @@ RUN go mod download
 # Copy the entire application source code
 COPY . .
 
-# Build the Go application
-RUN go build -o gateway .
-
 # Stage 2: Prepare the Aptos CLI
-FROM ubuntu:22.04 as aptos_builder
+FROM ubuntu:22.04 AS aptos_builder
 WORKDIR /app
 
 # Install dependencies and download the Aptos CLI
@@ -28,16 +25,16 @@ RUN apt update -y && \
 FROM ubuntu:22.04
 WORKDIR /app
 
-# Copy the built Go application and Aptos CLI from previous stages
-COPY --from=builder /app/gateway .
-COPY --from=aptos_builder /app/aptos .
+# Install Go runtime in the final image
+RUN apt update -y && apt install -y golang
 
-# Copy the startup script
-COPY ./docker-start.sh .
+# Copy the source code and Aptos CLI from previous stages
+COPY --from=builder /app /app
+COPY --from=aptos_builder /app/aptos .
 
 # Set environment variables
 ARG version
 ENV VERSION=$version
 
-# Set the default command
-CMD [ "bash", "docker-start.sh" ]
+# Set the default command to run the Go application
+CMD ["go", "run", "cmd/main.go", "cmd/server.go"]
