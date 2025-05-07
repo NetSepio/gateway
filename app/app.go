@@ -3,6 +3,7 @@ package app
 import (
 	"netsepio-gateway-v1.1/internal/caching"
 	"netsepio-gateway-v1.1/internal/database"
+	p2pnode "netsepio-gateway-v1.1/internal/p2p-Node"
 	"netsepio-gateway-v1.1/internal/routines"
 	"netsepio-gateway-v1.1/internal/server"
 	"netsepio-gateway-v1.1/utils/load"
@@ -14,13 +15,15 @@ func Init() {
 
 	load.Logger.Sugar().Infoln("Initializing the app...")
 	// Initialize the logger
+
 	logwrapper.Init()
+
 	// test db connection
 	database.GetDb()
 
 	// Migrate the database
 	// database.Migrate()
-	
+
 	// Initialize Redis
 	caching.InitRedis()
 
@@ -29,6 +32,8 @@ func Init() {
 
 	// Initialize the of Goroutines
 	routines.Init()
+
+	p2pnode.Init()
 
 	load.Logger.Sugar().Infoln("App initialized successfully.")
 
