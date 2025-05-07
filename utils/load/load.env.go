@@ -4,12 +4,12 @@ import (
 	"time"
 
 	"github.com/caarlos0/env/v6"
-	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 )
 
-type Enviroment interface {
-	Env() error
-}
+// type Enviroment interface {
+// 	init()
+// }
 
 type Config struct {
 	PASETO_PRIVATE_KEY       string        `env:"PASETO_PRIVATE_KEY,required"`
@@ -60,15 +60,7 @@ type Config struct {
 
 var Cfg Config = Config{}
 
-// add go dot env
 func init() {
-
-	// load env
-	if err := godotenv.Load(".env"); err != nil {
-		panic("Error loading .env file: " + err.Error())
-	} else {
-		println(time.Now().Format("2006-01-02 15:04:05") + "     INFO    Successfully Loaded .env file")
-	}
 	// parse environment variables into the Config struct
 	if err := env.Parse(&Cfg); err != nil {
 		panic("Error parsing env variables: " + err.Error())
