@@ -19,6 +19,7 @@ require (
 	github.com/mr-tron/base58 v1.2.0
 	github.com/redis/go-redis/v9 v9.7.3
 	github.com/resend/resend-go/v2 v2.18.0
+	github.com/robfig/cron v1.2.0
 	github.com/sashabaranov/go-openai v1.39.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stripe/stripe-go/v76 v76.25.0
