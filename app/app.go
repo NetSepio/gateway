@@ -22,18 +22,19 @@ func Init() {
 	database.GetDb()
 
 	// Migrate the database
-	// database.Migrate()
+	database.Migrate()
 
 	// Initialize Redis
 	caching.InitRedis()
 
-	// Initialize the server
-	server.Init()
-
 	// Initialize the of Goroutines
 	routines.Init()
 
+	// Initialize the P2P node
 	p2pnode.Init()
+
+	// Initialize the server
+	server.Init()
 
 	load.Logger.Sugar().Infoln("App initialized successfully.")
 

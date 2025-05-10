@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -77,7 +78,7 @@ func Init() {
 }
 
 func Start() {
-	if err := GinApp.Run(fmt.Sprintf(":%d", load.Cfg.APP_PORT)); err != nil {
+	if err := GinApp.Run(":" + strconv.Itoa(load.Cfg.APP_PORT)); err != nil {
 		panic(err)
 	}
 }

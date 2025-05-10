@@ -294,3 +294,27 @@ type ReferralDiscount struct {
 	Validity     time.Time `json:"validity" gorm:"not null"`                    // Expiration date of the discount
 	CreatedAt    time.Time `json:"createdAt" gorm:"autoCreateTime"`
 }
+
+type Node struct {
+	//using for db operation
+	PeerId           string  `json:"peerId" gorm:"primaryKey"`
+	Name             string  `json:"name"`
+	HttpPort         string  `json:"httpPort"`
+	Host             string  `json:"host"` //domain
+	PeerAddress      string  `json:"peerAddress"`
+	Region           string  `json:"region"`
+	Status           string  `json:"status"` // offline 1, online 2, maintainance 3,block 4
+	DownloadSpeed    float64 `json:"downloadSpeed"`
+	UploadSpeed      float64 `json:"uploadSpeed"`
+	RegistrationTime int64   `json:"registrationTime"` //StartTimeStamp
+	LastPing         int64   `json:"lastPing"`
+	Chain            string  `json:"chainName"`
+	WalletAddress    string  `json:"walletAddress"`
+	Version          string  `json:"version"`
+	CodeHash         string  `json:"codeHash"`
+	SystemInfo       string  `json:"systemInfo" gorm:"type:jsonb"`
+	IpInfo           string  `json:"ipinfo" gorm:"type:jsonb"`
+	IpGeoData        string  `json:"ipGeoData" gorm:"type:jsonb"`
+	NodeType         string  `json:"nodeType"`
+	NodeConfig       string  `json:"nodeConfig"`
+}

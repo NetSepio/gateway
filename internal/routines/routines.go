@@ -2,5 +2,5 @@ package routines
 
 func Init() {
 	AutoCalculateScoreBoard()
-	StartProcessingReportsPeriodically()
+	go StartProcessingReportsPeriodically()
 }
