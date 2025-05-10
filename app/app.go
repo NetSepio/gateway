@@ -20,8 +20,8 @@ var GinApp *gin.Engine
 
 func Init() {
 	envconfig.InitEnvVars()
-	redisconfig.InitRedis()
 	dbconfig.Migrate()
+	redisconfig.InitRedis()
 	stripe.Key = envconfig.EnvVars.STRIPE_SECRET_KEY
 	logwrapper.Init()
 

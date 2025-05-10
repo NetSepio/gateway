@@ -3,9 +3,9 @@ name: "Build and Push to GHCR"
 on:
   push:
     branches-ignore: 
-      - main
-      # - prod
-      # - aws_prod     
+      # - main
+      - prod
+      - aws_prod     
 
 jobs:
   build_push:

@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/NetSepio/gateway/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/api/v1/referral"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/config/envconfig"
 	"github.com/NetSepio/gateway/models"
@@ -17,6 +18,9 @@ import (
 	"github.com/NetSepio/gateway/util/pkg/flowid"
 	"github.com/NetSepio/gateway/util/pkg/logwrapper"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
@@ -26,6 +30,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/authenticate")
 	{
 		g.POST("", authenticate)
+		g.POST("/wallet_address", authenticateByWalletAddress)
 		g.POST("/NonSign", authenticateNonSignature)
 		g.Use(paseto.PASETO(false))
 		g.GET("", authenticateToken)
@@ -102,9 +107,39 @@ func authenticate(c *gin.Context) {
 		}
 
 		c.Set(CTX_CHAIN_NAME, req.ChainName)
-		//Get flowid type
-		var flowIdData models.FlowId
-		err = db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
+	}
+
+	if len(req.ChainName) == 0 {
+		req.ChainName = chain_symbol
+	}
+
+	//Get flowid type
+	var flowIdData models.FlowId
+	err = db.Model(&models.FlowId{}).Where("flow_id = ?", req.FlowId).First(&flowIdData).Error
+	if err != nil {
+		logwrapper.Errorf("failed to get flowId, error %v", err)
+		httpo.NewErrorResponse(http.StatusNotFound, "flow id not found").SendD(c)
+		return
+	}
+
+	if flowIdData.FlowIdType != models.AUTH {
+		httpo.NewErrorResponse(http.StatusBadRequest, "flow id not created for auth").SendD(c)
+		return
+	}
+
+	var isCorrect bool
+	var userId string
+	var walletAddr string
+	if chain_symbol == "evm" || strings.ToLower(chain_symbol) == "monad" || strings.ToLower(chain_symbol) == "peaq" {
+		userAuthEULA := envconfig.EnvVars.AUTH_EULA
+		message := userAuthEULA
+		userId, walletAddr, isCorrect, err = cryptosign.CheckSignEth(req.Signature, req.FlowId, message)
+
+		if err == cryptosign.ErrFlowIdNotFound {
+			httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
+			return
+		}
+
 		if err != nil {
 			logwrapper.Errorf("failed to get flowId, error %v", err)
 			httpo.NewErrorResponse(http.StatusNotFound, "flow id not found").SendD(c)
@@ -246,6 +281,296 @@ func authenticate(c *gin.Context) {
 		}
 	}
 
+		userId, walletAddr, isCorrect, err = cryptosign.CheckSign(req.Signature, req.FlowId, message, req.PubKey)
+
+		if err == cryptosign.ErrFlowIdNotFound {
+			httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
+			return
+		}
+
+		if err != nil {
+			logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			return
+		}
+	}
+	if chain_symbol == "sui" {
+		userId, walletAddr, isCorrect, err = cryptosign.CheckSignSui(req.SignatureSui, req.FlowId)
+
+		if err == cryptosign.ErrFlowIdNotFound {
+			httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
+			return
+		}
+
+		if err != nil {
+			logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			return
+		}
+
+	}
+	if chain_symbol == "sol" {
+		walletAddr, userId, isCorrect, err = cryptosign.CheckSignSol(req.Signature, req.FlowId, req.Message, req.PubKey)
+
+		if err == cryptosign.ErrFlowIdNotFound {
+			httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
+			return
+		}
+
+		if err != nil {
+			logwrapper.Errorf("failed to CheckSignature, error %v", err.Error())
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			return
+		}
+	}
+	if isCorrect {
+		// update wallet address for that user_id
+		err = db.Model(&models.User{}).Where("user_id = ?", userId).
+			Updates(map[string]interface{}{
+				"wallet_address": walletAddr,
+				"chain_name":     req.ChainName,
+			}).Error
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+			logwrapper.Errorf("failed to update wallet address and chain name, error %v", err.Error())
+			return
+		}
+
+		// c.Set(paseto.CTX_USER_ID, userId)
+		// c.Set(paseto.CTX_WALLET_ADDRES, walletAddr)
+
+		customClaims := claims.NewWithWallet(userId, &walletAddr)
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to generate token, error %v", err.Error())
+			return
+		}
+		pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to generate token, error %v", err.Error())
+			return
+		}
+		err = db.Where("flow_id = ?", req.FlowId).Delete(&models.FlowId{}).Error
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to delete flowId, error %v", err.Error())
+			return
+		}
+
+		{
+
+		}
+
+		payload := AuthenticatePayload{
+			Token:  pasetoToken,
+			UserId: userId,
+		}
+		httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
+	} else {
+		httpo.NewErrorResponse(http.StatusForbidden, "Wallet Address is not correct").SendD(c)
+		return
+	}
+}
+
+func authenticateByWalletAddress(c *gin.Context) {
+	db := dbconfig.GetDb()
+
+	//TODO remove flow id if 200"
+	var req AuthenticateRequestByWallet
+
+	err := c.BindJSON(&req)
+	if err != nil {
+		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid: %s", err)).SendD(c)
+		return
+	}
+
+	c.Set(CTX_CHAIN_NAME, req.ChainName)
+
+	var isCorrect bool
+	var userId string
+	var walletAddr = req.WalletAddress
+	if req.ChainName == "evm" || strings.ToLower(req.ChainName) == "monad" {
+		isCorrect = cryptosign.IsValidEVM_MONAD_Address(req.WalletAddress)
+
+		if isCorrect {
+
+			// select user details from models.userd by wallet_address
+			var user models.User
+			err = db.Model(&models.User{}).Where("wallet_address = ?", req.WalletAddress).First(&user).Error
+			if err != nil {
+				if err == gorm.ErrRecordNotFound {
+					// if wallet address not found, then create a new user
+					userId = uuid.NewString()
+					newUser := &models.User{
+						WalletAddress: &walletAddr,
+						UserId:        userId,
+						ReferralCode:  referral.GetReferalCode(),
+					}
+					if err := db.Create(newUser).Error; err != nil {
+						logwrapper.Warn(err)
+						httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+						return
+					}
+				} else {
+					logwrapper.Errorf("failed to fetch user details, error %v", err.Error())
+					httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+					return
+				}
+
+			} else {
+				// if wallet address found, then get the user id
+				userId = user.UserId
+			}
+
+		} else {
+			logwrapper.Errorf("invalid wallet address %v", req.WalletAddress)
+			httpo.NewErrorResponse(http.StatusBadRequest, "Invalid wallet address").SendD(c)
+			return
+		}
+	}
+	if req.ChainName == "apt" {
+		isCorrect = cryptosign.IsValidAptosAddress(req.WalletAddress)
+
+		if isCorrect {
+
+			// select user details from models.userd by wallet_address
+			var user models.User
+			err = db.Model(&models.User{}).Where("wallet_address = ?", req.WalletAddress).First(&user).Error
+			if err != nil {
+				if err == gorm.ErrRecordNotFound {
+					// if wallet address not found, then create a new user
+					userId = uuid.NewString()
+					newUser := &models.User{
+						WalletAddress: &walletAddr,
+						UserId:        userId,
+						ReferralCode:  referral.GetReferalCode(),
+					}
+					if err := db.Create(newUser).Error; err != nil {
+						logwrapper.Warn(err)
+						httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+						return
+					}
+				} else {
+					logwrapper.Errorf("failed to fetch user details, error %v", err.Error())
+					httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+					return
+				}
+
+			} else {
+				// if wallet address found, then get the user id
+				userId = user.UserId
+			}
+
+		} else {
+			logwrapper.Errorf("invalid wallet address %v", req.WalletAddress)
+			httpo.NewErrorResponse(http.StatusBadRequest, "Invalid wallet address").SendD(c)
+			return
+		}
+	}
+	if req.ChainName == "sui" || req.ChainName == "sol" {
+		isCorrect = cryptosign.IsValidBase58_32ByteAddress(req.WalletAddress)
+
+		if isCorrect {
+
+			// select user details from models.userd by wallet_address
+			var user models.User
+			err = db.Model(&models.User{}).Where("wallet_address = ?", req.WalletAddress).First(&user).Error
+			if err != nil {
+				if err == gorm.ErrRecordNotFound {
+					// if wallet address not found, then create a new user
+					userId = uuid.NewString()
+					newUser := &models.User{
+						WalletAddress: &walletAddr,
+						UserId:        userId,
+						ReferralCode:  referral.GetReferalCode(),
+					}
+					if err := db.Create(newUser).Error; err != nil {
+						logwrapper.Warn(err)
+						httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+						return
+					}
+				} else {
+					logwrapper.Errorf("failed to fetch user details, error %v", err.Error())
+					httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+					return
+				}
+
+			} else {
+				// if wallet address found, then get the user id
+				userId = user.UserId
+			}
+
+		} else {
+			logwrapper.Errorf("invalid wallet address %v", req.WalletAddress)
+			httpo.NewErrorResponse(http.StatusBadRequest, "Invalid wallet address").SendD(c)
+			return
+		}
+	}
+	if strings.ToLower(req.ChainName) == "peaq" {
+		isCorrect = cryptosign.IsValidPeaqAddress(req.WalletAddress)
+		if isCorrect {
+			// select user details from models.userd by wallet_address
+			var user models.User
+			err = db.Model(&models.User{}).Where("wallet_address = ?", req.WalletAddress).First(&user).Error
+			if err != nil {
+				if err == gorm.ErrRecordNotFound {
+					// if wallet address not found, then create a new user
+					userId = uuid.NewString()
+					newUser := &models.User{
+						WalletAddress: &walletAddr,
+						UserId:        userId,
+						ReferralCode:  referral.GetReferalCode(),
+					}
+					if err := db.Create(newUser).Error; err != nil {
+						logwrapper.Warn(err)
+						httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+						return
+					}
+				} else {
+					logwrapper.Errorf("failed to fetch user details, error %v", err.Error())
+					httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+					return
+				}
+
+			} else {
+				// if wallet address found, then get the user id
+				userId = user.UserId
+			}
+		} else {
+			logwrapper.Errorf("invalid wallet address %v", req.WalletAddress)
+			httpo.NewErrorResponse(http.StatusBadRequest, "Invalid wallet address").SendD(c)
+			return
+		}
+	}
+	if isCorrect {
+		c.Set(paseto.CTX_USER_ID, userId)
+		c.Set(paseto.CTX_WALLET_ADDRES, walletAddr)
+
+		customClaims := claims.NewWithWallet(userId, &walletAddr)
+		pvKey, err := hex.DecodeString(envconfig.EnvVars.PASETO_PRIVATE_KEY[2:])
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to generate token, error %v", err.Error())
+			return
+		}
+		pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
+		if err != nil {
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+			logwrapper.Errorf("failed to generate token, error %v", err.Error())
+			return
+		}
+
+		payload := AuthenticatePayload{
+			Token:  pasetoToken,
+			UserId: userId,
+		}
+		httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
+	} else {
+		httpo.NewErrorResponse(http.StatusForbidden, "Wallet Address is not correct").SendD(c)
+		return
+	}
 }
 
 func authenticateToken(c *gin.Context) {

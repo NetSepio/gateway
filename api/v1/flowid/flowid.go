@@ -50,7 +50,7 @@ func GetFlowId(c *gin.Context) {
 		}
 	} else {
 		var err error
-		flowId, err = flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId)
+		flowId, err = flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId,chain_symbol)
 		if err != nil {
 			log.Error(err)
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
