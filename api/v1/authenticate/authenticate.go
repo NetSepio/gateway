@@ -92,7 +92,7 @@ func authenticate(c *gin.Context) {
 		httpo.NewSuccessResponseP(200, "Flowid successfully generated", payload).SendD(c)
 		return
 	} else {
-		if condition := strings.Contains(req.Signature, "0x") && req.ChainName != "sui"; condition {
+		if strings.Contains(req.Signature, "0x") && req.ChainName != "sui" || strings.Contains(req.Signature, "0x") && req.ChainName != "evm" {
 			httpo.NewErrorResponse(http.StatusBadRequest, "Signature should start with 0x").SendD(c)
 			return
 		}
