@@ -1,38 +1,38 @@
 package flowid
 
 import (
-	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/NetSepio/gateway/api/v1/referral"
 	"github.com/NetSepio/gateway/config/dbconfig"
 	"github.com/NetSepio/gateway/models"
-	"gorm.io/gorm"
 
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
 
-func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string, userId, chain_symbol string) (string, error) {
+func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string, userId string) (string, error) {
 	db := dbconfig.GetDb()
 	flowId := uuid.NewString()
 	fmt.Printf("userId: %s\n", userId)
 	var update bool = true
 	if userId == "" {
 		var fetchUser models.User
+		lowerWalletAddress := strings.ToLower(walletAddress)
+		findResult := db.Model(&models.User{}).Find(&fetchUser, &models.User{WalletAddress: &lowerWalletAddress})
+		if err := findResult.Error; err != nil {
+			err = fmt.Errorf("while finding user error occured, %s", err)
+			logrus.Error(err)
+			return "", err
+		}
 
-		err := db.Where("wallet_address = ?", walletAddress).First(&fetchUser).Error
-		if err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				update = false
-			} else {
-				logrus.Errorf("while finding user, error occurred: %s", err)
-				return "", err
-			}
+		rowsAffected := findResult.RowsAffected
+		if rowsAffected == 0 {
+			update = false
 		} else {
 			userId = fetchUser.UserId
 		}
-
 	}
 
 	if update {
@@ -58,6 +58,7 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 			FlowIds: []models.FlowId{{
 				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId, WalletAddress: walletAddress,
 			}},
+			ReferralCode: referral.GetReferalCode(),
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			return "", err
@@ -109,6 +110,7 @@ func GenerateFlowIdSol(walletAddress string, flowIdType models.FlowIdType, relat
 			FlowIds: []models.FlowId{{
 				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId, WalletAddress: walletAddress,
 			}},
+			ReferralCode: referral.GetReferalCode(),
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			return "", err
