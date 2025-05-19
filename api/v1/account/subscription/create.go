@@ -1,6 +1,7 @@
 package subscription
 
 import (
+	"fmt"
 	"math"
 	"net/http"
 	"time"
@@ -185,6 +186,37 @@ func CreatePaymentIntent(c *gin.Context) {
 	httpo.NewSuccessResponseP(200, "Created new charge", gin.H{"clientSecret": pi.ClientSecret}).SendD(c)
 }
 func SubscriptionForCustomDuration(c *gin.Context) {
+
+	var (
+		oneMonth   = time.Now().AddDate(0, 1, 0)
+		threeMonth = time.Now().AddDate(0, 3, 0)
+		oneYear    = time.Now().AddDate(1, 0, 0)
+	)
+
+	// Map duration type to end time
+
+	var request struct {
+		DurationType int `json:"duration_type"`
+	}
+	err := c.BindJSON(&request)
+	if err != nil {
+		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
+		return
+	}
+
+	var endTime time.Time
+	switch request.DurationType {
+	case 1:
+		endTime = oneMonth
+	case 2:
+		endTime = threeMonth
+	case 3:
+		endTime = oneYear
+	default:
+		httpo.NewErrorResponse(http.StatusBadRequest, "invalid duration type").SendD(c)
+		return
+	}
+
 	userId := c.GetString(paseto.CTX_USER_ID)
 
 	// Check if there is already an active trial subscription for the user
@@ -200,7 +232,7 @@ func SubscriptionForCustomDuration(c *gin.Context) {
 	subscription := models.Subscription{
 		UserId:    userId,
 		StartTime: time.Now(),
-		EndTime:   time.Now().AddDate(0, 1, 0), // 1 month from now
+		EndTime:   endTime,
 		Type:      "TrialSubscription",
 	}
 
