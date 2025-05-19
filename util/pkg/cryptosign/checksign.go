@@ -286,6 +286,46 @@ func CheckSignSol(signature string, flowId string, message string, pubKey string
 
 }
 
+
+/*unc CheckSignSol(signatureBase58 string, flowId string, message string, pubKey string) (string, string, bool, error) {
+
+	db := dbconfig.GetDb()
+	// bytes, err := base58.Decode(pubKey)
+	// if err != nil {
+	// 	return "", "", false, err
+	// }
+	// Decode base58 signature
+	signature, err := base58.Decode(signatureBase58)
+	if err != nil {
+		return "", "", false, fmt.Errorf("failed to decode signature: %v", err)
+	}
+
+	var flowIdData models.FlowId
+	err = db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return "", "", false, err
+	}
+
+	// Decode base58 address to get public key
+	publicKeyBytes, err := base58.Decode(flowIdData.WalletAddress)
+	if err != nil {
+		return "", "", false, fmt.Errorf("failed to decode address: %v", err)
+	}
+
+	// Ensure public key is 32 bytes (ed25519 public key)
+	if len(publicKeyBytes) != 32 {
+		return "", "", false, fmt.Errorf("invalid public key length")
+	}
+
+	// Verify the signature using ed25519
+	if ed25519.Verify(publicKeyBytes, []byte(message), signature) {
+		return flowIdData.UserId, flowIdData.WalletAddress, true, nil
+	} else {
+		return "", "", false, errors.New("WalletAddressmismatch")
+	}
+
+}*/
+
 // SignMessage generates an EVM signature for a message using a mnemonic
 func SignMessage(mnemonic, message string) (signature, address string, err error) {
 	// Generate wallet from mnemonic
