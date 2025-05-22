@@ -107,6 +107,9 @@ func ApplyReferralCodeForAccount(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusBadRequest, "Invalid payload").SendD(c)
 		return
 	}
+	if len(request.ReferralCode) == 0 {
+		httpo.NewErrorResponse(http.StatusBadRequest, "Referral code is required").SendD(c)
+	}
 
 	db := dbconfig.GetDb()
 	// Check if referral code exists in user table by referral code
