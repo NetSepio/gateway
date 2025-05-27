@@ -5,7 +5,8 @@ on:
     branches: 
       # - main
       - prod
-      - aws_prod     
+      - aws_prod
+      - v1.1     
       
 jobs:
   build_push:
