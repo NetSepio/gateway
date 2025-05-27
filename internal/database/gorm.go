@@ -2,7 +2,6 @@ package database
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
@@ -34,7 +33,7 @@ type ConfigWrapper struct {
 	*load.Config
 }
 
-func (cfg ConfigWrapper) GetDB() (out DBout, err error) {
+func (cfg ConfigWrapper) GetDB() (err error) {
 
 	var b strings.Builder
 	b.WriteString("host=")
@@ -53,12 +52,10 @@ func (cfg ConfigWrapper) GetDB() (out DBout, err error) {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
+	} else {
+		// Set the database connection
+		SetDB(db)
 	}
-	// Set the database connection
-
-	out = DBout{DB: db}
-
-	// Migrate the schema
 
 	return
 }
@@ -84,15 +81,15 @@ func GetDb() *gorm.DB {
 		DSN: dns,
 	}))
 	if err != nil {
-		log.Fatal("failed to connect database", err)
+		load.Logger.Error("failed to connect database", zap.Error(err))
 	}
 
 	sqlDb, err := DB.DB()
 	if err != nil {
-		log.Fatal("failed to ping database", err)
+		load.Logger.Error("failed to get database instance", zap.Error(err))
 	}
 	if err = sqlDb.Ping(); err != nil {
-		log.Fatal("failed to ping database", err)
+		load.Logger.Error("failed to ping database", zap.Error(err))
 	}
 
 	return DB
