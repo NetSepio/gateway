@@ -54,6 +54,17 @@ jobs:
           echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
           docker pull ghcr.io/netsepio/gateway:main
           docker run --restart=on-failure:14 --dns=1.1.1.1 --name="gateway" --env-file=.env -p 3000:3000 --net=bridge -d ghcr.io/netsepio/gateway:main
+
+    # - name: Deploy on PROD server
+    #   if: github.ref == 'refs/heads/prod'
+    #   run: |
+    #     docker pull ghcr.io/netsepio/gateway:prod
+    #     docker tag  ghcr.io/netsepio/gateway:prod us-west4-docker.pkg.dev/netsepio-prod/netsepio/netsepio-gateway:prod
+    #     gcloud auth activate-service-account --key-file=${{ secrets.SERVICE_ACCOUNT_KEY_FILE_PATH }} --project=${{ secrets.PROJECT }}
+    #     gcloud config set account ${{ secrets.SERVICE_ACCOUNT }}
+    #     gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us-west4-docker.pkg.dev
+    #     docker push us-west4-docker.pkg.dev/netsepio-prod/netsepio/netsepio-gateway:prod
+    #     gcloud run deploy netsepio-gateway --image us-west4-docker.pkg.dev/netsepio-prod/netsepio/netsepio-gateway:prod --region us-west4
     
     - name: Deploy on PROD server 
       if: github.ref == 'refs/heads/aws_prod' 
@@ -70,3 +81,21 @@ jobs:
           echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
           docker pull ghcr.io/netsepio/gateway:aws_prod
           docker run --restart=on-failure:14 --dns=1.1.1.1 --name="gateway" --env-file=.env -p 3000:3000 --net=netsepio_prod_network -d ghcr.io/netsepio/gateway:aws_prod
+
+    - name: Deploy on PROD server V1.1 
+      if: github.ref == 'refs/heads/v1.1' 
+      uses: appleboy/ssh-action@v0.1.7
+      with:         
+        host: ${{ secrets.AWS_REMOTE_SERVER_ADDRESS }}
+        username: ${{ secrets.AWS_REMOTE_SERVER_USERNAME }}
+        key:  ${{ secrets.AWS_REMOTE_SERVER_KEY }}
+        port: ${{ secrets.AWS_SSH_PORT }} 
+        script: |
+          pwd
+          cd gateway
+          docker stop gateway_v1_1 
+          docker rm gateway_v1_1 
+          docker image rm ghcr.io/netsepio/gateway:v1.1
+          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+          docker pull ghcr.io/netsepio/gateway:v1.1
+          docker run --restart=on-failure:14 --dns=1.1.1.1 --name="gateway_v1_1" --env-file=.env -p 3001:3000 --net=netsepio_prod_network -d ghcr.io/netsepio/gateway:v1.1
