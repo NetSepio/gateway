@@ -34,7 +34,6 @@ func Init() {
 
 	GinApp.Use(corsM)
 	GinApp.Use(gin.Recovery())
-	GinApp.Use(gin.Logger())
 	GinApp.Use(gin.CustomRecovery(func(c *gin.Context, err interface{}) {
 		c.JSON(500, gin.H{
 			"error": "Internal Server Error",

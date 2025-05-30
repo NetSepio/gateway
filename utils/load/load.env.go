@@ -7,10 +7,6 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-// type Enviroment interface {
-// 	init()
-// }
-
 type Config struct {
 	PASETO_PRIVATE_KEY       string        `env:"PASETO_PRIVATE_KEY,required"`
 	PASETO_EXPIRATION        time.Duration `env:"PASETO_EXPIRATION,required"`
@@ -56,6 +52,8 @@ type Config struct {
 	REDIS_HOST               string        `env:"REDIS_HOST,notEmpty"`
 	REDIS_PASSWORD           string        `env:"REDIS_PASSWORD,notEmpty"`
 	RESEND_API_KEY           string        `env:"RESEND_API_KEY,notEmpty"`
+	ROOT_CA_CERT_BASE64      string        `env:"ROOT_CA_CERT_BASE64,notEmpty"`
+	ROOT_CA_KEY_BASE64       string        `env:"ROOT_CA_KEY_BASE64,notEmpty"`
 }
 
 var Cfg Config = Config{}

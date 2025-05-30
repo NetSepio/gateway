@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"netsepio-gateway-v1.1/internal/api/handlers/account"
 	"netsepio-gateway-v1.1/internal/api/handlers/authenticate"
+	"netsepio-gateway-v1.1/internal/api/handlers/certificate"
 	delegatereviewcreation "netsepio-gateway-v1.1/internal/api/handlers/delegateReviewCreation"
 	"netsepio-gateway-v1.1/internal/api/handlers/deletereview"
 	"netsepio-gateway-v1.1/internal/api/handlers/domain"
@@ -13,6 +14,7 @@ import (
 	"netsepio-gateway-v1.1/internal/api/handlers/getreviews"
 	"netsepio-gateway-v1.1/internal/api/handlers/leaderboard"
 	"netsepio-gateway-v1.1/internal/api/handlers/nftcontract"
+	"netsepio-gateway-v1.1/internal/api/handlers/organisation"
 	"netsepio-gateway-v1.1/internal/api/handlers/profile"
 	"netsepio-gateway-v1.1/internal/api/handlers/referral"
 	"netsepio-gateway-v1.1/internal/api/handlers/report"
@@ -49,6 +51,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		leaderboard.ApplyRoutes(v1)
 		nftcontract.ApplyRoutes(v1)
 		referral.ApplyReferraAccountlRoutes(v1)
+		organisation.ApplyRoutes(v1)
+		certificate.ApplyRoutes(v1)
 
 	}
 }

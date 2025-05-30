@@ -40,6 +40,7 @@ func Migrate() error {
 		&migrate.ReferralSubscription{},
 		&migrate.ReferralEarnings{},
 		&migrate.Node{},
+		&migrate.Organisation{},
 	} {
 		if err := DB.AutoMigrate(model); err != nil {
 			logrus.Fatalf("failed to migrate %T: %v", model, err.Error())
