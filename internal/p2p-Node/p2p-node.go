@@ -66,8 +66,8 @@ type NodeStateTracker struct {
 var nodeStates = make(map[string]*NodeStateTracker)
 
 func Init() {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	ctx, _ := context.WithCancel(context.Background())
+	
 	ha := host.CreateHost()
 	ps := service.NewService(ha, ctx)
 
