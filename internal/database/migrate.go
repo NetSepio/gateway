@@ -1,8 +1,8 @@
 package database
 
 import (
-	"github.com/sirupsen/logrus"
 	migrate "netsepio-gateway-v1.1/models/Migrate"
+	"netsepio-gateway-v1.1/utils/load"
 )
 
 func Migrate() error {
@@ -43,12 +43,12 @@ func Migrate() error {
 		&migrate.Organisation{},
 	} {
 		if err := DB.AutoMigrate(model); err != nil {
-			logrus.Fatalf("failed to migrate %T: %v", model, err.Error())
+			load.Logger.Sugar().Fatalf("failed to migrate %T: %v", model, err.Error())
 			return err
 		}
 	}
 
-	logrus.Info("Migrated all models")
+	load.Logger.Info("Migrated all models")
 
 	return nil
 }
