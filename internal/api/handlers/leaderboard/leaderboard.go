@@ -9,11 +9,11 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/models"
 	"netsepio-gateway-v1.1/utils/httpo"
+	"netsepio-gateway-v1.1/utils/load"
 	"netsepio-gateway-v1.1/utils/logwrapper"
 
 	"github.com/gin-gonic/gin"
@@ -114,7 +114,7 @@ func getScoreBoard(c *gin.Context) {
 				response = append(response, UserScoreBoard)
 				continue
 			} else {
-				logrus.Error(err)
+				load.Logger.Error(err.Error())
 				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 				return
 			}
@@ -173,7 +173,7 @@ func getAllUsersScoreBoard(c *gin.Context) {
 				data.UserDetails = userDetail
 				response = append(response, data)
 			} else {
-				logrus.Error(err)
+				load.Logger.Error(err.Error())
 			}
 		} else {
 			var data = models.UserScoreBoard{

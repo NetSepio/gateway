@@ -10,9 +10,9 @@ import (
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/models"
 	"netsepio-gateway-v1.1/utils/httpo"
+	"netsepio-gateway-v1.1/utils/load"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 // ApplyRoutes applies router to gin Router
@@ -35,11 +35,11 @@ func getProfile(c *gin.Context) {
 	err = db.Model(&models.User{}).Select("name, profile_picture_url, wallet_address, discord, twitter").Where("wallet_address = ?", strings.ToLower(request.WalletAddress)).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			logrus.Error(err)
+			load.Logger.Error(err.Error())
 			httpo.NewErrorResponse(http.StatusNotFound, "profile not found").SendD(c)
 			return
 		}
-		logrus.Error(err)
+		load.Logger.Error(err.Error())
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 		return
 	}

@@ -8,7 +8,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/models"
@@ -65,7 +64,7 @@ func authenticate(c *gin.Context) {
 			var err error
 			flowId, err = flowid.GenerateFlowIdSol(req.WalletAddress, models.AUTH, "", userId)
 			if err != nil {
-				log.Error(err)
+				load.Logger.Error(err.Error())
 				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 				return
 			}
@@ -73,7 +72,7 @@ func authenticate(c *gin.Context) {
 			var err error
 			flowId, err = flowid.GenerateFlowId(req.WalletAddress, models.AUTH, "", userId)
 			if err != nil {
-				log.Error(err)
+				load.Logger.Error(err.Error())
 				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 
 				return

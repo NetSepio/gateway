@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/models"
+	"netsepio-gateway-v1.1/utils/load"
 )
 
 func CronJobLeaderBoardUpdate(column_name string, leaderboard Leaderboard) {
@@ -136,7 +136,7 @@ func AutoCalculateScoreBoard() {
 	// var leaderboard ScoreBoard
 	leaderboards, err := GetAllLeaderBoard()
 	if err != nil {
-		logrus.Error(err)
+		load.Logger.Error(err.Error())
 		return
 	}
 

@@ -11,7 +11,6 @@ import (
 	"netsepio-gateway-v1.1/utils/pkg/flowid"
 
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 )
 
 // ApplyRoutes applies router to gin Router
@@ -45,7 +44,7 @@ func GetFlowId(c *gin.Context) {
 
 		flowId, err = flowid.GenerateFlowIdSol(walletAddress, models.AUTH, "", userId)
 		if err != nil {
-			log.Error(err)
+			load.Logger.Error(err.Error())
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 			return
 		}
@@ -53,9 +52,8 @@ func GetFlowId(c *gin.Context) {
 		var err error
 		flowId, err = flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId)
 		if err != nil {
-			log.Error(err)
+			load.Logger.Error(err.Error())
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-
 			return
 		}
 	}
