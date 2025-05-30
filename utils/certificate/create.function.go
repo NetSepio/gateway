@@ -13,6 +13,9 @@ func GenerateCertificateAndReturn(domain string) ([]byte, []byte, error) {
 	caCertBase64 := load.Cfg.ROOT_CA_CERT_BASE64
 	caKeyBase64 := load.Cfg.ROOT_CA_KEY_BASE64
 
+	fmt.Println("CA Cert Base64:", caCertBase64)
+	fmt.Println("CA Key Base64:", caKeyBase64)
+
 	// Decode base64-encoded CA cert and key
 	caCertPEM, err := base64.StdEncoding.DecodeString(caCertBase64)
 	if err != nil {
