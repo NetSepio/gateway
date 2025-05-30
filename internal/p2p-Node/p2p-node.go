@@ -3,7 +3,7 @@ package p2pnode
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"log"
 	"math/big"
 	"os"
@@ -18,12 +18,14 @@ import (
 	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/multiformats/go-multiaddr"
 	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 	"netsepio-gateway-v1.1/contract"
 	nodelogs "netsepio-gateway-v1.1/internal/api/handlers/nodes/nodeLogs"
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/internal/p2p-Node/host"
 	"netsepio-gateway-v1.1/internal/p2p-Node/service"
 	"netsepio-gateway-v1.1/models"
+	"netsepio-gateway-v1.1/utils/load"
 )
 
 // DiscoveryInterval is how often we search for other peers via the DHT.
@@ -64,7 +66,8 @@ type NodeStateTracker struct {
 var nodeStates = make(map[string]*NodeStateTracker)
 
 func Init() {
-	ctx, _ := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 	ha := host.CreateHost()
 	ps := service.NewService(ha, ctx)
 
@@ -244,12 +247,13 @@ func updateNodeContractStatus(nodeId string, status uint8) error {
 	db := database.GetDb()
 	var node models.Node
 	if err := db.Debug().Model(&models.Node{}).Where("peer_id = ?", nodeId).First(&node).Error; err != nil {
-		return fmt.Errorf("failed to fetch node from db: %v", err)
+		load.Logger.Error("failed to fetch node from db", zap.Error(err))
+		return errors.New("failed to fetch node from db: " + err.Error())
 	}
 
 	// Only proceed if chain is peaq
 	if strings.ToLower(node.Chain) != "peaq" {
-		logrus.Infof("Skipping contract update for non-peaq node: %s (chain: %s)", nodeId, node.Chain)
+		load.Logger.Info("Skipping contract update for non-peaq node", zap.String("nodeId", nodeId), zap.String("chain", node.Chain))
 		return nil
 	}
 
@@ -260,27 +264,31 @@ func updateNodeContractStatus(nodeId string, status uint8) error {
 	if os.Getenv("CONTRACT_ADDRESS") == "" {
 		err := godotenv.Load()
 		if err != nil {
-			return fmt.Errorf("error loading .env file: %v", err)
+			load.Logger.Error("error loading .env file", zap.Error(err))
+			return errors.New("error loading .env file: " + err.Error())
 		}
 	}
 
 	// Connect to the Ethereum client
 	client, err := ethclient.Dial(os.Getenv("RPC_URL"))
 	if err != nil {
-		return fmt.Errorf("failed to connect to the Ethereum client: %v", err)
+		load.Logger.Error("failed to connect to the Ethereum client", zap.Error(err))
+		return errors.New("failed to connect to the Ethereum client: " + err.Error())
 	}
 
 	// Create a new instance of the contract
 	contractAddress := common.HexToAddress(os.Getenv("CONTRACT_ADDRESS"))
 	instance, err := contract.NewContract(contractAddress, client)
 	if err != nil {
-		return fmt.Errorf("failed to instantiate contract: %v\n", err)
+		load.Logger.Error("failed to instantiate contract", zap.Error(err))
+		return errors.New("failed to instantiate contract: " + err.Error())
 	}
 
 	// Create auth options for the transaction
 	privateKey, err := crypto.HexToECDSA(os.Getenv("PRIVATE_KEY"))
 	if err != nil {
-		return fmt.Errorf("failed to create private key: %v\n", err)
+		load.Logger.Error("failed to create private key", zap.Error(err))
+		return errors.New("failed to create private key: " + err.Error())
 	}
 
 	// Add retry mechanism for getting chain ID
@@ -295,18 +303,20 @@ func updateNodeContractStatus(nodeId string, status uint8) error {
 		if i < maxRetries-1 {
 			// Exponential backoff
 			delay := time.Duration(1<<uint(i)) * time.Second
-			logrus.Warnf("Failed to get chain ID, retrying in %v: %v", delay, err)
+			load.Logger.Warn("Failed to get chain ID, retrying", zap.Duration("delay", delay), zap.Error(err))
 			time.Sleep(delay)
 		}
 	}
 
 	if err != nil {
-		return fmt.Errorf("failed to get chain ID after %d attempts: %v", maxRetries, err)
+		load.Logger.Error("failed to get chain ID after 5 attempts", zap.Error(err))
+		return errors.New("failed to get chain ID after 5 attempts: " + err.Error())
 	}
 
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
-		return fmt.Errorf("failed to create transactor: %v", err)
+		load.Logger.Error("failed to create transactor", zap.Error(err))
+		return errors.New("failed to create transactor: " + err.Error())
 	}
 
 	// Get node details to fetch tokenId
@@ -318,47 +328,52 @@ func updateNodeContractStatus(nodeId string, status uint8) error {
 	// Check if node exists before trying to update
 	contractNode, err := instance.Nodes(opts, formattedNodeId)
 	if err != nil {
-		return fmt.Errorf("Failed to get node details from contract: %v", err)
+		load.Logger.Error("Failed to get node details from contract", zap.Error(err))
+		return errors.New("Failed to get node details from contract: " + err.Error())
 	}
 
 	// Check if tokenId is valid
 	if contractNode.TokenId == nil || contractNode.TokenId.Cmp(big.NewInt(0)) == 0 {
-		logrus.Warnf("Node %s exists in database but not in contract or has invalid token ID", formattedNodeId)
+		load.Logger.Warn("Node exists in database but not in contract or has invalid token ID", zap.String("nodeId", formattedNodeId))
 		// Instead of returning error, we'll try to register the node
-		return fmt.Errorf("Invalid token ID for node %s", formattedNodeId)
+		return errors.New("Invalid token ID for node " + formattedNodeId)
 	}
 
 	// Set gas limit and price
 	auth.GasLimit = 300000
 	gasPrice, err := client.SuggestGasPrice(context.Background())
 	if err != nil {
-		return fmt.Errorf("Failed to get gas price: %v", err)
+		load.Logger.Error("Failed to get gas price", zap.Error(err))
+		return errors.New("Failed to get gas price: " + err.Error())
 	}
 	// Increase gas price by 20% to ensure transaction goes through
 	auth.GasPrice = new(big.Int).Mul(gasPrice, big.NewInt(120))
 	auth.GasPrice = new(big.Int).Div(auth.GasPrice, big.NewInt(100))
 
-	logrus.Infof("Updating node %s status to %d", formattedNodeId, status)
+	load.Logger.Info("Updating node status", zap.String("nodeId", formattedNodeId), zap.Uint8("status", status))
 
 	// Update node status
 	tx, err := instance.UpdateNodeStatus(auth, formattedNodeId, status)
 	if err != nil {
-		return fmt.Errorf("Failed to update node status: %v", err)
+		load.Logger.Error("Failed to update node status", zap.Error(err))
+		return errors.New("Failed to update node status: " + err.Error())
 	}
 
-	logrus.Infof("Status update transaction sent: %s", tx.Hash().Hex())
+	load.Logger.Info("Status update transaction sent", zap.String("txHash", tx.Hash().Hex()))
 
 	// Wait for transaction to be mined
 	receipt, err := bind.WaitMined(context.Background(), client, tx)
 	if err != nil {
-		return fmt.Errorf("Failed to wait for status update transaction: %v", err)
+		load.Logger.Error("Failed to wait for status update transaction", zap.Error(err))
+		return errors.New("Failed to wait for status update transaction: " + err.Error())
 	}
 
 	if receipt.Status == 0 {
-		return fmt.Errorf("Status update transaction failed")
+		load.Logger.Error("status update transaction failed", zap.String("nodeId", formattedNodeId))
+		return errors.New("status update transaction failed")
 	}
 
-	logrus.Infof("Status update transaction confirmed for node %s", formattedNodeId)
+	load.Logger.Info("Status update transaction confirmed", zap.String("nodeId", formattedNodeId))
 
 	// Get the appropriate URI based on status
 	var uri string
@@ -370,40 +385,48 @@ func updateNodeContractStatus(nodeId string, status uint8) error {
 	case StatusOffline:
 		uri = OfflineURI
 	default:
-		return fmt.Errorf("Invalid status for URI update")
+		load.Logger.Error("invalid status for URI update", zap.Uint8("status", status))
+		return errors.New("invalid status for URI update")
 	}
 
 	// Create a new auth for the second transaction
 	auth, err = bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
-		return fmt.Errorf("failed to create transactor for URI update: %v", err)
+		load.Logger.Error("failed to create transactor for URI update", zap.Error(err))
+		return errors.New("failed to create transactor for URI update: " + err.Error())
 	}
 
 	auth.GasLimit = 300000
 	auth.GasPrice = new(big.Int).Mul(gasPrice, big.NewInt(120))
 	auth.GasPrice = new(big.Int).Div(auth.GasPrice, big.NewInt(100))
 
-	logrus.Infof("Updating token URI for node %s to %s", formattedNodeId, uri)
+	load.Logger.Info("Updating token URI", zap.String("nodeId", formattedNodeId), zap.String("uri", uri))
 
 	// Update the token URI
 	tx, err = instance.UpdateTokenURI(auth, contractNode.TokenId, uri)
 	if err != nil {
-		return fmt.Errorf("Failed to update token URI: %v", err)
+		load.Logger.Error("Failed to update token URI", zap.Error(err))
+		return errors.New("Failed to update token URI: " + err.Error())
 	}
 
-	logrus.Infof("URI update transaction sent: %s", tx.Hash().Hex())
+	load.Logger.Info("URI update transaction sent", zap.String("txHash", tx.Hash().Hex()))
 
 	// Wait for transaction to be mined
 	receipt, err = bind.WaitMined(context.Background(), client, tx)
 	if err != nil {
-		return fmt.Errorf("Failed to wait for URI update transaction: %v", err)
+		load.Logger.Error("Failed to wait for URI update transaction", zap.Error(err))
+		return errors.New("Failed to wait for URI update transaction: " + err.Error())
 	}
 
 	if receipt.Status == 0 {
-		return fmt.Errorf("URI update transaction failed")
+		load.Logger.Error("URI update transaction failed", zap.String("nodeId", formattedNodeId))
+		return errors.New("URI update transaction failed")
 	}
 
-	logrus.Infof("Node %s status updated to %d and token URI updated to %s",
-		formattedNodeId, status, uri)
+	load.Logger.Info("Node status and token URI updated",
+		zap.String("nodeId", formattedNodeId),
+		zap.Uint8("status", status),
+		zap.String("uri", uri),
+	)
 	return nil
 }
