@@ -1,6 +1,8 @@
 package certificate
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"netsepio-gateway-v1.1/utils/certificate"
@@ -10,9 +12,30 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	g := r.Group("/certificate")
 	{
+		g.GET("/generate/:domain", generateCertificate)
 		g.POST("/verify", VerifyCertificate)
 	}
 
+}
+
+func generateCertificate(c *gin.Context) {
+	domain := c.Param("domain")
+	if domain == "" {
+		load.Logger.Error("Missing domain parameter in query")
+		c.JSON(400, gin.H{"error": "Missing domain parameter"})
+		return
+	}
+
+	certPEM, _, err := certificate.GenerateCertificateAndReturn(domain)
+	if err != nil {
+		load.Logger.Error("Certificate generation failed", zap.Error(err))
+		c.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Send certificate.pem as downloadable file
+	c.Header("Content-Disposition", "attachment; filename=certificate.pem")
+	c.Data(http.StatusOK, "application/x-pem-file", certPEM)
 }
 
 func VerifyCertificate(c *gin.Context) {
