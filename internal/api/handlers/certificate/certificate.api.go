@@ -36,7 +36,6 @@ func generateCertificate(c *gin.Context) {
 	// Send certificate.pem as downloadable file
 	c.Header("Content-Disposition", "attachment; filename=certificate.pem")
 	c.Data(http.StatusOK, "application/x-pem-file", certPEM)
-	c.JSON(200, gin.H{"message": "Certificate generated successfully", "domain": domain})
 }
 
 func VerifyCertificate(c *gin.Context) {
