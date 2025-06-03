@@ -10,9 +10,9 @@ import (
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {
-	g := r.Group("/certificate")
+	g := r.Group("/proxy")
 	{
-		g.GET("/generate/:domain", generateCertificate)
+		g.GET("/auth/:domain", generateCertificate)
 		g.POST("/verify", VerifyCertificate)
 	}
 
