@@ -67,12 +67,12 @@ var nodeStates = make(map[string]*NodeStateTracker)
 
 func Init() {
 	ctx, _ := context.WithCancel(context.Background())
-	
+
 	ha := host.CreateHost()
 	ps := service.NewService(ha, ctx)
 
 	bootstrapPeers := []multiaddr.Multiaddr{}
-	db := database.GetDb()
+	db := database.GetDB2()
 
 	dht, err := host.NewDHT(ctx, ha, bootstrapPeers)
 	if err != nil {
