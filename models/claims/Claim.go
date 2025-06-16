@@ -1,6 +1,7 @@
 package claims
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -51,10 +52,15 @@ func (c CustomClaims) Valid() error {
 		return err
 	}
 	fmt.Printf("c.UserId: %s\n", c.UserId)
-	err := db.Model(&models.User{}).Where("user_id = ?", c.UserId).First(&models.User{}).Error
-	if err != nil {
-		return err
+	if len(c.UserId) == 0 {
+		return errors.New("user id is empty")
+	} else {
+		err := db.Model(&models.User{}).Where("user_id = ?", c.UserId).First(&models.User{}).Error
+		if err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
 

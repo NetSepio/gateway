@@ -19,7 +19,7 @@ import (
 )
 
 func Buy111NFT(c *gin.Context) {
-	db := database.GetDb()
+	db := database.GetDB2()
 	userId := c.GetString(paseto.CTX_USER_ID)
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
 	if walletAddress == "" {
@@ -50,7 +50,6 @@ func Buy111NFT(c *gin.Context) {
 		return
 	}
 
-
 	// insert in above table
 	err = db.Create(&models.UserStripePi{
 		Id:           uuid.NewString(),
@@ -72,7 +71,7 @@ func TrialSubscription(c *gin.Context) {
 
 	// Check if there is already an active trial subscription for the user
 	var existingSubscription models.Subscription
-	db := database.GetDb()
+	db := database.GetDB2()
 	if err := db.Where("user_id = ? AND type = ? AND end_time > ?", userId, "trial", time.Now()).First(&existingSubscription).Error; err == nil {
 		// There is already an active trial subscription for the user
 		c.JSON(http.StatusBadRequest, gin.H{"error": "You already have an active trial subscription"})
@@ -102,7 +101,7 @@ func PatchTrialSubscription(c *gin.Context) {
 
 	// Check if there is already an active trial subscription for the user
 	var existingSubscription models.Subscription
-	db := database.GetDb()
+	db := database.GetDB2()
 	if err := db.Where("user_id = ? AND type = ? AND end_time > ?", userId, "trial", time.Now()).First(&existingSubscription).Error; err == nil {
 		// There is already an active trial subscription for the user
 		c.JSON(http.StatusBadRequest, gin.H{"error": "You already have an active trial subscription"})
@@ -130,7 +129,7 @@ func PatchTrialSubscription(c *gin.Context) {
 func CheckSubscription(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
 
-	db := database.GetDb()
+	db := database.GetDB2()
 	var subscription *models.Subscription
 	err := db.Where("user_id = ?", userId).Order("end_time DESC").First(&subscription).Error
 	if err != nil {
@@ -157,7 +156,7 @@ func CheckSubscription(c *gin.Context) {
 
 func CreatePaymentIntent(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
-	db := database.GetDb()
+	db := database.GetDB2()
 	params := &stripe.PaymentIntentParams{
 		Amount:      stripe.Int64(1000),
 		Currency:    stripe.String(string(stripe.CurrencyUSD)),

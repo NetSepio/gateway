@@ -22,6 +22,9 @@ import (
 
 var CTX_WALLET_ADDRES = "WALLET_ADDRESS"
 var CTX_USER_ID = "USER_ID"
+var CTX_ORGANISATION_ID = "ORGANISATION_ID"
+var CTX_ORGANISATION_IP = "ORGANISATION_IP"
+var CTX_ORGANISATION_NAME = "ORGANISATION_NAME"
 
 var (
 	ErrAuthHeaderMissing = errors.New("authorization header is required")
@@ -57,6 +60,7 @@ func PASETO(authOptional bool) func(*gin.Context) {
 
 		pasetoToken := strings.TrimPrefix(headers.Authorization, "Bearer ")
 		ppv4 := pvx.NewPV4Public()
+
 		k, err := hex.DecodeString(load.Cfg.PASETO_PRIVATE_KEY[2:])
 		if err != nil {
 			err = fmt.Errorf("failed to decode priv key, %s", err)
@@ -67,53 +71,69 @@ func PASETO(authOptional bool) func(*gin.Context) {
 
 		pubKey := ed25519.PrivateKey(k).Public().(ed25519.PublicKey)
 		asymPK := pvx.NewAsymmetricPublicKey(pubKey, pvx.Version4)
+
 		var cc claims.CustomClaims
-		err = ppv4.
-			Verify(pasetoToken, asymPK).
-			ScanClaims(&cc)
+		err = ppv4.Verify(pasetoToken, asymPK).ScanClaims(&cc)
+		if err == nil && cc.Valid() == nil {
+			// Valid CustomClaims
+			db := database.GetDb()
+			var userFetch models.User
+			err := db.Model(&models.User{}).Where("user_id = ?", strings.ToLower(cc.UserId)).First(&userFetch).Error
+			if err != nil {
+				err = fmt.Errorf("failed to get wallet address, %s", err)
+				logwrapper.Log.Error(err)
+				c.AbortWithStatus(http.StatusInternalServerError)
+				return
+			}
+			if userFetch.WalletAddress != nil {
+				c.Set(CTX_WALLET_ADDRES, *userFetch.WalletAddress)
+			}
+			c.Set(CTX_USER_ID, userFetch.UserId)
+			c.Next()
+			return
+		}
+
+		// Try parsing as CustomClaimsForOrganisation
+		var occ claims.CustomClaimsForOrganisation
+		err = ppv4.Verify(pasetoToken, asymPK).ScanClaims(&occ)
 		if err != nil {
 			var validationErr *pvx.ValidationError
 			if errors.As(err, &validationErr) {
 				if validationErr.HasExpiredErr() {
-					err = fmt.Errorf("failed to scan claims for paseto token, %s", err)
+					err = fmt.Errorf("token expired")
 					logValidationFailed(headers.Authorization, err)
 					httpo.NewErrorResponse(httpo.TokenExpired, "token expired").Send(c, http.StatusUnauthorized)
 					c.Abort()
 					return
 				}
-
 			}
 			err = fmt.Errorf("failed to scan claims for paseto token, %s", err)
 			logValidationFailed(headers.Authorization, err)
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
-		} else {
-			if err := cc.Valid(); err != nil {
-				logValidationFailed(headers.Authorization, err)
-				if err.Error() == gorm.ErrRecordNotFound.Error() {
-					c.AbortWithStatus(http.StatusUnauthorized)
-				} else {
-					err = fmt.Errorf("failed to validate claim, %s", err)
-					logwrapper.Log.Error(err)
-					c.AbortWithStatus(http.StatusInternalServerError)
-				}
-			} else {
-				db := database.GetDb()
-				var userFetch models.User
-				err := db.Model(&models.User{}).Where("user_id = ?", strings.ToLower(cc.UserId)).First(&userFetch).Error
-				if err != nil {
-					err = fmt.Errorf("failed to get wallet address, %s", err)
-					logwrapper.Log.Error(err)
-					c.AbortWithStatus(http.StatusInternalServerError)
-					return
-				}
-				if userFetch.WalletAddress != nil {
-					c.Set(CTX_WALLET_ADDRES, *userFetch.WalletAddress)
-				}
-				c.Set(CTX_USER_ID, userFetch.UserId)
-				c.Next()
-			}
 		}
+
+		if err := occ.Valid(); err != nil {
+			logValidationFailed(headers.Authorization, err)
+			if err.Error() == gorm.ErrRecordNotFound.Error() {
+				c.AbortWithStatus(http.StatusUnauthorized)
+			} else {
+				err = fmt.Errorf("failed to validate organisation claim, %s", err)
+				logwrapper.Log.Error(err)
+				c.AbortWithStatus(http.StatusInternalServerError)
+			}
+			return
+		}
+
+		// Set context for organisation
+		c.Set(CTX_ORGANISATION_ID, occ.OrganisationId)
+		if occ.OrganisationName != nil {
+			c.Set(CTX_ORGANISATION_NAME, occ.OrganisationName)
+		}
+		if occ.IpAddress != nil {
+			c.Set(CTX_ORGANISATION_IP, *occ.IpAddress)
+		}
+		c.Next()
 	}
 }
 

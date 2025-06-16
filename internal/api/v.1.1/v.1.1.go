@@ -5,6 +5,7 @@ import (
 	"netsepio-gateway-v1.1/internal/api/handlers/account"
 	"netsepio-gateway-v1.1/internal/api/handlers/authenticate"
 	"netsepio-gateway-v1.1/internal/api/handlers/certificate"
+	"netsepio-gateway-v1.1/internal/api/handlers/client"
 	delegatereviewcreation "netsepio-gateway-v1.1/internal/api/handlers/delegateReviewCreation"
 	"netsepio-gateway-v1.1/internal/api/handlers/deletereview"
 	"netsepio-gateway-v1.1/internal/api/handlers/domain"
@@ -14,6 +15,7 @@ import (
 	"netsepio-gateway-v1.1/internal/api/handlers/getreviews"
 	"netsepio-gateway-v1.1/internal/api/handlers/leaderboard"
 	"netsepio-gateway-v1.1/internal/api/handlers/nftcontract"
+	"netsepio-gateway-v1.1/internal/api/handlers/nodes"
 	"netsepio-gateway-v1.1/internal/api/handlers/organisation"
 	"netsepio-gateway-v1.1/internal/api/handlers/profile"
 	"netsepio-gateway-v1.1/internal/api/handlers/referral"
@@ -27,7 +29,7 @@ import (
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {
-	v1 := r.Group("/v1.1")
+	v1 := r.Group("/v1.0")
 	{
 		flowid.ApplyRoutes(v1)
 
@@ -51,6 +53,24 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		leaderboard.ApplyRoutes(v1)
 		nftcontract.ApplyRoutes(v1)
 		referral.ApplyReferraAccountlRoutes(v1)
+
+		// erebrus
+		client.ApplyRoutes(v1)
+		nodes.ApplyRoutes(v1)
+		// registerDwifi.ApplyRoutes(v1)
+		// nodedwifi.ApplyRoutes(v1)
+		// walrus.ApplyRoutes(v1)
+		// caddyservices.ApplyRoutes(v1)
+		// agents.ApplyRoutes(v1)
+		// cyreneAiAgent.ApplyRoutes(v1)
+		// perks.ApplyRoutesPerks(v1)
+
+	}
+}
+
+func ApplyRoutesV1_1(r *gin.RouterGroup) {
+	v1 := r.Group("/v1.1")
+	{
 		organisation.ApplyRoutes(v1)
 		certificate.ApplyRoutes(v1)
 

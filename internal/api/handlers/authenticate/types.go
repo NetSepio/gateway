@@ -25,3 +25,7 @@ type AuthenticateTokenPayload struct {
 	UserId        string `json:"userId"`
 	WalletAddress string `json:"walletAddress"`
 }
+type AuthenticateTokenPayloadForOrganisation struct {
+	OrgId string `json:"orgId"`
+	OrgIp string `json:"orgIp"`
+}

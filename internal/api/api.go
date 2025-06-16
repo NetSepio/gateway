@@ -9,5 +9,6 @@ func ApplyRoutes(r *gin.Engine) {
 	api := r.Group("/api")
 	{
 		v11.ApplyRoutes(api)
+		v11.ApplyRoutesV1_1(api)
 	}
 }

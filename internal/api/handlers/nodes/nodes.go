@@ -28,7 +28,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func FetchAllNodes(c *gin.Context) {
-	db := database.GetDb()
+	db := database.GetDB2()
 	var nodes *[]models.Node
 	// var node *models.Node
 	if err := db.Find(&nodes).Error; err != nil {
@@ -99,7 +99,7 @@ func FetchAllNodes(c *gin.Context) {
 
 func FetchAllNodesByStatus(c *gin.Context) {
 	status := c.Param("status") // active , inactive
-	db := database.GetDb()
+	db := database.GetDB2()
 	var nodes *[]models.Node
 	// var node *models.Node
 	if err := db.Where("status = ?", status).Find(&nodes).Error; err != nil {
@@ -178,7 +178,7 @@ func FetchAllNodesByStatusAndWalletAddress(c *gin.Context) {
 		return
 	}
 
-	db := database.GetDb()
+	db := database.GetDB2()
 	var nodes *[]models.Node
 	// var node *models.Node
 	if len(status) == 0 || status == ":status" {
@@ -264,7 +264,7 @@ func HandlerGetNodesByChainAndWallet() gin.HandlerFunc {
 
 			return
 		}
-		db := database.GetDb()
+		db := database.GetDB2()
 		var nodes *[]models.Node
 
 		err := db.Where("chain = ? AND wallet_address = ?", chain, walletAddress).Find(&nodes).Error
@@ -346,7 +346,7 @@ func HandlerGetNodesByChain() gin.HandlerFunc {
 			httpo.NewErrorResponse(400, "please pass atleast chain or wallet address").SendD(c)
 			return
 		}
-		db := database.GetDb()
+		db := database.GetDB2()
 		var nodes *[]models.Node
 
 		if chain != "" && walletAddress == "" {

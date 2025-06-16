@@ -232,12 +232,29 @@ func authenticate(c *gin.Context) {
 func authenticateToken(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
+	orgId := c.GetString(paseto.CTX_ORGANISATION_ID)
+	orgIp := c.GetString(paseto.CTX_ORGANISATION_IP)
 
-	payload := AuthenticateTokenPayload{
-		UserId:        userId,
-		WalletAddress: walletAddress,
+	if len(orgId) != 0 {
+		payload := AuthenticateTokenPayloadForOrganisation{
+			OrgId: orgId,
+			OrgIp: orgIp,
+		}
+		httpo.NewSuccessResponseP(200, "Token verifies successfully", payload).SendD(c)
+		return
+
+	} else if len(userId) != 0 {
+		payload := AuthenticateTokenPayload{
+			UserId:        userId,
+			WalletAddress: walletAddress,
+		}
+		httpo.NewSuccessResponseP(200, "Token verifies successfully", payload).SendD(c)
+		return
+
+	} else {
+		httpo.NewErrorResponse(http.StatusUnauthorized, "Unauthorized").SendD(c)
 	}
-	httpo.NewSuccessResponseP(200, "Token verifies successfully", payload).SendD(c)
+
 }
 
 func authenticateNonSignature(c *gin.Context) {
