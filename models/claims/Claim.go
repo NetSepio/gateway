@@ -18,6 +18,28 @@ type CustomClaims struct {
 	pvx.RegisteredClaims
 }
 
+type CustomClaimsForOrganisation struct {
+	OrganisationName *string `json:"orgainisationName,omitempty"`
+	OrganisationId   string  `json:"organisationId,omitempty"`
+	SignedBy         string  `json:"signedBy"`
+	IpAddress        *string `json:"ipAddress"`
+	pvx.RegisteredClaims
+}
+
+// Valid implements pvx.Claims.
+func (c CustomClaimsForOrganisation) Valid() error {
+	db := database.GetDb()
+	if err := c.RegisteredClaims.Valid(); err != nil {
+		return err
+	}
+	fmt.Printf("c.OrganisationId: %s\n", c.OrganisationId)
+	err := db.Model(&models.Organisation{}).Where("id = ?", c.OrganisationId).First(&models.Organisation{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 type AuthClaim struct {
 	AuthId string `json:"authId"`
 	pvx.RegisteredClaims
@@ -45,6 +67,21 @@ func NewWithWallet(userId string, walletAddr *string) CustomClaims {
 		userId,
 		signedBy,
 		nil,
+		pvx.RegisteredClaims{
+			Expiration: &expiration,
+		},
+	}
+}
+
+func NewWithOrganisation(organisationId string, organisationName *string, ipAddress *string) CustomClaimsForOrganisation {
+	pasetoExpirationInHours := load.Cfg.PASETO_EXPIRATION
+	expiration := time.Now().Add(pasetoExpirationInHours)
+	signedBy := load.Cfg.PASETO_SIGNED_BY
+	return CustomClaimsForOrganisation{
+		organisationName,
+		organisationId,
+		signedBy,
+		ipAddress,
 		pvx.RegisteredClaims{
 			Expiration: &expiration,
 		},

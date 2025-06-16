@@ -23,3 +23,8 @@ type CreateOrganisationInput struct {
 	IPAddress string `json:"ip_address" binding:"required"`
 	APIKey    string `json:"api_key" binding:"required"`
 }
+
+type OrganisationPaseto struct {
+	OrganisationId string
+	PasetoToken    string
+}
