@@ -26,5 +26,5 @@ type CreateOrganisationInput struct {
 
 type OrganisationPaseto struct {
 	OrganisationId string
-	PasetoToken    string
+	Token    string
 }

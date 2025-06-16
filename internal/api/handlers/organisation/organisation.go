@@ -87,6 +87,14 @@ func verifyAPIKey(c *gin.Context) {
 		logwrapper.Errorf("failed to generate token, error %v", err.Error())
 		return
 	}
+
+	// update organisation status = active
+	if err := database.DB.Model(&org).Update("status", "active").Error; err != nil {
+		logwrapper.Errorf("failed to update organisation status, error %v", err.Error())
+		c.JSON(http.StatusUnauthorized, gin.H{"valid": false, "error": "Failed to update api key status"})
+		return
+	}
+
 	pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
 	if err != nil {
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -98,7 +106,7 @@ func verifyAPIKey(c *gin.Context) {
 
 	payload := OrganisationPaseto{
 		OrganisationId: org.ID.String(),
-		PasetoToken:    pasetoToken,
+		Token:          pasetoToken,
 	}
 	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 }
