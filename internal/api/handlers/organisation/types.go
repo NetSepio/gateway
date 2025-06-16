@@ -25,6 +25,6 @@ type CreateOrganisationInput struct {
 }
 
 type OrganisationPaseto struct {
-	OrganisationId string
-	Token    string
+	OrganisationId string `json:"organisationId"`
+	Token          string `json:"token"`
 }
