@@ -129,13 +129,19 @@ func PatchTrialSubscription(c *gin.Context) {
 func CheckSubscription(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
 
+	ordId := c.GetString(paseto.CTX_ORGANISATION_ID)
+
+	if len(userId) == 0 {
+		userId = ordId
+	}
+
 	db := database.GetDB2()
 	var subscription *models.Subscription
 	err := db.Where("user_id = ?", userId).Order("end_time DESC").First(&subscription).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			res := SubscriptionResponse{
-				Status: "notFound",
+				Status: "subscription not found",
 			}
 			c.JSON(http.StatusNotFound, res)
 		}
