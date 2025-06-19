@@ -60,7 +60,7 @@ func SubscribeTopics(ps *pubsub.PubSub, h host.Host, ctx context.Context) {
 				logrus.Error(err)
 				continue
 			}
-			db := database.GetDb()
+			db := database.GetDB2()
 			node.Status = "active"
 			node.LastPing = time.Now().Unix()
 			err = CreateOrUpdate(db, node)
@@ -71,7 +71,6 @@ func SubscribeTopics(ps *pubsub.PubSub, h host.Host, ctx context.Context) {
 				logrus.Error(err)
 				continue
 			}
-
 			topic.EventHandler()
 		}
 	}()

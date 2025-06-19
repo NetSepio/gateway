@@ -25,7 +25,7 @@ func fromJSON(data string, v interface{}) error {
 
 // CreateNode creates a new node record in the database
 func CreateNode(node *models.Node) error {
-	DB := database.GetDb()
+	DB := database.GetDB2()
 	return DB.Create(node).Error
 }
 
@@ -36,7 +36,7 @@ func GetNodeByID(id string) (models.Node, error) {
 		v     models.Node
 		nodes models.Node
 	)
-	DB := database.GetDb()
+	DB := database.GetDB2()
 	err := DB.First(&node, "peer_id = ?", id).Error
 	if err != nil {
 		return v, err
@@ -85,13 +85,13 @@ func GetNodeByID(id string) (models.Node, error) {
 
 // UpdateNode updates an existing node record in the database
 func UpdateNode(node *models.Node) error {
-	DB := database.GetDb()
+	DB := database.GetDB2()
 	return DB.Save(node).Error
 }
 
 // DeleteNode deletes a node record from the database
 func DeleteNode(id string) error {
-	DB := database.GetDb()
+	DB := database.GetDB2()
 	return DB.Delete(&models.Node{}, "where peer_id = ?",id).Error
 }
 
