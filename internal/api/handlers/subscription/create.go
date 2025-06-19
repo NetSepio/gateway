@@ -103,6 +103,10 @@ func TrialSubscription(c *gin.Context) {
 func PatchTrialSubscription(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
 
+	if len(userId) == 0 {
+		userId = c.GetString(paseto.CTX_ORGANISATION_ID)
+	}
+
 	// Check if there is already an active trial subscription for the user
 	var existingSubscription models.Subscription
 	db := database.GetDB2()
@@ -166,6 +170,9 @@ func CheckSubscription(c *gin.Context) {
 
 func CreatePaymentIntent(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
+	if len(userId) == 0 {
+		userId = c.GetString(paseto.CTX_ORGANISATION_ID)
+	}
 	db := database.GetDB2()
 	params := &stripe.PaymentIntentParams{
 		Amount:      stripe.Int64(1000),
