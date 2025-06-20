@@ -201,3 +201,54 @@ func CreatePaymentIntent(c *gin.Context) {
 
 	httpo.NewSuccessResponseP(200, "Created new charge", gin.H{"clientSecret": pi.ClientSecret}).SendD(c)
 }
+
+func getAllSubscription(c *gin.Context) {
+	userId := c.GetString(paseto.CTX_USER_ID)
+
+	ordId := c.GetString(paseto.CTX_ORGANISATION_ID)
+
+	if len(userId) == 0 {
+		userId = ordId
+	}
+
+	db := database.GetDB2()
+	var subscriptions []models.Subscription
+	err := db.Where("user_id = ?", userId).Order("end_time DESC").Find(&subscriptions).Error
+	if err != nil {
+		logwrapper.Errorf("Error fetching subscriptions: %v", err)
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+	if len(subscriptions) == 0 {
+		res := gin.H{
+			"status":        "subscription not found",
+			"subscriptions": []models.Subscription{},
+		}
+		c.JSON(http.StatusNoContent, res)
+		return
+	}
+
+	// Mark status for each subscription
+	type SubscriptionWithStatus struct {
+		models.Subscription
+		Status string `json:"status"`
+	}
+	var result []SubscriptionWithStatus
+	now := time.Now()
+	for _, sub := range subscriptions {
+		status := "expired"
+		if now.Before(sub.EndTime) {
+			status = "active"
+		}
+		result = append(result, SubscriptionWithStatus{
+			Subscription: sub,
+			Status:       status,
+		})
+	}
+
+	res := gin.H{
+		"subscriptions": result,
+		"status":        "success",
+	}
+	c.JSON(http.StatusOK, res)
+}

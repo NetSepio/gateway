@@ -16,5 +16,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("/create-payment", CreatePaymentIntent)
 		g.GET("", CheckSubscription)
 		g.POST("erebrus", Buy111NFT)
+		g.GET("/list", getAllSubscription)
 	}
 }
