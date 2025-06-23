@@ -117,7 +117,25 @@ func authenticate(c *gin.Context) {
 
 		var isCorrect bool
 		var walletAddr string
-		if req.ChainName == "evm" || strings.ToLower(req.ChainName) == "monad" || strings.ToLower(req.ChainName) == "peaq" {
+		if req.ChainName == "evm" {
+
+			userAuthEULA := load.Cfg.AUTH_EULA
+			message := userAuthEULA + req.FlowId
+			userId, walletAddr, isCorrect, err = cryptosign.VerifySignatureEVM(message, req.Signature, req.FlowId)
+
+			if err == cryptosign.ErrFlowIdNotFound {
+				httpo.NewErrorResponse(http.StatusNotFound, "Flow Id not found")
+				return
+			}
+
+			if err != nil {
+				logwrapper.Errorf("failed to CheckSignature for evm, error %v", err.Error())
+				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
+				return
+			}
+
+		}
+		if strings.ToLower(req.ChainName) == "monad" || strings.ToLower(req.ChainName) == "peaq" {
 			userAuthEULA := load.Cfg.AUTH_EULA
 			message := userAuthEULA + req.FlowId
 			userId, walletAddr, isCorrect, err = cryptosign.CheckSignEth(req.Signature, req.FlowId, message)

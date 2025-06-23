@@ -19,6 +19,7 @@ import (
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/models"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 )
@@ -187,4 +188,48 @@ func CheckSignSol(signature string, flowId string, message string, pubKey string
 
 	return flowIdData.WalletAddress, flowIdData.UserId, true, nil
 
+}
+
+func VerifySignatureEVM(message, signature, flowId string) (string, string, bool, error) {
+
+	// Decode signature
+	sigBytes, err := hex.DecodeString(strings.TrimPrefix(signature, "0x"))
+	if err != nil {
+		return "", "", false, fmt.Errorf("invalid signature format: %v", err)
+	}
+
+	// Ensure signature length is correct
+	if len(sigBytes) != 65 {
+		return "", "", false, fmt.Errorf("invalid signature length: expected 65, got %d", len(sigBytes))
+	}
+
+	// Prepare message hash
+	hash := crypto.Keccak256Hash([]byte(fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(message), message)))
+
+	// Recover public key
+	sigBytes[64] -= 27 // Adjust v value for recovery
+	pubKey, err := crypto.SigToPub(hash.Bytes(), sigBytes)
+	if err != nil {
+		return "", "", false, fmt.Errorf("failed to recover public key: %v", err)
+	}
+	// Get recovered address
+	recoveredAddr := crypto.PubkeyToAddress(*pubKey)
+
+	var flowIdData models.FlowId
+	db := database.GetDb()
+
+	err = db.Model(&models.FlowId{}).Where("flow_id = ?", flowId).First(&flowIdData).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return "", "", false, ErrFlowIdNotFound
+	}
+
+	// fmt.Println("Recovered Address:", recoveredAddr.Hex())
+
+	// Compare addresses
+	expectedAddr := common.HexToAddress(flowIdData.WalletAddress)
+	if recoveredAddr == expectedAddr {
+		return flowIdData.UserId, flowIdData.WalletAddress, true, nil
+	} else {
+		return "", "", false, fmt.Errorf("signature does not match the expected address")
+	}
 }
