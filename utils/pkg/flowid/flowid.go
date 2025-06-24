@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
+	"netsepio-gateway-v1.1/internal/api/handlers/referral"
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/models"
 )
@@ -107,6 +108,7 @@ func GenerateFlowIdSol(walletAddress string, flowIdType models.FlowIdType, relat
 			FlowIds: []models.FlowId{{
 				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId, WalletAddress: walletAddress,
 			}},
+			ReferralCode: referral.GetReferalCode(),
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			return "", err
