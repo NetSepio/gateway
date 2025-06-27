@@ -19,3 +19,10 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.GET("/list", getAllSubscription)
 	}
 }
+func ApplyRoutesV11(r *gin.RouterGroup) {
+	g := r.Group("/subscription")
+	{
+		g.Use(paseto.PASETO(false))
+		g.POST("", CreateSubscription)
+	}
+}

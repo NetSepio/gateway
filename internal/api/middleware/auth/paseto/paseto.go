@@ -24,6 +24,7 @@ var CTX_USER_ID = "USER_ID"
 var CTX_ORGANISATION_ID = "ORGANISATION_ID"
 var CTX_ORGANISATION_IP = "ORGANISATION_IP"
 var CTX_ORGANISATION_NAME = "ORGANISATION_NAME"
+var CTX_ORG_APP_ID = "ORGANISATION_APP_ID"
 
 var (
 	ErrAuthHeaderMissing = errors.New("authorization header is required")
@@ -114,6 +115,7 @@ func PASETO(authOptional bool) func(*gin.Context) {
 		if err == nil && occApp.Valid() == nil {
 			// Set context for organisation app
 			c.Set(CTX_ORGANISATION_ID, occApp.AppOrganisationId)
+			c.Set(CTX_ORG_APP_ID, occApp.AppOrganisationId)
 			// if occApp.OrganisationName != nil {
 			// 	c.Set(CTX_ORGANISATION_NAME, occApp.OrganisationName)
 			// }
