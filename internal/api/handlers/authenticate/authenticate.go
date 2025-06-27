@@ -46,6 +46,7 @@ func authenticate(c *gin.Context) {
 		return
 	}
 
+	// generating flowId
 	if len(req.Signature) == 0 {
 		if req.WalletAddress == "" {
 			httpo.NewErrorResponse(http.StatusBadRequest, "Wallet address (walletAddress) is required").SendD(c)

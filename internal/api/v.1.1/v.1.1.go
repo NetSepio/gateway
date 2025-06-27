@@ -80,6 +80,7 @@ func ApplyRoutesV1_1(r *gin.RouterGroup) {
 	{
 		organisation.ApplyRoutes(v1)
 		certificate.ApplyRoutes(v1)
+		
 
 	}
 }

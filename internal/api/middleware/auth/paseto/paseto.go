@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/vk-rv/pvx"
-	"gorm.io/gorm"
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/models"
 	"netsepio-gateway-v1.1/models/claims"
@@ -96,44 +95,49 @@ func PASETO(authOptional bool) func(*gin.Context) {
 		// Try parsing as CustomClaimsForOrganisation
 		var occ claims.CustomClaimsForOrganisation
 		err = ppv4.Verify(pasetoToken, asymPK).ScanClaims(&occ)
-		if err != nil {
-			var validationErr *pvx.ValidationError
-			if errors.As(err, &validationErr) {
-				if validationErr.HasExpiredErr() {
-					err = fmt.Errorf("token expired")
-					logValidationFailed(headers.Authorization, err)
-					httpo.NewErrorResponse(httpo.TokenExpired, "token expired").Send(c, http.StatusUnauthorized)
-					c.Abort()
-					return
-				}
+		if err == nil && occ.Valid() == nil {
+			// Set context for organisation
+			c.Set(CTX_ORGANISATION_ID, occ.OrganisationId)
+			if occ.OrganisationName != nil {
+				c.Set(CTX_ORGANISATION_NAME, occ.OrganisationName)
 			}
-			err = fmt.Errorf("failed to scan claims for paseto token, %s", err)
-			logValidationFailed(headers.Authorization, err)
-			c.AbortWithStatus(http.StatusUnauthorized)
+			if occ.IpAddress != nil {
+				c.Set(CTX_ORGANISATION_IP, *occ.IpAddress)
+			}
+			c.Next()
 			return
 		}
 
-		if err := occ.Valid(); err != nil {
-			logValidationFailed(headers.Authorization, err)
-			if err.Error() == gorm.ErrRecordNotFound.Error() {
-				c.AbortWithStatus(http.StatusUnauthorized)
-			} else {
-				err = fmt.Errorf("failed to validate organisation claim, %s", err)
-				logwrapper.Log.Error(err)
-				c.AbortWithStatus(http.StatusInternalServerError)
-			}
+		// Try parsing as CustomClaimsForOrganisationApp
+		var occApp claims.CustomClaimsForOrganisationApp
+		err = ppv4.Verify(pasetoToken, asymPK).ScanClaims(&occApp)
+		if err == nil && occApp.Valid() == nil {
+			// Set context for organisation app
+			c.Set(CTX_ORGANISATION_ID, occApp.AppOrganisationId)
+			// if occApp.OrganisationName != nil {
+			// 	c.Set(CTX_ORGANISATION_NAME, occApp.OrganisationName)
+			// }
+			// if occApp.IpAddress != nil {
+			// 	c.Set(CTX_ORGANISATION_IP, *occApp.IpAddress)
+			// }
+			c.Next()
 			return
 		}
 
-		// Set context for organisation
-		c.Set(CTX_ORGANISATION_ID, occ.OrganisationId)
-		if occ.OrganisationName != nil {
-			c.Set(CTX_ORGANISATION_NAME, occ.OrganisationName)
+		// Handle validation errors
+		var validationErr *pvx.ValidationError
+		if errors.As(err, &validationErr) {
+			if validationErr.HasExpiredErr() {
+				err = fmt.Errorf("token expired")
+				logValidationFailed(headers.Authorization, err)
+				httpo.NewErrorResponse(httpo.TokenExpired, "token expired").Send(c, http.StatusUnauthorized)
+				c.Abort()
+				return
+			}
 		}
-		if occ.IpAddress != nil {
-			c.Set(CTX_ORGANISATION_IP, *occ.IpAddress)
-		}
-		c.Next()
+		err = fmt.Errorf("failed to scan claims for paseto token, %s", err)
+		logValidationFailed(headers.Authorization, err)
+		c.AbortWithStatus(http.StatusUnauthorized)
 	}
 }
 

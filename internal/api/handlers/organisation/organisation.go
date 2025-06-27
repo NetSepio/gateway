@@ -8,9 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
+	"netsepio-gateway-v1.1/internal/api/handlers/organisation/orgApp"
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/models/claims"
-	apikey "netsepio-gateway-v1.1/utils/apiKey"
+	apikey "netsepio-gateway-v1.1/utils/apikey"
 	"netsepio-gateway-v1.1/utils/auth"
 	"netsepio-gateway-v1.1/utils/httpo"
 	"netsepio-gateway-v1.1/utils/load"
@@ -23,6 +24,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("", createOrganisation)
 		g.GET("", listOrganisations)
 		g.GET("/token", verifyOrgAPIKey)
+		orgApp.ApplyRoutes(g)
 	}
 }
 
@@ -111,47 +113,3 @@ func verifyOrgAPIKey(c *gin.Context) {
 	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 }
 
-func verifyAppAPIKey(c *gin.Context) {
-	apiKey := c.GetHeader("X-APP-API-KEY")
-	if apiKey == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"valid": false, "error": "API key is required in 'X-API-Key' header"})
-		return
-	}
-
-	var org Organisation
-	if err := database.DB.Where("api_key = ?", apiKey).First(&org).Error; err != nil {
-		load.Logger.Warn("verifyAPIKey: invalid API key", zap.String("api_key", apiKey))
-		c.JSON(http.StatusUnauthorized, gin.H{"valid": false, "error": "Invalid API key"})
-		return
-	}
-
-	customClaims := claims.NewWithOrganisation(org.ID.String(), &org.Name, &org.IPAddress)
-	pvKey, err := hex.DecodeString(load.Cfg.PASETO_PRIVATE_KEY[2:])
-	if err != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Errorf("failed to generate token, error %v", err.Error())
-		return
-	}
-
-	// update organisation status = active
-	if err := database.DB.Model(&org).Update("status", "active").Error; err != nil {
-		logwrapper.Errorf("failed to update organisation status, error %v", err.Error())
-		c.JSON(http.StatusUnauthorized, gin.H{"valid": false, "error": "Failed to update api key status"})
-		return
-	}
-
-	pasetoToken, err := auth.GenerateToken(customClaims, pvKey)
-	if err != nil {
-		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
-		logwrapper.Errorf("failed to generate token, error %v", err.Error())
-		return
-	}
-
-	load.Logger.Info("Organisation verified token generated sucessfully", zap.String("id", org.ID.String()))
-
-	payload := OrganisationPaseto{
-		OrganisationId: org.ID.String(),
-		Token:          pasetoToken,
-	}
-	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
-}

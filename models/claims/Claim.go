@@ -26,6 +26,43 @@ type CustomClaimsForOrganisation struct {
 	IpAddress        *string `json:"ipAddress"`
 	pvx.RegisteredClaims
 }
+type CustomClaimsForOrganisationApp struct {
+	OrganisationAppName *string `json:"orgainisationAppName,omitempty"`
+	AppOrganisationId      string  `json:"appOrganisationId,omitempty"`
+	AppId               string  `json:"appId,omitempty"`
+	SignedBy            string  `json:"signedBy"`
+	pvx.RegisteredClaims
+}
+
+func (c CustomClaimsForOrganisationApp) Valid() error {
+	db := database.GetDb()
+	if err := c.RegisteredClaims.Valid(); err != nil {
+		return err
+	}
+	fmt.Printf("c.OrganisationId: %s\n", c.AppOrganisationId)
+	fmt.Printf("c.AppId: %s\n", c.AppId)
+
+	// Check if OrganisationId exists in Organisation table
+	var org models.Organisation
+	err := db.Model(&models.Organisation{}).Where("id = ?", c.AppOrganisationId).First(&org).Error
+	if err != nil {
+		return err
+	}
+
+	// Check if OrganisationId and AppId exist together in OrganisationApp table using join
+	var count int64
+	err = db.Model(&models.OrganisationApp{}).
+		Joins("JOIN organisations ON organisations.id = organisation_apps.organisation_id").
+		Where("organisation_apps.organisation_id = ? AND organisation_apps.id = ?", c.AppOrganisationId, c.AppId).
+		Count(&count).Error
+	if err != nil {
+		return err
+	}
+	if count == 0 {
+		return errors.New("organisation_id and app_id combination not found in organisation_apps")
+	}
+	return nil
+}
 
 // Valid implements pvx.Claims.
 func (c CustomClaimsForOrganisation) Valid() error {
@@ -118,6 +155,21 @@ func NewWithEmail(userId string, email *string) CustomClaims {
 		userId,
 		signedBy,
 		email,
+		pvx.RegisteredClaims{
+			Expiration: &expiration,
+		},
+	}
+}
+
+func NewWithOrganisationApp(organisationId string, AppId string, organisationAppName *string) CustomClaimsForOrganisationApp {
+	pasetoExpirationInHours := load.Cfg.PASETO_EXPIRATION
+	expiration := time.Now().Add(pasetoExpirationInHours)
+	signedBy := load.Cfg.PASETO_SIGNED_BY
+	return CustomClaimsForOrganisationApp{
+		organisationAppName,
+		organisationId,
+		AppId,
+		signedBy,
 		pvx.RegisteredClaims{
 			Expiration: &expiration,
 		},
