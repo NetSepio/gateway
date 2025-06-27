@@ -11,7 +11,7 @@ import (
 	"netsepio-gateway-v1.1/internal/api/handlers/organisation/orgApp"
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/models/claims"
-	apikey "netsepio-gateway-v1.1/utils/apikey"
+	apikey "netsepio-gateway-v1.1/utils/api_key"
 	"netsepio-gateway-v1.1/utils/auth"
 	"netsepio-gateway-v1.1/utils/httpo"
 	"netsepio-gateway-v1.1/utils/load"

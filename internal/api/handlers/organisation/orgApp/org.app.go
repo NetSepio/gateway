@@ -12,7 +12,7 @@ import (
 	"netsepio-gateway-v1.1/internal/database"
 	"netsepio-gateway-v1.1/models"
 	"netsepio-gateway-v1.1/models/claims"
-	"netsepio-gateway-v1.1/utils/apikey"
+	"netsepio-gateway-v1.1/utils/api_key"
 	"netsepio-gateway-v1.1/utils/auth"
 	"netsepio-gateway-v1.1/utils/httpo"
 	"netsepio-gateway-v1.1/utils/load"
@@ -87,7 +87,7 @@ func createOrganisationApp(c *gin.Context) {
 		OrganisationId: input.OrganisationId,
 		Name:           input.Name,
 		Description:    input.Description,
-		APIKey:         apikey.GenerateAPIKey(),
+		APIKey:         api_key.GenerateAPIKey(),
 		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
 	}
