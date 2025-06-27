@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	openai "github.com/sashabaranov/go-openai"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 func summarizeContent(contents []string) string {

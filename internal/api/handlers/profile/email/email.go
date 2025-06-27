@@ -13,11 +13,11 @@ import (
 	"github.com/resend/resend-go/v2"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
-	"netsepio-gateway-v1.1/internal/caching"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/caching"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 var (

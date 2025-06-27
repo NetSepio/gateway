@@ -6,12 +6,12 @@ import (
 	"strings"
 
 	"gorm.io/gorm"
-	"netsepio-gateway-v1.1/internal/api/handlers/profile/email"
-	"netsepio-gateway-v1.1/internal/api/handlers/referral"
-	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/httpo"
+	"github.com/NetSepio/gateway/internal/api/handlers/profile/email"
+	"github.com/NetSepio/gateway/internal/api/handlers/referral"
+	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/httpo"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"

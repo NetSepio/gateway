@@ -8,14 +8,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
-	"netsepio-gateway-v1.1/internal/api/handlers/organisation/orgApp"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models/claims"
-	apikey "netsepio-gateway-v1.1/utils/api_key"
-	"netsepio-gateway-v1.1/utils/auth"
-	"netsepio-gateway-v1.1/utils/httpo"
-	"netsepio-gateway-v1.1/utils/load"
-	"netsepio-gateway-v1.1/utils/logwrapper"
+	"github.com/NetSepio/gateway/internal/api/handlers/organisation/orgApp"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models/claims"
+	apikey "github.com/NetSepio/gateway/utils/api_key"
+	"github.com/NetSepio/gateway/utils/auth"
+	"github.com/NetSepio/gateway/utils/httpo"
+	"github.com/NetSepio/gateway/utils/load"
+	"github.com/NetSepio/gateway/utils/logwrapper"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {

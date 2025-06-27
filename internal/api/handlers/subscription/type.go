@@ -1,6 +1,6 @@
 package subscription
 
-import "netsepio-gateway-v1.1/models"
+import "github.com/NetSepio/gateway/models"
 
 type BuyErebrusNFTResponse struct {
 	ClientSecret string `json:"clientSecret"`

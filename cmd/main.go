@@ -1,6 +1,6 @@
 package main
 
-import "netsepio-gateway-v1.1/app"
+import "github.com/NetSepio/gateway/app"
 
 func main() {
 	app.Init()

@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/vk-rv/pvx"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 type CustomClaims struct {

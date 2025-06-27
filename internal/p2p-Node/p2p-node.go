@@ -19,13 +19,13 @@ import (
 	"github.com/multiformats/go-multiaddr"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/zap"
-	"netsepio-gateway-v1.1/contract"
-	nodelogs "netsepio-gateway-v1.1/internal/api/handlers/nodes/nodeLogs"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/internal/p2p-Node/host"
-	"netsepio-gateway-v1.1/internal/p2p-Node/service"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/contract"
+	nodelogs "github.com/NetSepio/gateway/internal/api/handlers/nodes/nodeLogs"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/internal/p2p-Node/host"
+	"github.com/NetSepio/gateway/internal/p2p-Node/service"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 // DiscoveryInterval is how often we search for other peers via the DHT.

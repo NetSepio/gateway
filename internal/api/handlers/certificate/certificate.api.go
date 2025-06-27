@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"netsepio-gateway-v1.1/utils/certificate"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/utils/certificate"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {

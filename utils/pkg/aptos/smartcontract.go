@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 func argS(s string) string {

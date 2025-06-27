@@ -7,7 +7,7 @@ import (
 	"mime/multipart"
 	"net/http"
 
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 func UploadToIpfs(osFile io.Reader, fileName string) (*NFTStorageRes, error) {

@@ -6,9 +6,9 @@ import (
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/pkg/graphql"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/pkg/graphql"
 )
 
 func BetaGraphqlQueryForLeaderboard() ([]string, error) {

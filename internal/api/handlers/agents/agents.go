@@ -9,9 +9,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
+	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {

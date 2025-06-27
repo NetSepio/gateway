@@ -2,7 +2,7 @@ package account
 
 import (
 	"github.com/gin-gonic/gin"
-	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
 )
 
 // ApplyRoutes applies router to gin Router

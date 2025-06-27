@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"netsepio-gateway-v1.1/models"
+	"github.com/NetSepio/gateway/models"
 )
 
 // RegisterRoutes sets up API routes

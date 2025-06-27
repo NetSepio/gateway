@@ -19,7 +19,7 @@ package paseto
 // 	"github.com/go-playground/assert/v2"
 // 	"github.com/google/uuid"
 // 	"github.com/vk-rv/pvx"
-// 	"netsepio-gateway-v1.1/utils/logwrapper"
+// 	"github.com/NetSepio/gateway/utils/logwrapper"
 // )
 
 // func Test_PASETO(t *testing.T) {

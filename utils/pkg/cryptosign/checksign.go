@@ -16,8 +16,8 @@ import (
 	"golang.org/x/crypto/nacl/sign"
 	"golang.org/x/crypto/sha3"
 	"gorm.io/gorm"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"

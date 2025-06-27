@@ -8,7 +8,7 @@ import (
 	"errors"
 
 	"go.uber.org/zap"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 func verifyCertFromFiles(caCertBase64, caKeyBase64 string, certPEM []byte) error {

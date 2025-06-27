@@ -14,7 +14,7 @@ import (
 	"github.com/libp2p/go-libp2p/p2p/discovery/routing"
 	discovery "github.com/libp2p/go-libp2p/p2p/discovery/util"
 	"github.com/multiformats/go-multiaddr"
-	"netsepio-gateway-v1.1/internal/p2p-Node/pkey"
+	"github.com/NetSepio/gateway/internal/p2p-Node/pkey"
 )
 
 // DiscoveryServiceTag is used in our DHT advertisements to discover

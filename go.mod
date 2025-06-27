@@ -1,4 +1,4 @@
-module netsepio-gateway-v1.1
+module github.com/NetSepio/gateway
 
 go 1.23.0
 

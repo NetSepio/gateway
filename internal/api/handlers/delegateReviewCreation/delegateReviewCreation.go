@@ -7,14 +7,14 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"netsepio-gateway-v1.1/internal/api/handlers/leaderboard"
-	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/httpo"
-	"netsepio-gateway-v1.1/utils/logwrapper"
-	"netsepio-gateway-v1.1/utils/pkg/aptos"
-	"netsepio-gateway-v1.1/utils/pkg/openai"
+	"github.com/NetSepio/gateway/internal/api/handlers/leaderboard"
+	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/httpo"
+	"github.com/NetSepio/gateway/utils/logwrapper"
+	"github.com/NetSepio/gateway/utils/pkg/aptos"
+	"github.com/NetSepio/gateway/utils/pkg/openai"
 )
 
 // ApplyRoutes applies router to gin Router
