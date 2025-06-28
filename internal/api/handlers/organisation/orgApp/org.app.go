@@ -82,8 +82,16 @@ func createOrganisationApp(c *gin.Context) {
 		input.OrganisationId = org.ID
 		load.Logger.Info("Organisation created for app", zap.String("id", org.ID.String()))
 	} else {
-		// verify this organisation exists
-		var org models.Organisation
+		// update APIKey to "App based" for the existing organisation
+		if err := database.DB.Model(&models.Organisation{}).
+			Where("id = ?", input.OrganisationId).
+			Update("api_key", "App based").Error; err != nil {
+			load.Logger.Error("createOrganisationApp: Failed to update organisation APIKey", zap.Error(err))
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update organisation APIKey"})
+			return
+		}
+
+		// get the organisation detail
 		if err := database.DB.First(&org, "id = ?", input.OrganisationId).Error; err != nil {
 			load.Logger.Error("createOrganisationApp: Organisation not found", zap.Error(err))
 			c.JSON(http.StatusNotFound, gin.H{"error": "Invalid organisation"})
