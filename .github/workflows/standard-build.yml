@@ -3,9 +3,7 @@ name: "Build and Push to GHCR"
 on:
   push:
     branches-ignore: 
-      # - main
-      - prod
-      - aws_prod
+      - main
       - v1.1     
 
 jobs:

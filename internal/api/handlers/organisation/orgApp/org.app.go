@@ -21,9 +21,10 @@ import (
 
 // Input struct for create/update
 type OrganisationAppInput struct {
-	OrganisationId uuid.UUID `json:"organisation_id"`
-	Name           string    `json:"name"`
-	Description    string    `json:"description"`
+	OrganisationId  uuid.UUID `json:"organisation_id"`
+	Name            string    `json:"name"`
+	Description     string    `json:"description"`
+	OrganisatioName string    `json:"organisation_name"`
 }
 
 // Register routes
@@ -60,8 +61,8 @@ func createOrganisationApp(c *gin.Context) {
 
 		var orgName string
 
-		if input.Name != "" {
-			orgName = input.Name + "-Org"
+		if input.OrganisatioName != "" {
+			orgName = input.OrganisatioName
 		} else {
 			orgName = "App-" + orgId.String() + "-Org"
 		}
