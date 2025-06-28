@@ -1,7 +1,7 @@
 package report
 
 import (
-	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
 	"github.com/gin-gonic/gin"
 )
 

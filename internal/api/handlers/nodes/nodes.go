@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	nodelogs "netsepio-gateway-v1.1/internal/api/handlers/nodes/nodeLogs"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/httpo"
-	"netsepio-gateway-v1.1/utils/logwrapper"
+	nodelogs "github.com/NetSepio/gateway/internal/api/handlers/nodes/nodeLogs"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/httpo"
+	"github.com/NetSepio/gateway/utils/logwrapper"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {

@@ -9,14 +9,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/models/claims"
-	"netsepio-gateway-v1.1/utils/auth"
-	"netsepio-gateway-v1.1/utils/httpo"
-	"netsepio-gateway-v1.1/utils/load"
-	"netsepio-gateway-v1.1/utils/logwrapper"
+	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/models/claims"
+	"github.com/NetSepio/gateway/utils/auth"
+	"github.com/NetSepio/gateway/utils/httpo"
+	"github.com/NetSepio/gateway/utils/load"
+	"github.com/NetSepio/gateway/utils/logwrapper"
 )
 
 func GenerateAuthId(c *gin.Context) {

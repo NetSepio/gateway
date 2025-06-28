@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 var (

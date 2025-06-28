@@ -4,7 +4,7 @@ import (
 	"mime/multipart"
 
 	"go.uber.org/zap"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 func VerifyCertificate(file *multipart.FileHeader) (bool, error) {

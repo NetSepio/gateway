@@ -49,8 +49,6 @@ jobs:
         script: |
           pwd
           cd gateway
-          docker stop gateway_v1_1 
-          docker rm gateway_v1_1
           docker stop gateway 
           docker rm gateway 
           docker image rm ghcr.io/netsepio/gateway:main

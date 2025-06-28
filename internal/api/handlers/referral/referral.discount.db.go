@@ -1,8 +1,8 @@
 package referral
 
 import (
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
 )
 
 // CreateReferralDiscount inserts a new referral discount into the database

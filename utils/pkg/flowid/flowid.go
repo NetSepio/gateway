@@ -6,9 +6,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
-	"netsepio-gateway-v1.1/internal/api/handlers/referral"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
+	"github.com/NetSepio/gateway/internal/api/handlers/referral"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
 )
 
 func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string, userId string) (string, error) {

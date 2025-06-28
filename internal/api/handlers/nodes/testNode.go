@@ -6,8 +6,8 @@ import (
 	"math/rand"
 	"time"
 
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
 )
 
 func toJSON(data interface{}) string {

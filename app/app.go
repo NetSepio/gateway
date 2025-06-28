@@ -1,11 +1,11 @@
 package app
 
 import (
-	"netsepio-gateway-v1.1/internal/caching"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/internal/server"
-	"netsepio-gateway-v1.1/utils/load"
-	"netsepio-gateway-v1.1/utils/logwrapper"
+	"github.com/NetSepio/gateway/internal/caching"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/internal/server"
+	"github.com/NetSepio/gateway/utils/load"
+	"github.com/NetSepio/gateway/utils/logwrapper"
 )
 
 // Initialize the app

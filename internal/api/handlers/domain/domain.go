@@ -2,9 +2,9 @@ package domain
 
 import (
 	"github.com/gin-gonic/gin"
-	"netsepio-gateway-v1.1/internal/api/handlers/domain/admin"
-	"netsepio-gateway-v1.1/internal/api/handlers/domain/claim"
-	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/api/handlers/domain/admin"
+	"github.com/NetSepio/gateway/internal/api/handlers/domain/claim"
+	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
 )
 
 // ApplyRoutes applies router to gin Router

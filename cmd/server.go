@@ -1,6 +1,6 @@
 package main
 
-import "netsepio-gateway-v1.1/internal/server"
+import "github.com/NetSepio/gateway/internal/server"
 
 func run() {
 	server.Start()

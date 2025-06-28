@@ -7,14 +7,14 @@ import (
 	"strings"
 
 	"github.com/robfig/cron"
-	"netsepio-gateway-v1.1/internal/api/handlers/leaderboard"
-	"netsepio-gateway-v1.1/internal/api/handlers/referral"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/models/claims"
-	"netsepio-gateway-v1.1/utils/auth"
-	"netsepio-gateway-v1.1/utils/load"
-	"netsepio-gateway-v1.1/utils/logwrapper"
+	"github.com/NetSepio/gateway/internal/api/handlers/leaderboard"
+	"github.com/NetSepio/gateway/internal/api/handlers/referral"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/models/claims"
+	"github.com/NetSepio/gateway/utils/auth"
+	"github.com/NetSepio/gateway/utils/load"
+	"github.com/NetSepio/gateway/utils/logwrapper"
 )
 
 func AutoCalculateScoreBoard() {

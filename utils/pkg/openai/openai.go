@@ -7,7 +7,7 @@ import (
 	"io"
 	"net/http"
 
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 type ChatRequest struct {

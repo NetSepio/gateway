@@ -5,7 +5,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 var (

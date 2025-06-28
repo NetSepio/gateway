@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	v11 "netsepio-gateway-v1.1/internal/api/v.1.1"
+	v11 "github.com/NetSepio/gateway/internal/api/v.1.1"
 )
 
 func ApplyRoutes(r *gin.Engine) {

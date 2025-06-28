@@ -7,9 +7,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/httpo"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/httpo"
 )
 
 // ApplyRoutes applies router to gin Router

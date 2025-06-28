@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"netsepio-gateway-v1.1/internal/database"
+	"github.com/NetSepio/gateway/internal/database"
 )
 
 func DynamicLeaderBoardUpdate(user_id, column_name string) {

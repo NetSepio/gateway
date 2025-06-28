@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
 )
 
 func ApplyRoutesSubscriptionToken(r *gin.RouterGroup) {

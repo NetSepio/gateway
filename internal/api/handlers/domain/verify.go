@@ -8,10 +8,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/httpo"
-	"netsepio-gateway-v1.1/utils/logwrapper"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/httpo"
+	"github.com/NetSepio/gateway/utils/logwrapper"
 )
 
 func verifyDomain(c *gin.Context) {

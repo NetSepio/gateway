@@ -8,8 +8,8 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"netsepio-gateway-v1.1/internal/api"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/internal/api"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 var GinApp *gin.Engine

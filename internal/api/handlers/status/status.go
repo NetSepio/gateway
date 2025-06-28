@@ -6,7 +6,7 @@ import (
 	"runtime"
 
 	"github.com/gin-gonic/gin"
-	"netsepio-gateway-v1.1/utils/load"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 var pubKey = ""

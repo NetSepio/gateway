@@ -8,9 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/logwrapper"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/logwrapper"
 )
 
 var (

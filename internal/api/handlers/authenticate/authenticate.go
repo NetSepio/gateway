@@ -8,16 +8,16 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/gin-gonic/gin"
-	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/models/claims"
-	"netsepio-gateway-v1.1/utils/auth"
-	"netsepio-gateway-v1.1/utils/httpo"
-	"netsepio-gateway-v1.1/utils/load"
-	"netsepio-gateway-v1.1/utils/logwrapper"
-	"netsepio-gateway-v1.1/utils/pkg/cryptosign"
-	"netsepio-gateway-v1.1/utils/pkg/flowid"
+	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/models/claims"
+	"github.com/NetSepio/gateway/utils/auth"
+	"github.com/NetSepio/gateway/utils/httpo"
+	"github.com/NetSepio/gateway/utils/load"
+	"github.com/NetSepio/gateway/utils/logwrapper"
+	"github.com/NetSepio/gateway/utils/pkg/cryptosign"
+	"github.com/NetSepio/gateway/utils/pkg/flowid"
 )
 
 // ApplyRoutes applies router to gin Router

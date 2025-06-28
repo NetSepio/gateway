@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {

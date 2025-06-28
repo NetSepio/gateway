@@ -7,12 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"netsepio-gateway-v1.1/internal/api/handlers/leaderboard"
-	"netsepio-gateway-v1.1/internal/api/middleware/auth/paseto"
-	"netsepio-gateway-v1.1/internal/database"
-	"netsepio-gateway-v1.1/models"
-	"netsepio-gateway-v1.1/utils/httpo"
-	"netsepio-gateway-v1.1/utils/logwrapper"
+	"github.com/NetSepio/gateway/internal/api/handlers/leaderboard"
+	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/database"
+	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/httpo"
+	"github.com/NetSepio/gateway/utils/logwrapper"
 )
 
 func postDomain(c *gin.Context) {

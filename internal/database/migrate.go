@@ -1,8 +1,8 @@
 package database
 
 import (
-	migrate "netsepio-gateway-v1.1/models/Migrate"
-	"netsepio-gateway-v1.1/utils/load"
+	migrate "github.com/NetSepio/gateway/models/Migrate"
+	"github.com/NetSepio/gateway/utils/load"
 )
 
 func Migrate() error {
