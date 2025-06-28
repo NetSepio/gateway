@@ -93,7 +93,7 @@ jobs:
         port: ${{ secrets.AWS_SSH_PORT }} 
         script: |
           pwd
-          cd gateway
+          cd gateway-dev
           docker stop gateway_v1_1 
           docker rm gateway_v1_1 
           docker image rm ghcr.io/netsepio/gateway:v1.1

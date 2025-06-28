@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/NetSepio/gateway/utils/load"
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"github.com/NetSepio/gateway/utils/load"
 )
 
 var (
@@ -110,7 +110,7 @@ func GetDB2() *gorm.DB {
 		host     = load.Cfg.DB_HOST
 		username = load.Cfg.DB_USERNAME
 		password = load.Cfg.DB_PASSWORD
-		dbname   = `erebrus`
+		dbname   = load.Cfg.DB_NAME2
 		port     = load.Cfg.DB_PORT
 	)
 
