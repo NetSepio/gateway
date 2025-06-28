@@ -131,7 +131,6 @@ func createOrganisationApp(c *gin.Context) {
 	orgResp := OrganisationResponse{
 		ID:        org.ID,
 		Name:      org.Name,
-		APIKey:    org.APIKey,
 		CreatedAt: org.CreatedAt,
 		UpdatedAt: org.UpdatedAt,
 		App:       apps,

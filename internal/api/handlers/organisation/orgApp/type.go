@@ -36,7 +36,6 @@ type OrganisationAppResponse struct {
 type OrganisationResponse struct {
 	ID        uuid.UUID               `json:"id"`
 	Name      string                  `json:"name"`
-	APIKey    string                  `json:"api_key"`
 	CreatedAt time.Time               `json:"created_at"`
 	UpdatedAt time.Time               `json:"updated_at"`
 	App       []OrganisationAppResponse `json:"app"`
