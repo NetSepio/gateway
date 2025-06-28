@@ -21,3 +21,23 @@ type OrganisationAppPaseto struct {
 	OrganisationId string `json:"organisationId"`
 	Token          string `json:"token"`
 }
+
+// Define response structs
+type OrganisationAppResponse struct {
+	ID             uuid.UUID `json:"id"`
+	OrganisationId uuid.UUID `json:"organisation_id"`
+	Name           string    `json:"name"`
+	Description    string    `json:"description"`
+	APIKey         string    `json:"api_key"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
+}
+
+type OrganisationResponse struct {
+	ID        uuid.UUID               `json:"id"`
+	Name      string                  `json:"name"`
+	APIKey    string                  `json:"api_key"`
+	CreatedAt time.Time               `json:"created_at"`
+	UpdatedAt time.Time               `json:"updated_at"`
+	App       []OrganisationAppResponse `json:"app"`
+}

@@ -51,15 +51,24 @@ func createOrganisationApp(c *gin.Context) {
 	if input.Name == "" {
 		input.Name = "App-" + id.String()
 	}
+	org := models.Organisation{}
 	if input.OrganisationId == uuid.Nil || len(input.OrganisationId) == 0 {
 		// logging the error
 		load.Logger.Sugar().Info("createOrganisationApp: Creating an organisation for app")
 		// create organtisation
 		orgId := uuid.New()
 
-		org := models.Organisation{
+		var orgName string
+
+		if input.Name != "" {
+			orgName = input.Name + "-Org"
+		} else {
+			orgName = "App-" + orgId.String() + "-Org"
+		}
+
+		org = models.Organisation{
 			ID:        orgId,
-			Name:      "App-" + orgId.String(),
+			Name:      orgName,
 			APIKey:    "App based",
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
@@ -98,8 +107,30 @@ func createOrganisationApp(c *gin.Context) {
 		return
 	}
 
-	load.Logger.Info("OrganisationApp created", zap.String("id", app.ID.String()))
-	c.JSON(http.StatusOK, app)
+	appResp := OrganisationAppResponse{
+		ID:             app.ID,
+		OrganisationId: app.OrganisationId,
+		Name:           app.Name,
+		Description:    app.Description,
+		APIKey:         app.APIKey,
+		CreatedAt:      app.CreatedAt,
+		UpdatedAt:      app.UpdatedAt,
+	}
+
+	apps := []OrganisationAppResponse{appResp}
+
+	orgResp := OrganisationResponse{
+		ID:        org.ID,
+		Name:      org.Name,
+		APIKey:    org.APIKey,
+		CreatedAt: org.CreatedAt,
+		UpdatedAt: org.UpdatedAt,
+		App:       apps,
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"organisation": orgResp,
+	})
 }
 
 // List all
