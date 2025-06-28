@@ -71,7 +71,7 @@ func GetActiveNodesHandler(c *gin.Context) {
 // LogNodeStatus logs the status change of a node
 func LogNodeStatus(peerID string, status string) error {
 	// Initialize the database and Redis client
-	db := database.GetDb()
+	db := database.GetDB2()
 	Ctx := context.Background()
 	RedisClient := caching.Rdb
 
@@ -155,7 +155,7 @@ func LogNodeStatus(peerID string, status string) error {
 
 // GetActiveDuration fetches the active duration of a node between two timestamps
 func GetActiveDuration(peerID string, startTime, endTime time.Time) (time.Duration, error) {
-	db := database.GetDb()
+	db := database.GetDB2()
 	var logs []models.NodeLog
 	if err := db.Where("peer_id = ? AND timestamp BETWEEN ? AND ?", peerID, startTime, endTime).
 		Order("timestamp").
@@ -180,7 +180,7 @@ func GetActiveDuration(peerID string, startTime, endTime time.Time) (time.Durati
 
 // GetActiveNodes fetches all nodes that were active during a specific time range
 func GetActiveNodes(startTime, endTime time.Time) ([]string, error) {
-	db := database.GetDb()
+	db := database.GetDB2()
 	var logs []models.NodeLog
 	if err := db.Where("status = 'active' AND timestamp BETWEEN ? AND ?", startTime, endTime).
 		Group("peer_id").
@@ -199,7 +199,7 @@ func GetActiveNodes(startTime, endTime time.Time) ([]string, error) {
 // GetTotalActiveDuration calculates the total duration (in seconds) that a node with a given PeerID was active
 func GetTotalActiveDuration(peerID string, startTime time.Time, endTime time.Time) (int64, error) {
 	// Initialize the database client
-	db := database.GetDb()
+	db := database.GetDB2()
 
 	// Retrieve all status logs for the given peerID within the specified date range
 	var nodeLogs []models.NodeLog

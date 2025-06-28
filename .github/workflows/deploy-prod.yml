@@ -100,3 +100,5 @@ jobs:
           echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
           docker pull ghcr.io/netsepio/gateway:v1.1
           docker run --restart=on-failure:14 --dns=1.1.1.1 --name="gateway_v1_1" --env-file=.env -p 3000:3000 --net=netsepio_prod_network -v "$(pwd)/identity.key:/app/secret/identity.key" -d ghcr.io/netsepio/gateway:v1.1
+
+
