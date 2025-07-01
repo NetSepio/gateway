@@ -183,7 +183,7 @@ func updateOrganisationApp(c *gin.Context) {
 		return
 	}
 
-	var app OrganisationApp
+	var app models.OrganisationApp
 	if err := database.DB.First(&app, "id = ?", id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Organisation app not found"})
 		return

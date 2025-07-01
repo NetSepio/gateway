@@ -4,13 +4,13 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/utils/ctx"
 	"github.com/NetSepio/gateway/utils/logwrapper"
 	"github.com/NetSepio/gateway/utils/status"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func CreateSubscription(c *gin.Context) {
@@ -67,9 +67,7 @@ func CreateSubscription(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "You already have an active trial subscription"})
 		return
 	}
-	/*
-	   v4.public.eyJ3YWxsZXRBZGRyZXNzIjoiRWY4aUNFOGEyVnVHZExOWXh1YjRKRmJiTXU4TkVqR0twVGdyQ1o2TXlIUmUiLCJ1c2VySWQiOiI1ODMwNTZmYS1hN2M2LTRiYzQtOGIxOC1kNDQxOGQxYWM2YjMiLCJzaWduZWRCeSI6Ik5ldFNlcGlvIiwiZXhwIjoiMjAyOC0wMy0yM1QxODo1NjowMi4wNjcwMDI2MzRaIn0C-V30s7nCl8DKl-igrDKtjhRsfb-TRWZs2heRwpcmlNeH7IOQctnYBuLWXcexHINzk1xqb-htwXBe1daqj_8H
-	*/
+
 	// Create a new trial subscription
 	subscription := models.SubscriptionPlan{
 		PlanID:      input.PlanId,

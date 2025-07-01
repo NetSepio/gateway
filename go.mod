@@ -31,6 +31,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stripe/stripe-go/v76 v76.25.0
 	github.com/vk-rv/pvx v0.0.0-20210912195928-ac00bc32f6e7
+	github.com/williepotgieter/keymaker v1.0.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.37.0
 	google.golang.org/api v0.231.0
@@ -189,7 +190,6 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	github.com/whyrusleeping/go-keyspace v0.0.0-20160322163242-5b898ac5add1 // indirect
-	github.com/williepotgieter/keymaker v1.0.0 // indirect
 	github.com/wlynxg/anet v0.0.5 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.60.0 // indirect
