@@ -5,9 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"go.uber.org/zap"
 	"github.com/NetSepio/gateway/internal/api/handlers/organisation/orgApp"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models/claims"
@@ -16,6 +13,9 @@ import (
 	"github.com/NetSepio/gateway/utils/httpo"
 	"github.com/NetSepio/gateway/utils/load"
 	"github.com/NetSepio/gateway/utils/logwrapper"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {
@@ -71,7 +71,8 @@ func listOrganisations(c *gin.Context) {
 func verifyOrgAPIKey(c *gin.Context) {
 	apiKey := c.GetHeader("X-ORG-API-KEY")
 	if apiKey == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"valid": false, "error": "API key is required in 'X-API-Key' header"})
+		load.Logger.Warn("verifyAPIKey: API key is missing in header. Hint: Provide your organisation API key in the 'X-ORG-API-KEY' header.")
+		c.JSON(http.StatusBadRequest, gin.H{"valid": false, "error": "API key is required in 'X-ORG-API-KEY' header"})
 		return
 	}
 
@@ -112,4 +113,3 @@ func verifyOrgAPIKey(c *gin.Context) {
 	}
 	httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 }
-

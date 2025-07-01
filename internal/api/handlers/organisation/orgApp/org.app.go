@@ -222,7 +222,8 @@ func deleteOrganisationApp(c *gin.Context) {
 func verifyAppAPIKey(c *gin.Context) {
 	apiKey := c.GetHeader("X-APP-API-KEY")
 	if apiKey == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"valid": false, "error": "API key is required in 'X-API-Key' header"})
+		load.Logger.Warn("verifyAPIKey: API key is missing in header. Hint: Provide your app API key in the 'X-APP-API-KEY' header.")
+		c.JSON(http.StatusBadRequest, gin.H{"valid": false, "error": "API key is required in 'X-APP-API-KEY' header"})
 		return
 	}
 
