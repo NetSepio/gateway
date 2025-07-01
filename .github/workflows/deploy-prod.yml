@@ -94,8 +94,7 @@ jobs:
         script: |
           pwd
           cd gateway-dev
-          docker stop gateway_v1_1 
-          docker rm gateway_v1_1 
+          docker stop gateway_v1_1 && docker rm gateway_v1_1
           docker image rm ghcr.io/netsepio/gateway:v1.1
           echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
           docker pull ghcr.io/netsepio/gateway:v1.1
