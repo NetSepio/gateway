@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -57,4 +58,18 @@ type SubscriptionRenewal struct {
 	CreatedAt          time.Time        `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt          time.Time        `gorm:"autoUpdateTime" json:"updated_at"`
 	DeletedAt          gorm.DeletedAt   `gorm:"index" json:"-"`
+}
+type OrgSubscription struct {
+	ID              uuid.UUID    `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"id"`
+	OrganisationID  uuid.UUID    `gorm:"type:uuid;not null;index" json:"organisation_id"`
+	Organisation    Organisation `gorm:"foreignKey:OrganisationID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"organisation"`
+	StartTime       time.Time    `gorm:"not null" json:"start_time"`
+	EndTime         *time.Time   `json:"end_time"`
+	BillingCycle    string       `gorm:"type:varchar(20);not null" json:"billing_cycle"` // e.g., Monthly, Quarterly
+	NextBillingDate time.Time    `gorm:"not null" json:"next_billing_date"`
+	AmountDue       float64      `gorm:"type:numeric(10,2);not null" json:"amount_due"`
+	Status          string       `gorm:"type:varchar(20);not null" json:"status"` // Active, Cancelled, Overdue
+	LastPaymentDate *time.Time   `json:"last_payment_date"`
+	CreatedAt       time.Time    `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt       time.Time    `gorm:"autoUpdateTime" json:"updated_at"`
 }
