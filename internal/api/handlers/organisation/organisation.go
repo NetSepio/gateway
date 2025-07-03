@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/NetSepio/gateway/internal/api/handlers/organisation/orgApp"
+	org_subscription "github.com/NetSepio/gateway/internal/api/handlers/subscription/orgSubscription"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models/claims"
 	apikey "github.com/NetSepio/gateway/utils/api_key"
@@ -24,7 +25,9 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.POST("", createOrganisation)
 		g.GET("", listOrganisations)
 		g.GET("/token", verifyOrgAPIKey)
+
 		orgApp.ApplyRoutes(g)
+		org_subscription.ApplyRoutesOrgSubscriptionV11(g)
 	}
 }
 

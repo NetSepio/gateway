@@ -1,8 +1,8 @@
 package subscription
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
+	"github.com/gin-gonic/gin"
 )
 
 // ApplyRoutes applies router to gin Router
