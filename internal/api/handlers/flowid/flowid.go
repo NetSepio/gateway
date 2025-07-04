@@ -42,7 +42,7 @@ func GetFlowId(c *gin.Context) {
 	if chain_symbol == "sol" {
 		var err error
 
-		flowId, err = flowid.GenerateFlowIdSol(walletAddress, models.AUTH, "", userId)
+		flowId, err = flowid.GenerateFlowIdSol(walletAddress, models.AUTH, "", userId,"")
 		if err != nil {
 			load.Logger.Error(err.Error())
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -50,7 +50,7 @@ func GetFlowId(c *gin.Context) {
 		}
 	} else {
 		var err error
-		flowId, err = flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId)
+		flowId, err = flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId,"")
 		if err != nil {
 			load.Logger.Error(err.Error())
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)

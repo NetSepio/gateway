@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/gin-gonic/gin"
 	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
@@ -18,6 +16,8 @@ import (
 	"github.com/NetSepio/gateway/utils/logwrapper"
 	"github.com/NetSepio/gateway/utils/pkg/cryptosign"
 	"github.com/NetSepio/gateway/utils/pkg/flowid"
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/gin-gonic/gin"
 )
 
 // ApplyRoutes applies router to gin Router
@@ -63,7 +63,7 @@ func authenticate(c *gin.Context) {
 		var flowId string
 		if req.ChainName == "sol" {
 			var err error
-			flowId, err = flowid.GenerateFlowIdSol(req.WalletAddress, models.AUTH, "", userId)
+			flowId, err = flowid.GenerateFlowIdSol(req.WalletAddress, models.AUTH, "", userId, req.Origin)
 			if err != nil {
 				load.Logger.Error(err.Error())
 				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -71,7 +71,7 @@ func authenticate(c *gin.Context) {
 			}
 		} else {
 			var err error
-			flowId, err = flowid.GenerateFlowId(req.WalletAddress, models.AUTH, "", userId)
+			flowId, err = flowid.GenerateFlowId(req.WalletAddress, models.AUTH, "", userId, req.Origin)
 			if err != nil {
 				load.Logger.Error(err.Error())
 				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)

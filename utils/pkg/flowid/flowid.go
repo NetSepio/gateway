@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 	"github.com/NetSepio/gateway/internal/api/handlers/referral"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
+	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 )
 
-func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string, userId string) (string, error) {
+func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string, userId, origin string) (string, error) {
 	db := database.GetDb()
 	flowId := uuid.NewString()
 	fmt.Printf("userId: %s\n", userId)
@@ -55,6 +55,8 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 			FlowIds: []models.FlowId{{
 				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId, WalletAddress: walletAddress,
 			}},
+			Origin:       &origin, // Default origin, can be changed later
+			ReferralCode: referral.GetReferalCode(),
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			return "", err
@@ -65,7 +67,7 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 	return flowId, nil
 }
 
-func GenerateFlowIdSol(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string, userId string) (string, error) {
+func GenerateFlowIdSol(walletAddress string, flowIdType models.FlowIdType, relatedRoleId string, userId, origin string) (string, error) {
 	db := database.GetDb()
 	flowId := uuid.NewString()
 	fmt.Printf("userId: %s\n", userId)
@@ -109,6 +111,7 @@ func GenerateFlowIdSol(walletAddress string, flowIdType models.FlowIdType, relat
 				FlowIdType: flowIdType, UserId: userId, FlowId: flowId, RelatedRoleId: relatedRoleId, WalletAddress: walletAddress,
 			}},
 			ReferralCode: referral.GetReferalCode(),
+			Origin:       &origin, // Default origin, can be changed later
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			return "", err
