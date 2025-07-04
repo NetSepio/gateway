@@ -10,6 +10,7 @@ type AuthenticateRequest struct {
 	AccessToken   string `json:"accessToken"`
 	IdToken       string `json:"idToken"` // to be pass in bearer token [ AUTHORIZATION KEY ]
 	ChainName     string `json:"chainName" binding:"required"`
+	Origin        string `json:"orgin"`
 }
 type AuthenticateRequestNoSign struct {
 	FlowId        string `json:"flowId" binding:"required"`

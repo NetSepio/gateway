@@ -24,6 +24,8 @@ type User struct {
 	Google            *string
 	Telegram          string
 	Farcaster         *string
+	Origin            *string   `gorm:"default:'web'"` // Origin of the user, e.g., web, mobile, etc.
+	Metadata          *string   `gorm:"string"`
 	ReferralCode      string    `gorm:"unique" json:"referalCode"`
 	CreatedAt         time.Time `gorm:"autoCreateTime"`
 	UpdatedAt         time.Time `gorm:"autoUpdateTime"`
