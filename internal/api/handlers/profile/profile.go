@@ -27,7 +27,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.Use(paseto.PASETO(false))
 		g.PATCH("", patchProfile)
 		g.GET("", getProfile)
-		r.GET("/origin", GetUserProfilesByOrigins)
 		g.Group("/email")
 		{
 			g.POST("", email.SendOTP)
