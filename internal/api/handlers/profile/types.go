@@ -10,6 +10,8 @@ type PatchProfileRequest struct {
 	Apple             *string `json:"apple,omitempty"`
 	Telegram          string  `json:"telegram,omitempty"`
 	Farcaster         *string `json:"farcaster,omitempty"`
+	Origin            *string `json:"origin"`
+	Metadata          *string `gorm:"string" json:"metadata"`
 	ProfilePictureUrl string  `json:"profilePictureUrl,omitempty"`
 }
 
