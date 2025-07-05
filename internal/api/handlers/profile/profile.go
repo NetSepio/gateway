@@ -32,11 +32,11 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 	}
 }
+
 func ApplyRoutesv11(r *gin.RouterGroup) {
 	g := r.Group("/profile")
 	{
 		g.GET("/origin", GetUserProfilesByOrigins)
-
 	}
 }
 
@@ -67,6 +67,8 @@ func patchProfile(c *gin.Context) {
 		Apple:             requestBody.Apple,
 		Telegram:          requestBody.Telegram,
 		Farcaster:         requestBody.Farcaster,
+		Metadata:          requestBody.Metadata,
+		Origin:            requestBody.Origin,
 	}
 
 	walletAddress := c.GetString(paseto.CTX_WALLET_ADDRES)
@@ -92,7 +94,6 @@ func patchProfile(c *gin.Context) {
 					logrus.Info("User deleted successfully.")
 					return nil
 				}
-
 			}
 			return err
 		}
@@ -179,8 +180,6 @@ func GetUserProfilesByOrigins(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusNotFound, "No profiles found").SendD(c)
 		return
 	} else {
-
 		httpo.NewSuccessResponseP(200, "Profiles fetched successfully", users).SendD(c)
 	}
-
 }
