@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"github.com/NetSepio/gateway/internal/api"
 	"github.com/NetSepio/gateway/utils/load"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 var GinApp *gin.Engine
@@ -61,7 +61,7 @@ func Init() {
 
 	GinApp.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{
-			"error": "Not Found",
+			"error": "Api Not Found",
 		})
 	})
 	GinApp.NoMethod(func(c *gin.Context) {
