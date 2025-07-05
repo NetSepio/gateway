@@ -22,6 +22,8 @@ type User struct {
 	Telegram          string         `json:"telegram,omitempty"`
 	Farcaster         *string        `json:"farcaster,omitempty"` // Farcaster ID
 	ReferralCode      string         `gorm:"unique" json:"referralCode"`
+	Origin            *string        `gorm:"default:'web'" json:"origin"` // Origin of the user, e.g., web, mobile, etc.
+	Metadata          *string        `gorm:"string" json:"metadata"`
 	CreatedAt         time.Time      `gorm:"autoCreateTime" json:"createdAt,omitempty"`
 	UpdatedAt         time.Time      `gorm:"autoUpdateTime" json:"updatedAt,omitempty"`
 }
