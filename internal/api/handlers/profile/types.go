@@ -28,6 +28,7 @@ type GetProfilePayload struct {
 	Google            *string `json:"google,omitempty"`
 	ChainName         string  `json:"chainName,omitempty"`
 	ReferralCode      string  `json:"referralCode,omitempty"`
+	Metadata          *string `gorm:"string" json:"metadata"`
 }
 
 type UpdateUserRequest struct {

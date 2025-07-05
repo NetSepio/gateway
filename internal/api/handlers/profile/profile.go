@@ -137,7 +137,7 @@ func getProfile(c *gin.Context) {
 	db := database.GetDb()
 	userId := c.GetString(paseto.CTX_USER_ID)
 	var user models.User
-	err := db.Model(&models.User{}).Select("user_id, name, profile_picture_url,country, wallet_address, discord, twitter, email, apple, telegram, farcaster, google, chain_name, referral_code").Where("user_id = ?", userId).First(&user).Error
+	err := db.Model(&models.User{}).Select("user_id, name, profile_picture_url,country, wallet_address, discord, twitter, email, apple, telegram, farcaster, google, chain_name, referral_code, metadata").Where("user_id = ?", userId).First(&user).Error
 	if err != nil {
 		logrus.Error(err)
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -152,7 +152,7 @@ func getProfile(c *gin.Context) {
 	}
 
 	payload := GetProfilePayload{
-		user.UserId, user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country, user.Discord, user.Twitter, user.Email, user.Apple, user.Telegram, user.Farcaster, user.Google, user.ChainName, user.ReferralCode,
+		user.UserId, user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country, user.Discord, user.Twitter, user.Email, user.Apple, user.Telegram, user.Farcaster, user.Google, user.ChainName, user.ReferralCode, user.Metadata,
 	}
 	httpo.NewSuccessResponseP(200, "Profile fetched successfully", payload).SendD(c)
 }
