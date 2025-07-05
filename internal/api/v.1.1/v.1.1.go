@@ -1,7 +1,6 @@
 package v11
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/NetSepio/gateway/internal/api/handlers/account"
 	"github.com/NetSepio/gateway/internal/api/handlers/agents"
 	"github.com/NetSepio/gateway/internal/api/handlers/agents/cyreneAiAgent"
@@ -33,6 +32,7 @@ import (
 	"github.com/NetSepio/gateway/internal/api/handlers/summary"
 	"github.com/NetSepio/gateway/internal/api/handlers/waitlist"
 	"github.com/NetSepio/gateway/internal/api/handlers/walrus"
+	"github.com/gin-gonic/gin"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {
@@ -81,5 +81,6 @@ func ApplyRoutesV1_1(r *gin.RouterGroup) {
 		organisation.ApplyRoutes(v1)
 		certificate.ApplyRoutes(v1)
 		subscription.ApplyRoutesV11(v1)
+		profile.ApplyRoutesv11(v1)
 	}
 }
