@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"strings"
 
-	"gorm.io/gorm"
 	"github.com/NetSepio/gateway/internal/api/handlers/profile/email"
 	"github.com/NetSepio/gateway/internal/api/handlers/referral"
 	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/utils/httpo"
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -24,6 +24,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.Use(paseto.PASETO(false))
 		g.PATCH("", patchProfile)
 		g.GET("", getProfile)
+		r.GET("/origin", GetUserProfilesByOrigins)
 		g.Group("/email")
 		{
 			g.POST("", email.SendOTP)
@@ -148,4 +149,32 @@ func getProfile(c *gin.Context) {
 		user.UserId, user.Name, user.WalletAddress, user.ProfilePictureUrl, user.Country, user.Discord, user.Twitter, user.Email, user.Apple, user.Telegram, user.Farcaster, user.Google, user.ChainName, user.ReferralCode,
 	}
 	httpo.NewSuccessResponseP(200, "Profile fetched successfully", payload).SendD(c)
+}
+
+// make one more get user profile by origin
+func GetUserProfilesByOrigins(c *gin.Context) {
+	db := database.GetDb()
+
+	originsParam := c.Query("origins")
+	if originsParam == "" {
+		httpo.NewErrorResponse(http.StatusBadRequest, "Origins are required").SendD(c)
+		return
+	}
+
+	var users []models.User
+	err := db.Where("origin = ?", originsParam).Find(&users).Error
+	if err != nil {
+		logrus.Error(err)
+		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+		return
+	}
+
+	if len(users) == 0 {
+		httpo.NewErrorResponse(http.StatusNotFound, "No profiles found").SendD(c)
+		return
+	} else {
+
+		httpo.NewSuccessResponseP(200, "Profiles fetched successfully", users).SendD(c)
+	}
+
 }
