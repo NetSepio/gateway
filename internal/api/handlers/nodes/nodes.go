@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	nodelogs "github.com/NetSepio/gateway/internal/api/handlers/nodes/nodeLogs"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/utils/httpo"
 	"github.com/NetSepio/gateway/utils/logwrapper"
+	"github.com/gin-gonic/gin"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {
@@ -20,6 +20,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.GET("/all", FetchAllNodes)
 		g.GET("/:status", FetchAllNodesByStatus)
 		g.GET("/status_wallet_address/:status/:wallet_address", FetchAllNodesByStatusAndWalletAddress)
+		g.GET("/config_type/:config_type", HandlerGetNodesByConfigType())
 		g.GET("/nodes_details", HandlerGetNodesByChain())
 		// g.GET("/nodes-info", HandlerGetNodesByChain())
 
@@ -470,6 +471,31 @@ func HandlerGetNodesByChain() gin.HandlerFunc {
 		}
 
 		httpo.NewSuccessResponseP(200, "Nodes fetched succesfully", responses).SendD(c)
+
+	}
+}
+func HandlerGetNodesByConfigType() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		configType := c.Query("config_type")
+
+		if configType == "" {
+			logwrapper.Errorf("provide chain_type { HandlerGetNodesByConfigType }")
+			httpo.NewErrorResponse(400, "please pass chain_type").SendD(c)
+			return
+		}
+		db := database.GetDB2()
+		var nodes *[]models.Node
+
+		err := db.Where("config_type = ?", configType).Find(&nodes).Error
+
+		// nodes, err := GetNodesByChainAndWallet(db, chain, walletAddress)
+		if err != nil {
+			logwrapper.Errorf("failed to get nodes from DB { HandlerGetNodesByChainAndWallet 3 }: %s", err)
+			httpo.NewErrorResponse(500, "error fetching nodes").SendD(c)
+			return
+		}
+
+		httpo.NewSuccessResponseP(200, "Nodes fetched succesfully", nodes).SendD(c)
 
 	}
 }
