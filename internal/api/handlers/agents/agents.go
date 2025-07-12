@@ -8,10 +8,10 @@ import (
 	"mime/multipart"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
+	"github.com/gin-gonic/gin"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {
@@ -21,6 +21,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.GET("/:node_id", getAgents)
 		g.GET("", getAllAgents)
 		g.GET("/:node_id/:agentId", getAgent)
+		g.GET("/name/:node_config", getAllAgentsByConfigType)
 		g.DELETE("/:node_id/:agentId", deleteAgent)
 		g.PATCH("/:node_id/:agentId", manageAgent)
 
@@ -184,7 +185,7 @@ func addAgent(c *gin.Context) {
 		}
 
 		// Store in database
-			db := database.GetDB2()
+		db := database.GetDB2()
 		if err := db.Create(&agent).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to store agent in database"})
 			return
@@ -230,7 +231,7 @@ func getAgent(c *gin.Context) {
 	agentId := c.Param("agentId")
 
 	var serverDomain string
-		db := database.GetDB2()
+	db := database.GetDB2()
 
 	var node models.Node
 	if err := db.Table("nodes").Where("peer_id = ?", peer_id).First(&node).Error; err != nil {
@@ -261,7 +262,7 @@ func deleteAgent(c *gin.Context) {
 	agentId := c.Param("agentId")
 
 	var serverDomain string
-		db := database.GetDB2()
+	db := database.GetDB2()
 
 	var node models.Node
 	if err := db.Table("nodes").Where("peer_id = ?", peer_id).First(&node).Error; err != nil {
@@ -293,7 +294,7 @@ func deleteAgent(c *gin.Context) {
 
 	if resp.StatusCode == http.StatusOK {
 		// Delete from database using Unscoped to perform a hard delete
-			db := database.GetDB2()
+		db := database.GetDB2()
 		if err := db.Unscoped().Where("id = ?", agentId).Delete(&models.Agent{}).Error; err != nil {
 			fmt.Printf("Error deleting agent from database: %v\n", err)
 		}
@@ -310,7 +311,7 @@ func manageAgent(c *gin.Context) {
 	action := c.Query("action")
 
 	var serverDomain string
-		db := database.GetDB2()
+	db := database.GetDB2()
 
 	var node models.Node
 	if err := db.Table("nodes").Where("peer_id = ?", peer_id).First(&node).Error; err != nil {
@@ -343,7 +344,7 @@ func manageAgent(c *gin.Context) {
 	if resp.StatusCode == http.StatusOK {
 		// Update agent status in database if action is pause/resume
 		if action == "pause" || action == "resume" {
-				db := database.GetDB2()
+			db := database.GetDB2()
 			status := "active"
 			if action == "pause" {
 				status = "inactive"
@@ -361,7 +362,7 @@ func getAgents(c *gin.Context) {
 	peer_id := c.Param("node_id")
 	// Forward request to upstream service
 	var serverDomain string
-		db := database.GetDB2()
+	db := database.GetDB2()
 
 	var node models.Node
 	if err := db.Table("nodes").Where("peer_id = ?", peer_id).First(&node).Error; err != nil {
@@ -393,7 +394,7 @@ func getAgentsByWalletAddress(c *gin.Context) {
 	}
 
 	var agents []models.Agent
-		db := database.GetDB2()
+	db := database.GetDB2()
 	if err := db.Where("wallet_address = ?", walletAddress).Find(&agents).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query agents"})
 		return
@@ -429,7 +430,7 @@ func getCharacterFileByAgentId(c *gin.Context) {
 	}
 
 	var agent models.Agent
-		db := database.GetDB2()
+	db := database.GetDB2()
 	if err := db.Where("wallet_address = ? AND id = ?", walletAddressStr, agentId).First(&agent).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Agent not found for your wallet address"})
 		return
@@ -445,7 +446,7 @@ func getCharacterFileByAgentId(c *gin.Context) {
 
 func getPublicConfig(c *gin.Context) {
 	var agents []models.Agent
-		db := database.GetDB2()
+	db := database.GetDB2()
 	if err := db.Find(&agents).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to query agents"})
 		return
@@ -520,7 +521,7 @@ func getPublicConfig(c *gin.Context) {
 func getAllAgents(c *gin.Context) {
 
 	// Forward request to upstream service
-		db := database.GetDB2()
+	db := database.GetDB2()
 
 	var nodes []models.Node
 	if err := db.Table("nodes").Where("status = ? AND node_config = ?", "active", "NEXUS").Find(&nodes).Error; err != nil {
@@ -557,4 +558,45 @@ func getAllAgents(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"agents": allAgents})
+}
+
+func getAllAgentsByConfigType(c *gin.Context) {
+
+	node_config := c.Param("node_config")
+
+	// Forward request to upstream service
+	db := database.GetDB2()
+
+	var agents []models.Agent
+	if err := db.Where("status = ? AND ( name = ? OR organization = ? )", "active", node_config, node_config).Find(&agents).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to fetch active nodes"})
+		return
+	}
+	if len(agents) == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No active nodes found"})
+		return
+	}
+
+	// var allAgents []interface{}
+	// for _, agent := range agents {
+	// 	serverDomain := agent.ServerDomain
+	// 	fmt.Println("serverDomain : ", fmt.Sprintf("%s/api/v1.0/agents", serverDomain))
+	// 	resp, err := http.Get(fmt.Sprintf("%s/api/v1.0/agents", serverDomain))
+	// 	if err != nil {
+	// 		continue // skip this node if request fails
+	// 	}
+	// 	body, err := io.ReadAll(resp.Body)
+	// 	resp.Body.Close()
+	// 	if err != nil {
+	// 		continue // skip this node if reading fails
+	// 	}
+	// 	var agent interface{}
+	// 	if err := json.Unmarshal(body, &agent); err != nil {
+	// 		continue // skip if response is not valid JSON
+	// 	}
+	// 	// Add node details along with agents
+	// 	allAgents = append(allAgents, agent)
+	// }
+
+	c.JSON(http.StatusOK, gin.H{"agents": agents})
 }
