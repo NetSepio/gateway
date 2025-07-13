@@ -10,8 +10,8 @@ func Save(u models.UserActivity) {
 
 	db := database.GetDb()
 
-	if err := db.Save(u); err != nil {
-		logwrapper.Errorf("UserActivity Failed to save this error : %+v\n", u)
+	if err := db.Create(&u).Error; err != nil {
+		logwrapper.Errorf("UserActivity Failed to save this error : %+v\n", err)
 		return
 	}
 }

@@ -125,7 +125,8 @@ func patchProfile(c *gin.Context) {
 		if errMsg := result.Error.Error(); errMsg != "" {
 			// Check for duplicate key violation (unique constraint)
 			if strings.Contains(errMsg, "duplicate key value violates unique constraint") {
-				go useractivity.Save(models.UserActivity{UserId: userId, Modules: module.Profile, Action: actions.Failed + " to " + actions.Updated, Metadata: " duplication"})
+				duplication := " duplication"
+				go useractivity.Save(models.UserActivity{UserId: userId, Modules: module.Profile, Action: actions.Failed + " to " + actions.Updated, Metadata: &duplication})
 				httpo.NewErrorResponse(http.StatusConflict, "Email address already in use for another account").SendD(c)
 				return
 			}

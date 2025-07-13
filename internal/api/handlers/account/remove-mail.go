@@ -45,7 +45,9 @@ func removeMail(c *gin.Context) {
 		idenity = *user.WalletAddress
 	}
 
-	go useractivity.Save(models.UserActivity{UserId: userId, Modules: module.Account, Action: actions.Updated, Metadata: "Email removed for " + idenity})
+	meta := "Email removed for " + idenity
+
+	go useractivity.Save(models.UserActivity{UserId: userId, Modules: module.Account, Action: actions.Updated, Metadata: &meta})
 
 	httpo.NewSuccessResponse(200, "email removed successfully").SendD(c)
 }

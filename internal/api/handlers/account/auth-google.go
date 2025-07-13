@@ -65,7 +65,8 @@ func authGoogle(c *gin.Context) {
 				httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 				return
 			}
-			go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
+			metadata := "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress
+			go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: &metadata})
 		} else {
 			// Other error occurred
 			logwrapper.Errorf("failed to retrieve user: %s", err)
@@ -120,7 +121,8 @@ func authGoogleApp(c *gin.Context) {
 				httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 				return
 			}
-			go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
+			meta := "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress
+			go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: &meta})
 
 		} else {
 			// Other error occurred
@@ -195,7 +197,8 @@ func allAuthApp(c *gin.Context) {
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error : "+err.Error()).SendD(c)
 					return
 				}
-				go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
+				meta := "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress
+				go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: &meta})
 
 				// if user.ReferralCode == "" {
 				// 	referral.GenerateReferralCodeForUser(user)
@@ -233,7 +236,8 @@ func allAuthApp(c *gin.Context) {
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error : "+err.Error()).SendD(c)
 					return
 				} else {
-					go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
+					meta := "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress
+					go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: &meta})
 					logwrapper.Infof("user created successfully")
 				}
 			} else {
@@ -319,7 +323,8 @@ func registerApple(c *gin.Context) {
 				httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 				return
 			}
-			go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
+			meta := "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress
+			go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: &meta})
 
 		} else if !errors.Is(err, gorm.ErrRecordNotFound) {
 			// // Other error occurred
@@ -333,7 +338,8 @@ func registerApple(c *gin.Context) {
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 					return
 				}
-				go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Updated, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
+				meta := "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress
+				go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Updated, Metadata: &meta})
 
 				httpo.NewSuccessResponse(200, "account Updated successfully").SendD(c)
 				return
