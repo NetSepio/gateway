@@ -8,19 +8,22 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"google.golang.org/api/idtoken"
-	"gorm.io/gorm"
 	"github.com/NetSepio/gateway/internal/api/handlers/referral"
+	useractivity "github.com/NetSepio/gateway/internal/api/handlers/userActivity"
 	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/models/claims"
+	"github.com/NetSepio/gateway/utils/actions"
 	"github.com/NetSepio/gateway/utils/auth"
 	"github.com/NetSepio/gateway/utils/httpo"
 	"github.com/NetSepio/gateway/utils/load"
 	"github.com/NetSepio/gateway/utils/logwrapper"
+	"github.com/NetSepio/gateway/utils/module"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"google.golang.org/api/idtoken"
+	"gorm.io/gorm"
 )
 
 // For creating account or siging pass without paseto
@@ -62,6 +65,7 @@ func authGoogle(c *gin.Context) {
 				httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 				return
 			}
+			go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
 		} else {
 			// Other error occurred
 			logwrapper.Errorf("failed to retrieve user: %s", err)
@@ -116,6 +120,8 @@ func authGoogleApp(c *gin.Context) {
 				httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 				return
 			}
+			go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
+
 		} else {
 			// Other error occurred
 			logwrapper.Errorf("failed to retrieve user: %s", err)
@@ -189,6 +195,8 @@ func allAuthApp(c *gin.Context) {
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error : "+err.Error()).SendD(c)
 					return
 				}
+				go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
+
 				// if user.ReferralCode == "" {
 				// 	referral.GenerateReferralCodeForUser(user)
 				// }
@@ -225,6 +233,7 @@ func allAuthApp(c *gin.Context) {
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error : "+err.Error()).SendD(c)
 					return
 				} else {
+					go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
 					logwrapper.Infof("user created successfully")
 				}
 			} else {
@@ -310,6 +319,8 @@ func registerApple(c *gin.Context) {
 				httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 				return
 			}
+			go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Created, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
+
 		} else if !errors.Is(err, gorm.ErrRecordNotFound) {
 			// // Other error occurred
 			// logwrapper.Errorf("failed to retrieve user: %s", err)
@@ -322,6 +333,8 @@ func registerApple(c *gin.Context) {
 					httpo.NewErrorResponse(http.StatusInternalServerError, "internal server error").SendD(c)
 					return
 				}
+				go useractivity.Save(models.UserActivity{UserId: user.UserId, Modules: module.Account, Action: actions.Updated, Metadata: "email  : " + *user.Email + ", wallet address : " + *user.WalletAddress})
+
 				httpo.NewSuccessResponse(200, "account Updated successfully").SendD(c)
 				return
 			} else {

@@ -7,10 +7,13 @@ import (
 
 	"github.com/NetSepio/gateway/internal/api/handlers/profile/email"
 	"github.com/NetSepio/gateway/internal/api/handlers/referral"
+	useractivity "github.com/NetSepio/gateway/internal/api/handlers/userActivity"
 	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
+	"github.com/NetSepio/gateway/utils/actions"
 	"github.com/NetSepio/gateway/utils/httpo"
+	"github.com/NetSepio/gateway/utils/module"
 	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
@@ -122,14 +125,18 @@ func patchProfile(c *gin.Context) {
 		if errMsg := result.Error.Error(); errMsg != "" {
 			// Check for duplicate key violation (unique constraint)
 			if strings.Contains(errMsg, "duplicate key value violates unique constraint") {
+				go useractivity.Save(models.UserActivity{UserId: userId, Modules: module.Profile, Action: actions.Failed + " to " + actions.Updated, Metadata: " duplication"})
 				httpo.NewErrorResponse(http.StatusConflict, "Email address already in use for another account").SendD(c)
 				return
 			}
+			go useractivity.Save(models.UserActivity{UserId: userId, Modules: module.Profile, Action: actions.Failed + " to " + actions.Updated})
 		}
 		// Handle other errors
 		httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
 		return
 	}
+
+	go useractivity.Save(models.UserActivity{UserId: userId, Modules: module.Profile, Action: actions.Updated})
 
 	httpo.NewSuccessResponse(200, "Profile successfully updated").SendD(c)
 }
