@@ -47,6 +47,7 @@ func Migrate() error {
 		&migrate.SubscriptionRenewal{},
 		&migrate.OrgSubscription{},
 		&migrate.Agent{},
+		&migrate.UserActivity{},
 	} {
 		if err := DB.AutoMigrate(model); err != nil {
 			load.Logger.Sugar().Fatalf("failed to migrate %T: %v", model, err.Error())
