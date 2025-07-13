@@ -25,7 +25,6 @@ func GenerateAuthId(c *gin.Context) {
 	var request GenerateAuthIdRequest
 	err := c.BindJSON(&request)
 	if err != nil {
-
 		httpo.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("payload is invalid %s", err)).SendD(c)
 		return
 	}
