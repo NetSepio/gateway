@@ -11,6 +11,6 @@ type UserActivity struct {
 	UserId    string    `json:"user_id"`
 	Modules   string    `json:"modules"`
 	Action    string    `json:"action"`
-	Metadata  *string    `json:"metadata"`
+	Metadata  *string   `json:"metadata"`
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 }

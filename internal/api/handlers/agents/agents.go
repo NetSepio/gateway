@@ -12,6 +12,7 @@ import (
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func ApplyRoutes(r *gin.RouterGroup) {
@@ -31,6 +32,13 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		configGroup := g.Group("/config")
 		configGroup.Use(paseto.PASETO(false))
 		configGroup.GET("/:agentId", getCharacterFileByAgentId)
+	}
+}
+
+func ApplyRoutesv11(r *gin.RouterGroup) {
+	g := r.Group("/agents")
+	{
+		g.PATCH("/:agentId", UpdateAgent())
 	}
 }
 
@@ -599,4 +607,57 @@ func getAllAgentsByConfigType(c *gin.Context) {
 	// }
 
 	c.JSON(http.StatusOK, gin.H{"agents": agents})
+}
+
+func UpdateAgent() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var input AgentUpdateDTO
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON payload"})
+			return
+		}
+
+		id := c.Param("agentId")
+		// build a map of only the fields that were sent
+		updates := make(map[string]interface{})
+		if input.Name != nil {
+			updates["name"] = *input.Name
+		}
+		if input.Clients != nil {
+			updates["clients"] = *input.Clients
+		}
+		if input.AvatarImg != nil {
+			updates["avatar_img"] = *input.AvatarImg
+		}
+		if input.CoverImg != nil {
+			updates["cover_img"] = *input.CoverImg
+		}
+		if input.VoiceModel != nil {
+			updates["voice_model"] = *input.VoiceModel
+		}
+		if input.Organization != nil {
+			updates["organization"] = *input.Organization
+		}
+
+		if len(updates) == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "no fields to update"})
+			return
+		}
+
+		var agent models.Agent
+		db := database.GetDB2()
+		if err := db.Model(&models.Agent{}).
+			Where("id = ?", id).
+			Updates(updates).
+			First(&agent, "id = ?", id).
+			Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				c.JSON(http.StatusNotFound, gin.H{"error": "agent not found"})
+			} else {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "update failed"})
+			}
+			return
+		}
+		c.JSON(http.StatusOK, agent)
+	}
 }

@@ -76,11 +76,12 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func ApplyRoutesV1_1(r *gin.RouterGroup) {
-	v1 := r.Group("/v1.1")
+	v11 := r.Group("/v1.1")
 	{
-		organisation.ApplyRoutes(v1)
-		certificate.ApplyRoutes(v1)
-		subscription.ApplyRoutesV11(v1)
-		profile.ApplyRoutesv11(v1)
+		organisation.ApplyRoutes(v11)
+		certificate.ApplyRoutes(v11)
+		subscription.ApplyRoutesV11(v11)
+		profile.ApplyRoutesv11(v11)
+		agents.ApplyRoutesv11(v11)
 	}
 }
