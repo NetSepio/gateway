@@ -20,8 +20,8 @@ func InitRedis() {
 	Rdb = redis.NewClient(&redis.Options{
 		Addr:     address,
 		Password: password, // No password set
-		DB:       0,        // Use default DB
-		Protocol: 2,        // Connection protocol
+		// DB:       0,        // Use default DB
+		// Protocol: 2,        // Connection protocol
 	})
 	if Rdb.Ping(ctx).Err() != nil {
 		logrus.Fatal(Rdb.Ping(ctx).Err())

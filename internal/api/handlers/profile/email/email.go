@@ -8,20 +8,19 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/redis/go-redis/v9"
-	"github.com/resend/resend-go/v2"
-	"github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/internal/caching"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/utils/load"
+	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
+	"github.com/resend/resend-go/v2"
+	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 var (
-	rdb = caching.Rdb
 	ctx = context.Background() // context.Background() is a function that returns a new context
 )
 
@@ -46,7 +45,12 @@ func SendOTP(c *gin.Context) {
 	otp := generateOTP()
 	expiration := 15 * time.Minute
 
-	rdb.Set(ctx, otp, req.Email, expiration)
+	status := caching.Rdb.Set(ctx, otp, req.Email, expiration)
+	if status.Err() != nil {
+		logrus.Errorf("failed to set OTP in redis: %s", status.Err())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to cache OTP"})
+		return
+	}
 
 	client := resend.NewClient(load.Cfg.RESEND_API_KEY)
 	params := &resend.SendEmailRequest{
@@ -74,7 +78,7 @@ func VerifyOTP(c *gin.Context) {
 		return
 	}
 
-	storedEmail, err := rdb.Get(ctx, req.OTP).Result()
+	storedEmail, err := caching.Rdb.Get(ctx, req.OTP).Result()
 	if err == redis.Nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired OTP"})
 		return
@@ -100,7 +104,7 @@ func VerifyOTP(c *gin.Context) {
 		}
 	}
 
-	rdb.Del(ctx, req.OTP) // OTP is one-time use
+	caching.Rdb.Del(ctx, req.OTP) // OTP is one-time use
 
 	c.JSON(http.StatusOK, gin.H{"message": "Email verified successfully"})
 }

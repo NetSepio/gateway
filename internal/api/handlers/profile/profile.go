@@ -27,11 +27,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		g.Use(paseto.PASETO(false))
 		g.PATCH("", patchProfile)
 		g.GET("", getProfile)
-		g.Group("/email")
-		{
-			g.POST("", email.SendOTP)
-			g.POST("/verify", email.VerifyOTP)
-		}
 
 	}
 }
@@ -41,6 +36,12 @@ func ApplyRoutesv11(r *gin.RouterGroup) {
 	{
 		g.GET("/origin", GetUserProfilesByOrigins)
 	}
+	s := g.Group("/email")
+	{
+		s.POST("/send", email.SendOTP)
+		s.POST("/verify", email.VerifyOTP)
+	}
+
 }
 
 func patchProfile(c *gin.Context) {

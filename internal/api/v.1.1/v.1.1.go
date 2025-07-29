@@ -39,7 +39,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	v1 := r.Group("/v1.0")
 	{
 		flowid.ApplyRoutes(v1)
-
 		authenticate.ApplyRoutes(v1)
 		profile.ApplyRoutes(v1)
 		delegatereviewcreation.ApplyRoutes(v1)

@@ -24,7 +24,6 @@ require (
 	github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1
 	github.com/mr-tron/base58 v1.2.0
 	github.com/multiformats/go-multiaddr v0.15.0
-	github.com/redis/go-redis/v9 v9.7.3
 	github.com/resend/resend-go/v2 v2.18.0
 	github.com/robfig/cron v1.2.0
 	github.com/sashabaranov/go-openai v1.39.0
@@ -39,6 +38,8 @@ require (
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
 )
+
+require github.com/redis/go-redis/v9 v9.11.0
 
 require (
 	cloud.google.com/go/auth v0.16.1 // indirect
