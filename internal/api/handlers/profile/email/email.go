@@ -54,14 +54,15 @@ func SendOTP(c *gin.Context) {
 
 	client := resend.NewClient(load.Cfg.RESEND_API_KEY)
 	params := &resend.SendEmailRequest{
-		To:      []string{req.Email},
-		From:    "Erebrus Info <noreply@info.erebrus.io>",
-		Text:    fmt.Sprintf("Your OTP for verifying this email is: %s", otp),
-		Subject: "Your OTP Code",
-	}
+    From:    "noreply@info.erebrus.io", // Must be verified
+    To:      []string{req.Email},
+    Subject: "Your OTP Code",
+    Text:    fmt.Sprintf("Your OTP for verifying this email is: %s", otp),
+}
 
 	_, err := client.Emails.Send(params)
 	if err != nil {
+		logrus.Infof("failed to send OTP via resend: %s", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send OTP"})
 		return
 	}
