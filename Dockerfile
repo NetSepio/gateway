@@ -24,11 +24,13 @@ RUN apt update -y && \
 FROM ubuntu:22.04
 WORKDIR /app
 
+# ✅ Install CA certificates to fix TLS issues
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
 # Copy the source code and Aptos CLI from previous stages
 COPY --from=builder /app/gateway .
 COPY --from=aptos_builder /app/aptos .
 COPY ./docker-start.sh .
-
 
 # Set environment variables
 ARG version
