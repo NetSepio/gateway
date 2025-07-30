@@ -1,23 +1,31 @@
 package profile
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/NetSepio/gateway/internal/api/handlers/profile/email"
 	"github.com/NetSepio/gateway/internal/api/handlers/referral"
 	useractivity "github.com/NetSepio/gateway/internal/api/handlers/userActivity"
 	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
+	"github.com/NetSepio/gateway/internal/caching"
 	"github.com/NetSepio/gateway/internal/database"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/utils/actions"
 	"github.com/NetSepio/gateway/utils/httpo"
 	"github.com/NetSepio/gateway/utils/module"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+)
+
+var (
+	ctx = context.Background() // context.Background() is a function that returns a new context
 )
 
 // ApplyRoutes applies router to gin Router
@@ -52,12 +60,48 @@ func patchProfile(c *gin.Context) {
 		httpo.NewErrorResponse(http.StatusForbidden, "payload is invalid").SendD(c)
 		return
 	}
-
 	var email *string
-	if requestBody.EmailId == "" {
-		email = nil // This will store NULL in the database
+
+	if requestBody.OTP != 0 {
+		// Verify OTP
+		storedEmail, err := caching.Rdb.Get(ctx, strconv.Itoa(requestBody.OTP)).Result()
+		if err == redis.Nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired OTP"})
+			return
+		}
+
+		if len(storedEmail) != 0 {
+
+			email = &storedEmail
+			// Delete the OTP from Redis after successful verification
+			if err := caching.Rdb.Del(ctx, strconv.Itoa(requestBody.OTP)).Err(); err != nil {
+				logrus.Errorf("failed to delete OTP from redis: %s", err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete OTP"})
+				return
+			}
+
+		}
+
 	} else {
-		email = &requestBody.EmailId // Store the provided email
+		// get email from the user table
+		userId := c.GetString(paseto.CTX_USER_ID)
+		if userId == "" {
+			httpo.NewErrorResponse(http.StatusForbidden, "User not found").SendD(c)
+			return
+		}
+		var user models.User
+		err := db.Model(&models.User{}).Where("user_id = ?", userId).
+			Select("email").First(&user).Error
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+				return
+			}
+			logrus.Error(err)
+			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occurred").SendD(c)
+			return
+		}
+		email = user.Email
 	}
 
 	profileUpdate := models.User{

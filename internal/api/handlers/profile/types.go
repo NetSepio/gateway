@@ -3,7 +3,6 @@ package profile
 type PatchProfileRequest struct {
 	Name              string  `json:"name,omitempty"`
 	Country           string  `json:"country,omitempty"`
-	EmailId           string  `json:"emailId,omitempty"`
 	Discord           string  `json:"discord,omitempty"`
 	Twitter           string  `json:"twitter,omitempty"`
 	Google            *string `json:"google,omitempty"`
@@ -11,6 +10,7 @@ type PatchProfileRequest struct {
 	Telegram          string  `json:"telegram,omitempty"`
 	Farcaster         *string `json:"farcaster,omitempty"`
 	Origin            *string `json:"origin"`
+	OTP               int  `json:"otp,omitempty"` // OTP for email verification, optional
 	Metadata          *string `gorm:"string" json:"metadata"`
 	ProfilePictureUrl string  `json:"profilePictureUrl,omitempty"`
 }
