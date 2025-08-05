@@ -1,9 +1,11 @@
 package email
 
 import (
+	"bytes"
 	"context"
 	"crypto/rand"
 	"fmt"
+	"html/template"
 	"math/big"
 	"net/http"
 	"time"
@@ -52,22 +54,40 @@ func SendOTP(c *gin.Context) {
 		return
 	}
 
+	// Parse and render HTML template
+	tmpl, err := template.ParseFiles("internal/api/handlers/profile/email/templete/email_templete.html")
+	if err != nil {
+		logrus.Errorf("failed to load email template: %s", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Template load failure"})
+		return
+	}
+
+	var body bytes.Buffer
+	err = tmpl.Execute(&body, map[string]string{"OTP_CODE": otp})
+	if err != nil {
+		logrus.Errorf("failed to render template: %s", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Template render failure"})
+		return
+	}
+
 	client := resend.NewClient(load.Cfg.RESEND_API_KEY)
 	params := &resend.SendEmailRequest{
 		From:    "noreply@info.erebrus.io", // Must be verified
 		To:      []string{req.Email},
 		Subject: "Your OTP Code",
-		Text:    fmt.Sprintf("Your OTP for verifying this email is: %s", otp),
+		Html:    body.String(),
 	}
 
-	_, err := client.Emails.Send(params)
+	_, err = client.Emails.Send(params)
 	if err != nil {
 		logrus.Infof("failed to send OTP via resend: %s", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send OTP"})
 		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "OTP sent successfully"})
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "OTP sent successfully"})
 }
 
 func VerifyOTP(c *gin.Context) {
