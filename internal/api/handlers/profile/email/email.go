@@ -14,7 +14,6 @@ import (
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/utils/load"
 	"github.com/gin-gonic/gin"
-	"github.com/redis/go-redis/v9"
 	"github.com/resend/resend-go/v2"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -43,6 +42,7 @@ func SendOTP(c *gin.Context) {
 	}
 
 	otp := generateOTP()
+	fmt.Println("OTP : ", otp)
 	expiration := 15 * time.Minute
 
 	status := caching.Rdb.Set(ctx, otp, req.Email, expiration)
@@ -54,11 +54,11 @@ func SendOTP(c *gin.Context) {
 
 	client := resend.NewClient(load.Cfg.RESEND_API_KEY)
 	params := &resend.SendEmailRequest{
-    From:    "noreply@info.erebrus.io", // Must be verified
-    To:      []string{req.Email},
-    Subject: "Your OTP Code",
-    Text:    fmt.Sprintf("Your OTP for verifying this email is: %s", otp),
-}
+		From:    "noreply@info.erebrus.io", // Must be verified
+		To:      []string{req.Email},
+		Subject: "Your OTP Code",
+		Text:    fmt.Sprintf("Your OTP for verifying this email is: %s", otp),
+	}
 
 	_, err := client.Emails.Send(params)
 	if err != nil {
@@ -80,7 +80,7 @@ func VerifyOTP(c *gin.Context) {
 	}
 
 	storedEmail, err := caching.Rdb.Get(ctx, req.OTP).Result()
-	if err == redis.Nil {
+	if err != nil && len(storedEmail) == 0 {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired OTP"})
 		return
 	} else {
@@ -102,10 +102,13 @@ func VerifyOTP(c *gin.Context) {
 			}
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update email"})
 			return
+		} else {
+			caching.Rdb.Del(ctx, req.OTP) // OTP is one-time use
+
+			c.JSON(http.StatusOK, gin.H{"message": "Email verified successfully"})
+			return
+
 		}
 	}
 
-	caching.Rdb.Del(ctx, req.OTP) // OTP is one-time use
-
-	c.JSON(http.StatusOK, gin.H{"message": "Email verified successfully"})
 }

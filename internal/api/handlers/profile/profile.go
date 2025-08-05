@@ -40,12 +40,15 @@ func ApplyRoutes(r *gin.RouterGroup) {
 }
 
 func ApplyRoutesv11(r *gin.RouterGroup) {
+
 	g := r.Group("/profile")
 	{
+		g.Use(paseto.PASETO(false))
 		g.GET("/origin", GetUserProfilesByOrigins)
 	}
 	s := g.Group("/email")
 	{
+		// g.Use(paseto.PASETO(false))
 		s.POST("/send", email.SendOTP)
 		s.POST("/verify", email.VerifyOTP)
 	}
