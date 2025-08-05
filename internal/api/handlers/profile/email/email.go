@@ -43,6 +43,15 @@ func SendOTP(c *gin.Context) {
 		return
 	}
 
+	db := database.GetDb()
+
+	// Check if email already exists for another user
+	var existingUser models.User
+	if err := db.Where("email = ?", req.Email).First(&existingUser).Error; err == nil {
+		c.JSON(http.StatusConflict, gin.H{"error": "Email is already in use"})
+		return
+	}
+
 	otp := generateOTP()
 	fmt.Println("OTP : ", otp)
 	expiration := 15 * time.Minute
@@ -111,6 +120,13 @@ func VerifyOTP(c *gin.Context) {
 
 		// print the value of the key
 		logrus.Infoln("storedEmail : ", storedEmail)
+
+	// Check if email already exists for another user
+	var existingUser models.User
+	if err := db.Where("email = ?", storedEmail).First(&existingUser).Error; err == nil {
+		c.JSON(http.StatusConflict, gin.H{"error": "Email is already in use"})
+		return
+	}
 
 		// update user's email in the database
 		err := db.Model(&models.User{}).Where("user_id = ?", userId).Update("email", storedEmail).Error
