@@ -25,6 +25,7 @@ var CTX_ORGANISATION_ID = "ORGANISATION_ID"
 var CTX_ORGANISATION_IP = "ORGANISATION_IP"
 var CTX_ORGANISATION_NAME = "ORGANISATION_NAME"
 var CTX_ORG_APP_ID = "ORGANISATION_APP_ID"
+var CTX_VERIFIED = "VERIFY"
 
 var (
 	ErrAuthHeaderMissing = errors.New("authorization header is required")

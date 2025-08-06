@@ -3,12 +3,12 @@ package flowid
 import (
 	"net/http"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/NetSepio/gateway/internal/api/middleware/auth/paseto"
 	"github.com/NetSepio/gateway/models"
 	"github.com/NetSepio/gateway/utils/httpo"
 	"github.com/NetSepio/gateway/utils/load"
 	"github.com/NetSepio/gateway/utils/pkg/flowid"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,6 +26,7 @@ func GetFlowId(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
 	walletAddress := c.Query("walletAddress")
 	chain_symbol := c.Query("chain")
+	var verify bool
 
 	if walletAddress == "" {
 		httpo.NewErrorResponse(http.StatusBadRequest, "Wallet address (walletAddress) is required").SendD(c)
@@ -42,20 +43,22 @@ func GetFlowId(c *gin.Context) {
 	if chain_symbol == "sol" {
 		var err error
 
-		flowId, err = flowid.GenerateFlowIdSol(walletAddress, models.AUTH, "", userId,"")
+		flowId, err, verify = flowid.GenerateFlowIdSol(walletAddress, models.AUTH, "", userId, "")
 		if err != nil {
 			load.Logger.Error(err.Error())
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 			return
 		}
+		c.Set(paseto.CTX_VERIFIED, verify)
 	} else {
 		var err error
-		flowId, err = flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId,"")
+		flowId, err, verify = flowid.GenerateFlowId(walletAddress, models.AUTH, "", userId, "")
 		if err != nil {
 			load.Logger.Error(err.Error())
 			httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 			return
 		}
+		c.Set(paseto.CTX_VERIFIED, verify)
 	}
 	userAuthEULA := load.Cfg.AUTH_EULA
 	payload := GetFlowIdPayload{

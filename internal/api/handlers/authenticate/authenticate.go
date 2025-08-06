@@ -36,6 +36,8 @@ var CTX_CHAIN_NAME = "CHAIN_NAME"
 func authenticate(c *gin.Context) {
 	userId := c.GetString(paseto.CTX_USER_ID)
 	db := database.GetDb()
+	var verify bool
+	verify = c.GetBool(paseto.CTX_VERIFIED)
 	// chain_symbol := c.Query("chain") //google\
 
 	var req AuthenticateRequest
@@ -63,7 +65,7 @@ func authenticate(c *gin.Context) {
 		var flowId string
 		if req.ChainName == "sol" {
 			var err error
-			flowId, err = flowid.GenerateFlowIdSol(req.WalletAddress, models.AUTH, "", userId, req.Origin)
+			flowId, err, verify = flowid.GenerateFlowIdSol(req.WalletAddress, models.AUTH, "", userId, req.Origin)
 			if err != nil {
 				load.Logger.Error(err.Error())
 				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -71,7 +73,7 @@ func authenticate(c *gin.Context) {
 			}
 		} else {
 			var err error
-			flowId, err = flowid.GenerateFlowId(req.WalletAddress, models.AUTH, "", userId, req.Origin)
+			flowId, err, verify = flowid.GenerateFlowId(req.WalletAddress, models.AUTH, "", userId, req.Origin)
 			if err != nil {
 				load.Logger.Error(err.Error())
 				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
@@ -237,6 +239,7 @@ func authenticate(c *gin.Context) {
 			payload := AuthenticatePayload{
 				Token:  pasetoToken,
 				UserId: userId,
+				Verify: verify,
 			}
 			httpo.NewSuccessResponseP(200, "Token generated successfully", payload).SendD(c)
 			return

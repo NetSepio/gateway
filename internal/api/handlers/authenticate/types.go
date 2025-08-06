@@ -20,6 +20,7 @@ type AuthenticateRequestNoSign struct {
 type AuthenticatePayload struct {
 	Token  string `json:"token"`
 	UserId string `json:"userId"`
+	Verify bool   `json:"verify"`
 }
 
 type AuthenticateTokenPayload struct {
