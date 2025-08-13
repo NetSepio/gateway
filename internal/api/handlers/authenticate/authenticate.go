@@ -18,6 +18,7 @@ import (
 	"github.com/NetSepio/gateway/utils/pkg/flowid"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 // ApplyRoutes applies router to gin Router
@@ -234,6 +235,20 @@ func authenticate(c *gin.Context) {
 				httpo.NewErrorResponse(http.StatusInternalServerError, "Unexpected error occured").SendD(c)
 				logwrapper.Errorf("failed to delete flowId, error %v", err.Error())
 				return
+			} else {
+				var fetchUser models.User
+				userId = c.GetString(paseto.CTX_USER_ID)
+				findResult := db.Model(&models.User{}).Find(&fetchUser, &models.User{UserId: userId})
+				if err := findResult.Error; err != nil {
+					err = fmt.Errorf("while finding user error occured, %s; for user id : %s", err, userId)
+					logrus.Error(err)
+				}
+				if fetchUser.Email == nil || fetchUser.Name == "" {
+					verify = false
+				} else {
+					verify = true
+					c.Set(paseto.CTX_VERIFIED, true)
+				}
 			}
 
 			payload := AuthenticatePayload{
