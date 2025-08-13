@@ -33,6 +33,12 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 		} else {
 			userId = fetchUser.UserId
 		}
+
+		if fetchUser.Email == nil || fetchUser.Name == "" {
+			verify = false
+		} else {
+			verify = true
+		}
 	}
 
 	if update {
@@ -48,6 +54,22 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 		if err != nil {
 			return "", err, verify
 		}
+
+		var fetchUser models.User
+		lowerWalletAddress := strings.ToLower(walletAddress)
+		findResult := db.Model(&models.User{}).Find(&fetchUser, &models.User{WalletAddress: &lowerWalletAddress})
+		if err := findResult.Error; err != nil {
+			err = fmt.Errorf("while finding user error occured, %s", err)
+			logrus.Error(err)
+			return "", err, verify
+		}
+
+		if fetchUser.Email == nil || fetchUser.Name == "" {
+			verify = false
+		} else {
+			verify = true
+		}
+
 	} else {
 		// User doesn't exist so create
 		userId := uuid.NewString()
@@ -61,6 +83,21 @@ func GenerateFlowId(walletAddress string, flowIdType models.FlowIdType, relatedR
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			return "", err, verify
+		}
+
+		var fetchUser models.User
+		lowerWalletAddress := strings.ToLower(walletAddress)
+		findResult := db.Model(&models.User{}).Find(&fetchUser, &models.User{WalletAddress: &lowerWalletAddress})
+		if err := findResult.Error; err != nil {
+			err = fmt.Errorf("while finding user error occured, %s", err)
+			logrus.Error(err)
+			return "", err, verify
+		}
+
+		if fetchUser.Email == nil || fetchUser.Name == "" {
+			verify = false
+		} else {
+			verify = true
 		}
 
 	}
@@ -110,6 +147,18 @@ func GenerateFlowIdSol(walletAddress string, flowIdType models.FlowIdType, relat
 		if err != nil {
 			return "", err, verify
 		}
+		var fetchUser models.User
+		findResult := db.Model(&models.User{}).Find(&fetchUser, &models.User{WalletAddress: &walletAddress})
+		if err := findResult.Error; err != nil {
+			err = fmt.Errorf("while finding user error occured, %s", err)
+			logrus.Error(err)
+			return "", err, verify
+		}
+		if fetchUser.Email == nil || fetchUser.Name == "" {
+			verify = false
+		} else {
+			verify = true
+		}
 	} else {
 		// User doesn't exist so create
 		userId := uuid.NewString()
@@ -123,6 +172,19 @@ func GenerateFlowIdSol(walletAddress string, flowIdType models.FlowIdType, relat
 		}
 		if err := db.Create(newUser).Error; err != nil {
 			return "", err, verify
+		}
+
+		var fetchUser models.User
+		findResult := db.Model(&models.User{}).Find(&fetchUser, &models.User{WalletAddress: &walletAddress})
+		if err := findResult.Error; err != nil {
+			err = fmt.Errorf("while finding user error occured, %s", err)
+			logrus.Error(err)
+			return "", err, verify
+		}
+		if fetchUser.Email == nil || fetchUser.Name == "" {
+			verify = false
+		} else {
+			verify = true
 		}
 
 	}
