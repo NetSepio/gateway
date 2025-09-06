@@ -3,6 +3,8 @@ package app
 import (
 	"github.com/NetSepio/gateway/internal/caching"
 	"github.com/NetSepio/gateway/internal/database"
+	p2pnode "github.com/NetSepio/gateway/internal/p2p-Node"
+	"github.com/NetSepio/gateway/internal/routines"
 	"github.com/NetSepio/gateway/internal/server"
 	"github.com/NetSepio/gateway/utils/load"
 	"github.com/NetSepio/gateway/utils/logwrapper"
