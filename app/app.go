@@ -20,16 +20,16 @@ func Init() {
 	database.GetDb()
 
 	// Migrate the database
-	// database.Migrate()
+	database.Migrate()
 
 	// Initialize Redis
 	caching.InitRedis()
 
 	// Initialize the of Goroutines
-	// routines.Init()
+	routines.Init()
 
 	// // Initialize the P2P node
-	// p2pnode.Init()
+	p2pnode.Init()
 
 	// Initialize the server
 	server.Init()
